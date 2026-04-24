@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elyne — стили, вопросы к тебе</title>
+<style>
+  body { font-family: -apple-system, Inter, system-ui, sans-serif; max-width: 920px; margin: 32px auto; padding: 0 16px; color: #222; line-height: 1.55; background: #fafaf7; }
+  h1 { font-size: 26px; font-weight: 600; margin: 0 0 8px; }
+  h2 { font-size: 19px; font-weight: 600; margin: 32px 0 10px; color: #333; }
+  h3 { font-size: 16px; font-weight: 600; margin: 18px 0 4px; color: #444; }
+  p.lead { color: #555; font-size: 15px; }
+  .intro { background: #f0efe9; border-radius: 12px; padding: 16px 20px; margin: 18px 0 28px; font-size: 14.5px; }
+  .intro ol { padding-left: 20px; margin: 6px 0; }
+  .intro li { margin: 4px 0; }
+  .style-block { border: 1px solid #e5e3dc; border-radius: 12px; padding: 14px 18px; margin: 10px 0; background: white; }
+  .style-block h3 { margin-top: 0; }
+  .style-desc { color: #666; font-size: 13.5px; margin-bottom: 8px; }
+  .pick { font-size: 14px; color: #333; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+  .pick .p { padding: 4px 10px; background: #f4f3ee; border-radius: 16px; font-weight: 500; }
+  .pick .none { background: #fbe8d7; color: #8a5a2a; }
+  .pick-thumbs { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .pick-thumbs .t { width: 120px; aspect-ratio: 3/4; border-radius: 8px; overflow: hidden; position: relative; background: #eee; }
+  .pick-thumbs .t img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pick-thumbs .t .lbl { position: absolute; top: 4px; left: 4px; background: rgba(0,0,0,0.65); color: white; padding: 1px 7px; border-radius: 8px; font-size: 11px; font-weight: 600; }
+  .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 6px; margin-top: 14px; }
+  .tile { position: relative; background: #eee; border-radius: 8px; overflow: hidden; aspect-ratio: 3/4; }
+  .tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .tile .num { position: absolute; top: 5px; left: 5px; background: rgba(0,0,0,0.65); color: white; padding: 1px 7px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .questions { background: #fffbea; border: 1px solid #efe2aa; border-radius: 12px; padding: 16px 20px; margin: 28px 0; font-size: 14.5px; }
+  .questions ol { padding-left: 20px; }
+  .questions li { margin: 8px 0; }
+  .hint { color: #8a7a3a; font-size: 13px; font-style: italic; }
+  .banner { background: #1a1a1a; color: white; border-radius: 12px; padding: 18px 22px; margin: 20px 0; font-size: 14.5px; }
+  .banner h3 { color: white; margin-top: 0; }
+  .banner p { color: #ddd; }
+  hr { border: 0; border-top: 1px solid #e5e3dc; margin: 24px 0; }
+</style>
+</head>
+<body>
+
+<h1>Стили — вопросы к тебе</h1>
+<p class="lead">Прошёл все 74 картинки, классифицировал каждую, собрал пары ♀+♂ на каждый стиль. Ниже — мои выборы, проверь и поправь.</p>
+
+<div class="intro">
+  <b>Что надо от тебя:</b>
+  <ol>
+    <li>Пройтись по 8 блокам ниже и сказать — согласна с парой или поменять номер (галерея всех 74 — в конце).</li>
+    <li>Sport casual ♂ и Y2K ♂ — пустые (в присланном только ♀ в этих стилях). Вариант А: я генерю AI-референсы под твой вкус. Вариант Б: ты добираешь. Скажи.</li>
+    <li>«На море» — не стиль, а ситуация: внутри Old money / Casual / Boho / Business style может быть своя пляжная вариация. Согласна?</li>
+  </ol>
+</div>
+
+<h2>Пары по 8 стилям</h2>
+
+<div class="style-block">
+  <h3>Old money</h3>
+  <div class="style-desc">Тихая роскошь, без логотипов. Кашемир, тёплые нейтральные, ухоженность, дорогая простота.</div>
+  <div class="pick"><span class="p">♀ #4</span> <span class="p">♂ #10</span> <span class="hint">Беж+кремовые, minimal-luxury. У #7 и #62 AI-look — взял живые снимки.</span></div>
+  <div class="pick-thumbs">
+    <div class="t"><span class="lbl">♀ 4</span><img src="img/04.jpg" alt="#4"></div>
+    <div class="t"><span class="lbl">♂ 10</span><img src="img/10.jpg" alt="#10"></div>
+  </div>
+</div>
+
+<div class="style-block">
+  <h3>Business style</h3>
+  <div class="style-desc">Деловое, но современное. Костюмы и комплекты, строгая форма — без канцелярщины.</div>
+  <div class="pick"><span class="p">♀ #34</span> <span class="p">♂ #8</span> <span class="hint">Oversized pinstripe + whisky-library. Деловое без галстука.</span></div>
+  <div class="pick-thumbs">
+    <div class="t"><span class="lbl">♀ 34</span><img src="img/34.jpg" alt="#34"></div>
+    <div class="t"><span class="lbl">♂ 8</span><img src="img/08.jpg" alt="#8"></div>
+  </div>
+</div>
+
+<div class="style-block">
+  <h3>Classic</h3>
+  <div class="style-desc">Вечная классика: тренчи, рубашки, лоферы, базовые силуэты.</div>
+  <div class="pick"><span class="p">♀ #57</span> <span class="p">♂ #29</span> <span class="hint">Таймлесс, без фэшн-шума. Mediterranean + Paris cafe.</span></div>
+  <div class="pick-thumbs">
+    <div class="t"><span class="lbl">♀ 57</span><img src="img/57.jpg" alt="#57"></div>
+    <div class="t"><span class="lbl">♂ 29</span><img src="img/29.jpg" alt="#29"></div>
+  </div>
+</div>
+
+<div class="style-block">
+  <h3>Casual</h3>
+  <div class="style-desc">Повседневный кежуал без лишних акцентов.</div>
+  <div class="pick"><span class="p">♀ #3</span> <span class="p">♂ #52</span> <span class="hint">Ежедневный minimal, чистые линии.</span></div>
+  <div class="pick-thumbs">
+    <div class="t"><span class="lbl">♀ 3</span><img src="img/03.jpg" alt="#3"></div>
+    <div class="t"><span class="lbl">♂ 52</span><img src="img/52.jpg" alt="#52"></div>
+  </div>
+</div>
+
+<div class="style-block">
+  <h3>Streetwear</h3>
+  <div class="style-desc">Уличный стиль: оверсайз, кроссовки, худи, карго, cap. Молодёжная эстетика.</div>
+  <div class="pick"><span class="p">♀ #73</span> <span class="p">♂ #16</span> <span class="hint">Fashion-forward ♀ (Prada+Dior scarf) + NYC-архетип ♂ (Yankees hoodie).</span></div>
+  <div class="pick-thumbs">
+    <div class="t"><span class="lbl">♀ 73</span><img src="img/73.jpg" alt="#73"></div>
+    <div class="t"><span class="lbl">♂ 16</span><img src="img/16.jpg" alt="#16"></div>
+  </div>
+</div>
+
+<div class="style-block">
+  <h3>Sport casual</h3>
+  <div class="style-desc">Спортивно-повседневный: легинсы, свитшоты, pilates-princess. Функциональная ткань.</div>
+  <div class="pick"><span class="p">♀ #11</span> <span class="p none">♂ — нет</span> <span class="hint">Ежедневный athleisure. ♂ нет в присланном — решаем: AI или добираешь?</span></div>
+  <div class="pick-thumbs">
+    <div class="t"><span class="lbl">♀ 11</span><img src="img/11.jpg" alt="#11"></div>
+  </div>
+</div>
+
+<div class="style-block">
+  <h3>Boho</h3>
+  <div class="style-desc">Этника, свободные силуэты, ткани с характером. Русский фолк / латино / vintage-nomad.</div>
+  <div class="pick"><span class="p">♀ #43</span> <span class="p">♂ #40</span> <span class="hint">Лён + natural palette. У #41 и #42 AI-look — взял живой снимок.</span></div>
+  <div class="pick-thumbs">
+    <div class="t"><span class="lbl">♀ 43</span><img src="img/43.jpg" alt="#43"></div>
+    <div class="t"><span class="lbl">♂ 40</span><img src="img/40.jpg" alt="#40"></div>
+  </div>
+</div>
+
+<div class="style-block">
+  <h3>Y2K</h3>
+  <div class="style-desc">Поп-эстетика начала 2000-х: metallic, low-rise, кроп-топы, mini, яркие принты.</div>
+  <div class="pick"><span class="p">♀ #23</span> <span class="p none">♂ — нет</span> <span class="hint">Galliano-pink + milky-green, Paris street. ♂ нет в присланном — AI или добираешь?</span></div>
+  <div class="pick-thumbs">
+    <div class="t"><span class="lbl">♀ 23</span><img src="img/23.jpg" alt="#23"></div>
+  </div>
+</div>
+
+<div class="banner">
+  <h3>«На море» — не стиль, а ситуация</h3>
+  <p>У тебя в галерее блок пляжно-курортных образов (льняные мужские, coastal vibe). Они не влезают в 8 существующих стилей как отдельный тип — но это <b>ситуация</b>, которая есть у каждого стиля: у Old money есть своё «на море» (St.Tropez с Panama hat), у Casual своё (linen shorts + espadrilles), у Boho своё (Ibiza white lace).</p>
+  <p>Предложение: 8 стилей остаются как есть; «резорт / море» — это сценарий, который приложение покажет внутри выбранного стиля. Согласна?</p>
+</div>
+
+<div class="questions">
+  <h3 style="margin-top:0">Ещё вопросы, над которыми думаем</h3>
+  <ol>
+    <li><b>Quiet Luxury vs Old money.</b> Оставляем Old money — твоя формулировка. Подтверждаешь?</li>
+    <li><b>Русская косоворотка / латино-ремесло</b> — оба живут внутри Boho как регионы или хочешь разделить?</li>
+    <li><b>Pilates princess</b> — это Sport casual или отдельный? (#13 ты раньше отнесла к Classic — давай сверим.)</li>
+    <li><b>Brown-core / Mocha Mousse</b> — сквозной приём во всех стилях или отдельный стиль?</li>
+    <li>Что у тебя в голове, что мы ещё не назвали?</li>
+  </ol>
+</div>
+
+<hr>
+
+<h2>Галерея — все 74 картинки</h2>
+<p class="lead">Пронумерованы 1–74 по порядку отправки. Если хочешь поменять пару — напиши номер.</p>
+<div class="gallery">
+<!-- тайлы подставятся ниже -->
+</div>
+
+<script>
+  const g = document.querySelector('.gallery');
+  for (let i = 1; i <= 74; i++) {
+    const n = String(i).padStart(2, '0');
+    g.insertAdjacentHTML('beforeend',
+      `<div class="tile"><span class="num">${i}</span><img loading="lazy" src="img/${n}.jpg" alt="#${i}"></div>`);
+  }
+</script>
+
+<hr>
+<p class="hint">Если что — голосовое Олегу, он мне перешлёт. 2026-04-24.</p>
+</body></html>
