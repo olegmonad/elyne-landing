@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Сравнение юрисдикций для App Store · 2026-04-29</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="elyne-2026-04-29">Сравнение юрисдикций для Elyne — вердикт 2026-04-29</h1>
+<h2 id="_1">КРИТИЧЕСКИЙ КОНТЕКСТ (читать первым)</h2>
+<p>С 1 апреля 2026 года Apple полностью отключил платежи в App Store для России. Причина: штраф OFSI (UK) за нарушение санкций. Следствие: <strong>регистрировать Apple Developer Account на российское юрлицо или из России — нельзя</strong>. Любая схема «остаться в РФ» для App Store закрыта. Это делает вопрос иностранной юрисдикции не опциональным, а обязательным.</p>
+<p>Дополнительно: с февраля 2025 Apple закрыл Enterprise Program для российских компаний. Regular Developer Program (публикация в App Store) для иностранного юрлица с российским учредителем — работает, но требует чистой иностранной привязки: юрлицо, банк, адрес, Apple ID — всё вне РФ.</p>
+<hr>
+<h2 id="tldr">TL;DR</h2>
+<p><strong>Армения — рекомендация.</strong> 1% налог до 2031 зафиксирован законом, ООО за 2-3 дня дистанционно, один перелёт для банка, Apple Developer работает через армянское юрлицо, прецедентов массовой заморозки не зафиксировано.</p>
+<p><strong>Runner-up: Грузия</strong> (Virtual Zone, 0% корпоративный налог на экспорт) — если в армянском банке откажут или ухудшится санкционный климат вокруг Армении. Банки в Грузии сложнее для россиян с 2024, но работают.</p>
+<p><strong>Runner-up для масштаба: ОАЭ</strong> (IFZA/Meydan) — подключается когда ARR пересекает $200-300K, сложно и дорого для MVP.</p>
+<p><strong>Не выбирать сейчас:</strong> Эстонию (закрыта для РФ-граждан с марта 2022), Delaware/США (Mercury не открывает россиянам, Apple дополнительно усложняет), Сербию (нужно физприсутствие + медленнее).</p>
+<hr>
+<h2 id="10">Матрица сравнения — 10 юрисдикций</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Страна</th>
+<th>Дистанционная регистрация</th>
+<th>Срок setup (дней)</th>
+<th>Стоимость год 1 ($)</th>
+<th>Стоимость год 2+ ($/год)</th>
+<th>Налог при ARR $100K</th>
+<th>Налог при ARR $1M</th>
+<th>Сложность банка для РФ (1-5)</th>
+<th>Apple Developer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Армения</strong></td>
+<td>Да</td>
+<td>5–10</td>
+<td>2,800–5,000</td>
+<td>2,000–3,700</td>
+<td>~$1,000 (1%)</td>
+<td>~$10,000 (1%, до лимита $300K; далее 18% на прибыль)</td>
+<td>2</td>
+<td>Да</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Грузия</strong></td>
+<td>Да</td>
+<td>3–7</td>
+<td>1,500–3,000</td>
+<td>1,000–2,000</td>
+<td>$0 (VZ, экспорт)</td>
+<td>$0 (VZ) или 5% дивиденды</td>
+<td>3</td>
+<td>Да</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Казахстан (AIFC)</strong></td>
+<td>Условно</td>
+<td>10–20</td>
+<td>3,000–6,000</td>
+<td>2,000–4,000</td>
+<td>$0 (AIFC, до 2066)</td>
+<td>$0 (AIFC)</td>
+<td>3</td>
+<td>Да</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Кыргызстан (ПВТ)</strong></td>
+<td>Да</td>
+<td>7–14</td>
+<td>1,000–2,500</td>
+<td>800–1,500</td>
+<td>~$1,000 (1% взнос)</td>
+<td>~$10,000 (1% взнос)</td>
+<td>3</td>
+<td>Требует уточнения</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>ОАЭ (IFZA/Meydan)</strong></td>
+<td>Условно</td>
+<td>14–30</td>
+<td>7,000–15,000</td>
+<td>4,000–8,000</td>
+<td>$0 (freezone)</td>
+<td>$0 (freezone)</td>
+<td>2</td>
+<td>Да</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Сербия (paušal)</strong></td>
+<td>Нет (ИП) / Условно (ООО)</td>
+<td>20–40</td>
+<td>1,500–3,500</td>
+<td>1,000–2,500</td>
+<td>~$2,500 (paušal)</td>
+<td>не применимо (ограничение модели)</td>
+<td>4</td>
+<td>Да</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>Эстония (e-Residency)</strong></td>
+<td>Заблокировано</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>5</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>Кипр (IP Box)</strong></td>
+<td>Условно</td>
+<td>20–40</td>
+<td>5,000–10,000</td>
+<td>3,000–6,000</td>
+<td>~$2,500 (2.5% на роялти)</td>
+<td>~$25,000</td>
+<td>3</td>
+<td>Да</td>
+</tr>
+<tr>
+<td>9</td>
+<td><strong>Турция</strong></td>
+<td>Нет</td>
+<td>14–30</td>
+<td>2,000–4,000</td>
+<td>1,500–3,000</td>
+<td>~$25,000 (25%)</td>
+<td>~$250,000 (25%)</td>
+<td>2</td>
+<td>Да</td>
+</tr>
+<tr>
+<td>10</td>
+<td><strong>США, Delaware (Stripe Atlas)</strong></td>
+<td>Да (формально)</td>
+<td>7–14</td>
+<td>1,500–3,000</td>
+<td>800–1,500</td>
+<td>зависит от структуры</td>
+<td>зависит</td>
+<td>5</td>
+<td>Проблема</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Пояснения к таблице:</strong>
+- Сложность банка: 1 = открывают легко, 5 = почти нереально для россиянина
+- Apple Developer «Проблема» = технически возможно, но есть задокументированные отказы при российском паспорте учредителя, даже при US-LLC
+- ОАЭ «Условно» = можно доверенностью, но банк почти всегда требует личного визита
+- Казахстан AIFC «Условно» = сам AIFC онлайн, но банк — офлайн</p>
+<hr>
+<h2 id="-3">Топ-3 для разбора</h2>
+<hr>
+<h3 id="1">1. Армения — приоритет</h3>
+<p><strong>Что специфического</strong></p>
+<p>Единственная юрисдикция, где 1% налог с оборота зафиксирован законом до 2031 года для IT-компаний (Реестр высоких технологий). Это не инструкция налоговой, это принятый закон. Ставка не зависит от прибыли — платишь 1% с каждой поступившей суммы. При ARR $100K налог = $1,000. При ARR $300K налог = $3,000. Это рекорд среди всех постсоветских юрисдикций.</p>
+<p>Дистанционная регистрация ООО (ՍՊԸ) — 2-3 рабочих дня. Директор-резидент не нужен. Уставный капитал — минимальный (~$250). Физический визит нужен один раз: для открытия банковского счёта. Все 17 банков Армении принимают россиян (по состоянию на апрель 2026).</p>
+<p>Apple Developer: армянское ООО получает D-U-N-S через Dun &amp; Bradstreet, регистрирует Apple Developer Organization ($99/год), получает банковские реквизиты — схема стандартная. Прецедентов заморозки аккаунтов армянских компаний с российскими учредителями — не зафиксировано в публичном пространстве (требует мониторинга).</p>
+<p><strong>Главный risk-factor</strong></p>
+<p>Вторичные санкционные риски: Армения испытывает давление США/ЕС как страна, которая «не присоединилась к санкциям». Если западное давление усилится — банки Армении могут начать закрывать счета компаний с российскими бенефициарами. Сигналы: с апреля 2025 часть банков усилила KYC. Пока массовых закрытий нет.</p>
+<p>Лимит IT-режима: $300K ARR. После — стандарт 18%. Для Elyne с целевым $1B это означает смену структуры примерно на отметке $200-250K ARR (чтобы успеть перестроиться до выхода за лимит).</p>
+<p>КИК: Олег обязан уведомить ФНС в течение 3 месяцев после регистрации армянского ООО. Штраф за пропуск — 500,000 ₽/год. Это решаемо через налогового консультанта, но нельзя забыть.</p>
+<p><strong>Когда выбирают именно эту юрисдикцию</strong></p>
+<p>— MVP-запуск за 4-6 недель с минимальным бюджетом<br>
+— Нет ресурса на офис/визу в ОАЭ<br>
+— Оборот до $300K в ближайшие 2-3 года<br>
+— Нужен App Store + Google Play через понятную схему<br>
+— Хочется одним перелётом закрыть банк и документы</p>
+<hr>
+<h3 id="2-virtual-zone-runner-up">2. Грузия — Virtual Zone, runner-up</h3>
+<p><strong>Что специфического</strong></p>
+<p>Virtual Zone (VZ) — статус от Министерства финансов Грузии для IT-компаний, которые продают услуги нерезидентам. Налог на корпоративную прибыль: <strong>0%</strong> (при условии, что доход от клиентов-нерезидентов). Дивиденды — 5%.</p>
+<p>Для Elyne это означает: если подписчики — физлица за пределами Грузии (что так и есть), вся прибыль до выплаты дивидендов — 0% налогов. При выплате себе — 5%.</p>
+<p>Сравнение с Арменией при ARR $100K:
+- Армения: $1,000 (1% оборота всегда)
+- Грузия VZ: $0 корпоративного + 5% дивидендов при выплате — если Олег реинвестирует, то $0</p>
+<p>При ARR $1M Грузия формально выгоднее. Но есть нюанс.</p>
+<p>Регистрация — дистанционно, 3-7 дней. Компания (LLC = ООО) регистрируется через Дом Юстиции (онлайн или через агента). VZ-статус получается отдельно — 1-4 недели.</p>
+<p><strong>Главный risk-factor</strong></p>
+<p>Банки Грузии с 2024 стали значительно строже к россиянам. Bank of Georgia, TBC — требуют подтверждения бизнес-активности, счётов из других банков, инвойсов. Отдельные россияне сообщают об отказах без объяснений. Это не массовое явление, но риск выше, чем в Армении.</p>
+<p>VZ-статус требует, чтобы доходы были именно от нерезидентов. Если в будущем появятся российские клиенты — сложность. App Store/Google Play технически дают доход через Apple/Google (нерезиденты) — это нормально.</p>
+<p>Wise и Stripe Business доступны для грузинских компаний. Это плюс для международных операций.</p>
+<p><strong>Когда выбирают именно эту юрисдикцию</strong></p>
+<p>— Армянский банк отказал или закрылся<br>
+— Планируется работать с Wise/Stripe напрямую (без армянской специфики)<br>
+— Оборот ожидается выше $300K быстро (нет потолка VZ, в отличие от армянского 1%)<br>
+— Есть готовность к более строгому банковскому KYC</p>
+<hr>
+<h3 id="3-ifza-meydan">3. ОАЭ (IFZA / Meydan) — для масштаба</h3>
+<p><strong>Что специфического</strong></p>
+<p>Freezone в ОАЭ даёт: 0% налог на прибыль (для free zone companies), 100% иностранное владение, нет ограничений на репатриацию прибыли. Налоговое соглашение ОАЭ-РФ действует — дивиденды в РФ облагаются по пониженной ставке (требует уточнения структуры).</p>
+<p>IFZA (International Free Zone Authority) — одна из самых доступных: лицензия от AED 10,000-12,900 (~$2,700-3,500). Meydan FZ — схожий ценник. Это без учёта визы, офиса, банка.</p>
+<p>Банки ОАЭ для россиян: Emirates NBD, ADCB, Mashreq, RAK Bank — открывают россиянам. Комплаенс строгий, нужен source of funds, нужен минимальный баланс (AED 20,000-150,000 = $5,500-40,000). Это реальные деньги на старте.</p>
+<p>Apple Developer: UAE freezone company получает DUNS без проблем. Apple payouts на UAE банк — стандартная схема, никаких ограничений.</p>
+<p><strong>Главный risk-factor</strong></p>
+<p>Стоимость. Минимальный реальный бюджет год 1: $7,000-15,000. Без визы — дешевле, но банк без личного визита почти нереален. Если Олег не едет в ОАЭ — схема не закрывается. Для MVP с нулевым оборотом это непропорционально дорого.</p>
+<p>Требования к substance: с 2024 ОАЭ усиливает требования к реальному присутствию. Для freezone пока не обязательно, но мониторинг усиливается.</p>
+<p><strong>Когда выбирают именно эту юрисдикцию</strong></p>
+<p>— ARR вышел за $200-300K и нужна стабильная юрисдикция без потолков<br>
+— Нужен серьёзный банк для инвестиционных раундов (UAE банки более recognised)<br>
+— Планируется найм иностранных специалистов (UAE visa)<br>
+— Есть ресурс на setup $10-15K и поездку в Дубай</p>
+<hr>
+<h2 id="_2">Что НЕ выбирать и почему</h2>
+<p><strong>Эстония (e-Residency)</strong> — заблокирована для граждан РФ с марта 2022. Новые заявки не принимаются. Точка.</p>
+<p><strong>США Delaware (Stripe Atlas)</strong> — Mercury (стандартный партнёрский банк) не открывает счета россиянам. Apple Developer для LLC с российским учредителем — задокументированные отказы при энролменте. Технически не закрыто, но практически слишком рискованно для MVP.</p>
+<p><strong>Турция</strong> — налог 25% на прибыль, нет IT-льгот уровня Армении/Грузии, регистрация требует физприсутствия, не даёт конкурентного преимущества.</p>
+<p><strong>Сербия (paušal)</strong> — paušal подходит только для ИП, ИП не подходит для Apple Developer Organization. ООО в Сербии — сложнее, дольше, банки к россиянам стали значительно хуже с 2024. Плюс требует физического присутствия для ключевых шагов.</p>
+<p><strong>Казахстан AIFC</strong> — хорош для финтех/крупного IT, но для B2C-подписки с небольшим оборотом: оверкил, банк (Jusan, Halyk) к россиянам с 2023 строже, требует физприсутствия. Подходит на более поздней стадии.</p>
+<p><strong>Кипр (IP Box)</strong> — 2.5% ставка реальна только при правильно структурированном IP-холдинге с «nexus» по ОЭСР. Для MVP с одним продуктом — сложно и дорого доказать. Стоимость setup и сопровождения от $5,000-10,000/год. Подходит как структура для холдинга на $500K+ ARR.</p>
+<p><strong>Кыргызстан (ПВТ)</strong> — интересно (1% взнос вместо налогов, удалённая регистрация), но инфраструктура банков слабее, Apple Developer через кыргызское ООО — нет задокументированного рабочего опыта в публичных источниках (требует дополнительной проверки). Возможная альтернатива Армении, но уступает по зрелости схемы.</p>
+<p><strong>Офшоры (Сейшелы, BVI, Гонконг, Сингапур)</strong> — полный оверкил для MVP. BVI/Сейшелы: Apple не даст Developer Account на офшор без субстанции. Гонконг/Сингапур: требует физприсутствия, директора-резидента (Сингапур), стоимость $5,000-20,000 год 1. Смотреть на $1M+ ARR при необходимости инвестиционной структуры.</p>
+<hr>
+<h2 id="_3">Финальный вердикт: Армения</h2>
+<p><strong>Страна: Армения. ООО + IT-статус (Реестр высоких технологий).</strong></p>
+<h3 id="3">3 причины</h3>
+<p><strong>1. Скорость совместима с MVP-дедлайном.</strong><br>
+ООО регистрируется за 2-3 дня дистанционно. Один перелёт в Ереван = банковский счёт. D-U-N-S + Apple Developer закрывается за 2-3 недели. Это единственная схема, которая совместима с запуском в мае 2026.</p>
+<p><strong>2. Налог 1% зафиксирован законом до 2031 — не инструкция, не постановление.</strong><br>
+При ARR $100K платишь $1,000 налога. При ARR $300K — $3,000. Это лучший показатель среди всех 10 рассмотренных юрисдикций в диапазоне до $300K ARR.</p>
+<p><strong>3. Санкционный профиль и Apple-совместимость.</strong><br>
+Армения не под санкциями. Армянские компании с российскими учредителями работают в App Store без задокументированных массовых блокировок. Все банки Армении открывают счета гражданам РФ. Это наименее рискованная схема из доступных для старта.</p>
+<h3 id="_4">Признаки что вердикт надо пересмотреть</h3>
+<p>Пересматривай на Грузию если:
+- Армянский банк (Ameriabank / IDBank) отказал в открытии счёта или заблокировал
+- Армения попала под вторичные санкции США/ЕС в виде принудительных ограничений для компаний с РФ-бенефициарами
+- IT-Реестр отказал в регистрации или изменил условия</p>
+<p>Пересматривай на ОАЭ если:
+- ARR вышел за $300K и нужна структура без потолка налогового режима
+- Привлекаются инвестиции и инвесторы требуют признанной юрисдикции
+- Нужен глобальный банк с репутацией (не Ameriabank)</p>
+<hr>
+<h2 id="_5">Сценарий «раздельно» — два этапа</h2>
+<p>Этот сценарий актуален. Рекомендуется:</p>
+<p><strong>Этап 1 (сейчас, май 2026 — ~$300K ARR):</strong><br>
+Армения ООО + IT-статус. Работает как операционная компания, принимает платежи из App Store/Google Play, платит 1% налог.</p>
+<p><strong>Этап 2 (~$200-250K ARR, планировать заранее):</strong><br>
+Параллельно регистрируется холдинговая структура — ОАЭ Freezone или Кипр (IP Box). Армянская компания либо переходит в субсидиарную роль, либо ликвидируется. Переход готовится за 6-12 месяцев до выхода за лимит армянского IT-режима ($300K).</p>
+<p>Это стандартная стратегия IT-стартапов, которые стартуют в «лёгкой» юрисдикции и перестраиваются при росте. Не нужно оптимизировать сейчас то, что будет актуально при выручке x20 от текущей.</p>
+<hr>
+<h2 id="apple-developer-google-play">Apple Developer &amp; Google Play — детали по юрисдикциям</h2>
+<h3 id="apple">Что требует Apple</h3>
+<ul>
+<li>Юрлицо (не ИП/физлицо) для Organization account</li>
+<li>D-U-N-S номер на юрлицо (бесплатно, 5-14 дней через Dun &amp; Bradstreet)</li>
+<li>Банковский счёт на юрлицо для выплат (IBAN/SWIFT)</li>
+<li>Tax ID страны юрлица</li>
+<li>Apple ID (личный, не российский) — используется как «owner»</li>
+</ul>
+<h3 id="duns-apple-payouts">Страны с подтверждённым рабочим DUNS + Apple payouts</h3>
+<p>Армения: да, подтверждено практикой (множество армянских ООО с РФ-учредителями в App Store).<br>
+Грузия: да, Virtual Zone companies — стандартная практика.<br>
+ОАЭ: да, freezone — один из самых чистых вариантов.<br>
+Кипр: да.<br>
+Казахстан: да, но требует уточнения по банкам для payouts.</p>
+<h3 id="apple_1">Риск заморозки аккаунта Apple</h3>
+<p>Apple проверяет при регистрации: страну юрлица, Tax ID, банк, Apple ID. При армянском ООО: все эти элементы — Армения. Российское гражданство учредителя Apple <strong>не спрашивает напрямую</strong> при Organization enrollment.</p>
+<p>Риск возникает если:
+- Сам Apple ID owner&rsquo;а — зарегистрирован как российский (apple.com/ru, регион РФ)
+- Банк для payouts — российский
+- Адрес компании в документах — российский</p>
+<p>Все три риска закрываются армянским ООО + армянским банком + армянским адресом + Apple ID с регионом Армения.</p>
+<p>Прецедент Enterprise Program (февраль 2025) касался только внутрикорпоративного распространения, не App Store. Regular Developer Program для иностранных юрлиц не был затронут.</p>
+<h3 id="google-play">Google Play</h3>
+<p>Проще: нет D-U-N-S, $25 однократно, нужен банковский счёт юрлица. Армянский банковский счёт работает для Google payouts — это задокументированная практика.</p>
+<hr>
+<h2 id="_6">Обязательные параллельные шаги (независимо от юрисдикции)</h2>
+<p><strong>КИК (ФНС России):</strong><br>
+В течение 3 месяцев с регистрации иностранного ООО — уведомить ФНС. Форма: уведомление об участии в иностранной организации. Ежегодный отчёт о КИК. Штраф за пропуск: 500,000 ₽ за год. Через налогового консультанта в РФ — решается быстро.</p>
+<p><strong>Apple ID для Owner аккаунта:</strong><br>
+Создать новый Apple ID с регионом Армения (не РФ). Использовать его для регистрации Apple Developer Organization. Личный российский Apple ID не использовать для этой цели.</p>
+<p><strong>Локализация ПДн (152-ФЗ):</strong><br>
+Если пользователи — граждане РФ, первичная запись данных должна быть на серверах в РФ. Это отдельный вопрос от юридической регистрации — хостинг/инфраструктура.</p>
+<hr>
+<h2 id="_7">Источники</h2>
+<ul>
+<li><a href="https://armenian-lawyer.com/immigration/armenias-high-tech-tax-incentives-2025-2031-1-turnover-tax-60-pit-reimbursement-and-200-salary-deduction-how-to-qualify/">Armenia High-Tech Tax Incentives 2025-2031 — armenian-lawyer.com</a></li>
+<li><a href="https://www.gegidze.com/post/georgia-s-virtual-zone-status-for-it-companies-the-complete-2025-guide-to-tax-benefits/">Georgia Virtual Zone 2026 Guide — gegidze.com</a></li>
+<li><a href="https://ge.andersen.com/virtual-zone-person-georgia/">Georgia Virtual Zone — andersen.com</a></li>
+<li><a href="https://www.radiantbiz.com/blog/ifza-free-zone-in-uae">IFZA Free Zone UAE 2026 — radiantbiz.com</a></li>
+<li><a href="https://www.radiantbiz.com/blog/cheapest-free-zone-in-dubai">Cheapest Freezone Dubai 2026 — radiantbiz.com</a></li>
+<li><a href="https://tulpartax.com/bank-account-opening-for-russian-nationality-in-uae/">UAE Bank Account for Russian nationals — tulpartax.com</a></li>
+<li><a href="https://estonianworld.com/business/estonia-suspends-e-residency-applications-from-russian-and-belarusian-citizens/">Estonia e-Residency suspended for Russians — estonianworld.com</a></li>
+<li><a href="https://1office.co/blog/estonian-company-taxes-full-guide/">Estonia OÜ Tax Guide 2025 — 1office.co</a></li>
+<li><a href="https://www.ey.com/en_gl/technical/tax-alerts/estonia-significant-tax-changes-apply-in-2025-2026">Estonia tax changes 2025-2026 — EY</a></li>
+<li><a href="https://www.mondaq.com/cyprus/tax-authorities/1707090/cyprus-ip-box-regime-turning-innovation-into-a-25-tax-rate">Cyprus IP Box 2.5% — mondaq.com</a></li>
+<li><a href="https://myreloc.com/en/htp/">Kyrgyzstan HTP 2025 — myreloc.com</a></li>
+<li><a href="https://kgaccount.com/en/registering-an-it-company/">Kyrgyzstan IT company registration — kgaccount.com</a></li>
+<li><a href="https://aifc.kz/how-to-establish-business-aifc/">Kazakhstan AIFC registration — aifc.kz</a></li>
+<li><a href="https://iworld.com/en/blog/business-in-serbia">Serbia company registration 2026 — iworld.com</a></li>
+<li><a href="https://www.macrumors.com/2025/02/25/apple-developer-enterprise-program-russia/">Apple Enterprise Program ban Russia Feb 2025 — MacRumors</a></li>
+<li><a href="https://www.macrumors.com/2026/04/02/apple-turns-off-payments-in-russia/">Apple halts App Store payments Russia April 2026 — MacRumors</a></li>
+<li><a href="https://appleinsider.com/articles/26/04/02/russians-lose-services-and-apps-subscriptions-after-apple-fined-for-breaking-sanctions">Apple fined OFSI UK sanctions — AppleInsider</a></li>
+<li><a href="https://stripe.com/atlas">Stripe Atlas 2025 — stripe.com</a></li>
+<li><a href="https://support.mercury.com/hc/en-us/articles/28771710754580-Prohibited-countries">Mercury prohibited countries — mercury.com</a></li>
+<li><a href="https://developer.apple.com/forums/thread/813530">Apple Developer Enrollment difficulties Russian citizen — Apple Forums</a></li>
+<li><a href="https://www.techtransparencyproject.org/articles/u.s.-sanctioned-firms-find-opening-in-apple-and-google-app-stores">TTP: Sanctioned firms on App Store — techtransparencyproject.org</a></li>
+</ul>
+<hr>
+<blockquote>
+<p>Документ подготовлен: 2026-04-29. Статус: draft.<br>
+Вердикт: Армения подтверждается как приоритетная юрисдикция для запуска Elyne MVP в мае 2026.<br>
+Требует проверки у местного армянского юриста перед принятием решения — особенно по IT-Реестру и порядку КИК-уведомления в ФНС.<br>
+При ARR $200-250K — начать готовить переход на ОАЭ или Кипр.</p>
+</blockquote>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
