@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elyne · обзор HTML-prototype 2026-04-29</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="html-prototype-claude-design">Обзор HTML-prototype Олега из Claude Design</h1>
+<p>Олег прислал HTML-bundler из Claude Design — самораспаковывающийся файл (manifest+template, ассеты внутри base64+gzip). 24 пресета внизу = карта flow MVP. Прокликал каждый, снял скриншоты.</p>
+<p><strong>Это первый раз когда полный flow собран в одном prototype без разрывов.</strong> Это серьёзная веха.</p>
+<h2 id="_1">Карта пресетов</h2>
+<table>
+<thead>
+<tr>
+<th>Пресет</th>
+<th>Title</th>
+<th>Что</th>
+<th>Файл</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>◐</td>
+<td>welcome</td>
+<td>Welcome v1: жёлтая палитра, девушка в наушниках, ELYNE wordmark + крупный tagline + CTA</td>
+<td><a href="screens/preset-01-welcome.png">preset-01-welcome.png</a></td>
+</tr>
+<tr>
+<td>◑</td>
+<td>start</td>
+<td>Start: типографический «представь / ЖИЗНЬ, / в которую действительно <em>хочется войти</em>» + НАЧАТЬ</td>
+<td><a href="screens/preset-02-start.png">preset-02-start.png</a></td>
+</tr>
+<tr>
+<td>1</td>
+<td>priorities</td>
+<td>ШАГ 1/10: «что для тебя сейчас важно?» (выбор до 3 из 9)</td>
+<td><a href="screens/preset-03-priorities.png">preset-03-priorities.png</a></td>
+</tr>
+<tr>
+<td>2</td>
+<td>среда</td>
+<td>ШАГ 2/10: «в какой среде ты видишь свою жизнь?» (5 опций)</td>
+<td><a href="screens/preset-04-sreda.png">preset-04-sreda.png</a></td>
+</tr>
+<tr>
+<td>3</td>
+<td>реализация</td>
+<td>ШАГ 3/10: «в чём ты хочешь реализовываться?» (до 2 из 6)</td>
+<td><a href="screens/preset-05-realizatsia.png">preset-05-realizatsia.png</a></td>
+</tr>
+<tr>
+<td>4</td>
+<td>уровень</td>
+<td>ШАГ 4/10: «на каком уровне хочешь проявлять себя?» (1 из 4)</td>
+<td><a href="screens/preset-06-uroven.png">preset-06-uroven.png</a></td>
+</tr>
+<tr>
+<td>5</td>
+<td>style</td>
+<td>ШАГ 5/10: «какой образ ближе?» — табы ж/м + 4 карточки (Old money / Business / Classic / Casual)</td>
+<td><a href="screens/preset-07-style.png">preset-07-style.png</a></td>
+</tr>
+<tr>
+<td>6</td>
+<td>upload</td>
+<td>ШАГ 6/10: ДОБАВИТЬ ФОТО + правила (свет, лицо, без очков, в пол-оборота)</td>
+<td><a href="screens/preset-08-upload.png">preset-08-upload.png</a></td>
+</tr>
+<tr>
+<td>→</td>
+<td>gen</td>
+<td>переход (тот же экран что и first scene)</td>
+<td><a href="screens/preset-09-gen.png">preset-09-gen.png</a></td>
+</tr>
+<tr>
+<td>✦</td>
+<td>first scene</td>
+<td>Первая сцена: hero фото + СФЕРА·01·СОСТОЯНИЕ «тишина утра» + 3 кнопки + ПРОДОЛЖИТЬ</td>
+<td><a href="screens/preset-10-firstscene.png">preset-10-firstscene.png</a></td>
+</tr>
+<tr>
+<td>r1</td>
+<td>reveal 1</td>
+<td>«это только одна первая из возможных версий <em>твоей жизни</em>»</td>
+<td><a href="screens/preset-11-reveal1.png">preset-11-reveal1.png</a></td>
+</tr>
+<tr>
+<td>r2</td>
+<td>reveal 2</td>
+<td>«мы покажем больше — <em>версии тебя</em>» + 4-плитка + переход к доразметке</td>
+<td><a href="screens/preset-12-reveal2.png">preset-12-reveal2.png</a></td>
+</tr>
+<tr>
+<td>7</td>
+<td>q7</td>
+<td>ШАГ 7/10: «через что нравится проявляться?» (до 3 из 9)</td>
+<td><a href="screens/preset-13-q7.png">preset-13-q7.png</a></td>
+</tr>
+<tr>
+<td>8</td>
+<td>q8</td>
+<td>ШАГ 8/10: «что должно ощущаться первым?» (до 3 из 10)</td>
+<td><a href="screens/preset-14-q8.png">preset-14-q8.png</a></td>
+</tr>
+<tr>
+<td>9</td>
+<td>q9</td>
+<td>ШАГ 9/10: «что важнее в результате?» (1 из 4)</td>
+<td><a href="screens/preset-15-q9.png">preset-15-q9.png</a></td>
+</tr>
+<tr>
+<td>10</td>
+<td>q10</td>
+<td>ШАГ 10/10: «что хочешь усилить?» (до 2 из 7)</td>
+<td><a href="screens/preset-16-q10.png">preset-16-q10.png</a></td>
+</tr>
+<tr>
+<td>$</td>
+<td>paywall</td>
+<td>Soft paywall: размытая сцена + замок + «<em>намного больше, чем одна сцена</em>» + РЕГИСТРАЦИЯ</td>
+<td><a href="screens/preset-17-paywall.png">preset-17-paywall.png</a></td>
+</tr>
+<tr>
+<td>$$</td>
+<td>pricing</td>
+<td>3 пакета: Базовый 1499₽ / Стандарт 1999₽ (★) / VIP 2999₽</td>
+<td><a href="screens/preset-18-pricing.png">preset-18-pricing.png</a></td>
+</tr>
+<tr>
+<td>◯</td>
+<td>pay</td>
+<td>Оплата: карта/срок/CVC + К ОПЛАТЕ + ОПЛАТИТЬ</td>
+<td><a href="screens/preset-19-pay.png">preset-19-pay.png</a></td>
+</tr>
+<tr>
+<td>◍</td>
+<td>spheres…</td>
+<td>Главный экран: hero + 9 точек-индикатор + 5 кнопок + карусель сфер</td>
+<td><a href="screens/preset-20-spheres.png">preset-20-spheres.png</a></td>
+</tr>
+<tr>
+<td>◉</td>
+<td>main</td>
+<td>(= ◍, дубликат)</td>
+<td><a href="screens/preset-21-main.png">preset-21-main.png</a></td>
+</tr>
+<tr>
+<td>⌬</td>
+<td>auth</td>
+<td>«переступи порог» + Apple/Google/Telegram/email</td>
+<td><a href="screens/preset-22-auth.png">preset-22-auth.png</a></td>
+</tr>
+<tr>
+<td>§T</td>
+<td>terms</td>
+<td>Пользовательское соглашение (3 пункта, premium-tone) + Я СОГЛАСЕН(А)</td>
+<td><a href="screens/preset-23-terms.png">preset-23-terms.png</a></td>
+</tr>
+<tr>
+<td>§P</td>
+<td>privacy</td>
+<td>Согласие на обработку данных (3 пункта) + Я СОГЛАСЕН(А)</td>
+<td><a href="screens/preset-24-privacy.png">preset-24-privacy.png</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="_2">Что хорошо (что работает)</h2>
+<ol>
+<li><strong>Полный flow в одном prototype</strong> — впервые без разрывов. Это серьёзное продвижение.</li>
+<li><strong>Тон-of-voice последовательный</strong> — «коснись чтобы войти» / «переступи порог» / «войди в свой свет». Метафора входа ведётся от welcome до auth.</li>
+<li><strong>Start ◑</strong> — крутая работа с типографикой: sans + serif italic + cursive script через переломы строк, читается как одно дыхание.</li>
+<li><strong>Reveal 1 + 2</strong> — точно работают как мост от первой бесплатной сцены к логике мультиверсии. Не «скажи спасибо за сцену», а «это только одна из&hellip;».</li>
+<li><strong>Pricing $$</strong> — структура «базовый / стандарт (★) / VIP» с маркером «самый выбираемый» — чистый Apple-style. 1499 / 1999 / 2999 — внутри ожиданий рынка.</li>
+<li><strong>Terms / Privacy в premium-tone</strong> — «это не юридический ритуал — это рамка взаимного уважения», «к ним [фото и ответам] мы относимся с тем же уважением, с каким ты приходишь в Elyne». Можно использовать без перегонки на «как у юриста».</li>
+<li><strong>Main ◍</strong> — главный экран собран чисто: hero сцена + 9-точечный индикатор сфер + 5 кнопок (состояние/исследовать/+/поделиться/нравится) + карусель карточек. Решение «5 кнопок вместо 3» — закрытый открытый вопрос с Zoom-а 27.04.</li>
+<li><strong>Upload-screen с правилами</strong> caps — «мягкий естественный свет / лицо видно полностью / спокойный взгляд, без очков / в пол-оборота — лучше, чем в лоб». Хорошо обнимает identity-mismatch проблему.</li>
+</ol>
+<h2 id="_3">Флаги (что выбивается / не сходится)</h2>
+<h3 id="1-tagline-logo-welcome">Ф1. Tagline под logo на welcome ◐ — расхождение с зафиксированным правилом</h3>
+<p>В welcome ◐ под ELYNE стоит крупный serif tagline «пространство твоей будущей жизни» + CTA «КОСНИСЬ, ЧТОБЫ ВОЙТИ».</p>
+<p>В нашей памяти: <strong>«под логотипом ничего, wordmark дышит один»</strong> (Олег зафиксировал msg_1077 + msg_1113). Сейчас — наоборот.</p>
+<p>→ Это пересмотр правила или welcome остался от старой итерации? Если пересмотр — обнови правило, если нет — welcome переделать.</p>
+<h3 id="2-welcome-brandmd">Ф2. Жёлтая палитра welcome ◐ — расхождение с BRAND.md</h3>
+<p>BRAND-палитра Elyne: <code>#0a0907</code> (deep void) + <code>#C9A86A</code> (амбер). Welcome ◐ — mustard yellow на весь экран.</p>
+<p>→ Жёлтый — это новое решение или один из экспериментов? Если новое — обновить BRAND.md. Если эксперимент — отметить как preset «Welcome — yellow».</p>
+<h3 id="3-priorities-1-q10">Ф3. Priorities (шаг 1) и q10 — пересечение по смыслу</h3>
+<ul>
+<li>Шаг 1 priorities: «что для тебя сейчас важно? выбери до 3»</li>
+<li>Шаг 10 q10: «что ты хочешь усилить в своей жизни? до 2 направлений»</li>
+</ul>
+<p>Пересечение почти полное. Юзер дважды отвечает на похожий вопрос. Возможно q10 — это уточнение в направлениях ВЕРСИИ ТЕБЯ (post-reveal), но формулировки слишком близкие.</p>
+<p>→ Уточни разницу или сократи до одного.</p>
+<h3 id="4-priorities-1-9">Ф4. Priorities (шаг 1) — формулировки 9 опций отличаются от зафиксированной номенклатуры</h3>
+<p>Зафиксированные 9 сфер (project_elyne_9_spheres_naming.md, msg_1518):
+1. Состояние — Состояние
+2. Ресурс — Богатство и ресурсы
+3. Реализация — Реализация
+4. Партнёрство — Партнёрство
+5. Семья — Семья и дом
+6. Творение — Творение
+7. Развитие — Развитие
+8. Свобода — Свобода
+9. Окружение — Окружение</p>
+<p>В priorities (шаг 1):
+- покой и опора внутри → Состояние ✓
+- тёплые отношения с близкими → ?? (Партнёрство или Семья?)
+- дело, в которое веришь → Реализация ✓
+- достаток и свобода выбора → Ресурсы + Свобода (миксят 2 сферы)
+- здоровье и тело → отдельно от Состояния? У нас «Состояние» включало здоровье.
+- рост, обучение, новое → Развитие ✓
+- дом и пространство → Семья и дом (но без «семьи»)
+- окружение и связи → Окружение ✓
+- смысл и вклад → Творение ✓?</p>
+<p>→ И где <strong>Свобода</strong> как отдельная сфера? Сейчас она схлопнута внутри «достаток и свобода».
+→ Пользовательские слова не совпадают с фронтендом (Сферы 01–09). Нужно сверить — это интенсиональная переработка под пользовательские слова, или draft?</p>
+<h3 id="5-pricing">Ф5. Pricing $$ — разовая покупка или подписка?</h3>
+<p>Цены 1499/1999/2999 без указания периода («/мес»? «единоразово»?). В финмодели CFO мы обсуждали подписочную модель.</p>
+<p>→ Это разовый пакет (купил раз — пользуйся), или подписка? Эта неоднозначность критическая для CFO-модели.</p>
+<h3 id="6-9-vip">Ф6. «9+ сфер» в VIP — что за плюс?</h3>
+<p>В VIP пакете указано «9+ сфер жизни». Сфер по нашему zafix-у — ровно 9. Что значит +?</p>
+<p>→ Дополнительные сценарии в каждой сфере? Это нужно ясно объяснить юзеру — иначе ощущение «впарили 9 + ничего». Текст «9+» = красный флаг для маркетолога.</p>
+<h3 id="7-paywall-auth-pricing-pay">Ф7. Логика связки paywall → auth → pricing → pay не очевидна</h3>
+<p>Текущие пресеты:
+- $ paywall — soft paywall с CTA «РЕГИСТРАЦИЯ»
+- ⌬ auth — экран входа с Apple/Google/Telegram/email
+- $$ pricing — выбор пакета
+- ◯ pay — оплата</p>
+<p>Связка не обозначена. После auth — сразу pricing? Или возврат в первую сцену с показом «вот что ты получишь, выбери пакет»?</p>
+<p>→ Прорисовать переходы: какая стрелка от $ → ⌬ / ⌬ → $$ / $$ → ◯ / ◯ → ◍.</p>
+<h3 id="8-10-wow-wow">Ф8. 10 шагов онбординга — где разрез на «до wow» и «после wow»?</h3>
+<p>Шаги 1–6 (priorities → среда → реализация → уровень → style → upload) до first scene = понятно.
+Шаги 7–10 (q7-q10) — после reveal 2 — это уже «доразметка под мультиверсию» = после wow.</p>
+<p>В prototype это не обозначено. Юзер не понимает «осталось 4 шага» vs «уже видел сцену, теперь уточняем».</p>
+<p>→ Явно отметить разрез: «ШАГ 1/6 до сцены» / «дальше уточнения для развёртки твоего пространства».</p>
+<h3 id="9-main-main">Ф9. main ◍ и main ◉ — два пресета, один экран</h3>
+<p>Дубликаты. Либо ты хотел показать варианты, но они не загрузились. Либо лишняя кнопка.</p>
+<p>→ Удалить дубль или прогрузить второй вариант.</p>
+<h3 id="10-upload-screen-first-scene-identity-mismatch">Ф10. Upload screen + first scene → identity-mismatch не закрыт визуально</h3>
+<p>Upload screen хорош (правила фото). Но first scene показывает девушку <strong>сзади</strong> (копна волос, нет лица). При identity-mismatch ситуация ровно в этом — юзер должен видеть <strong>своё лицо</strong> в сцене, а тут это не показывается.</p>
+<p>→ Это потому что в prototype нет реального юзер-фото. Но ремарка: на демо для команды/инвестора надо подменять на сцену <strong>с лицом</strong> — иначе фича «это <strong>ты</strong> в этой жизни» не считывается.</p>
+<h2 id="flow">Открытые вопросы (надо решить, чтобы flow собрался полностью)</h2>
+<h3 id="1-9">В1. Куда вставляются микроопросники по 9 сферам?</h3>
+<p>В pricing указано «9 сфер жизни» в Стандарте. Значит после оплаты юзер последовательно проходит сферы?</p>
+<p>Логика 1: pay → 9-сфер микроопросники последовательно → генерация 9 сцен → main с каруселью.
+Логика 2: 9 сцен генерируются автоматически из priorities/среда/реализация ответов, а микроопросники = опциональная доразметка по сферам.</p>
+<p>→ Какая логика?</p>
+<h3 id="2-paywall">В2. Что после первой бесплатной сцены до paywall?</h3>
+<p><code>first scene → reveal 1 → reveal 2 → q7-q10 → paywall ($)</code> — или какой-то другой порядок? Сейчас reveal 1+2 идут без явной связки с q7-10.</p>
+<h3 id="3">В3. Аффирмации — где?</h3>
+<p>В pricing указано «5/10/20 аффирмаций» по пакетам. В 24 пресетах <strong>ни одного экрана с аффирмацией нет</strong>. Где они показываются — внутри сферы, отдельно, через push?</p>
+<h3 id="4-loader-upload-first-scene">В4. Loader между upload и first scene — где?</h3>
+<p>Между upload (6) и first scene (✦) должен быть loading screen («сцена генерируется»). Не нашёл. → ведёт прямо на ✦.</p>
+<h3 id="5-main">В5. ПРОФИЛЬ в правом углу main — куда ведёт?</h3>
+<p>Кнопка ПРОФИЛЬ есть в шапке main, но экран профиля не показан. Что там?</p>
+<h3 id="6-apple-sign-in">В6. Apple Sign In — реалистично для РФ?</h3>
+<p>Apple обязателен на iOS если в App Store. Если веб-приложение или PWA — можно убрать. Telegram + Google + email — точно работают. Apple — стоит уточнить с lawyer (не нужно ли отдельное соглашение).</p>
+<h2 id="_4">Что Моня может редактировать</h2>
+<p>Полные технические возможности:
+- <strong>Текст микрокопии и заголовков</strong> — да, прямо в HTML, легко.
+- <strong>Цвета и шрифты CSS</strong> — да, в <code>&lt;style&gt;</code>.
+- <strong>Структуру отдельных пресетов</strong> — да, через шаблон template (но осторожно — bundler чувствителен к синтаксису).
+- <strong>Картинки/референсы</strong> — сложнее: нужно распаковать manifest, заменить ассет на новый base64, пересобрать. Реалистичнее — вернуться в Claude Design когда снимется лимит, или импортировать в Figma.</p>
+<h2 id="_5">Следующие шаги</h2>
+<ol>
+<li><strong>Разрешить флаги Ф1, Ф2</strong> — обновить правила или welcome (ASAP, перед передачей Денису).</li>
+<li><strong>Решить Ф3, Ф4</strong> — сверить priorities/q10 и номенклатуру 9 сфер.</li>
+<li><strong>Решить Ф5, Ф6</strong> — определить разовая/подписка + что значит «9+».</li>
+<li><strong>Прорисовать связки Ф7, Ф8</strong> — поток от paywall до main с разрезом «до wow / после wow».</li>
+<li><strong>Ответить на В1–В6</strong> — добить пробелы flow.</li>
+</ol>
+<p>Когда флаги закроются — этот prototype можно передавать Денису и Сергею как <strong>референс-источник истины</strong> для имплементации.</p>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
