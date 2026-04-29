@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apple Developer · риск блокировки для РФ-учредителей · 2026-04-29</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="app-store-apple">App Store и российский след: что реально проверяет Apple, кейсы блокировок, стратегия снижения риска</h1>
+<h2 id="_1">Почему этот вопрос критичен именно сейчас</h2>
+<p>Предыдущий анализ (<code>jurisdictions-comparison-2026-04-29.md</code>) рекомендовал Армению как приоритетную юрисдикцию и указал, что «прецедентов массовой заморозки аккаунтов армянских компаний с российскими учредителями не зафиксировано». Это утверждение остаётся в силе — но оно не отвечает на вопрос о механизме блокировки. Настоящий документ разбирает именно механизм: что Apple реально смотрит, что триггерит блокировку, и как минимизировать риск.</p>
+<hr>
+<h2 id="1-apple-developer-enrollment">1. Что Apple реально проверяет при Developer Enrollment</h2>
+<h3 id="11-organization-account">1.1 Официальные требования при регистрации Organization Account</h3>
+<p>Согласно официальной документации Apple (<a href="https://developer.apple.com/help/account/membership/program-enrollment/">developer.apple.com/help/account/membership/program-enrollment/</a>):</p>
+<ul>
+<li><strong>D-U-N-S номер</strong> на юрлицо (верифицирует: название компании, юридический адрес, правовой статус)</li>
+<li><strong>Страну и Tax ID</strong> — страна юрлица, не страна учредителя</li>
+<li><strong>Домен и рабочий сайт</strong> компании</li>
+<li><strong>Полномочия подписанта</strong> — кто регистрирует аккаунт, тот должен иметь право обязывать организацию</li>
+<li><strong>Нотариально заверенные документы</strong> — зависит от региона, не повсеместно</li>
+</ul>
+<p><strong>Что Apple НЕ спрашивает напрямую при Organization enrollment:</strong>
+- Гражданство учредителя
+- Паспорт UBO (ultimate beneficial owner)
+- Страну резидентства учредителя
+- Документы о структуре владения (кто является бенефициаром юрлица)</p>
+<p>Источник: официальная документация Apple + анализ OFAC enforcement 2019 года (<a href="https://www.mcginnislaw.com/news-Denied-Party-Screening-Software-Lapse-Apple-Settles-with-OFAC-over-Sanctions-Violations">mcginnislaw.com</a>).</p>
+<h3 id="12-apple">1.2 Санкционный скрининг Apple — как он устроен</h3>
+<p>В 2019 году OFAC оштрафовал Apple за 47 нарушений санкций — за транзакции с компанией SIS d.o.o., которая находилась в SDN-листе. Материалы дела раскрывают механизм скрининга Apple:</p>
+<p><strong>Что Apple проверяет:</strong>
+- Имена аккаунтов разработчиков по SDN-списку OFAC (имя компании-аккаунтхолдера)
+- После 2019: расширен до платёжных бенефициаров и банков-получателей</p>
+<p><strong>Что Apple не проверяет системно:</strong>
+- Всех индивидуальных пользователей, связанных с аккаунтом (это прямо зафиксировано в материалах OFAC: «Apple&rsquo;s compliance process did not screen all individual users associated with an App Store account»)
+- Гражданство или паспорт владельца компании</p>
+<p><strong>Важный вывод:</strong> скрининг Apple — это name-matching по SDN-листу, не KYC с проверкой гражданства. Это означает, что российский паспорт учредителя сам по себе НЕ является автоматическим триггером блокировки — если учредитель не фигурирует в SDN-листе OFAC.</p>
+<p>Источники:
+- <a href="https://www.mcginnislaw.com/news-Denied-Party-Screening-Software-Lapse-Apple-Settles-with-OFAC-over-Sanctions-Violations">OFAC enforcement 2019 — mcginnislaw.com</a>
+- <a href="https://fcpablog.com/2019/11/25/ofac-apples-faulty-screening-caused-47-sanction-violations/">Apple OFAC fine — FCPA Blog</a></p>
+<h3 id="13-verify-your-identity-2026">1.3 Что триггерит «Verify Your Identity» в 2026 году</h3>
+<p>С февраля 2026 Apple начал присылать «Verify Your Identity» уведомления пользователям, чьи <strong>имена совпадают с записями в SDN-листе</strong> (около 9,000 записей). Apple проверяет три поля: полное имя, дата рождения, регион.</p>
+<p>Этот механизм касается <strong>потребительских Apple ID</strong>, а не Developer Organization аккаунтов. Но он важен: если Apple ID, через который регистрируется Developer аккаунт, попадает под такую проверку — это создаёт трение.</p>
+<p>Источник: <a href="https://caliber.az/en/post/apple-blocks-russian-accounts-over-sanctions-list-matches">caliber.az — Apple blocks Russian accounts over sanctions list matches</a></p>
+<p><strong>Практический вывод:</strong> Apple ID для регистрации Developer аккаунта должен быть создан отдельно, с армянским регионом, без истории платежей в РФ, без российского имени в профиле (имя можно использовать латиницей, это не запрещено).</p>
+<hr>
+<h2 id="2-2024-2026">2. Реальные кейсы блокировок 2024-2026</h2>
+<h3 id="21-enterprise-program-2025">2.1 Enterprise Program — февраль 2025 (задокументировано)</h3>
+<p>12 февраля 2025 Apple полностью отключил Apple Developer Enterprise Program (ADEP) для российских компаний. Все сертификаты аннулированы, данные удалены.</p>
+<p><strong>Что такое Enterprise Program:</strong> инструмент для внутрикорпоративного распространения приложений — без App Store, только среди сотрудников. Это НЕ то, что нужно Elyne. Elyne публикуется в Regular Developer Program (App Store).</p>
+<p>Источники:
+- <a href="https://www.macrumors.com/2025/02/25/apple-developer-enterprise-program-russia/">MacRumors — Apple Cuts Off Russian Access to Developer Enterprise Program</a>
+- <a href="https://www.ghacks.net/2025/02/26/apple-cuts-off-russian-developers-from-enterprise-program-amid-ongoing-sanctions/">gHacks — Apple Cuts Off Russian Developers from Enterprise Program</a></p>
+<p><strong>Критически важно:</strong> блокировка Enterprise Program — это блокировка <strong>российских юрлиц</strong>. Не российских граждан. Не иностранных компаний с российскими учредителями. Армянское ООО под эту блокировку не попадает.</p>
+<h3 id="22-app-store-payments-2026">2.2 App Store Payments — апрель 2026 (задокументировано)</h3>
+<p>С 1 апреля 2026 Apple отключил обработку платежей в App Store для России. Причина: штраф OFSI (UK) за нарушение санкций. Эффект: российские пользователи не могут покупать приложения или подписки через российский App Store.</p>
+<p>Источники:
+- <a href="https://appleinsider.com/articles/26/04/02/russians-lose-services-and-apps-subscriptions-after-apple-fined-for-breaking-sanctions">AppleInsider — Russians lose services after Apple fined for breaking sanctions</a>
+- <a href="https://www.macrumors.com/2026/04/02/apple-turns-off-payments-in-russia/">MacRumors — Apple halts App Store payments Russia</a></p>
+<p><strong>Практический вывод для Elyne:</strong> российские пользователи с российским Apple ID и российской картой платить за Elyne через App Store не смогут. Русскоязычная аудитория будет качать через иностранный Apple ID (это распространённая практика — см. раздел 4).</p>
+<h3 id="23-regular-developer-program-us-llc-2026-apple">2.3 Regular Developer Program — российский гражданин через US LLC (январь 2026, форум Apple)</h3>
+<p>На форуме developer.apple.com появилась ветка: российский гражданин, находящийся за пределами РФ, пытается зарегистрировать Apple Developer Organization через US LLC с EIN. Месяц переписки с поддержкой, Apple не даёт чёткого объяснения, аккаунт не создан.</p>
+<p><strong>Особенность кейса:</strong> US LLC — это красный флаг, потому что Apple видит структуру «американская компания, российский учредитель». Для Mercury и других US финтех-банков это стоп-фактор, а Apple, по всей видимости, тоже испытывает трудности с выплатами на такую структуру.</p>
+<p>Источник: <a href="https://developer.apple.com/forums/thread/813530">Apple Developer Forums — thread/813530</a></p>
+<p><strong>Вывод:</strong> US LLC с российским основателем — проблемная конфигурация. Армянское ООО — другая история: нет санкционной связки, нет проблемы с банком-получателем.</p>
+<h3 id="24-app-store-2025-ttp-report">2.4 Санкционированные компании в App Store (декабрь 2025, TTP Report)</h3>
+<p>Исследование Tech Transparency Project показало: в App Store находятся приложения 52 компаний, попавших под санкции США — включая российские банки. Apple удалил 24 приложения после публикации отчёта. Остальные 17 продолжали работать.</p>
+<p><strong>Механизм попадания:</strong> Apple проверяет имена компаний-разработчиков по SDN-листу, но screening нечувствителен к форматированию (разный регистр, знаки препинания). Приложения прошли через автоматический скрининг из-за мелких несовпадений.</p>
+<p><strong>Ключевой вывод:</strong> Apple снимает приложения реактивно (после внешнего давления), а не проактивно. Это говорит о том, что система не ищет «русский след» — она ищет конкретные имена в SDN-листе.</p>
+<p>Источники:
+- <a href="https://www.techtransparencyproject.org/articles/u.s.-sanctioned-firms-find-opening-in-apple-and-google-app-stores">Tech Transparency Project — U.S.-Sanctioned Firms Find Opening in Apple and Google App Stores</a>
+- <a href="https://www.washingtonpost.com/technology/2025/12/10/us-sanctions-apple-google/">Washington Post — Blacklisted foreign organizations remain in Apple and Google app stores</a></p>
+<h3 id="25-">2.5 Кейсы армянских / грузинских компаний с РФ-учредителями</h3>
+<p>Публичных задокументированных случаев блокировки Regular Developer Program для армянских или грузинских компаний с российскими учредителями <strong>не обнаружено</strong> ни в профессиональных форумах, ни в новостных источниках, ни в материалах TTP.</p>
+<p><strong>Оговорка:</strong> отсутствие публичных кейсов не означает отсутствие единичных случаев — они могут не попасть в публичное пространство. Требует подтверждения у юриста с практикой по Apple-disputes.</p>
+<hr>
+<h2 id="3-7">3. Юрисдикции по риску блокировки: сравнение 7 вариантов</h2>
+<table>
+<thead>
+<tr>
+<th>Юрисдикция</th>
+<th>Санкционный статус</th>
+<th>Известность как «РФ back door»</th>
+<th>Публичные кейсы блокировок Apple</th>
+<th>Итоговый риск-уровень</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Армения</strong></td>
+<td>Не под санкциями, вторичное давление США/ЕС</td>
+<td>Средняя (много РФ-релокантов)</td>
+<td>Не задокументированы</td>
+<td>Низкий</td>
+</tr>
+<tr>
+<td><strong>Грузия</strong></td>
+<td>Не под санкциями</td>
+<td>Средняя</td>
+<td>Не задокументированы</td>
+<td>Низкий</td>
+</tr>
+<tr>
+<td><strong>ОАЭ</strong></td>
+<td>Не под санкциями, нейтральная</td>
+<td>Низкая (глобальный хаб)</td>
+<td>Не задокументированы</td>
+<td>Очень низкий</td>
+</tr>
+<tr>
+<td><strong>Казахстан</strong></td>
+<td>Не под санкциями, ЕАЭС</td>
+<td>Средняя-высокая</td>
+<td>Не задокументированы</td>
+<td>Средний (EAEU-ассоциация)</td>
+</tr>
+<tr>
+<td><strong>Кипр</strong></td>
+<td>В ЕС, применяет санкции ЕС</td>
+<td>Низкая</td>
+<td>Единичные для «русских кипрских» компаний при EU санкционном давлении</td>
+<td>Средний</td>
+</tr>
+<tr>
+<td><strong>Сербия</strong></td>
+<td>Не под санкциями ЕС</td>
+<td>Низкая</td>
+<td>Не задокументированы</td>
+<td>Низкий-средний</td>
+</tr>
+<tr>
+<td><strong>Турция</strong></td>
+<td>Не под санкциями</td>
+<td>Низкая</td>
+<td>Не задокументированы</td>
+<td>Низкий</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Пояснения:</strong></p>
+<p><strong>Армения.</strong> Ключевой риск — не Apple, а банки. Если армянский банк закроет счёт из-за вторичных санкций, выплаты из App Store встанут. Apple при этом аккаунт не блокирует. Риск сохраняется, но он банковский, а не на уровне Developer Program.</p>
+<p><strong>ОАЭ.</strong> Максимально «чистая» юрисдикция в глазах Apple — freezone company вызывает минимум вопросов. Стоимость setup ($7-15K) делает его непропорциональным для MVP.</p>
+<p><strong>Казахстан.</strong> Членство в ЕАЭС создаёт политическую ассоциацию с РФ в глазах западных комплаенс-офицеров, хотя Казахстан не под санкциями. Риск косвенный.</p>
+<p><strong>Кипр.</strong> ЕС применяет санкции против РФ. Кипрские компании с очевидными РФ-связями могут попасть под давление со стороны самого ЕС — не от Apple. Банк кипрской компании может отказать в обслуживании. Для Apple это выглядело бы как «кипрская компания» — но банковская часть рискованна.</p>
+<hr>
+<h2 id="4-publishing">4. Стратегия publishing: как быть глобальным и не потерять русскоязычную аудиторию</h2>
+<h3 id="41-apple">4.1 Что Apple считает «признаком русского приложения»</h3>
+<p>Apple не публикует критерии. Однако по совокупности анализа можно определить следующие сигналы:</p>
+<table>
+<thead>
+<tr>
+<th>Сигнал</th>
+<th>Уровень риска для аккаунта</th>
+<th>Комментарий</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Страна доступности: Россия включена</td>
+<td>Нулевой (был) / Неактуальный</td>
+<td>С апреля 2026 платежи в РФ всё равно отключены</td>
+</tr>
+<tr>
+<td>Приложение на русском как единственном языке</td>
+<td>Низкий</td>
+<td>Apple проверяет не язык, а SDN-список</td>
+</tr>
+<tr>
+<td>Privacy Policy с РФ-юрисдикцией</td>
+<td>Средний</td>
+<td>Сигнал для комплаенс-проверки если возникнут вопросы</td>
+</tr>
+<tr>
+<td>Банк-получатель — российский банк</td>
+<td>Критический</td>
+<td>Прямой блок выплат</td>
+</tr>
+<tr>
+<td>Apple ID owner с РФ-регионом</td>
+<td>Высокий</td>
+<td>Попадает под «Verify Your Identity» скрининг</td>
+</tr>
+<tr>
+<td>Адрес компании в документах — российский</td>
+<td>Критический</td>
+<td>Провалит enrollment</td>
+</tr>
+</tbody>
+</table>
+<h3 id="42">4.2 Рабочая стратегия: глобальное приложение, русский — один из языков</h3>
+<p><strong>Рекомендация:</strong> публиковать Elyne как глобальное приложение без отдельного «российского» сторе.</p>
+<ul>
+<li>Страны доступности: «All countries» или выборочно — без «Russia» как primary market</li>
+<li>Локализации в App Store: английский как primary, русский как один из 20+ доступных языков (наравне с немецким, испанским и др.)</li>
+<li>Название приложения: Elyne (латиница, без кириллицы в официальном App Store listing)</li>
+<li>Privacy Policy: английский основной, русский — перевод, юрисдикция — Армения</li>
+<li>Описание: english primary, русский — дополнительная локализация</li>
+</ul>
+<p><strong>Результат:</strong> с точки зрения Apple это выглядит как стандартный global B2C SaaS с поддержкой русского языка. Таких тысячи (Notion, Figma, Miro — у всех есть русский язык без «российского» профиля).</p>
+<h3 id="43-app-store">4.3 Русскоязычные пользователи без российского App Store — рабочая практика?</h3>
+<p>Да, это реальная и массовая практика с 2022 года.</p>
+<p>Русскоязычные пользователи в РФ:
+- Создают иностранный Apple ID (казахстанский, армянский, американский)
+- Пополняют баланс через gift cards или иностранные карты
+- Скачивают и оплачивают приложения через этот аккаунт</p>
+<p>Это легально с точки зрения Apple ToS (пользователь вправе использовать Apple ID другого региона). Apple это не блокирует, это не нарушение для разработчика.</p>
+<p><strong>Для Elyne:</strong> русскоязычные пользователи в РФ смогут скачать приложение и оплатить подписку, если у них есть иностранный Apple ID. Это сужает аудиторию на старте, но не обнуляет её — среди технически грамотной аудитории (а это и есть аудитория Elyne) иностранные Apple ID широко распространены.</p>
+<hr>
+<h2 id="5-ubo">5. Структура UBO: что реалистично</h2>
+<h3 id="51">5.1 Текущая ситуация</h3>
+<p>Олег — гражданин РФ, резидент РФ, учредитель армянского ООО. Apple при Organization enrollment не спрашивает имя UBO и его паспорт — проверяется D-U-N-S (имя компании, адрес) и Tax ID армянского юрлица.</p>
+<p><strong>Реальный риск от паспорта Олега:</strong> не при enrollment, а при пограничных ситуациях:
+- Если Apple вдруг усилит KYC (сейчас не усилил)
+- Если Олег или Денис попадут под санкции OFAC лично (сценарий крайне маловероятен — санкции против физлиц носят целевой характер)
+- Если Apple ID для Developer аккаунта будет с РФ-регионом и попадёт под «Verify Your Identity»</p>
+<h3 id="52-ubo">5.2 Может ли кто-то ещё фигурировать как UBO?</h3>
+<p>Вариант «номинальный UBO» — незаконен и не решает проблему. Apple при проверке смотрит на аккаунтхолдера (кто регистрирует Developer аккаунт), а не на корпоративную структуру.</p>
+<p>Вариант «Денис как основной фигурант» — если Денис является директором и регистрирует аккаунт, а Олег — учредитель без публичного упоминания, риск снижается незначительно. Apple может попросить подтвердить полномочия директора. Если Денис тоже гражданин РФ — это не помогает.</p>
+<p><strong>Жена Олега (Квин)</strong> — если она гражданка РФ и резидент РФ, это не снижает риск. Если у неё есть иностранное гражданство или вид на жительство в нейтральной стране — это меняет картину. Требует уточнения у Олега.</p>
+<h3 id="53">5.3 Второй паспорт как долгосрочное решение</h3>
+<p><strong>Турция (гражданство за инвестиции):</strong>
+- Минимум $400,000 в недвижимость
+- Срок: 8-12 месяцев
+- Турецкий паспорт — нейтральная юрисдикция, не под санкциями
+- Турция разрешает двойное гражданство
+- С турецким паспортом Олег может зарегистрировать Developer аккаунт как гражданин Турции</p>
+<p>Источник: <a href="https://globalresidenceindex.com/turkey-citizenship-investment/">Global Residence Index — Turkey Citizenship by Investment</a></p>
+<p><strong>Доминика / Гренада / Вануату (гражданство за пожертвование):</strong>
+- От $100,000-150,000
+- Срок: 3-6 месяцев
+- Паспорт нейтральной юрисдикции
+- Меньшая узнаваемость — менее «убедителен» для банков, но для Apple формально работает</p>
+<p><strong>Практическая оговорка:</strong> в 2025 году США и ЕС потребовали от 36 стран с программами citizenship by investment усиления проверки заявителей. Программы Доминики и Гренады попали под давление. Требует проверки у специализированного миграционного юриста.</p>
+<p><strong>Временное решение до второго паспорта:</strong> регистрация Developer аккаунта через армянское ООО с армянским Apple ID — это уже значительно снижает риск без второго паспорта.</p>
+<h3 id="54-it-">5.4 Как реально решают эту проблему российские IT-стартапы</h3>
+<p>По наблюдениям из открытых источников (RestOfWorld, TechCrunch, RFERL):</p>
+<ol>
+<li><strong>Физический переезд</strong> — часть фаундеров реально переехала в Армению, Грузию, Сербию, Турцию, Израиль и получила ВНЖ/резидентство. После 183 дней в стране — смена налогового резидентства, новый паспорт/ID.</li>
+<li><strong>Армянская схема без переезда</strong> — большинство тех, кто не переезжал, зарегистрировали юрлицо в Армении и работают удалённо из РФ. App Store и Google Play у них работают.</li>
+<li><strong>Грузинская схема</strong> — Грузия менее популярна из-за сложности банков, но ряд команд работает так же.</li>
+<li><strong>Delaware LLC через доверенных лиц</strong> — встречается, но с задокументированными проблемами (см. кейс forum/813530).</li>
+</ol>
+<p>Источник: <a href="https://restofworld.org/2022/russian-tech-workers-armenia/">Rest of World — Russian tech workers Armenia</a></p>
+<hr>
+<h2 id="6-optimal">6. Финальный optimal: прямой ответ</h2>
+<p><strong>Страна юрлица:</strong> Армения (ՍՊԸ) с IT-статусом в Реестре высоких технологий.</p>
+<p><strong>Кто фигурирует как UBO при Apple enrollment:</strong> в D-U-N-S и Apple Developer Organization указывается армянское ООО как юрлицо, директор (Олег или Денис) — как уполномоченный представитель. Apple не запрашивает имя UBO-физлица при Organization enrollment. Apple ID для аккаунта создаётся с регионом Армения — отдельный аккаунт, не российский.</p>
+<p><strong>Стратегия publishing:</strong> глобальная публикация (все страны или select, без России как выделенного рынка), русский язык — одна из локализаций наравне с другими языками, не primary. Описание в App Store — english primary, название — Elyne латиницей. Privacy Policy — армянская юрисдикция, переводы на английский и русский.</p>
+<p><strong>Банк для payouts:</strong> Ameriabank или IDBank (Армения) — стандартный IBAN/SWIFT, напрямую принимает выплаты от Apple. Не российский банк ни в каком виде.</p>
+<p><strong>Что делать в первый месяц чтобы не триггернуть блокировку:</strong>
+1. Зарегистрировать отдельный Apple ID с регионом Армения на email домена компании (не @gmail.com, не @icloud.com с РФ-историей)
+2. Открыть армянский банковский счёт до подачи заявки на Developer (Apple проверит реквизиты)
+3. Получить D-U-N-S на армянское ООО и дождаться подтверждения (5-14 дней)
+4. При enrollment указывать адрес армянского ООО, армянский Tax ID, армянский банк
+5. Не добавлять Россию в список стран доступности приложения</p>
+<hr>
+<h2 id="7-3">7. Топ-3 ошибки, которые точно приводят к блокировке</h2>
+<h3 id="1-apple-id-developer-program">Ошибка 1: Российский Apple ID как аккаунтхолдер Developer Program</h3>
+<p>Если Apple ID, через который регистрируется Organization аккаунт, имеет историю платежей в РФ, российский регион, или попадает под «Verify Your Identity» по SDN-скринингу — enrollment застрянет или будет отклонён. Apple ID для Developer аккаунта должен быть чистым, без российской истории, регион — страна юрлица (Армения).</p>
+<h3 id="2-">Ошибка 2: Российский банк-получатель в любой части цепочки</h3>
+<p>Apple платит выплаты напрямую на банковский счёт, указанный в Financial Reports. Если этот счёт в российском банке — выплаты заблокированы. Если счёт формально иностранный, но переводы идут в РФ через цепочку — риск по OFAC. Армянский банк должен быть конечным получателем и операционным счётом.</p>
+<h3 id="3">Ошибка 3: Российское юрлицо в любой точке цепочки владения</h3>
+<p>Если структура выглядит как «российское ООО → армянское ООО → App Store», это меняет всё. OFAC 50%-rule: компания, которую контролирует санкционированная компания (50%+), сама считается санкционированной. Российское юрлицо не должно фигурировать ни как учредитель, ни как «головная» структура. Армянское ООО должно быть прямым юрлицом, учреждённым физическими лицами.</p>
+<p><strong>Дополнительно (не в топ-3, но важно):</strong> не включать Россию в выбранные регионы оплаты Apple Pay при настройке приложения, не указывать рублёвые цены как primary, не делать Privacy Policy с прямой ссылкой на 152-ФЗ в App Store metadata.</p>
+<hr>
+<h2 id="8-apple">8. Запасной план: если Apple заблокировал аккаунт</h2>
+<h3 id="81">8.1 Апелляция</h3>
+<p>Apple предоставляет формальную процедуру: обращение в App Review Board с планом исправления. Статистика из официального P2B-отчёта Apple: из ~8,000 апелляций в 2024 году восстановлено 225 аккаунтов (~2.8%). Апелляция возможна, но вероятность успеха низкая, особенно если причина — санкционная.</p>
+<p>Если блокировка связана с техническим сбоем (имя похоже на SDN-запись, но не является ею) — можно предоставить паспорт и документы. Apple рассматривает такие кейсы.</p>
+<p>Источник: <a href="https://developer.apple.com/support/p2b/">Apple Developer P2B Report</a></p>
+<h3 id="82">8.2 Создание нового аккаунта</h3>
+<p>Технически возможно с нового Apple ID, новой компании, нового банковского счёта. Политика Apple: новый enrollment через новый Apple ID email. На практике если Apple заблокировал по санкционным основаниям — новый аккаунт с теми же данными компании будет идентифицирован как связанный с заблокированным.</p>
+<p><strong>Что работает в индустрии:</strong> новое юрлицо в другой юрисдикции (например, переход с Армении на ОАЭ), полностью новые реквизиты, другой уполномоченный представитель.</p>
+<h3 id="83">8.3 Альтернативные каналы распространения</h3>
+<p>Если App Store заблокирован полностью:</p>
+<ul>
+<li><strong>Google Play</strong> — отдельный аккаунт, отдельная проверка. Блокировка Apple не означает блокировку Google. Google Play проще в enrollment ($25, без D-U-N-S).</li>
+<li><strong>PWA (Progressive Web App)</strong> — Elyne технически может работать как веб-приложение. Пользователь добавляет на главный экран, без App Store. Ограничение: нет push-уведомлений на iOS (Apple ограничил PWA), сложнее монетизировать.</li>
+<li><strong>Stripe / LemonSqueezy / Paddle</strong> — прямая веб-подписка без App Store, выплаты на армянский счёт. Для Elyne это базовый канал для web-версии в любом случае.</li>
+</ul>
+<h3 id="84">8.4 Временной горизонт восстановления</h3>
+<p>Апелляция — 30-90 дней. Новый аккаунт через новое юрлицо — 6-8 недель (регистрация + D-U-N-S + enrollment). Потеря App Store на этот период = потеря iOS-канала продаж. Для MVP это болезненно, но не фатально если есть веб-версия.</p>
+<hr>
+<h2 id="_2">Итоговое резюме по рискам</h2>
+<table>
+<thead>
+<tr>
+<th>Риск</th>
+<th>Вероятность при правильной армянской схеме</th>
+<th>Митигация</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Блокировка при enrollment (отказ в регистрации аккаунта)</td>
+<td>Низкая</td>
+<td>Чистый Apple ID с регионом AM, армянские реквизиты</td>
+</tr>
+<tr>
+<td>Блокировка аккаунта после старта</td>
+<td>Очень низкая (нет прецедентов для AM-компаний)</td>
+<td>Не включать РФ в payout chain, не использовать рос. банк</td>
+</tr>
+<tr>
+<td>Блокировка выплат</td>
+<td>Средняя (зависит от банков Армении и вторичных санкций)</td>
+<td>Мониторинг, запасной счёт в Грузии или ОАЭ</td>
+</tr>
+<tr>
+<td>Блокировка приложения по содержанию</td>
+<td>Не связана с гражданством</td>
+<td>Стандартные Guidelines</td>
+</tr>
+<tr>
+<td>Санкционный скрининг по имени Олега/Дениса</td>
+<td>Очень низкая (не в SDN-листе)</td>
+<td>Латинизированное имя в Apple ID, армянский регион</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="_3">Источники</h2>
+<ul>
+<li><a href="https://developer.apple.com/help/account/membership/program-enrollment/">Apple Developer Program Enrollment — официальная документация</a></li>
+<li><a href="https://fcpablog.com/2019/11/25/ofac-apples-faulty-screening-caused-47-sanction-violations/">Apple OFAC fine 2019 — FCPA Blog</a></li>
+<li><a href="https://www.mcginnislaw.com/news-Denied-Party-Screening-Software-Lapse-Apple-Settles-with-OFAC-over-Sanctions-Violations">Apple OFAC — McGinnis Law</a></li>
+<li><a href="https://www.macrumors.com/2025/02/25/apple-developer-enterprise-program-russia/">Apple Cuts Off Russian Enterprise Program — MacRumors, февраль 2025</a></li>
+<li><a href="https://www.macrumors.com/2026/04/02/apple-turns-off-payments-in-russia/">Apple halts App Store payments Russia — MacRumors, апрель 2026</a></li>
+<li><a href="https://appleinsider.com/articles/26/04/02/russians-lose-services-and-apps-subscriptions-after-apple-fined-for-breaking-sanctions">AppleInsider — Apple fined OFSI, Russians lose services</a></li>
+<li><a href="https://developer.apple.com/forums/thread/813530">Apple Developer Forum — Russian citizen US LLC enrollment issue, январь 2026</a></li>
+<li><a href="https://www.techtransparencyproject.org/articles/u.s.-sanctioned-firms-find-opening-in-apple-and-google-app-stores">TTP — Sanctioned Firms in Apple and Google App Stores</a></li>
+<li><a href="https://www.washingtonpost.com/technology/2025/12/10/us-sanctions-apple-google/">Washington Post — Blacklisted organizations in app stores, декабрь 2025</a></li>
+<li><a href="https://caliber.az/en/post/apple-blocks-russian-accounts-over-sanctions-list-matches">Caliber.az — Apple blocks accounts over sanctions list matches</a></li>
+<li><a href="https://www.ghacks.net/2025/02/26/apple-cuts-off-russian-developers-from-enterprise-program-amid-ongoing-sanctions/">gHacks — Apple Enterprise Program ban Russia</a></li>
+<li><a href="https://restofworld.org/2022/russian-tech-workers-armenia/">Rest of World — Russian tech workers in Armenia</a></li>
+<li><a href="https://developer.apple.com/support/p2b/">Apple P2B Regulation Report — developer.apple.com</a></li>
+<li><a href="https://globalresidenceindex.com/turkey-citizenship-investment/">Turkey Citizenship by Investment 2026 — Global Residence Index</a></li>
+</ul>
+<hr>
+<blockquote>
+<p>Документ подготовлен: 2026-04-29. Статус: draft.
+Требует подтверждения у юриста с практикой по Apple-disputes — особенно разделы 5 (UBO-структура) и 8 (восстановление аккаунта).
+Фактические данные по блокировкам армянских компаний с РФ-учредителями отсутствуют в публичных источниках — это позитивный сигнал, но не гарантия.</p>
+</blockquote>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
