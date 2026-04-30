@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Терминология · life_scale, environment, scene_atmosphere</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="_1">Терминология входных параметров метапромтов</h1>
+<p>Метапромты <code>META_PROMPT_QUESTION</code> и <code>META_PROMPT_SCENE</code> опираются на 4 параметра помимо ответов микроопросника:
+- <code>life_scale</code>
+- <code>environment</code>
+- <code>style_profile</code>
+- <code>scene_atmosphere</code></p>
+<p>Без определений эти параметры — пустые слова, AI генерирует наугад. Ниже мои <strong>гипотезы определений</strong> на твоё ревью.</p>
+<hr>
+<h2 id="1-life_scale">1. <code>life_scale</code> — масштаб жизни пользователя</h2>
+<h3 id="_2">Гипотеза (моя)</h3>
+<p><code>life_scale</code> — категория масштаба жизни, описывающая привычные ему ресурсы, окружение, типы пространств и плотность активности.</p>
+<p><strong>Источник вычисления:</strong> ответы пользователя в Сфере 2 («Ресурсы и уровень жизни») + Сфере 9 («Свобода и масштаб жизни»). AI вычисляет один раз при первом заходе в систему, дальше используется как параметр.</p>
+<p><strong>Категории (5 уровней):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Уровень</th>
+<th>Категория</th>
+<th>Признаки в среде</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>intimate</strong></td>
+<td>малая квартира, простые материалы, городская плотность, рюкзак не чемодан</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>standard</strong></td>
+<td>стандартное жильё, повседневная техника, средние машины, отпуск раз в год</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>premium</strong></td>
+<td>дизайнерский интерьер, премиум-техника, частые путешествия</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>extensive</strong></td>
+<td>дом 200+ м², бизнес-класс, водительский шофёр, домашний персонал</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>global</strong></td>
+<td>несколько домов в разных странах, частный самолёт, охрана, кружочек elite</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_3">Как используется в сцене</h3>
+<ul>
+<li>среда сцены (тип жилья, авто, фактура одежды)</li>
+<li>предметы в кадре (бренды посуды, чая, парфюма)</li>
+<li>транспорт</li>
+<li>количество людей вокруг (одиночество vs обслуживание)</li>
+</ul>
+<h3 id="_4">Как НЕ используется</h3>
+<ul>
+<li>не описывает эмоцию или состояние</li>
+<li>не определяет стиль одежды напрямую (это <code>style_profile</code>)</li>
+</ul>
+<h3 id="_5">Открытое от меня</h3>
+<ul>
+<li>Может быть <strong>не один параметр</strong>, а 2: <code>life_scale_now</code> (где живёт сейчас) + <code>life_scale_aspiration</code> (куда движется). Это даёт более тонкое разделение.</li>
+<li>Если разница большая (now=2, aspiration=4) — сцена строится по <code>aspiration</code> (Elyne про желаемое), но <strong>с следами реальности</strong> (не глянец, lived-in).</li>
+</ul>
+<hr>
+<h2 id="2-environment">2. <code>environment</code> — физическая среда жизни</h2>
+<h3 id="_6">Гипотеза (моя)</h3>
+<p><code>environment</code> — словарь, описывающий <strong>физический контекст</strong> жизни пользователя. Это <strong>не люди</strong> (про людей — Сфера 10 «Окружение»), а <strong>место</strong>.</p>
+<p><strong>Структура:</strong></p>
+<pre><code class="language-yaml">environment:
+  home_type: [квартира | дом | таунхаус | лофт | студия | поместье | вилла]
+  location_type: [мегаполис | город | пригород | провинция | природа | курорт]
+  climate_hint: [север | средний пояс | юг | тропики | пустыня | горы]
+  density: [одинокое жильё | соседи через стену | квартал с движением | shared с семьёй]
+</code></pre>
+<p><strong>Источник вычисления:</strong>
+- <code>home_type</code> — Сфера 5 Q5 «формат жилья»
+- <code>location_type</code> — Profile Summary (город / страна) + ответы Q3 в разных сферах
+- <code>climate_hint</code> — гео + сезон
+- <code>density</code> — Сфера 5 Q1-Q3 («что для тебя дом», «через что считывается»)</p>
+<h3 id="_7">Как используется в сцене</h3>
+<ul>
+<li>свет и время суток (тропики vs север дают разный естественный свет)</li>
+<li>архитектура и фактура (квартира vs дом vs лофт)</li>
+<li>вид из окна (город / природа / море / горы)</li>
+<li>плотность присутствия других людей</li>
+</ul>
+<h3 id="_8">Как НЕ используется</h3>
+<ul>
+<li>не определяет конкретные действия</li>
+<li>не определяет внутреннее состояние (это микроопросник Q1-Q3)</li>
+</ul>
+<hr>
+<h2 id="3-style_profile">3. <code>style_profile</code> — выбранные стили пользователя</h2>
+<h3 id="_9">Уже определено</h3>
+<p><code>style_profile</code> — список выбранных пользователем стилей одежды (3-5 штук). Источник — отдельный экран выбора стилей (после авторизации, до первой генерации).</p>
+<p>Файл со стилями: <code>docs/elyne/content/style-profiles-v4.md</code> (10 стилей × ♀/♂ split).</p>
+<h3 id="_10">Используется в сцене</h3>
+<p>См. <strong>ШАГ 4 в meta-prompt-scene-v2.md</strong> — дерево выбора одного из множественных по приоритету (уместность / время / место / действие).</p>
+<h3 id="question">Не используется в QUESTION</h3>
+<p>(см. <code>meta-prompt-question-v2.md</code> — <code>style_profile</code> убран из входов вопроса).</p>
+<hr>
+<h2 id="4-scene_atmosphere-">4. <code>scene_atmosphere</code> — эмоционально-световая палитра сцены</h2>
+<h3 id="_11">Гипотеза (моя)</h3>
+<p><code>scene_atmosphere</code> — <strong>derived AI-параметр</strong>, не прямой вход. Вычисляется AI на основе:
+- Profile Summary (общий вайб человека)
+- ответов Q1-Q3 в текущей сфере
+- ответа на AI-уточнение (если есть)
+- Механики Состояния из ШАГ 1.2</p>
+<p><strong>Структура:</strong></p>
+<pre><code class="language-yaml">scene_atmosphere:
+  light_palette: [тёплый закатный | холодный утренний | полуденный мягкий | ночной точечный | пасмурный объёмный]
+  energy_level: [тихий | сдержанный | живой | активный]
+  texture: [мягкие ткани | минимализм | органические материалы | ремесленный | техно]
+  density: [просторный | плотный | камерный | широкий]
+</code></pre>
+<h3 id="_12">Логика вычисления (примеры)</h3>
+<ul>
+<li>Механика recovery_mode + Q1 «лёгкость внутри» + утреннее уточнение → light=холодный утренний, energy=тихий, texture=мягкие, density=просторный.</li>
+<li>Механика energy_activation + Q1 «энергия и включённость» + дневное уточнение → light=полуденный, energy=активный, texture=техно/функциональные, density=плотный.</li>
+</ul>
+<h3 id="_13">Как используется в сцене</h3>
+<ul>
+<li>свет (см. ШАГ 6 в meta-prompt-scene-v2)</li>
+<li>материалы и фактура (ШАГ 7 — среда)</li>
+<li>темп / движение / паузы (ШАГ 5 — композиция)</li>
+</ul>
+<h3 id="_14">Альтернатива</h3>
+<p>Можно НЕ выносить <code>scene_atmosphere</code> как отдельный параметр и <strong>встроить его как inline-расчёт в сам метапромт</strong> (после ШАГ 1.2 — «выведи light, energy, texture, density»). Это упрощает архитектуру (меньше слоёв). На твоё решение.</p>
+<hr>
+<h1 id="_15">Открытые вопросы для решения</h1>
+<ol>
+<li><strong>life_scale</strong> — 5 уровней или меньше? Источник вычисления (Сфера 2 + 9) — ОК?</li>
+<li><strong>life_scale_now / life_scale_aspiration</strong> — раздельно или один параметр?</li>
+<li><strong>environment</strong> — мой словарь (4 поля) — достаточно или нужно добавить (например, <code>urban_or_rural</code>, <code>season</code>)?</li>
+<li><strong>scene_atmosphere</strong> — отдельный параметр или inline-расчёт в сцене?</li>
+<li><strong>Источник Profile Summary</strong> — это уже определено или нужно отдельно фиксировать (из чего собирается Profile Summary)?</li>
+</ol>
+<hr>
+<h1 id="_16">Что блокирует это решение</h1>
+<p>Без определений терминов <strong>метапромты v2 не работают на 100%</strong> на 9 других сферах. Можно отлаживать на Сфере 1 без них (потому что у нас уже есть полный набор Q1-Q3), но при размножении на сферы 2-10 каждый раз будет «как использовать <code>environment</code>?». Лучше зафиксировать раз и сразу.</p>
+<p>Жду твои решения по 5 вопросам выше.</p>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
