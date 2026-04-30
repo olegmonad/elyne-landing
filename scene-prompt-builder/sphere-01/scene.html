@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Метапромпт сцены · Сфера 1</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="meta_prompt_scene-1">META_PROMPT_SCENE · СФЕРА 1 — Я и состояние</h1>
+<pre><code>Ты — AI-визуальный режиссёр Elyne.
+
+Создай ultra photorealistic cinematic сцену из реальной жизни человека,
+основанную на:
+- фото пользователя
+- Profile Summary
+- life_scale
+- environment
+- ответы Q1-Q3 (сфера «Я и состояние»)
+- ответ на AI-уточнение (если есть)
+- style profile (список выбранных стилей пользователя)
+- scene atmosphere
+
+Задача:
+показать, как выглядит человек, который живёт в выбранном состоянии.
+
+Сцена должна:
+- ощущаться как реальный момент (не постановка, не визуализация)
+- передавать состояние через тело, позу, движение, ритм
+- быть либо:
+  → subject-focused (человек в центре)
+  → либо environment-driven (широкий кадр)
+  (не смешивать)
+
+Визуальные требования:
+- ultra photorealistic
+- natural skin texture
+- real-world lighting (естественный свет, без студийности)
+- no stock feeling
+- no cliché (ноутбук, кофе, телефон — только если оправдано сценой)
+
+Композиция:
+- camera: выбрать осознанно (35mm / 50mm / wide)
+- depth of field
+- естественная перспектива
+- живой момент, без позирования
+
+Состояние передаётся через:
+- posture (расслабленность / собранность / движение)
+- micro-actions (идёт, стоит, взаимодействует с пространством)
+- взаимодействие с окружением
+
+Стиль:
+- выбрать ОДИН наиболее уместный стиль из выбранных пользователем
+- стиль должен соответствовать контексту сцены (место, действие, время)
+- одежда и внешний вид выглядят естественно, не как стилизация
+- стиль усиливает сцену, а не доминирует над ней
+
+Среда:
+- соответствует environment
+- усиливает состояние (свет, воздух, пространство)
+- содержит lived-in details (следы жизни, несовершенства)
+
+Запрещено:
+- описывать эмоции словами
+- использовать абстрактные формулировки
+- создавать «идеальную» или глянцевую картинку
+
+Результат:
+одна сцена, один момент, ощущение «это происходит сейчас»
+</code></pre>
+<h2 id="_1">Флаги от Мони (на твоё решение)</h2>
+<h3 id="face-mapping-vs-inspiration">🔴 Критично · Лицо пользователя — face-mapping vs inspiration</h3>
+<p>В промпте сказано «фото пользователя» как вход, но <strong>не сказано как использовать</strong>: как точный референс (face-lock) или как inspiration (свободная интерпретация)?</p>
+<p><strong>Гипотеза (не проверено на нашем pipeline):</strong> без явной директивы AI может интерпретировать «фото» как inspiration и сгенерировать «лицо из стока». Это критично для продукта где главный insight — «это я в моей сцене». Нужен тест на текущей модели генерации (Flux / SDXL / Midjourney), но независимо от теста — явное правило не помешает:</p>
+<p><strong>Предлагаю добавить блок:</strong></p>
+<pre><code>Лицо и тело пользователя:
+- использовать фото как ТОЧНЫЙ референс лица, телосложения и возраста
+- сохранять пол, расу, этническую принадлежность точно
+- запрещено: подмена внешности, омоложение/состаривание, стилизация лица
+</code></pre>
+<h3 id="_2">🟠 Важно · Критерий выбора стиля при множественном выборе</h3>
+<p>«Выбрать ОДИН наиболее уместный стиль» — но если пользователь выбрал 3 стиля (например, athleisure + casual minimalist + business smart), как AI выбирает?</p>
+<p><strong>Гипотеза (не проверено):</strong> без явных критериев AI выбирает «по интуиции», что может давать нестабильность от генерации к генерации. Нужны явные критерии. Предлагаю:</p>
+<pre><code>Выбор стиля по приоритету:
+1. Время суток сцены (раннее утро → athleisure, день → smart, вечер → casual minimalist)
+2. Место (дом → casual, офис/город → smart, природа → outdoor)
+3. Действие (движение → athleisure, отдых → casual, презентация → smart)
+4. Если несколько подходят — выбрать наименее доминирующий
+</code></pre>
+<p>Без этого AI будет выбирать рандомно, и сцена может выпадать из контекста.</p>
+<h3 id="_3">🟠 Важно · Термины не определены</h3>
+<ul>
+<li><strong><code>life_scale</code></strong> — что это? То же что и в QUESTION — нужно определение.</li>
+<li><strong><code>environment</code></strong> — то же.</li>
+<li><strong><code>scene atmosphere</code></strong> — НОВЫЙ параметр, появляется только в SCENE. Откуда он? Из Q3 («через что это видно»)? Из AI-уточнения? Из отдельного слоя?</li>
+</ul>
+<h3 id="_4">🟡 Косметика · Световая директива</h3>
+<p>«real-world lighting (естественный свет, без студийности)» — расплывчато. Что считается «естественным»? Свечи? Лампа в комнате? Костёр? Ring light в инстаграмной комнате?</p>
+<p>Предлагаю расширить:</p>
+<pre><code>Освещение:
+- использовать существующие источники света в среде:
+  → окна, лампы, свечи, костёр, экран ноутбука, ночной город
+- запрещено:
+  → rim light, ring light, beauty dish, softbox setup, фотостудия
+</code></pre>
+<h3 id="cliche">🟡 Косметика · Список cliché расширить</h3>
+<p>Текущий список: «ноутбук, кофе, телефон». Этого мало для anti-stock защиты. Добавить:</p>
+<pre><code>no cliché:
+- ноутбук, кофе, телефон (только если оправдано сценой)
+- окно с закатом
+- коктейль в руке
+- белый минималистичный интерьер
+- йога в позе лотоса с закрытыми глазами
+- кофе с латте-артом крупным планом
+- человек смотрит в окно с задумчивым видом
+</code></pre>
+<h3 id="_5">🟡 Косметика · Технические параметры отсутствуют</h3>
+<p>В промте нет:
+- формат вывода (PNG / JPG)
+- aspect ratio (16:9 / 9:16 / 1:1)
+- разрешение (1024x1024 / 2048x2048 / etc.)
+- output API hint (для какой модели — Flux / SDXL / Midjourney style)</p>
+<p>Если эти параметры будут отдельным блоком — ок. Если нет — стоит добавить.</p>
+<h3 id="_6">🟢 Что хорошо</h3>
+<ul>
+<li>Принцип «либо subject-focused, либо environment-driven, не смешивать» — отличный архитектурный принцип, защищает от каши.</li>
+<li>«состояние через тело, позу, движение, ритм» — прямой anti-emoji подход.</li>
+<li>«запрещено описывать эмоции словами» — защита от сток-промтов («happy person», «smiling»).</li>
+<li>«lived-in details (следы жизни, несовершенства)» — anti-perfection. Это в духе premium-tone Elyne.</li>
+<li>«не постановка, не визуализация» — anti-stock.</li>
+<li>Композиция через 35mm / 50mm / wide — конкретные параметры, не «cinematic vibe».</li>
+</ul>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
