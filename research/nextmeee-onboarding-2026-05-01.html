@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>nextmeee онбординг — промежуточный отчёт</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="4">Что пройдено (4 экрана)</h1>
+<h2 id="01-hook-presentation">01 · /hook · presentation</h2>
+<p><strong>Title:</strong> «Представь жизнь, в которую действительно хочется войти»</p>
+<p>Без content-text. CTA — пустой POST, идём на <code>/we-help</code>.</p>
+<h2 id="02-we-help-presentation">02 · /we-help · presentation</h2>
+<p><strong>Title:</strong> (пусто)
+<strong>Content (text):</strong></p>
+<blockquote>
+<p>Мы поможем тебе увидеть возможные версии твоей жизни
+через ощущения, приоритеты и внутренний фокус</p>
+</blockquote>
+<p>CTA — пустой POST, идём на <code>/prepared</code>.</p>
+<h2 id="03-prepared-presentation">03 · /prepared · presentation</h2>
+<p><strong>Title:</strong> (пусто)
+<strong>Content (text):</strong></p>
+<blockquote>
+<p>Ответь на несколько вопросов.
+Это займёт меньше минуты
+и повлияет на то, что ты увидишь дальше.</p>
+</blockquote>
+<p>CTA — пустой POST, идём на <code>/recognition</code>.</p>
+<h2 id="04-recognition-questionnaire">04 · /recognition · questionnaire</h2>
+<p><strong>Title:</strong> (пусто, рендерится в компоненте)
+<strong>Format:</strong> standard, prioritized=true (значит выбор приоритетов)
+<strong>Структура:</strong> 1 вопрос с 8 опциями, нужно выбрать <strong>до 3</strong>.</p>
+<h3 id="q1-max_selections3">Q1: «Что для тебя сейчас важно?» (max_selections=3)</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Текст</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>48</td>
+<td>Быть признанным и увиденным</td>
+</tr>
+<tr>
+<td>49</td>
+<td>Глубоко понимать себя и свою жизнь</td>
+</tr>
+<tr>
+<td>50</td>
+<td>Выражать себя и своё творчество</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Реализовать себя и создать что-то значимое</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Быть свободным и жить как хочется</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Чувствовать любовь и близость</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Выглядеть и ощущаться как лучшая версия себя</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Влиять и быть значимым</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Payload что работает:</strong> <code>{"answers": {"1": [48, 49, 50]}}</code> — формат <code>answer_id: [option_ids]</code>.</p>
+<p>После ответа backend редиректит обратно на <strong><code>/hook</code></strong> того же user_id — видимо начинается <strong>второй цикл онбординга</strong> на основе выбранных приоритетов (новый workflow специфичный к выбранным ценностям). Дальше нужно копать.</p>
+<hr>
+<h1 id="elyne-v4">Стратегические наблюдения для Elyne v4</h1>
+<h2 id="1-nextmeee">1. nextmeee стартует с <strong>приоритизации ценностей</strong>, не со сфер</h2>
+<p>8 опций — это <strong>корневой questionnaire</strong>, который определяет <strong>дальнейший флоу</strong>. У нас в Elyne v4 — 10 сфер, и юзер заходит сразу в любую через дашборд (микроопросник внутри сферы).</p>
+<p><strong>Что это значит:</strong> nextmeee использует <strong>funnel</strong> «определи приоритеты → дальше под них». Elyne — <strong>lateral</strong>: «10 сфер, все доступны».</p>
+<p><strong>Подумать:</strong> есть ли смысл в Elyne <strong>тоже добавить приоритизацию</strong> на старте онбординга — чтобы юзер увидел сначала те сферы, которые приоритетнее? Или это убьёт принципы Elyne (равенство сфер)?</p>
+<h2 id="2-8-nextmeee-10-elyne">2. Маппинг 8 ценностей nextmeee → 10 сфер Elyne</h2>
+<table>
+<thead>
+<tr>
+<th>nextmeee</th>
+<th>Elyne v4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>48 Быть признанным и увиденным</td>
+<td>3 Реализация и влияние</td>
+</tr>
+<tr>
+<td>49 Глубоко понимать себя и свою жизнь</td>
+<td>8 Развитие и мудрость</td>
+</tr>
+<tr>
+<td>50 Выражать своё творчество</td>
+<td>7 Творчество</td>
+</tr>
+<tr>
+<td>1 Реализовать себя</td>
+<td>3 Реализация</td>
+</tr>
+<tr>
+<td>2 Быть свободным</td>
+<td>9 Свобода</td>
+</tr>
+<tr>
+<td>3 Любовь и близость</td>
+<td>4 Любовь и партнёрство</td>
+</tr>
+<tr>
+<td>4 Лучшая версия себя</td>
+<td>1 Я и состояние</td>
+</tr>
+<tr>
+<td>5 Влиять и быть значимым</td>
+<td>3 Реализация</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Что упущено в nextmeee:</strong>
+- Сфера 2 «Ресурсы и уровень жизни» — нет
+- Сфера 5 «Дом, семья и близкие» — нет (только косвенно через «любовь»)
+- Сфера 6 «Дети и наследие» — нет
+- Сфера 10 «Окружение» — нет</p>
+<p><strong>Это сигнал:</strong> nextmeee беднее по охвату жизни, чем мы. У нас покрытие шире.</p>
+<h2 id="3-1-3">3. Презентационные экраны (1-3) до вопросов</h2>
+<p>Идея: <strong>3 экрана подготовки</strong> перед первым вопросом. Это создаёт ощущение «я знаю что мне делать», снимает фрустрацию первого взгляда. У нас в Elyne этого <strong>нет</strong> — юзер сразу попадает в дашборд после первой wow-генерации.</p>
+<p><strong>Подумать:</strong> добавить ли 1-2 «pre-onboarding» экрана для Elyne для контекста? Или фокус Elyne на «сразу к делу» — сильное отличие?</p>
+<h2 id="4-nextmeee">4. Тон nextmeee</h2>
+<p>Просто, конкретно, без manifestation-cringe:
+- «Представь жизнь, в которую действительно хочется войти»
+- «Мы поможем тебе увидеть возможные версии твоей жизни»
+- «Ответь на несколько вопросов. Это займёт меньше минуты»</p>
+<p>Это <strong>близко к нашему tone-of-voice</strong> (premium, без эзотерики). Не учусь у nextmeee — но факт: они держат планку.</p>
+<hr>
+<h1 id="_1">Что дальше копать</h1>
+<ol>
+<li>Что после <code>/recognition</code> reset на <code>/hook</code>? Проверить — может это новый цикл с конкретной сферой по выбранным приоритетам</li>
+<li>Дойти до <code>/style-clotches</code> (был замечен в раннем тесте) — что там</li>
+<li>Дойти до paywall — увидеть формулировки оплаты</li>
+<li>Если есть exec — посмотреть форму регистрации (требует ли email, фото)</li>
+</ol>
+<h1 id="_2">Технические детали (для архива)</h1>
+<p><strong>Endpoint:</strong> все экраны идут на <code>https://nextmeee.ru/onboarding/{user_id}/{slug}</code></p>
+<p><strong>Headers для GET:</strong>
+- <code>X-Inertia: true</code>
+- <code>X-Inertia-Version: f954530d89a058511e6114c398dd9fb0</code>
+- <code>X-Requested-With: XMLHttpRequest</code></p>
+<p><strong>Headers для POST:</strong>
+- <code>X-XSRF-TOKEN: {decoded XSRF cookie}</code>
+- + всё что выше
+- <code>Content-Type: application/json</code></p>
+<p><strong>Stack:</strong> Laravel 12 + Inertia.js + nginx 1.29.5</p>
+<p><strong>Анонимная регистрация:</strong> да, при первом GET создаётся новый user_id (5012-5022 в моих попытках) — заходить можно без логина и идти по флоу.</p>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
