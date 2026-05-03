@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Оператор-ревью финала v1 рилса «Игра»</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="_1">Что Олег увидел (расшифровка)</h1>
+<h2 id="1-instagram">1. «Формат не для рилса в Instagram, расширен»</h2>
+<p>Технически 1080×1920 правильный. Но визуально кадр читается как горизонтальный — в шотах 1, 3, 5 композиция исходных клипов изначально landscape (потолки/коридоры/панорама), и при scale+pad в 9:16 остаётся горизонтальная логика. Глаз видит «вертикально обрезанное горизонтальное видео».</p>
+<p>Шот 1: массивный «потолок + люстры» в верхней половине, король внизу справа теряется. Не king-shot.</p>
+<h2 id="2">2. «Шрифт ужасный»</h2>
+<p>DejaVu Sans 14pt с тенью — системный default Linux, выглядит как Aegisub 2008 / fanmade YouTube середины 2010-х. Premium-стандарт сейчас:</p>
+<ul>
+<li>Inter / SF Pro / Helvetica Now / Söhne / TT Norms Pro</li>
+<li>Weight 300-400 (Light/Regular), не Bold</li>
+<li>Letter-spacing +20 до +40</li>
+<li>Размер 52-64 px (а не 14pt)</li>
+<li>Тень — очень мягкая (blur 8, alpha 30%), не drop-shadow</li>
+<li>Цвет — off-white #F5F2EB (тёплый бежевый), не чисто белый</li>
+</ul>
+<h2 id="3">3. «Слова должны появляться и пропадать»</h2>
+<p>SRT мёртвый. Премиум — ASS subtitles с fade на каждую фразу:</p>
+<pre><code class="language-ass">Style: Default,Inter,58,&amp;H00EBF2F5,&amp;H00000000,&amp;H80000000,0,0,1,0,0,5,80,80,200
+Dialogue: 0,0:00:01.00,0:00:05.00,Default,,0,0,0,,{\fad(400,400)\blur0.6}Тебе никто не говорил, что это игра.
+</code></pre>
+<ul>
+<li><code>\fad(400,400)</code> — fade in 400ms, out 400ms</li>
+<li><code>\blur0.6</code> — gaussian blur по краям, премиум-софт</li>
+<li>Bottom-third (MarginV=380), не центр-середина</li>
+</ul>
+<p>Между фразами 30-50ms полной пустоты — глаз отдыхает. Субтитр приходит на 150ms раньше voice, уходит на 200ms позже.</p>
+<p>Для отдельных слов («Надо.» «Правильно.» «А что скажут.») — появление с интервалом 800ms, не одновременно. Тяжесть нарастает.</p>
+<h2 id="4">4. «Качество колхозное» — конкретные дефекты</h2>
+<ol>
+<li>Шрифт (главный)</li>
+<li>Субтитры по центру, не bottom-third</li>
+<li>Нет fade — текст «вываливается»</li>
+<li>Нет общего LUT поверх — каждый клип со своим цветом, нет единого фильма</li>
+<li>Нет film grain поверх склейки</li>
+<li>Voice не сидит в пространстве (см. ниже)</li>
+<li>Нет safe-area padding (нижние 250px перекрываются UI Instagram)</li>
+</ol>
+<h2 id="5-audio-mix">5. «Голос слишком громкий» — audio mix</h2>
+<p>Voice -16 LUFS + ambient -25dB = разрыв 12-15dB, voice доминирует. Премиум-стандарт:</p>
+<table>
+<thead>
+<tr>
+<th>Слой</th>
+<th>Уровень</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Voice</td>
+<td>-18 to -20 LUFS short-term</td>
+</tr>
+<tr>
+<td>Ambient drone</td>
+<td>-24 to -22 LUFS</td>
+</tr>
+<tr>
+<td>Foley accents</td>
+<td>пик -28 to -24 dBFS</td>
+</tr>
+<tr>
+<td>Integrated loudness</td>
+<td>-14 LUFS (стандарт IG)</td>
+</tr>
+<tr>
+<td>True peak</td>
+<td>≤ -1.0 dBTP</td>
+</tr>
+</tbody>
+</table>
+<p>Разрыв voice/ambient — 6-8 dB, не 12. Дополнительно:
+- High-pass voice 80 Hz
+- Sidechain ducking ambient -3dB при voice
+- На паузах ambient возвращается — даёт «дыхание» mix&rsquo;у</p>
+<h1 id="top-3-v2">Top-3 правки приоритетом для v2</h1>
+<ol>
+<li><strong>Шрифт + анимация</strong> (Inter Light 56px, fade 350/300ms, blur 0.4, bottom-third) — +60% воспринимаемого качества</li>
+<li><strong>Audio mix</strong> (voice -19 LUFS, ambient -22dB с ducking, integrated -14) — голос перестанет торчать</li>
+<li><strong>Единый LUT + film grain</strong> — связывает 8 разных AI-клипов в один фильм</li>
+</ol>
+<h1 id="ffmpegass">Конкретные параметры для ffmpeg/ASS</h1>
+<h2 id="ass-subtitle-style">ASS subtitle style</h2>
+<pre><code>Font: Inter Light (300), size 56, color #EBE7DC
+Letter-spacing: +30
+Line-height: 1.3
+Outline: 0
+Shadow: blur 12 alpha 25% offset 0,0
+Position: bottom-third (MarginV=380)
+Max width 880px, max 2 строки
+</code></pre>
+<h2 id="audio-chain">Audio chain</h2>
+<pre><code class="language-bash"># voice
+highpass=f=80, equalizer=f=200:g=-2, equalizer=f=3000:g=2,
+acompressor=threshold=-18dB:ratio=3, loudnorm=I=-19:TP=-1.5
+
+# ambient with ducking
+volume=-22dB, sidechaincompress=threshold=-30dB:ratio=4
+
+# final integrated -14
+amix + loudnorm=I=-14:TP=-1.0
+</code></pre>
+<h2 id="color-grade-lut">Color grade LUT (поверх всех клипов)</h2>
+<pre><code class="language-bash">curves=preset=increase_contrast,
+colorbalance=rs=0.05:gs=-0.02:bs=-0.08:rm=0.03:bm=-0.05,
+eq=saturation=0.85:contrast=1.08:gamma=0.95,
+noise=alls=8:allf=t
+</code></pre>
+<h2 id="1-3-5">Композиция шотов 1, 3, 5</h2>
+<p>Перегенерировать с явным «9:16 vertical composition, NOT horizontal cropped», или crop по правилу третей где главный объект в правом-верхнем третях.</p>
+<h1 id="safe-area-instagram">Safe area для Instagram</h1>
+<ul>
+<li>Subtitle MarginV ≥ 380px от низа</li>
+<li>Top safe ≥ 220px (header IG)</li>
+<li>Текст в средней трети по горизонтали, padding 60px от краёв</li>
+</ul>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
