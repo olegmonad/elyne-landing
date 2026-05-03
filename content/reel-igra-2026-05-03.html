@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Рилс «Игра» — раскадровка</title>
+<title>Рилс «Игра» — раскадровка (русская)</title>
 <style>
   :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
   body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
@@ -35,138 +35,75 @@
 <li><strong>9:16, 1080×1920, 24-30 fps</strong></li>
 <li><strong>Без лиц, без читаемых людей</strong> — только силуэты, руки, фигуры на дистанции</li>
 <li><strong>Палитра:</strong> sepia-charcoal monochrome + одна точка тёплого янтаря (свет, акцент)</li>
-<li><strong>Свет:</strong> мягкий sidelight, golden-hour либо studio-amber</li>
-<li><strong>Камера:</strong> медленные dolly/track shots, никаких рывков. Slo-mo на ключевых моментах</li>
+<li><strong>Свет:</strong> мягкий боковой, золотой час либо студийный янтарь</li>
+<li><strong>Камера:</strong> медленные наезды, никаких рывков. Slow-motion на ключевых моментах</li>
 <li><strong>Без текста в кадре</strong> (текст добавим потом через ffmpeg burn-in субтитры)</li>
-<li><strong>Длина клипа:</strong> 5-10 сек, склейка прямым cut&rsquo;ом или мягким crossfade на 0.5 сек</li>
+<li><strong>Длина клипа:</strong> 5-10 сек, склейка прямым cut&rsquo;ом или мягким переходом на 0.5 сек</li>
 <li><strong>Запрещено:</strong> глитч, неоновые цвета (кроме одного янтаря), частицы-эзотерика, чакры, гипноз-спирали, чары</li>
 </ul>
-<h1 id="8-62">Раскадровка — 8 шотов под голос ~62 сек</h1>
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>TC</th>
-<th>Voice line</th>
-<th>Mood</th>
-<th>Video-промт (готов копировать в Sora/Veo/FAL FLUX video)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>0:00-0:07</td>
-<td>«Тебе никто не говорил, что это игра. Поэтому ты решил, что это серьёзно. Не в смысле детских игрушек. Вообще.»</td>
-<td>intimate, разоружающее</td>
-<td>Cinematic extreme close-up of a single carved wooden chess king piece standing alone on a vast polished marble floor. Soft amber sidelight from frame-left, deep shadows on the right. Very slow dolly-in. Charcoal-sepia palette, subtle film grain. 9:16 vertical, 4K, no people, no text, no logos.</td>
-</tr>
-<tr>
-<td>2</td>
-<td>0:07-0:15</td>
-<td>«Ты ведь помнишь это состояние. Когда не страшно пробовать. Когда можно проиграть — и это не конец. Когда интересно, что будет дальше, а не тревожно.»</td>
-<td>nostalgic light, warm</td>
-<td>Slow-motion shot of a paper airplane gently gliding through floating dust particles in a sunlit empty room. Warm golden hour light streaming through tall window blinds. Camera follows the plane from below, soft focus background. Cinematic, calm, no people visible. 9:16, sepia-warm grading, 4K.</td>
-</tr>
-<tr>
-<td>3</td>
-<td>0:15-0:22</td>
-<td>«А потом как будто щёлкнуло. Появилось „надо&rdquo;. „Правильно&rdquo;. „А что скажут&rdquo;.»</td>
-<td>tightening, мрачнее</td>
-<td>Slow tracking shot through a long minimalist corridor where heavy iron doors close one by one in sequence, each casting a sharp angled shadow on the floor. Cold steel-blue tones with a single distant amber light far ahead. No people, industrial-minimalist (think Kubrick / Denis Villeneuve), not gothic. 9:16, cinematic, 4K.</td>
-</tr>
-<tr>
-<td>4</td>
-<td>0:22-0:30</td>
-<td>«И ты начал жить аккуратно. Словно идёшь по тонкому льду, где ошибка — это провал.»</td>
-<td>tense, тихое</td>
-<td>Top-down extreme close-up of bare feet carefully stepping on thin cracking ice. Dark water visible through cracks. Frozen breath rising from below frame. Slow, deliberate movement, ASMR-feel. Charcoal-blue palette with faint amber from outside frame. No faces. 9:16, cinematic, 4K.</td>
-</tr>
-<tr>
-<td>5</td>
-<td>0:30-0:40</td>
-<td>«Но вот в чём подвох. Ты всё равно играешь. Просто теперь это плохая игра. С правилами, которые ты не выбирал. Где нет лёгкости, нет азарта. Где каждый шаг — как экзамен.»</td>
-<td>heavy realization, surreal</td>
-<td>Wide cinematic shot of a chessboard expanding into infinite tiled horizon, pieces moving by invisible mechanical synchronized patterns. Dark mahogany wood and aged brass tones. Camera slowly pulls back to reveal the scale. Surreal but grounded, never glitchy or psychedelic. 9:16, 4K, sepia-charcoal.</td>
-</tr>
-<tr>
-<td>6</td>
-<td>0:40-0:48</td>
-<td>«А можно иначе. Можно снова двигаться как игрок. Пробовать без гарантии. Менять ход. Не застревать в одной роли, как будто это навсегда.»</td>
-<td>turn, opening</td>
-<td>Cinematic close-up of a hand (only hand visible, no face) flipping a single carved chess piece up into the air. The piece spins in slow-motion against soft warm amber backlight. Dust motes float in beam. Quiet liberation. 9:16, 4K, charcoal+amber palette.</td>
-</tr>
-<tr>
-<td>7</td>
-<td>0:48-0:55</td>
-<td>«И главное — не путать себя с результатом. Ты не проиграл. Ты просто в такой партии.»</td>
-<td>clarity, respect</td>
-<td>Wide shot of a single human silhouette (back to camera, never face) standing on a vast black-and-white tiled floor stretching to a hazy horizon. Various chess pieces of different sizes scattered across the floor at varying distances. Soft warm amber fog at the far horizon. Cinematic stillness, no movement. 9:16, 4K, monochrome+amber.</td>
-</tr>
-<tr>
-<td>8</td>
-<td>0:55-1:05</td>
-<td>«Игра — это не про легкомысленность. Это про свободу внутри действия. Когда ты снова играешь — жизнь перестаёт давить. И становится тем, во что ты играешь.»</td>
-<td>lightness, release</td>
-<td>Cinematic shot at table level: a single wooden chess pawn rolling and bouncing gently across a sunlit oak tabletop, knocking lightly into other game objects (dice, dominoes, cards) like dropped fragments. Warm afternoon golden light through window, shallow depth of field. No people, joyful but grounded. 9:16, 4K, sepia-warm.</td>
-</tr>
-</tbody>
-</table>
+<h1 id="8-62">Раскадровка — 8 шотов под твой голос ~62 сек</h1>
+<blockquote>
+<p>Описание на русском, чтобы ты мог прочитать и поправить. На английский я переведу сам, когда буду отправлять промты в Sora/FAL — это твоей работы не касается.</p>
+</blockquote>
+<hr>
+<h2 id="1-000007">Шот 1 — 0:00–0:07</h2>
+<p><strong>Голос:</strong> «Тебе никто не говорил, что это игра. Поэтому ты решил, что это серьёзно. Не в смысле детских игрушек. Вообще.»
+<strong>Настроение:</strong> доверительное, разоружающее.
+<strong>Что в кадре:</strong> очень крупный план одной деревянной шахматной фигуры — короля, резного, старого. Стоит один на огромном полированном мраморном полу. Свет — мягкий янтарный, бьёт сбоку слева, справа — глубокая тень. Камера очень медленно наезжает. Палитра: уголь и сепия, лёгкое плёночное зерно. Без людей, без текста.</p>
+<h2 id="2-007015">Шот 2 — 0:07–0:15</h2>
+<p><strong>Голос:</strong> «Ты ведь помнишь это состояние. Когда не страшно пробовать. Когда можно проиграть — и это не конец. Когда интересно, что будет дальше, а не тревожно.»
+<strong>Настроение:</strong> ностальгически-светлое, тёплое.
+<strong>Что в кадре:</strong> замедленная съёмка бумажного самолётика, мягко планирующего через парящие пылинки в залитой солнцем пустой комнате. Тёплый свет золотого часа сквозь высокие жалюзи. Камера снизу, идёт за самолётиком. Без людей, без лиц. Тёплая сепия.</p>
+<h2 id="3-015022">Шот 3 — 0:15–0:22</h2>
+<p><strong>Голос:</strong> «А потом как будто щёлкнуло. Появилось „надо&rdquo;. „Правильно&rdquo;. „А что скажут&rdquo;.»
+<strong>Настроение:</strong> сжимающее, мрачнее.
+<strong>Что в кадре:</strong> медленный проезд по длинному минималистичному коридору. Тяжёлые железные двери закрываются одна за другой по очереди, каждая отбрасывает резкую косую тень на пол. Холодные стально-синие тона. Один далёкий янтарный свет в конце коридора. Без людей. Стилистика — Кубрик / Дени Вильнёв. Не готика, не хоррор.</p>
+<h2 id="4-022030">Шот 4 — 0:22–0:30</h2>
+<p><strong>Голос:</strong> «И ты начал жить аккуратно. Словно идёшь по тонкому льду, где ошибка — это провал.»
+<strong>Настроение:</strong> напряжённое, тихое.
+<strong>Что в кадре:</strong> очень крупный план сверху — босые ступни осторожно ступают по тонкому трескающемуся льду. Через трещины видна тёмная вода. Морозный пар поднимается из-за края кадра. Медленные, выверенные движения, ASMR-ощущение. Без лиц. Уголь+синий с лёгким янтарём из-за кадра.</p>
+<h2 id="5-030040">Шот 5 — 0:30–0:40</h2>
+<p><strong>Голос:</strong> «Но вот в чём подвох. Ты всё равно играешь. Просто теперь это плохая игра. С правилами, которые ты не выбирал. Где нет лёгкости, нет азарта. Где каждый шаг — как экзамен.»
+<strong>Настроение:</strong> тяжёлое осознание, сюрреалистично.
+<strong>Что в кадре:</strong> широкий кадр шахматной доски, расширяющейся в бесконечный плиточный горизонт. Фигуры движутся сами, синхронно, словно по невидимым механическим правилам. Тёмное красное дерево и состаренная латунь. Камера медленно отъезжает, открывая масштаб. Сюрреал — но не глитч, не психоделика.</p>
+<h2 id="6-040048">Шот 6 — 0:40–0:48</h2>
+<p><strong>Голос:</strong> «А можно иначе. Можно снова двигаться как игрок. Пробовать без гарантии. Менять ход. Не застревать в одной роли, как будто это навсегда.»
+<strong>Настроение:</strong> разворот, открытие.
+<strong>Что в кадре:</strong> крупный план — кисть руки (только рука, лица нет) подбрасывает резную шахматную фигуру в воздух. Фигура вращается в замедленной съёмке против мягкого тёплого янтарного контрового света. В луче света парят пылинки. Тихое освобождение.</p>
+<h2 id="7-048055">Шот 7 — 0:48–0:55</h2>
+<p><strong>Голос:</strong> «И главное — не путать себя с результатом. Ты не проиграл. Ты просто в такой партии.»
+<strong>Настроение:</strong> ясность, уважение.
+<strong>Что в кадре:</strong> широкий план — одинокий силуэт человека (спиной к камере, лица никогда не видно) стоит на огромном чёрно-белом плиточном полу, уходящем к туманному горизонту. По полу на разных расстояниях разбросаны шахматные фигуры разных размеров. У далёкого горизонта — мягкий тёплый янтарный туман. Кинематографичная неподвижность, без движения.</p>
+<h2 id="8-055105">Шот 8 — 0:55–1:05</h2>
+<p><strong>Голос:</strong> «Игра — это не про легкомысленность. Это про свободу внутри действия. Когда ты снова играешь — жизнь перестаёт давить. И становится тем, во что ты играешь.»
+<strong>Настроение:</strong> лёгкость, освобождение.
+<strong>Что в кадре:</strong> план на уровне стола — одна деревянная шахматная пешка катится и мягко прыгает по залитой солнцем дубовой столешнице, легко задевая другие игровые предметы (кости, домино, карты), как упавшие фрагменты. Тёплый свет вечернего солнца сквозь окно, малая глубина резкости. Без людей. Радостно, но не легкомысленно.</p>
+<hr>
 <h1 id="_3">Стек реализации</h1>
 <ol>
-<li><strong>Voiceover</strong> — ты записываешь голосом (либо я через edge-tts если хочешь машинный — но твой голос правильнее)</li>
-<li><strong>Whisper</strong> — транскрипт + word-level timestamps для синхронизации субтитров</li>
-<li><strong>Video-генерация</strong> — каждый промт выше → один клип 5-10 сек:
-   - <strong>Sora 2</strong> (через ChatGPT Plus / API): premium качество, ~$1-3 за клип
-   - <strong>Google Veo 3</strong> (через Gemini): сопоставимо
-   - <strong>FAL FLUX video</strong> (через MCP): ~$0.5-1 за клип, но качество ниже Sora
-   - <strong>Runway Gen-4</strong>: $1-2 за клип</li>
+<li><strong>Voiceover</strong> — ты записываешь голосом</li>
+<li><strong>Whisper</strong> — транскрипт + точные таймкоды каждого слова для синхронизации субтитров</li>
+<li><strong>Video-генерация</strong> — каждый шот выше → один клип 5-10 сек. Смотри блок «Бюджет» ниже.</li>
 <li><strong>Монтаж ffmpeg:</strong>
    - склейка 8 клипов по таймингу
-   - voiceover как основная audio track
-   - ambient drone подложкой -25 dB (взять любой free royalty)
-   - burn-in субтитров через <code>drawtext</code> по word-timestamps из whisper
+   - voiceover как основная аудиодорожка
+   - ambient-подложка -25 dB (бесплатный royalty-free трек)
+   - burn-in субтитров через <code>drawtext</code> по таймкодам из whisper
    - финал 9:16, h.264 / mp4</li>
 </ol>
-<h1 id="_4">Бюджет</h1>
-<table>
-<thead>
-<tr>
-<th>Вариант</th>
-<th>Стоимость 1 рилса</th>
-<th>Качество</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>FAL FLUX video все 8</td>
-<td>~$5</td>
-<td>средне (новый игрок)</td>
-</tr>
-<tr>
-<td>Runway Gen-4 все 8</td>
-<td>~$10-15</td>
-<td>высокое</td>
-</tr>
-<tr>
-<td>Sora 2 все 8</td>
-<td>~$10-20</td>
-<td>топ</td>
-</tr>
-<tr>
-<td>Гибрид (4 Sora + 4 FAL)</td>
-<td>~$8-10</td>
-<td>хорошо</td>
-</tr>
-</tbody>
-</table>
+<h1 id="_4">Бюджет (после твоего «гибрид — нравится»)</h1>
+<p>Цель: бюджет ниже, качество не страдает.</p>
+<p><strong>Гибрид-стратегия:</strong>
+- 4-5 шотов из 8 = бесплатный сток (Pexels/Pixabay) — для общих метафор: пыль в свете, лёд, шахматы, коридор
+- 2-3 шота = LTX Video через FAL — $0.10-0.30 каждый — для специфичных метафор, которых в стоке нет
+- 1 шот = Sora 2 или Veo 3 — $2-3 — на самый акцент</p>
+<p><strong>Итого: ~$3-5 за один рилс.</strong> Качество не страдает, потому что сток в нужных категориях у Pexels часто кинематографичный, а Sora мы тратим только на 1 момент, который никто не закроет.</p>
 <h1 id="_5">Действия — твой ход</h1>
 <ol>
-<li>Прочитать раскадровку, поправить video-промты (могут быть слова которые ты бы заменил)</li>
-<li>Решить бюджет (какой вариант выше)</li>
-<li>Записать voiceover (1 минута, своим голосом)</li>
-<li>Я запускаю генерацию + монтаж</li>
+<li>Прочитать раскадровку (на русском теперь), поправить если что-то «не моё»</li>
+<li>Записать voiceover на свой голос (1 минута, в тишине, на телефон или micro)</li>
+<li>Прислать мне аудио — дальше я делаю всё</li>
 </ol>
-<p>Если хочешь альтернативу через ChatGPT — могу дать готовое ТЗ для него (там прикажу нагенерить промты в его стиле, и сравним).</p>
 <div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
 </body>
 </html>
