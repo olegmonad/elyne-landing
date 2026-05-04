@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UX-ревью онбординга nextmeee</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="ux-nextmeeeru">UX-ревью онбординга nextmeee.ru</h1>
+<p><em>2026-05-04 | 29 шагов → предлагается 15</em></p>
+<hr>
+<h2 id="_1">Главная проблема</h2>
+<p>Пользователь видит одну и ту же фразу «Представь жизнь, в которую действительно хочется войти» <strong>8 раз подряд</strong> как отдельные экраны. Это не создаёт ритм — это создаёт ощущение бага. Человек начинает читать быстрее, потом перестаёт читать вообще. Момент узнавания убивается монотонностью ещё до генерации.</p>
+<p>Второе: регистрация стоит <strong>после</strong> генерации, но <strong>до</strong> paywalla — это правильно. Но три вопроса после wow-момента (first-impression / what-you-need / want-enhance) размещены <strong>между wow и регистрацией</strong> — и это неверно. Человек только что увидел себя и хочет сохранить. Его тормозят тремя вопросами. Конверсия просядет.</p>
+<hr>
+<h2 id="vs">Карта потока: что есть vs что должно быть</h2>
+<h3 id="29-17-wow">СЕЙЧАС (29 шагов, ~17 нажатий до wow)</h3>
+<pre><code>hook → we-help → prepared
+→ [hook] → recognition (Q1)
+→ [hook] → environment (Q3)
+→ [hook] → sphere (Q5)
+→ [hook] → impact (Q6)
+→ [hook] → what-deal (Q14)
+→ [hook] → style-clotches (Q23)
+→ [hook] → photo-upload
+→ [hook] → generation-loader → affirmation
+→ only-one-variant → we-can-vision-different-level
+→ first-impression (Q15) → [hook] → what-you-need (Q16) → [hook] → want-enhance (Q17)
+→ [hook] → registration → [hook]
+</code></pre>
+<h3 id="15-9-wow">ДОЛЖНО БЫТЬ (15 шагов, ~9 нажатий до wow)</h3>
+<pre><code>hook (1 раз)
+→ we-help + prepared (объединить в один экран)
+→ recognition (Q1: что важно — до 3)
+→ environment (Q3: среда — 1)
+→ sphere (Q5: реализация — до 2)
+→ style-clotches (Q23: образ — до 3, визуально)
+→ photo-upload
+→ generation-loader
+→ affirmation (WOW)
+→ registration
+→ [пейволл или углубление]
+</code></pre>
+<p>Вопросы Q6/Q14/Q15/Q16/Q17 — перенести в post-wow опрос внутри подписки (прогрессивное профилирование).</p>
+<hr>
+<h2 id="_2">Конкретно: что убрать, что объединить, что сдвинуть</h2>
+<h3 id="_3">Убрать без потери ценности</h3>
+<table>
+<thead>
+<tr>
+<th>Шаг</th>
+<th>Почему убрать</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>7 повторяющихся hook-экранов (05, 07, 09, 11, 13, 15, 17)</td>
+<td>Один и тот же текст, нет нового смысла, создают усталость</td>
+</tr>
+<tr>
+<td><code>only-one-variant</code> (20)</td>
+<td>Сказать это можно одной строкой внутри affirmation-экрана</td>
+</tr>
+<tr>
+<td><code>we-can-vision-different-level</code> (21)</td>
+<td>Это уже продажа. Перенести на paywall как его заголовок</td>
+</tr>
+<tr>
+<td>hook после регистрации (29)</td>
+<td>После регистрации — сразу paywall или дашборд, hook здесь бессмысленен</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_4">Объединить</h3>
+<table>
+<thead>
+<tr>
+<th>Было</th>
+<th>Стало</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>we-help</code> (02) + <code>prepared</code> (03)</td>
+<td>Один экран: «Ответь на несколько вопросов — это займёт меньше минуты»</td>
+</tr>
+<tr>
+<td><code>first-impression</code> (Q15) + <code>what-you-need</code> (Q16)</td>
+<td>Один экран с двумя вопросами (оба короткие, single-select) — после регистрации</td>
+</tr>
+<tr>
+<td><code>want-enhance</code> (Q17)</td>
+<td>Убрать из онбординга. Это первый вопрос сферного микроопросника — там он уже есть</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_5">Перенести за регистрацию</h3>
+<p><code>Q6</code> (impact), <code>Q14</code> (what-deal), <code>Q15</code> (first-impression), <code>Q16</code> (what-you-need) — эти четыре вопроса про тон и масштаб присутствия. Они уточняют сцены, но не нужны для <strong>первой</strong> генерации. Переносятся в прогрессивный опрос после wow. Онбординг становится короче, генерация — не хуже.</p>
+<h3 id="_6">Оставить (в текущем порядке)</h3>
+<ul>
+<li><code>hook</code> (01) — единственный раз, вход</li>
+<li><code>we-help + prepared</code> (объединённый)</li>
+<li>Q1 <code>recognition</code> — ключевой, определяет тематику</li>
+<li>Q3 <code>environment</code> — визуальный контекст сцены</li>
+<li>Q5 <code>sphere</code> — направление реализации</li>
+<li>Q23 <code>style-clotches</code> — образ, визуал (единственный с картинками — сделать его акцентным)</li>
+<li><code>photo-upload</code></li>
+<li><code>generation-loader</code></li>
+<li><code>affirmation</code> (wow)</li>
+<li><code>registration</code> — сразу после wow, пока эмоция живая</li>
+</ul>
+<hr>
+<h2 id="_7">Критические ошибки копирайта</h2>
+<ol>
+<li><strong>Q4 option</strong>: «Выглядеть и ощущаться как лучшая версия себя» — запрещённый паттерн (best self = manifestation-язык). Заменить на «Выглядеть так, как я себя чувствую внутри».</li>
+<li><strong>Q16 options</strong>: «чтобы это была моя более сильная версия», «чтобы это вдохновляло меня на новый уровень» — goal-tracker лексика. Если этот вопрос останется, переписать. Но лучше убрать.</li>
+<li><strong><code>we-can-vision-different-level</code></strong>: «разные версии тебя» — формулировка из self-help. Если перейдёт на paywall, заменить на «Больше сцен. Больше жизни.»</li>
+</ol>
+<hr>
+<h2 id="_8">Итого: числа</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Было</th>
+<th>Станет</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Экранов всего</td>
+<td>29</td>
+<td>15</td>
+</tr>
+<tr>
+<td>hook-экранов</td>
+<td>8</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Вопросов до wow</td>
+<td>6</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Шагов до первой генерации</td>
+<td>~17</td>
+<td>~9</td>
+</tr>
+<tr>
+<td>Вопросов после wow (до регистрации)</td>
+<td>3</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="_9">Открытый вопрос для Олега</h2>
+<p>Q6 (impact — «на каком уровне проявлять себя?») сейчас идёт до wow. Это важный вопрос для промта сцены. Если генерация без него заметно хуже — оставить до foto-upload. Если модель справляется без него — убрать в пост-wow. Нужен тест на качестве сцен.</p>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
