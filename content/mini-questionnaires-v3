@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elyne · документ</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="-9-elyne-v3">Мини-анкеты 9 сфер Elyne · v3</h1>
+<blockquote>
+<p><strong>Контент</strong> — вопросы и варианты ответов для показа пользователю перед первой генерацией сцены в каждой сфере. Движок-промт — отдельно. JSON-схема для Дениса — в конце.</p>
+</blockquote>
+<hr>
+<h2 id="vs-v2">Что изменилось vs v2</h2>
+<p>Номенклатура переведена на финальную (26.04): «Очаг» → «Семья, род, и дом»; «Творчество» → «Дети, творчество, новое начинание»; «Социальность» → «Окружение и социальная среда». Эти три сферы переопределены по смыслу, не только по названию — вопросы переписаны с нуля. Остальные шесть сфер сохранили смысловую структуру: вопросы переформулированы под нондуальное ядро («что сейчас живёт» вместо «чего хочется») и очищены от action-based формулировок.</p>
+<hr>
+<h2 id="_1">Общая вводная (показывается перед анкетой)</h2>
+<blockquote>
+<p><strong>«Пара вопросов — и сцена попадёт в тебя, а не в кого-то»</strong></p>
+</blockquote>
+<p>Под заголовком — мелкий текст:</p>
+<blockquote>
+<p><em>или <a href="#describe_own_scene">опиши сцену сам</a></em></p>
+</blockquote>
+<hr>
+<h2 id="1">1. Я и состояние</h2>
+<p><strong>Slug:</strong> <code>sostoyanie</code>
+<strong>Короткое имя:</strong> состояние</p>
+<p><strong>Три угла (сохранены из v2-файла, подходят под новое название):</strong>
+- Угол 1 — Собранность: «я в своём центре, из него — в мир»
+- Угол 2 — Уникальность: «я — это я, и это не нужно объяснять»
+- Угол 3 — Присутствие: «я здесь, сейчас, никуда не тороплюсь»</p>
+<h3 id="intro">Intro</h3>
+<blockquote>
+<p><em>Как ты сейчас — 2 вопроса, 15 секунд</em></p>
+</blockquote>
+<h3 id="q1">Q1 — Что сейчас живёт в тебе?</h3>
+<ul>
+<li><strong>А. «Опора и собранность»</strong> → угол 1 (Собранность) — сценарий: перед входом куда-то / утро перед действием</li>
+<li><strong>Б. «Своё, особенное»</strong> → угол 2 (Уникальность) — сценарий: в привычной среде с характерной деталью</li>
+<li><strong>В. «Тишина и присутствие»</strong> → угол 3 (Присутствие) — сценарий: у окна / в замедлении</li>
+</ul>
+<h3 id="q2">Q2 — Где это происходит?</h3>
+<ul>
+<li><strong>А. Дома</strong></li>
+<li><strong>Б. В городе / в движении</strong></li>
+<li><strong>В. На природе / у воды</strong></li>
+</ul>
+<hr>
+<h2 id="2">2. Богатство и Ресурсы</h2>
+<p><strong>Slug:</strong> <code>resursy</code>
+<strong>Короткое имя:</strong> ресурсы</p>
+<p><strong>Три угла (сохранены из v2-файла, точно подходят):</strong>
+- Угол 1 — Свобода выбора: «могу не думать о цене — думаю о качестве»
+- Угол 2 — Мастерство: «я умею то, что ценится — и это достаточно»
+- Угол 3 — Масштаб: «то, что я делаю, касается многих»</p>
+<h3 id="intro_1">Intro</h3>
+<blockquote>
+<p><em>Ресурсы — это не про деньги. Про ощущение. 2 вопроса</em></p>
+</blockquote>
+<h3 id="q1_1">Q1 — Что сейчас здесь для тебя?</h3>
+<ul>
+<li><strong>А. «Могу выбирать — не думая о цене»</strong> → угол 1 (Свобода выбора)</li>
+<li><strong>Б. «Делаю то, в чём по-настоящему хорош»</strong> → угол 2 (Мастерство)</li>
+<li><strong>В. «Моё дело резонирует далеко»</strong> → угол 3 (Масштаб)</li>
+</ul>
+<h3 id="q2_1">Q2 — В какой роли ты сейчас?</h3>
+<ul>
+<li><strong>А. Выбираю / покупаю</strong> → усиление угла 1, сцена: момент выбора без внутреннего торга</li>
+<li><strong>Б. Создаю / работаю</strong> → усиление угла 2, сцена: в деле, руки или мысль — в работе</li>
+<li><strong>В. Управляю / веду</strong> → усиление угла 3, сцена: между людьми, в движении масштаба</li>
+</ul>
+<h3 id="q3">Q3 (опционально) — Где это происходит?</h3>
+<ul>
+<li><strong>А. В своём пространстве</strong></li>
+<li><strong>Б. В городе / в кафе</strong></li>
+<li><strong>В. На объекте / в команде / в пути</strong></li>
+</ul>
+<hr>
+<h2 id="3">3. Слава и Реализация</h2>
+<p><strong>Slug:</strong> <code>realizatsiya</code>
+<strong>Короткое имя:</strong> реализация</p>
+<p><strong>Три угла (из v2 «Проявленность», название сферы расширилось — углы актуальны, добавлен акцент на «признание без гонки за ним»):</strong>
+- Угол 1 — Голос: «меня слышат, потому что я говорю правду»
+- Угол 2 — Влияние: «моё присутствие что-то меняет в мире»
+- Угол 3 — Заметность: «я не прячусь — и это нормально»</p>
+<h3 id="intro_2">Intro</h3>
+<blockquote>
+<p><em>Как ты выходишь в мир — 2 вопроса</em></p>
+</blockquote>
+<h3 id="q1_2">Q1 — Через что ты сейчас выходишь?</h3>
+<ul>
+<li><strong>А. «Через слово — сказать важное»</strong> → угол 1 (Голос)</li>
+<li><strong>Б. «Через дело — оставить след»</strong> → угол 2 (Влияние)</li>
+<li><strong>В. «Через присутствие — быть видимым»</strong> → угол 3 (Заметность)</li>
+</ul>
+<h3 id="q2_2">Q2 — Масштаб?</h3>
+<ul>
+<li><strong>А. Малый круг / один на один</strong></li>
+<li><strong>Б. Команда / аудитория</strong></li>
+<li><strong>В. Через результат — продукт, а не напрямую</strong></li>
+</ul>
+<hr>
+<h2 id="4">4. Любовь и партнёрство</h2>
+<p><strong>Slug:</strong> <code>partnerstvo</code>
+<strong>Короткое имя:</strong> партнёрство</p>
+<p><strong>Три угла (из v2 «Отношения», название стало точнее — углы сохранены, добавлен акцент на партнёрство как тип связи):</strong>
+- Угол 1 — Близость: «я рядом с тем, с кем можно быть собой»
+- Угол 2 — Принятие: «не нужно держать лицо — и это освобождает»
+- Угол 3 — Со-творчество: «мы делаем что-то вместе, и это наше»</p>
+<h3 id="intro_3">Intro</h3>
+<blockquote>
+<p><em>Как живёт это рядом — 2 вопроса</em></p>
+</blockquote>
+<h3 id="q1_3">Q1 — Что сейчас важно в близком контакте?</h3>
+<ul>
+<li><strong>А. «Тишина — просто рядом»</strong> → угол 1 (Близость)</li>
+<li><strong>Б. «Быть принятым, как есть»</strong> → угол 2 (Принятие)</li>
+<li><strong>В. «Делать что-то вместе»</strong> → угол 3 (Со-творчество)</li>
+</ul>
+<h3 id="q2_3">Q2 — Когда это происходит?</h3>
+<ul>
+<li><strong>А. Утром — медленное начало дня</strong></li>
+<li><strong>Б. Вечером — замедление после</strong></li>
+<li><strong>В. В движении — среди дня</strong></li>
+</ul>
+<p><em>Q2 влияет на свет и атмосферу сцены, не на угол.</em></p>
+<hr>
+<h2 id="5">5. Семья, род, и дом</h2>
+<p><strong>Slug:</strong> <code>semya</code>
+<strong>Короткое имя:</strong> семья</p>
+<p><strong>Три угла — ПЕРЕРАБОТАНЫ. v2 «Очаг» держал фокус на личном пространстве и уюте. Новая сфера добавляет родовое измерение: история рода, корни, то, что передаётся. Углы пересмотрены:</strong></p>
+<ul>
+<li>Угол 1 — Дом как место силы: «здесь я восстанавливаюсь — стены работают на меня»</li>
+</ul>
+<p><em>Сохранён из v2-угла «Уют» — актуален. Только пользователь.</em></p>
+<ul>
+<li>Угол 2 — Корни и история: «здесь — моё. Место с памятью, которое меня держит»</li>
+</ul>
+<p><em>Расширен из v2-угла «Корни» — добавлено родовое измерение: традиции, передача, наследование.</em></p>
+<ul>
+<li>Угол 3 — Живой ритм вместе: «дом дышит — в нём есть жизнь, движение, близкие»</li>
+</ul>
+<p><em>Из v2-угла «Совместный ритм» — сохранён.</em></p>
+<blockquote>
+<p><strong>Флаг для Олега:</strong> угол 2 в v3 сместился от «предметов с историей» к «роду и памяти» — в него может попасть и фото родителей, и семейный ритуал, и история места. Это расширение. Нужно подтверждение: этот сдвиг задуман или «Корни» — это всё ещё только личная история, без рода?</p>
+</blockquote>
+<h3 id="intro_4">Intro</h3>
+<blockquote>
+<p><em>Про дом и тех, кто рядом — 2 вопроса</em></p>
+</blockquote>
+<h3 id="q1_4">Q1 — Что сейчас живёт здесь?</h3>
+<ul>
+<li><strong>А. «Моё пространство — дышу, когда вхожу»</strong> → угол 1 (Дом как место силы)</li>
+<li><strong>Б. «История рода — то, что держит и передаётся»</strong> → угол 2 (Корни и история)</li>
+<li><strong>В. «Совместный ритм — дом дышит, когда мы все в нём»</strong> → угол 3 (Живой ритм вместе)</li>
+</ul>
+<h3 id="q2_4">Q2 — Что ты сейчас делаешь дома?</h3>
+<ul>
+<li><strong>А. Отдыхаю — кофе, тишина, своё место</strong></li>
+<li><strong>Б. Ухаживаю — за пространством, за близкими, за тем, что важно</strong></li>
+<li><strong>В. Живём вместе — в движении, в ритме, в общем</strong></li>
+</ul>
+<hr>
+<h2 id="6">6. Дети, творчество, новое начинание</h2>
+<p><strong>Slug:</strong> <code>tvorenie</code>
+<strong>Короткое имя:</strong> творение</p>
+<p><strong>Три угла — ПЕРЕСМОТРЕНЫ. v2 «Творчество» держал фокус исключительно на процессе создания. Новая сфера добавляет: рождение нового (в том числе детей, новых проектов), начало с чистого листа. Углы:</strong></p>
+<ul>
+<li>Угол 1 — Поток: «я в нём — и в нём нет времени, есть только это»</li>
+</ul>
+<p><em>Из v2 — сохранён.</em></p>
+<ul>
+<li>Угол 2 — Рождение нового: «что-то начинается. Ещё хрупкое, но уже настоящее»</li>
+</ul>
+<p><em>НОВЫЙ угол, заменяет v2 «Мастерство руки». Охватывает: ребёнок, новый проект, первые шаги нового дела, семя.</em></p>
+<blockquote>
+<p><strong>Флаг для Олега:</strong> «Мастерство руки» из v2 убран, заменён на «Рождение нового» — чтобы покрыть тему детей и новых начинаний. Если «мастерство» важно держать — можно вернуть как четвёртый вариант Q1 или поставить Q3.</p>
+</blockquote>
+<ul>
+<li>Угол 3 — Живой процесс: «это происходит — не результат, а движение внутри»</li>
+</ul>
+<p><em>Из v2 — сохранён.</em></p>
+<h3 id="intro_5">Intro</h3>
+<blockquote>
+<p><em>Что сейчас создаёт себя в тебе — 2 вопроса</em></p>
+</blockquote>
+<h3 id="q1_5">Q1 — Что сейчас живёт в этой сфере?</h3>
+<ul>
+<li><strong>А. «Поток — когда время исчезает»</strong> → угол 1 (Поток)</li>
+<li><strong>Б. «Что-то новое — рождается, начинается»</strong> → угол 2 (Рождение нового)</li>
+<li><strong>В. «Процесс идёт — я в нём и с ним»</strong> → угол 3 (Живой процесс)</li>
+</ul>
+<h3 id="q2_5">Q2 — Что именно ты создаёшь или начинаешь?</h3>
+<ul>
+<li><strong>А. Цифровое / интеллектуальное (текст, код, идея, стратегия)</strong></li>
+<li><strong>Б. Материальное / тактильное (еда, ремесло, пространство, тело)</strong></li>
+<li><strong>В. Живое / человеческое (ребёнок, сообщество, отношения, традиция)</strong></li>
+</ul>
+<p><em>Ответ Q2 — прямой ключ к персонализации сцены. «Живое / человеческое» + угол 2 = сцена про рождение или взросление ребёнка, начало нового проекта с чистого листа.</em></p>
+<h3 id="q3_1">Q3 (опционально, текстовое поле) — Назови своими словами</h3>
+<blockquote>
+<p><em>Если хочешь — уточни, что именно. Иначе мы угадаем.</em></p>
+</blockquote>
+<p><em>Только в этой сфере. Дополнительная персонализация, не обязательна. Если пользователь ничего не вводит — работает Q1+Q2.</em></p>
+<hr>
+<h2 id="7">7. Знание, развитие и мудрость</h2>
+<p><strong>Slug:</strong> <code>razvitie</code>
+<strong>Короткое имя:</strong> развитие</p>
+<p><strong>Три угла (из v2 «Образование» — подходят точно, название расширилось добавив «мудрость», что усиливает угол 3):</strong>
+- Угол 1 — Погружение: «ушёл в это — и время потерялось»
+- Угол 2 — Открытие: «что-то щёлкнуло — стало ясно»
+- Угол 3 — Мудрость: «материал стал частью меня — я уже знаю»</p>
+<p><em>Угол 3 переименован с «Понимание» → «Мудрость» в соответствии с новым названием сферы. Смысл сохранён.</em></p>
+<h3 id="intro_6">Intro</h3>
+<blockquote>
+<p><em>Как ты сейчас с знанием — 2 вопроса</em></p>
+</blockquote>
+<h3 id="q1_6">Q1 — Какое отношение к знанию сейчас живёт?</h3>
+<ul>
+<li><strong>А. «Погружение — ушёл глубоко»</strong> → угол 1 (Погружение)</li>
+<li><strong>Б. «Открытие — что-то щёлкнуло»</strong> → угол 2 (Открытие)</li>
+<li><strong>В. «Знаю — и могу передать»</strong> → угол 3 (Мудрость)</li>
+</ul>
+<h3 id="q2_6">Q2 — Как это происходит?</h3>
+<ul>
+<li><strong>А. Через книгу / курс / статью</strong></li>
+<li><strong>Б. Через практику / навык / опыт</strong></li>
+<li><strong>В. Через наблюдение / жизнь / другого человека</strong></li>
+</ul>
+<hr>
+<h2 id="8">8. Свобода, путешествие и масштаб</h2>
+<p><strong>Slug:</strong> <code>svoboda</code>
+<strong>Короткое имя:</strong> свобода</p>
+<p><strong>Три угла (из v2 «Путешествия» — подходят, новое название добавляет «свободу» и «масштаб», что усиливает углы 1 и 3):</strong>
+- Угол 1 — Дорога: «я в движении — и сам путь ценен»
+- Угол 2 — Новое место: «встреча с иным — живой, не турист»
+- Угол 3 — Ритм движения: «это мой образ жизни — не поездка»</p>
+<h3 id="intro_7">Intro</h3>
+<blockquote>
+<p><em>Как живёт движение в тебе — 2 вопроса</em></p>
+</blockquote>
+<h3 id="q1_7">Q1 — Что сейчас здесь?</h3>
+<ul>
+<li><strong>А. «Быть в движении — сам путь важен»</strong> → угол 1 (Дорога)</li>
+<li><strong>Б. «Встретить новое место»</strong> → угол 2 (Новое место)</li>
+<li><strong>В. «Движение — мой ритм жизни»</strong> → угол 3 (Ритм движения)</li>
+</ul>
+<h3 id="q2_7">Q2 — Тип?</h3>
+<ul>
+<li><strong>А. Тихое / созерцательное</strong></li>
+<li><strong>Б. Активное / исследовательское</strong></li>
+<li><strong>В. Возвращающееся — места, которые знают меня</strong></li>
+</ul>
+<hr>
+<h2 id="9">9. Окружение и социальная среда</h2>
+<p><strong>Slug:</strong> <code>okruzhenie</code>
+<strong>Короткое имя:</strong> окружение</p>
+<p><strong>Три угла — ПЕРЕСМОТРЕНЫ. v2 «Социальность» держал фокус на компании и взаимодействии. Новая сфера — про СРЕДУ вокруг: кто рядом по жизни, какой воздух, какие люди формируют ежедневный контекст. Это не разовая встреча — это среда как часть идентичности.</strong></p>
+<ul>
+<li>Угол 1 — Свой круг: «среди тех, кому не надо объяснять, кто ты»</li>
+</ul>
+<p><em>Из v2 — сохранён.</em></p>
+<ul>
+<li>Угол 2 — Среда как сила: «люди вокруг тянут вверх — просто от того, что они рядом»</li>
+</ul>
+<p><em>НОВЫЙ акцент. v2 «Вклад в людей» держал фокус на том, что пользователь ДАЁТ. Новый угол смещается: что СРЕДА даёт пользователю — качество контекста, уровень окружения, вдохновляющее поле.</em></p>
+<blockquote>
+<p><strong>Флаг для Олега:</strong> угол 2 сменён с «Вклад в людей» → «Среда как сила». Это меняет вектор: было «я даю», стало «я в среде, которая поднимает». Если «отдача» важна — можно оставить v2-вариант или сделать Q2 с выбором.</p>
+</blockquote>
+<ul>
+<li>Угол 3 — Принятие: «мне с ними хорошо — принят таким, какой я есть»</li>
+</ul>
+<p><em>Из v2 — сохранён.</em></p>
+<h3 id="intro_8">Intro</h3>
+<blockquote>
+<p><em>Кто вокруг — 2 вопроса</em></p>
+</blockquote>
+<h3 id="q1_8">Q1 — Что сейчас важно в окружении?</h3>
+<ul>
+<li><strong>А. «Свои — понимают с полуслова»</strong> → угол 1 (Свой круг)</li>
+<li><strong>Б. «Среда, которая тянет вверх»</strong> → угол 2 (Среда как сила)</li>
+<li><strong>В. «Тепло — принят таким, какой есть»</strong> → угол 3 (Принятие)</li>
+</ul>
+<h3 id="q2_8">Q2 — Где это живёт?</h3>
+<ul>
+<li><strong>А. Дома / в своём пространстве</strong></li>
+<li><strong>Б. В кафе / ресторане / в городе</strong></li>
+<li><strong>В. В сообществе / на событии / в профессиональной среде</strong></li>
+</ul>
+<hr>
+<h2 id="json-">JSON-схема для Дениса</h2>
+<pre><code class="language-json">{
+  &quot;sostoyanie&quot;: {
+    &quot;intro&quot;: &quot;Как ты сейчас — 2 вопроса, 15 секунд&quot;,
+    &quot;questions&quot;: [
+      {
+        &quot;id&quot;: &quot;q1&quot;,
+        &quot;text&quot;: &quot;Что сейчас живёт в тебе?&quot;,
+        &quot;options&quot;: [
+          { &quot;label&quot;: &quot;Опора и собранность&quot;, &quot;maps_to_angle&quot;: 1, &quot;scenario_hint&quot;: &quot;before_action_morning_center&quot; },
+          { &quot;label&quot;: &quot;Своё, особенное&quot;, &quot;maps_to_angle&quot;: 2, &quot;scenario_hint&quot;: &quot;signature_detail_habitual_env&quot; },
+          { &quot;label&quot;: &quot;Тишина и присутствие&quot;, &quot;maps_to_angle&quot;: 3, &quot;scenario_hint&quot;: &quot;window_slow_moment&quot; }
+        ]
+      },
+      {
+        &quot;id&quot;: &quot;q2&quot;,
+        &quot;text&quot;: &quot;Где это происходит?&quot;,
+        &quot;options&quot;: [
+          { &quot;label&quot;: &quot;Дома&quot;, &quot;environment_hint&quot;: &quot;home&quot; },
+          { &quot;label&quot;: &quot;В городе / в движении&quot;, &quot;environment_hint&quot;: &quot;urban_transit&quot; },
+          { &quot;label&quot;: &quot;На природе / у воды&quot;, &quot;environment_hint&quot;: &quot;nature_quiet&quot; }
+        ]
+      }
+    ],
+    &quot;default_angle_if_skipped&quot;: 3
+  },
+
+  &quot;resursy&quot;: {
+    &quot;intro&quot;: &quot;Ресурсы — это не про деньги. Про ощущение. 2 вопроса&quot;,
+    &quot;questions&quot;: [
+      {
+        &quot;id&quot;: &quot;q1&quot;,
+        &quot;text&quot;: &quot;Что сейчас здесь для тебя?&quot;,
+        &quot;options&quot;: [
+          { &quot;label&quot;: &quot;Могу выбирать — не думая о цене&quot;, &quot;maps_to_angle&quot;: 1, &quot;scenario_hint&quot;: &quot;choice_without_price_thought&quot; },
+          { &quot;label&quot;: &quot;Делаю то, в чём по-настоящему хорош&quot;, &quot;maps_to_angle&quot;: 2, &quot;scenario_hint&quot;: &quot;work_at_mastery_level&quot; },
+          { &quot;label&quot;: &quot;Моё дело резонирует далеко&quot;, &quot;maps_to_angle&quot;: 3, &quot;scenario_hint&quot;: &quot;scale_resonance_beyond_self&quot; }
+        ]
+      },
+      {
+        &quot;id&quot;: &quot;q2&quot;,
+        &quot;text&quot;: &quot;В какой роли ты сейчас?&quot;,
+        &quot;options&quot;: [
+          { &quot;label&quot;: &quot;Выбираю / покупаю&quot;, &quot;maps_to_angle&quot;: 1, &quot;scenario_hint&quot;: &quot;buyer_chooser&quot; },
+          { &quot;label&quot;: &quot;Создаю / работаю&quot;, &quot;maps_to_angle&quot;: 2, &quot;scenario_hint&quot;: &quot;maker_worker&quot; },
+          { &quot;label&quot;: &quot;Управляю / веду&quot;, &quot;maps_to_angle&quot;: 3, &quot;scenario_hint&quot;: &quot;leader_coordinator&quot; }
+        ]
+      },
+      {
+        &quot;id&quot;: &quot;q3&quot;,
+        &quot;optional&quot;: true,
+        &quot;text&quot;: &quot;Где это происходит?&quot;,
+        &quot;options&quot;: [
+          { &quot;label&quot;: &quot;В своём пространстве&quot;, &quot;environment_hint&quot;: &quot;home_office&quot; },
+          { &quot;label&quot;: &quot;В городе / в кафе&quot;, &quot;environment_hint&quot;: &quot;urban&quot; },
+          { &quot;label&quot;: &quot;На объекте / в команде / в пути&quot;, &quot;environment_hint&quot;: &quot;field_team_travel&quot; }
+        ]
+      }
+    ],
+    &quot;default_angle_if_skipped&quot;: 1
+  },
+
+  &quot;realizatsiya&quot;: {
+    &quot;intro&quot;: &quot;Как ты выходишь в мир — 2 вопроса&quot;,
+    &quot;questions&quot;: [
+      {
+        &quot;id&quot;: &quot;q1&quot;,
+        &quot;text&quot;: &quot;Через что ты сейчас выходишь?&quot;,
+        &quot;options&quot;: [
+          { &quot;label&quot;: &quot;Через слово — сказать важное&quot;, &quot;maps_to_angle&quot;: 1, &quot;scenario_hint&quot;: &quot;voice_truth_small_group&quot; },
+          { &quot;label&quot;: &quot;Через дело — оставить след&quot;, &quot;maps_to_angle&quot;: 2, &quot;scenario_hint&quot;: &quot;action_ripple_effect&quot; },
+          { &quot;label&quot;: &quot;Через присутствие — быть видимым&quot;, &quot;maps_to_angle&quot;: 3, &quot;scenario_hint&quot;: &quot;visible_open_natural&quot; }
+        ]
+      },
+      {
+        &quot;id&quot;: &quot;q2&quot;,
+        &quot;text&quot;: &quot;Масштаб?&quot;,
+        &quot;options&quot;: [
+          { &quot;label&quot;: &quot;Малый круг / один на один&quot;, &quot;environment_hint&quot;: &quot;intimate_small&quot; },
+          { &quot;label&quot;: &quot;Команда / аудитория&quot;, &quot;environment_hint&quot;: &quot;group_audience&quot; },
+          { &quot;label&quot;: &quot;Через результат — продукт, а не напрямую&quot;, &quot;environment_hint&quot;: &quot;through_output&quot; }
+        ]
+      }
+    ],
+    &quot;default_angle_if_skipped&quot;: 1
+  },
+
+  &quot;partnerstvo&quot;: {
+    &quot;intro&quot;: &quot;Как живёт это рядом — 2 вопроса&quot;,
+    &quot;questions&quot;: [
+      {
+        &quot;id&quot;: &quot;q1&quot;,
+        &quot;text&quot;: &quot;Что сейчас важно в близком контакте?&quot;,
+        &quot;options&quot;: [
+          { &quot;label&quot;: &quot;Тишина — просто рядом&quot;, &quot;maps_to_angle&quot;: 1, &quot;scenario_hint&quot;: &quot;quiet_presence_side_by_side&quot; },
+          { &quot;label&quot;: &quot;Быть принятым, как есть&quot;, &quot;maps_to_angle&quot;: 2, &quot;scenario_hint&quot;: &quot;acceptance_no_mask&quot; },
+          { &quot;label&quot;: &quot;Делать что-то вместе&quot;, &quot;maps_to_angle&quot;: 3, &quot;scenario_hint&quot;: &quot;co_action_partnership&quot; }
+        ]
+      },
+      {
+        &quot;id&quot;: &quot;q2&quot;,
+        &quot;text&quot;: &quot;Когда это происходит?&quot;,
+        &quot;options&quot;: [
+          { &quot;label&quot;: &quot;Утром — медленное начало дня&quot;, &quot;time_hint&quot;: &quot;morning&quot; },
+          { &quot;label&quot;: &quot;Вечером — замедление после&quot;, &quot;time_hint&quot;: &quot;evening&quot; },
+          { &quot;label&quot;: &quot;В движении — среди дня&quot;, &quot;time_hint&quot;: &quot;daytime&quot; }
+        ]
+      }
+    ],
+    &quot;default_angle_if_skipped&quot;: 1
+  },
+
+  &quot;semya&quot;: {
+    &quot;intro&quot;: &quot;Про дом и тех, кто рядом — 2 вопроса&quot;,
+    &quot;questions&quot;: [
+      {
+        &quot;id&quot;: &quot;q1&quot;,
+        &quot;text&quot;: &quot;Что сейчас живёт здесь?&quot;,
+        &quot;options&quot;: [
+          { &quot;label&quot;: &quot;Моё пространство — дышу, когда вхожу&quot;, &quot;maps_to_angle&quot;: 1, &quot;scenario_hint&quot;: &quot;home_as_refuge_solo&quot; },
+          { &quot;label&quot;: &quot;История рода — то, что держит и передаётся&quot;, &quot;maps_to_angle&quot;: 2, &quot;scenario_hint&quot;: &quot;roots_memory_tradition&quot; },
+          { &quot;label&quot;: &quot;Совместный ритм — дом дышит, когда мы в нём&quot;, &quot;maps_to_angle&quot;: 3, &quot;scenario_hint&quot;: &quot;living_rhythm_together&quot; }
+        ]
+      },
+      {
+        &quot;id&quot;: &quot;q2&quot;,
+        &quot;text&quot;: &quot;Что ты сейчас делаешь дома?&quot;,
+        &quot;options&quot;: [
+          { &quot;label&quot;: &quot;Отдыхаю — кофе, тишина, своё место&quot;, &quot;scenario_hint&quot;: &quot;rest_ritual&quot; },
+          { &quot;label&quot;: &quot;Ухаживаю — за пространством, за близкими&quot;, &quot;scenario_hint&quot;: &quot;care_nurture&quot; },
+          { &quot;label&quot;: &quot;Живём вместе — в движении, в ритме&quot;, &quot;scenario_hint&quot;: &quot;shared_life_rhythm&quot; }
+        ]
+      }
+    ],
+    &quot;default_angle_if_skipped&quot;: 1
+  },
+
+  &quot;tvorenie&quot;: {
+    &quot;intro&quot;: &quot;Что сейчас создаёт себя в тебе — 2 вопроса&quot;,
+    &quot;questions&quot;: [
+      {
+        &quot;id&quot;: &quot;q1&quot;,
+        &quot;text&quot;: &quot;Что сейчас живёт в этой сфере?&quot;,
+        &quot;options&quot;: [
+          { &quot;label&quot;: &quot;Поток — когда время исчезает&quot;, &quot;maps_to_angle&quot;: 1, &quot;scenario_hint&quot;: &quot;flow_time_disappears&quot; },
+          { &quot;label&quot;: &quot;Что-то новое — рождается, начинается&quot;, &quot;maps_to_angle&quot;: 2, &quot;scenario_hint&quot;: &quot;new_beginning_birth_seed&quot; },
+          { &quot;label&quot;: &quot;Процесс идёт — я в нём и с ним&quot;, &quot;maps_to_angle&quot;: 3, &quot;scenario_hint&quot;: &quot;alive_process_in_motion&quot; }
+        ]
+      },
+      {
+        &quot;id&quot;: &quot;q2&quot;,
+        &quot;text&quot;: &quot;Что именно создаёшь или начинаешь?&quot;,
+        &quot;options&quot;: [
+          { &quot;label&quot;: &quot;Цифровое / интеллектуальное (текст, код, идея)&quot;, &quot;medium_hint&quot;: &quot;digital_intellectual&quot; },
+          { &quot;label&quot;: &quot;Материальное / тактильное (еда, ремесло, пространство)&quot;, &quot;medium_hint&quot;: &quot;physical_tactile&quot; },
+          { &quot;label&quot;: &quot;Живое / человеческое (ребёнок, сообщество, традиция)&quot;, &quot;medium_hint&quot;: &quot;living_human&quot; }
+        ]
+      },
+      {
+        &quot;id&quot;: &quot;q3&quot;,
+        &quot;optional&quot;: true,
+        &quot;type&quot;: &quot;text_field&quot;,
+        &quot;placeholder&quot;: &quot;Если хочешь — уточни, что именно. Иначе мы угадаем.&quot;,
+        &quot;max_length&quot;: 80
+      }
+    ],
+    &quot;default_angle_if_skipped&quot;: 1
+  },
+
+  &quot;razvitie&quot;: {
+    &quot;intro&quot;: &quot;Как ты сейчас с знанием — 2 вопроса&quot;,
+    &quot;questions&quot;: [
+      {
+        &quot;id&quot;: &quot;q1&quot;,
+        &quot;text&quot;: &quot;Какое отношение к знанию сейчас живёт?&quot;,
+        &quot;options&quot;: [
+          { &quot;label&quot;: &quot;Погружение — ушёл глубоко&quot;, &quot;maps_to_angle&quot;: 1, &quot;scenario_hint&quot;: &quot;deep_absorption_material&quot; },
+          { &quot;label&quot;: &quot;Открытие — что-то щёлкнуло&quot;, &quot;maps_to_angle&quot;: 2, &quot;scenario_hint&quot;: &quot;insight_click_moment&quot; },
+          { &quot;label&quot;: &quot;Знаю — и могу передать&quot;, &quot;maps_to_angle&quot;: 3, &quot;scenario_hint&quot;: &quot;wisdom_embodied_calm&quot; }
+        ]
+      },
+      {
+        &quot;id&quot;: &quot;q2&quot;,
+        &quot;text&quot;: &quot;Как это происходит?&quot;,
+        &quot;options&quot;: [
+          { &quot;label&quot;: &quot;Через книгу / курс / статью&quot;, &quot;medium_hint&quot;: &quot;book_course_text&quot; },
+          { &quot;label&quot;: &quot;Через практику / навык / опыт&quot;, &quot;medium_hint&quot;: &quot;practice_skill&quot; },
+          { &quot;label&quot;: &quot;Через наблюдение / жизнь / другого человека&quot;, &quot;medium_hint&quot;: &quot;observation_life&quot; }
+        ]
+      }
+    ],
+    &quot;default_angle_if_skipped&quot;: 1
+  },
+
+  &quot;svoboda&quot;: {
+    &quot;intro&quot;: &quot;Как живёт движение в тебе — 2 вопроса&quot;,
+    &quot;questions&quot;: [
+      {
+        &quot;id&quot;: &quot;q1&quot;,
+        &quot;text&quot;: &quot;Что сейчас здесь?&quot;,
+        &quot;options&quot;: [
+          { &quot;label&quot;: &quot;Быть в движении — сам путь важен&quot;, &quot;maps_to_angle&quot;: 1, &quot;scenario_hint&quot;: &quot;road_motion_as_value&quot; },
+          { &quot;label&quot;: &quot;Встретить новое место&quot;, &quot;maps_to_angle&quot;: 2, &quot;scenario_hint&quot;: &quot;new_place_alive_presence&quot; },
+          { &quot;label&quot;: &quot;Движение — мой ритм жизни&quot;, &quot;maps_to_angle&quot;: 3, &quot;scenario_hint&quot;: &quot;travel_as_lifestyle_rhythm&quot; }
+        ]
+      },
+      {
+        &quot;id&quot;: &quot;q2&quot;,
+        &quot;text&quot;: &quot;Тип?&quot;,
+        &quot;options&quot;: [
+          { &quot;label&quot;: &quot;Тихое / созерцательное&quot;, &quot;style_hint&quot;: &quot;quiet_contemplative&quot; },
+          { &quot;label&quot;: &quot;Активное / исследовательское&quot;, &quot;style_hint&quot;: &quot;active_exploratory&quot; },
+          { &quot;label&quot;: &quot;Возвращающееся — места, которые знают меня&quot;, &quot;style_hint&quot;: &quot;ritual_return&quot; }
+        ]
+      }
+    ],
+    &quot;default_angle_if_skipped&quot;: 2
+  },
+
+  &quot;okruzhenie&quot;: {
+    &quot;intro&quot;: &quot;Кто вокруг — 2 вопроса&quot;,
+    &quot;questions&quot;: [
+      {
+        &quot;id&quot;: &quot;q1&quot;,
+        &quot;text&quot;: &quot;Что сейчас важно в окружении?&quot;,
+        &quot;options&quot;: [
+          { &quot;label&quot;: &quot;Свои — понимают с полуслова&quot;, &quot;maps_to_angle&quot;: 1, &quot;scenario_hint&quot;: &quot;own_circle_understood&quot; },
+          { &quot;label&quot;: &quot;Среда, которая тянет вверх&quot;, &quot;maps_to_angle&quot;: 2, &quot;scenario_hint&quot;: &quot;environment_pulls_up_elevates&quot; },
+          { &quot;label&quot;: &quot;Тепло — принят таким, какой есть&quot;, &quot;maps_to_angle&quot;: 3, &quot;scenario_hint&quot;: &quot;warmth_accepted_as_is&quot; }
+        ]
+      },
+      {
+        &quot;id&quot;: &quot;q2&quot;,
+        &quot;text&quot;: &quot;Где это живёт?&quot;,
+        &quot;options&quot;: [
+          { &quot;label&quot;: &quot;Дома / в своём пространстве&quot;, &quot;environment_hint&quot;: &quot;home&quot; },
+          { &quot;label&quot;: &quot;В кафе / ресторане / в городе&quot;, &quot;environment_hint&quot;: &quot;urban_social&quot; },
+          { &quot;label&quot;: &quot;В сообществе / на событии / в профессиональной среде&quot;, &quot;environment_hint&quot;: &quot;community_event_professional&quot; }
+        ]
+      }
+    ],
+    &quot;default_angle_if_skipped&quot;: 1
+  }
+}
+</code></pre>
+<hr>
+<h2 id="_2">Комментарий для Дениса</h2>
+<ol>
+<li>
+<p>Структура та же, что в v2: Q1 → угол, Q2 → сцена/среда, Q3 опционально. Только в сфере <code>tvorenie</code> (творение) есть текстовое поле Q3 — <code>"type": "text_field"</code>. Все остальные Q3 — кнопочные.</p>
+</li>
+<li>
+<p>Слаги изменились для трёх сфер: <code>ochag</code> → <code>semya</code>, <code>tvorchestvo</code> → <code>tvorenie</code>, <code>sotsialnost</code> → <code>okruzhenie</code>. Остальные шесть — те же слаги, что в v2.</p>
+</li>
+<li>
+<p><code>default_angle_if_skipped</code> проставлен по смыслу: для сфер присутствия (состояние) — угол 3 (Присутствие). Для остальных — угол 1. Исключение: <code>svoboda</code> — угол 2 (Новое место), как наиболее universal.</p>
+</li>
+<li>
+<p>Частичные ответы — то же правило, что в v2: сохраняем на 24 часа, при возврате предлагаем «продолжить или заново».</p>
+</li>
+<li>
+<p><code>maps_to_angle</code> в Q2 проставлен только там, где он явно усиливает угол (ресурсы). В остальных Q2 — только <code>environment_hint</code> или <code>time_hint</code>.</p>
+</li>
+</ol>
+<hr>
+<h2 id="_3">Открытые вопросы для Олега</h2>
+<ol>
+<li>
+<p><strong>Сфера 5 «Семья, род, и дом» — угол 2:</strong> я сдвинул «Корни» в сторону рода и передающейся истории. Если «родовая тема» — риск эзотерики, угол можно держать ближе к v2 (предметы с историей, обжитое пространство). Твоё решение.</p>
+</li>
+<li>
+<p><strong>Сфера 6 «Творение» — угол 2:</strong> убрал «Мастерство руки», добавил «Рождение нового». Это чтобы сфера покрывала детей и новые начинания. Если «мастерство руки» нужно держать — можно вернуть Q3 с выбором или добавить четвёртый вариант Q1.</p>
+</li>
+<li>
+<p><strong>Сфера 9 «Окружение» — угол 2:</strong> сменил «Вклад в людей» (я даю) → «Среда как сила» (среда поднимает меня). Если важен вектор «я создаю среду» — возвращаем v2-вариант.</p>
+</li>
+<li>
+<p><strong>Intro-строки:</strong> сейчас разные по тону для каждой сферы. Проверь — хочется ли единого шаблона или разные фразы нормально, каждая сфера дышит по-своему.</p>
+</li>
+<li>
+<p><strong>Q2 для «Партнёрство» — время суток:</strong> там выбор между утром/вечером/днём влияет на свет. Нет ли ощущения, что это слишком «техническое» для пользователя — не пора ли заменить на что-то более смысловое?</p>
+</li>
+</ol>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
