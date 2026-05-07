@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elyne</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #14110d;
+  --text: #efe6d5;
+  --text-mute: #8d7659;
+  --amber: #d49963;
+  --line: rgba(180,132,80,0.14);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+.deck { display: flex; flex-direction: column; }
+.slide {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 14vh 10vw;
+  position: relative;
+  border-bottom: 1px solid var(--line);
+  background:
+    radial-gradient(ellipse 70% 50% at 80% 20%, rgba(212,153,99,0.05), transparent 60%);
+}
+.slide-inner {
+  max-width: 980px;
+  width: 100%;
+}
+.slide-num {
+  position: absolute;
+  top: 5vh;
+  left: 5vw;
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+}
+.slide-text {
+  font-family: 'Cormorant Garamond', 'Tinos', Georgia, serif;
+  font-weight: 300;
+  font-size: clamp(30px, 4.4vw, 64px);
+  line-height: 1.22;
+  letter-spacing: -0.005em;
+  color: var(--text);
+  max-width: 18ch;
+}
+.slide-text p + p { margin-top: 0.7em; }
+.slide-text .em { color: var(--amber); font-style: italic; font-weight: 400; }
+
+/* hero (slide 1) */
+.slide-hero .wordmark {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(80px, 14vw, 200px);
+  letter-spacing: 0.04em;
+  line-height: 1;
+  margin-bottom: 0.35em;
+  color: var(--text);
+}
+.slide-hero .tagline {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(24px, 3vw, 44px);
+  line-height: 1.3;
+  color: var(--text);
+  max-width: 24ch;
+}
+.slide-hero .subline {
+  margin-top: 2.4em;
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(11px, 1vw, 13px);
+  font-weight: 400;
+  color: var(--text-mute);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+/* finale (slide 7) */
+.slide-finale .slide-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 4em;
+}
+.slide-finale .closing {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(28px, 3.6vw, 50px);
+  line-height: 1.3;
+  color: var(--text);
+  max-width: 24ch;
+}
+.slide-finale .wordmark {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(60px, 10vw, 140px);
+  letter-spacing: 0.05em;
+  line-height: 1;
+  color: var(--amber);
+}
+
+/* mechanism slide (4) — three lines with elegant flow */
+.mechanism p {
+  position: relative;
+  padding-left: 1.6em;
+}
+.mechanism p::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  top: 0.05em;
+  color: var(--amber);
+  opacity: 0.5;
+  font-style: normal;
+}
+
+@media (max-width: 820px) {
+  .slide { padding: 10vh 7vw; }
+  .slide-text { font-size: clamp(26px, 6vw, 40px); }
+}
+@media print {
+  .slide { page-break-after: always; min-height: 100vh; border-bottom: none; }
+}
+</style>
+</head>
+<body>
+<div class="deck">
+
+<!-- 1 — hero -->
+<section class="slide slide-hero">
+  <span class="slide-num">01 · 07</span>
+  <div class="slide-inner">
+    <div class="wordmark">Elyne</div>
+    <div class="tagline">Увидеть жизнь, которую ты действительно хочешь проживать.</div>
+    <div class="subline">Платформа визуализации возможных сценариев жизни</div>
+  </div>
+</section>
+
+<!-- 2 — turning point -->
+<section class="slide">
+  <span class="slide-num">02 · 07</span>
+  <div class="slide-inner">
+    <div class="slide-text">
+      <p>Иногда человеку нужно</p>
+      <p>не&nbsp;просто поставить цель&nbsp;—</p>
+      <p>а&nbsp;<span class="em">увидеть себя внутри неё.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- 3 — main thesis -->
+<section class="slide">
+  <span class="slide-num">03 · 07</span>
+  <div class="slide-inner">
+    <div class="slide-text">
+      <p>Когда человек способен</p>
+      <p>ясно увидеть возможную жизнь&nbsp;—</p>
+      <p>она начинает ощущаться <span class="em">реальной.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- 4 — mechanism -->
+<section class="slide">
+  <span class="slide-num">04 · 07</span>
+  <div class="slide-inner">
+    <div class="slide-text mechanism">
+      <p>Состояние меняет восприятие.</p>
+      <p>Восприятие меняет действия.</p>
+      <p>Действия меняют <span class="em">траекторию жизни.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- 5 — what Elyne is -->
+<section class="slide">
+  <span class="slide-num">05 · 07</span>
+  <div class="slide-inner">
+    <div class="slide-text">
+      <p>Elyne&nbsp;— пространство,</p>
+      <p>где человек может приблизиться</p>
+      <p>к&nbsp;той версии себя,</p>
+      <p>которой <span class="em">хочет стать.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- 6 — from seeing to living -->
+<section class="slide">
+  <span class="slide-num">06 · 07</span>
+  <div class="slide-inner">
+    <div class="slide-text">
+      <p>Увидеть жизнь&nbsp;— недостаточно.</p>
+      <p>Важно начать <span class="em">проживать её.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 — finale -->
+<section class="slide slide-finale">
+  <span class="slide-num">07 · 07</span>
+  <div class="slide-inner">
+    <div class="closing">
+      Всё, что человек способен увидеть,<br>
+      может стать частью его жизни.
+    </div>
+    <div class="wordmark">Elyne</div>
+  </div>
+</section>
+
+</div>
+</body>
+</html>
