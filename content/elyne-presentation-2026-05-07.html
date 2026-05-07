@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elyne — презентация</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #15110d;
+  --bg-elev: #1f1812;
+  --text: #f0e6d6;
+  --text-mute: #a78866;
+  --amber: #d49963;
+  --brass: #b48450;
+  --line: rgba(180,132,80,0.18);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-font-smoothing: antialiased; }
+.deck { display: flex; flex-direction: column; }
+.slide {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8vh 7vw;
+  position: relative;
+  border-bottom: 1px solid var(--line);
+  background:
+    radial-gradient(ellipse 80% 60% at 75% 30%, rgba(212,153,99,0.06), transparent 60%),
+    radial-gradient(ellipse 60% 80% at 20% 80%, rgba(180,132,80,0.04), transparent 65%);
+}
+.slide-inner {
+  max-width: 1180px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 7vw;
+  align-items: center;
+}
+.slide-text {
+  font-family: 'Cormorant Garamond', 'Tinos', Georgia, serif;
+  font-weight: 300;
+  font-size: clamp(26px, 3.4vw, 50px);
+  line-height: 1.28;
+  letter-spacing: -0.005em;
+  color: var(--text);
+}
+.slide-text p + p { margin-top: 1em; }
+.slide-text .em { color: var(--amber); font-style: italic; font-weight: 400; }
+.slide-num {
+  position: absolute;
+  top: 4vh;
+  left: 4vw;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  font-family: 'Inter', sans-serif;
+}
+.image-brief {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(14px, 1.05vw, 17px);
+  line-height: 1.6;
+  color: var(--text-mute);
+  border-left: 1px solid var(--line);
+  padding-left: 26px;
+}
+.image-brief::before {
+  content: "image";
+  display: block;
+  font-style: normal;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  color: var(--brass);
+  margin-bottom: 14px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+}
+.image-brief br { margin-bottom: 0.4em; display: block; content: ""; }
+
+/* hero */
+.slide-hero .slide-inner { grid-template-columns: 1fr; }
+.slide-hero .wordmark {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(64px, 11vw, 156px);
+  letter-spacing: 0.04em;
+  line-height: 1;
+  margin-bottom: 0.5em;
+  color: var(--text);
+}
+.slide-hero .tagline {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(22px, 2.7vw, 38px);
+  line-height: 1.3;
+  color: var(--text);
+  max-width: 22ch;
+}
+.slide-hero .subline {
+  margin-top: 2em;
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(12px, 1.1vw, 15px);
+  font-weight: 400;
+  color: var(--text-mute);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+/* flow slide (slide 15) */
+.flow-step {
+  display: block;
+  margin-bottom: 1em;
+  font-size: clamp(20px, 2.2vw, 30px);
+}
+.flow-step::after {
+  content: "↓";
+  display: block;
+  margin-top: 0.6em;
+  font-size: 18px;
+  color: var(--brass);
+  opacity: 0.6;
+}
+.flow-step:last-child::after { content: ""; }
+
+/* nav hint */
+.nav-hint {
+  position: fixed;
+  bottom: 2vh;
+  right: 2vw;
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  color: var(--text-mute);
+  text-transform: uppercase;
+  z-index: 10;
+  background: rgba(21,17,13,0.85);
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+}
+
+@media (max-width: 820px) {
+  .slide-inner { grid-template-columns: 1fr; gap: 5vh; }
+  .slide-text { font-size: clamp(22px, 5vw, 32px); }
+  .slide { padding: 6vh 6vw; }
+}
+@media print {
+  .nav-hint { display: none; }
+  .slide { page-break-after: always; min-height: 100vh; }
+}
+</style>
+</head>
+<body>
+<div class="deck">
+
+<!-- 1 -->
+<section class="slide slide-hero">
+  <span class="slide-num">01 · 19</span>
+  <div class="slide-inner">
+    <div>
+      <div class="wordmark">Elyne</div>
+      <div class="tagline">Увидеть жизнь, которую ты действительно хочешь проживать.</div>
+      <div class="subline">AI-платформа визуализации возможных сценариев жизни</div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section class="slide">
+  <span class="slide-num">02 · 19</span>
+  <div class="slide-inner">
+    <div class="slide-text">
+      <p>У&nbsp;человека всегда существует</p>
+      <p><span class="em">больше одной</span> возможной версии своей жизни.</p>
+    </div>
+    <div class="image-brief">Один человек стоит перед огромным спокойным пространством&nbsp;— вода, туман, несколько направлений пути. Ощущение выбора и&nbsp;множества реальностей.</div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="slide">
+  <span class="slide-num">03 · 19</span>
+  <div class="slide-inner">
+    <div class="slide-text">
+      <p>Но большинство людей</p>
+      <p>никогда не&nbsp;видят их&nbsp;<span class="em">ясно</span>.</p>
+    </div>
+    <div class="image-brief">Размытый портрет человека в&nbsp;движении. Мягкий motion blur. Тёмный cinematic свет.</div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="slide">
+  <span class="slide-num">04 · 19</span>
+  <div class="slide-inner">
+    <div class="slide-text">
+      <p>Желания остаются абстрактными.</p>
+      <p>Цели&nbsp;— формальными.</p>
+      <p>А&nbsp;внутренний отклик <span class="em">теряется</span>.</p>
+    </div>
+    <div class="image-brief">Открытый блокнот или страницы с&nbsp;заметками при тёплом свете. Небольшой хаос мыслей. Очень тактильная сцена.</div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="slide">
+  <span class="slide-num">05 · 19</span>
+  <div class="slide-inner">
+    <div class="slide-text">
+      <p>Иногда человеку нужно</p>
+      <p>не&nbsp;просто поставить цель.</p>
+      <p><span class="em">А&nbsp;увидеть себя внутри неё.</span></p>
+    </div>
+    <div class="image-brief">Человек сидит на&nbsp;полу вечером у&nbsp;окна. Тихий момент внутреннего осознания. Очень реалистично и&nbsp;интимно.</div>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="slide">
+  <span class="slide-num">06 · 19</span>
+  <div class="slide-inner">
+    <div class="slide-text">
+      <p>Elyne помогает увидеть</p>
+      <p>возможные <span class="em">ветки</span> своей жизни.</p>
+    </div>
+    <div class="image-brief">Коллаж из&nbsp;6&ndash;9 cinematic-фрагментов&nbsp;— море, творчество, отношения, свобода, путешествия, спокойная жизнь, масштаб, город, природа. Все сцены ощущаются как одна жизнь.</div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="slide">
+  <span class="slide-num">07 · 19</span>
+  <div class="slide-inner">
+    <div class="slide-text">
+      <p>Не&nbsp;как фантазию.</p>
+      <p>А&nbsp;как <span class="em">эмоционально узнаваемый</span> опыт.</p>
+    </div>
+    <div class="image-brief">Ткань, свет, тени, движение воздуха. Почти абстрактная cinematic-фотография. Очень tactile feeling.</div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="slide">
+  <span class="slide-num">08 · 19</span>
+  <div class="slide-inner">
+    <div class="slide-text">
+      <p>Ты не&nbsp;просто смотришь на&nbsp;образ.</p>
+      <p>Ты начинаешь <span class="em">чувствовать себя</span> внутри него.</p>
+    </div>
+    <div class="image-brief">Человек сидит на&nbsp;кровати напротив огромного окна с&nbsp;видом. Ощущение погружения внутрь будущей жизни.</div>
+  </div>
+</section>
+
+<!-- 9 -->
+<section class="slide">
+  <span class="slide-num">09 · 19</span>
+  <div class="slide-inner">
+    <div class="slide-text">
+      <p>Когда человек способен</p>
+      <p>ясно увидеть возможную жизнь&nbsp;—</p>
+      <p>она начинает ощущаться <span class="em">реальной</span>.</p>
+    </div>
+    <div class="image-brief">Человек стоит у&nbsp;края воды или скалы. Большое пространство впереди. Рассветный свет.</div>
+  </div>
+</section>
+
+<!-- 10 -->
+<section class="slide">
+  <span class="slide-num">10 · 19</span>
+  <div class="slide-inner">
+    <div class="slide-text">
+      <p>Наш мозг сильнее реагирует</p>
+      <p>на&nbsp;то,</p>
+      <p>что можно <span class="em">эмоционально представить</span>.</p>
+    </div>
+    <div class="image-brief">Крупный кинематографичный портрет. Глаза закрыты. Мягкий свет на&nbsp;лице.</div>
+  </div>
+</section>
+
+<!-- 11 -->
+<section class="slide">
+  <span class="slide-num">11 · 19</span>
+  <div class="slide-inner">
+    <div class="slide-text">
+      <p>То, что человек способен <span class="em">почувствовать</span>,</p>
+      <p>перестаёт казаться невозможным.</p>
+    </div>
+    <div class="image-brief">Один человек в&nbsp;огромном пространстве дома или природы. Момент спокойствия и&nbsp;присутствия.</div>
+  </div>
+</section>
+
+<!-- 12 -->
+<section class="slide">
+  <span class="slide-num">12 · 19</span>
+  <div class="slide-inner">
+    <div class="slide-text">
+      <p>Состояние меняет восприятие.</p>
+      <p>Восприятие меняет действия.</p>
+      <p>Действия меняют <span class="em">траекторию жизни</span>.</p>
+    </div>
+    <div class="image-brief">Мягкие световые переходы. Абстрактная cinematic texture. Тени, ткань, воздух.</div>
+  </div>
+</section>
+
+<!-- 13 -->
+<section class="slide">
+  <span class="slide-num">13 · 19</span>
+  <div class="slide-inner">
+    <div class="slide-text">
+      <p>Elyne создаёт</p>
+      <p><span class="em">реалистичные AI-сцены</span></p>
+      <p>возможной жизни человека.</p>
+    </div>
+    <div class="image-brief">Рука держит телефон с&nbsp;интерфейсом Elyne. На&nbsp;экране&nbsp;— generated scenes.</div>
+  </div>
+</section>
+
+<!-- 14 -->
+<section class="slide">
+  <span class="slide-num">14 · 19</span>
+  <div class="slide-inner">
+    <div class="slide-text" style="font-size: clamp(22px, 2.6vw, 36px);">
+      <p style="margin-bottom: 1em;">На&nbsp;основе:</p>
+      <p>— личности</p>
+      <p>— внутреннего состояния</p>
+      <p>— ценностей</p>
+      <p>— желаний</p>
+      <p>— образа жизни</p>
+      <p>— эмоционального отклика</p>
+    </div>
+    <div class="image-brief">Очень близкий cinematic-портрет. Тёплая кожа, натуральный свет. Без глянца.</div>
+  </div>
+</section>
+
+<!-- 15 -->
+<section class="slide">
+  <span class="slide-num">15 · 19</span>
+  <div class="slide-inner">
+    <div class="slide-text" style="font-size: clamp(20px, 2.4vw, 30px);">
+      <span class="flow-step">Человек отвечает на&nbsp;вопросы</span>
+      <span class="flow-step">Загружает фотографию</span>
+      <span class="flow-step">AI собирает персональный профиль</span>
+      <span class="flow-step">Создаёт сцены возможной жизни</span>
+      <span class="flow-step">Человек исследует версии своей реальности</span>
+    </div>
+    <div class="image-brief">Минималистичная тёмная схема. Без сложной инфографики.</div>
+  </div>
+</section>
+
+<!-- 16 -->
+<section class="slide">
+  <span class="slide-num">16 · 19</span>
+  <div class="slide-inner">
+    <div class="slide-text">
+      <p>Это не&nbsp;карта желаний.</p>
+      <p>Не&nbsp;мотивационное приложение.</p>
+      <p>И&nbsp;не&nbsp;<span class="em">«манифестация»</span>.</p>
+    </div>
+    <div class="image-brief">Почти пустой тёмный фон. Минимум визуала. Пауза.</div>
+  </div>
+</section>
+
+<!-- 17 -->
+<section class="slide">
+  <span class="slide-num">17 · 19</span>
+  <div class="slide-inner">
+    <div class="slide-text">
+      <p>Elyne&nbsp;— это <span class="em">эмоциональный AI-опыт</span>.</p>
+      <p>Пространство,</p>
+      <p>где человек может приблизиться</p>
+      <p>к&nbsp;той версии себя,</p>
+      <p>которой хочет стать.</p>
+    </div>
+    <div class="image-brief">Тёплый свет внутри спокойного пространства. Минималистичный интерьер.</div>
+  </div>
+</section>
+
+<!-- 18 -->
+<section class="slide">
+  <span class="slide-num">18 · 19</span>
+  <div class="slide-inner">
+    <div class="slide-text" style="font-size: clamp(22px, 2.6vw, 32px);">
+      <p style="margin-bottom: 1em;">Человек может исследовать:</p>
+      <p>— состояние</p>
+      <p>— отношения</p>
+      <p>— проявленность</p>
+      <p>— свободу</p>
+      <p>— творчество</p>
+      <p>— окружение</p>
+      <p>— уровень жизни</p>
+      <p>— предназначение</p>
+      <p>— масштаб своей жизни</p>
+    </div>
+    <div class="image-brief">Большая cinematic landscape scene. Человек на&nbsp;фоне облаков, гор или океана.</div>
+  </div>
+</section>
+
+<!-- 19 -->
+<section class="slide">
+  <span class="slide-num">19 · 19</span>
+  <div class="slide-inner">
+    <div class="slide-text">
+      <p>Человек движется</p>
+      <p>в&nbsp;сторону той жизни,</p>
+      <p>которую способен <span class="em">почувствовать своей</span>.</p>
+    </div>
+    <div class="image-brief">Силуэт человека в&nbsp;мягком вечернем свете.</div>
+  </div>
+</section>
+
+</div>
+
+<div class="nav-hint">scroll · arrows · pgdn</div>
+
+</body>
+</html>
