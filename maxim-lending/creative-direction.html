@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Максим · creative direction для лендинга</title>
+<title>Максим · creative direction (Tilda Free + chef-as-brand)</title>
 <style>
   :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
   body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
@@ -332,7 +332,49 @@
 <li>1 hero-видео (или image-sequence) с паром над тарелкой, 6 сек loop.</li>
 <li>1 ambient-loop огня для #8.</li>
 </ul>
-<p>Источники: Midjourney v7 / Flux 1.1 Pro / SDXL + 7 промт-якорей из секции 7. Стоковая база — только Stocksy (Chef’s Table-grade), не Shutterstock.</p>
+<p>Источники: Midjourney v7 / Flux 1.1 Pro / SDXL + 7 промт-якорей из секции 7. Стоковая база — только Stocksy (Chef&rsquo;s Table-grade), не Shutterstock.</p>
+<hr>
+<h2 id="2026-05-09-2205">Решения от Олега · 2026-05-09 22:05 МСК</h2>
+<p><strong>Позиционирование:</strong> A — Максим как chef-as-brand. Лендинг про человека, оба места («Огни ресторан» + «Vinukka») и кулинарная студия упоминаются как часть пути / партнёрства. Не корпоративный сайт ресторана.</p>
+<p><strong>Платформа:</strong> Tilda Free (на старте). Дальше — пересмотр.</p>
+<h3 id="_2">Что это означает для концепта</h3>
+<p>Tilda Free физически не вытащит описанный уровень. Идём на компромиссы — но не теряем эмоцию.</p>
+<p><strong>Что выживает на Tilda Free:</strong>
+- Палитра, типографика (Tilda базовые шрифты максимально близко к GT Sectra Fine + Söhne — Playfair Display + Inter), общий тёмный feel
+- Long-scroll структура из 8 секций
+- Full-screen hero с обложкой (1 видео/гиф в первом блоке без водяного знака)
+- Basic parallax (BG-zoom + opacity)
+- Image gallery #4 — стандартная Tilda gallery с custom CSS
+- About #6 с реальными студийными фото</p>
+<p><strong>Что отрезаем:</strong>
+- Scroll-hijack #3 (Process — горизонтальный сдвиг) — заменяем на 4 sticky-блока вертикально, каждый full-screen, fade-через-opacity при скролле. Эффект мягче, но рабочий.
+- Custom cursor — убираем
+- Sub-pixel cross-dissolve переходы между секциями — заменяем на стандартные Tilda effects.in
+- Floating booking-pill — заменяем на Zero Block с position:fixed (лимит 6 ZB)
+- Видео-loops с паром/огнём в #1 и #8 — заменяем на static hero + 1 webp-cinemagraph (зацикленный, малой массой)</p>
+<p><strong>Что будет хуже:</strong>
+- Glass cursor / micro-motion в #2 Philosophy — теряется. Текст просто появляется в opacity.
+- #4 Signature dishes без horizontal scroll-hijack — переделываем в вертикальную карусель из 6 блюд, каждое full-screen с fade.
+- Smooth easing transitions — на Tilda стандартные, не GSAP-кастомные.</p>
+<p><strong>Реалистичный итог:</strong> «приличный moody лендинг шефа», не «кинофильм-Awwwards». 70% заявленного концепта. Если Олег после первой версии скажет «хочу больше» — переезд на Tilda Pro / Webflow.</p>
+<h3 id="tilda-free">Реализационный план под Tilda Free</h3>
+<ol>
+<li><strong>Hero-портрет cinematic</strong> — генерация через Midjourney v7 / Nano Banana, 4-6 кандидатов. Промт: scholar-chef portrait + image-style anchors из секции 7 концепта. До начала вёрстки.</li>
+<li><strong>6 hero-shots блюд</strong> на чёрном фоне — генерация после получения от Максима списка авторских блюд.</li>
+<li><strong>4 process-кадра</strong> (нож/огонь/руки/чугун) — генерация по тем же anchors.</li>
+<li><strong>About-фото</strong> — два реальные (с «Огней» и «Vinukka»), лёгкий dark grade в Photoshop/Lightroom (опускаем экспозицию, теплеем тени, оставляем бирюзу как accent).</li>
+<li><strong>Tilda сборка</strong> — 8 ZB-блоков, базовые анимации, custom CSS (не больше 200 строк), Adobe Fonts через head-вставку (если позволят), иначе Tilda базовые.</li>
+</ol>
+<h3 id="mobile">Mobile</h3>
+<p>Mobile-логика из секции 9 концепта — без изменений, она и так была компромиссная. Tilda mobile-default подойдёт.</p>
+<hr>
+<h2 id="_3">Что дальше</h2>
+<ol>
+<li><strong>В следующем заходе</strong> — генерация 4-6 hero-портретов Максима через FAL/Midjourney с anchors из концепта. Платное действие — согласовываю сумму с Олегом до запуска.</li>
+<li><strong>Параллельно</strong> — moodboard-страница на elyne-landing с подобранными референсами из external (визуальная подложка, чтобы Максим/команда увидели куда идём, до hero-фото).</li>
+<li><strong>После hero-фото</strong> — список авторских блюд от Максима, генерация food-кадров.</li>
+<li><strong>Сборка на Tilda Free</strong> — последний этап, после всех ассетов.</li>
+</ol>
 <div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
 </body>
 </html>
