@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Максим Рысин · шеф</title>
-<meta name="description" content="Максим Рысин — авторская кухня, частные ужины, кулинарные мастер-классы.">
+<meta name="description" content="Приготовление — это не про рецепт. Частный шеф, ужины, мастер-классы.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter+Tight:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..600,30..70;1,9..144,300..600,30..70&family=Inter+Tight:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
 :root{
@@ -21,45 +21,53 @@
   --text-muted:#8A8378;
   --cyan:#7FB6B0;
   --line:rgba(239,231,214,0.12);
-  --display:'DM Serif Display', 'Tiempos Headline', Georgia, serif;
-  --body:'Inter Tight', -apple-system, system-ui, sans-serif;
-  --mono:'DM Mono', 'Söhne Mono', monospace;
+  --display:'Fraunces','Tiempos Headline',Georgia,serif;
+  --body:'Inter Tight',-apple-system,system-ui,sans-serif;
+  --mono:'JetBrains Mono','Söhne Mono',monospace;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;background:var(--bg)}
 body{
   font-family:var(--body);
+  font-weight:300;
   background:var(--bg);
   color:var(--text);
   line-height:1.55;
   font-size:18px;
-  letter-spacing:0.005em;
+  letter-spacing:0.01em;
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
   overflow-x:hidden;
 }
 img{display:block;max-width:100%;height:auto}
 
-/* Typography */
-.display{
-  font-family:var(--display);
-  font-weight:400;
-  letter-spacing:-0.02em;
-  line-height:1.05;
-}
+.display{font-family:var(--display);font-weight:400;letter-spacing:-0.02em;line-height:1.05}
 .mono{
   font-family:var(--mono);
-  font-size:12px;
+  font-size:11px;
   letter-spacing:0.16em;
   text-transform:uppercase;
   color:var(--text-muted);
+  font-weight:400;
 }
 
-/* Layout */
 section{position:relative;padding:0 24px}
 .wrap{max-width:1280px;margin:0 auto}
 
-/* Chrome-less header */
+/* Section velvet-fade */
+section{
+  opacity:0;
+  transform:scale(0.985);
+  filter:brightness(0.55);
+  transition:opacity 1200ms cubic-bezier(.2,.7,.2,1),
+             transform 1200ms cubic-bezier(.2,.7,.2,1),
+             filter 1400ms cubic-bezier(.2,.7,.2,1);
+  will-change:opacity,transform,filter;
+}
+section.lit{opacity:1;transform:scale(1);filter:brightness(1)}
+.hero{opacity:1;transform:none;filter:none}
+
+/* Chrome */
 .chrome{
   position:fixed;top:0;left:0;right:0;
   padding:24px 32px;
@@ -76,14 +84,9 @@ section{position:relative;padding:0 24px}
   font-size:14px;
   letter-spacing:0.02em;
   pointer-events:auto;
+  font-variation-settings:"opsz" 12,"wght" 400;
 }
-.chrome .menu{
-  pointer-events:auto;
-  font-size:24px;
-  cursor:pointer;
-  color:var(--text);
-  letter-spacing:0.1em;
-}
+.chrome .menu{pointer-events:auto;font-size:24px;cursor:pointer;color:var(--text);letter-spacing:0.1em}
 
 /* HERO */
 .hero{
@@ -93,63 +96,70 @@ section{position:relative;padding:0 24px}
   position:relative;
   overflow:hidden;
 }
+.hero-stack{position:absolute;inset:0}
 .hero-bg{
   position:absolute;inset:0;
-  background-image:url('https://olegmonad.github.io/elyne-landing/maxim-lending/img/hero-01-profile-pan.png');
   background-size:cover;
   background-position:center;
+  opacity:0;
   filter:brightness(0.85);
-  transform:scale(1.0);
-  transition:transform 8000ms ease-out;
+  transition:opacity 1600ms cubic-bezier(.4,0,.2,1),transform 7000ms ease-out;
 }
-.hero-bg.zoomed{transform:scale(1.06)}
+.hero-bg.active{opacity:1;transform:scale(1.04)}
+.hero-bg-1{background-image:url('https://olegmonad.github.io/elyne-landing/maxim-lending/img/hero-01-profile-pan.png')}
+.hero-bg-2{background-image:url('https://olegmonad.github.io/elyne-landing/maxim-lending/img/v3-plating-pendant.png')}
+.hero-bg-3{background-image:url('https://olegmonad.github.io/elyne-landing/maxim-lending/img/v4-front-fresh.png')}
+.hero-bg-4{background-image:url('https://olegmonad.github.io/elyne-landing/maxim-lending/img/v3-ingredients-board.png')}
 .hero-overlay{
   position:absolute;inset:0;
-  background:linear-gradient(to bottom, rgba(14,13,11,0.2) 0%, rgba(14,13,11,0.6) 70%, rgba(14,13,11,0.95) 100%);
+  background:linear-gradient(to bottom, rgba(14,13,11,0.25) 0%, rgba(14,13,11,0.55) 65%, rgba(14,13,11,0.95) 100%);
 }
-.hero-name-block{
+.hero-content{
   position:relative;
   padding:0 48px 80px;
   max-width:1280px;
   margin:0 auto;
   width:100%;
 }
+.hero-tagline{
+  font-family:var(--display);
+  font-variation-settings:"opsz" 144,"wght" 320,"SOFT" 50;
+  font-weight:300;
+  font-size:clamp(48px,7.4vw,108px);
+  line-height:0.96;
+  letter-spacing:-0.035em;
+  color:var(--highlight);
+  margin-bottom:32px;
+  max-width:14ch;
+}
+.hero-sub{
+  font-family:var(--body);
+  font-size:clamp(15px,1.15vw,18px);
+  font-weight:300;
+  letter-spacing:0.01em;
+  color:var(--text);
+  opacity:0.85;
+}
 .hero-name{
   font-family:var(--display);
-  font-size:clamp(56px, 9.2vw, 144px);
-  line-height:0.92;
-  letter-spacing:-0.025em;
-  color:var(--highlight);
-  margin-bottom:24px;
-}
-.hero-tagline{
-  font-family:var(--body);
-  font-size:clamp(15px, 1.2vw, 19px);
-  font-weight:300;
-  max-width:520px;
-  line-height:1.5;
-  color:var(--text);
-  letter-spacing:0.005em;
-}
-.hero-scroll-cue{
-  position:absolute;
-  bottom:32px;left:50%;transform:translateX(-50%);
-  font-family:var(--mono);
-  font-size:11px;
+  font-variation-settings:"opsz" 14,"wght" 400;
+  font-size:13px;
+  letter-spacing:0.04em;
   color:var(--text-muted);
-  opacity:0.7;
+  margin-top:48px;
+  display:inline-block;
+}
+.hero-name::before{content:"— "}
+.hero-scroll-cue{
+  position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
+  font-family:var(--mono);font-size:10px;color:var(--text-muted);opacity:0.6;
 }
 .hero-scroll-cue::after{
-  content:"";
-  display:block;width:1px;height:32px;
-  background:var(--text-muted);
-  margin:8px auto 0;
+  content:"";display:block;width:1px;height:32px;
+  background:var(--text-muted);margin:8px auto 0;
   animation:scrollHint 2.4s ease-in-out infinite;
 }
-@keyframes scrollHint{
-  0%,100%{transform:scaleY(0.4);transform-origin:top;opacity:0.3}
-  50%{transform:scaleY(1);opacity:0.7}
-}
+@keyframes scrollHint{0%,100%{transform:scaleY(0.4);transform-origin:top;opacity:0.3}50%{transform:scaleY(1);opacity:0.7}}
 
 /* PHILOSOPHY */
 .philosophy{
@@ -159,42 +169,44 @@ section{position:relative;padding:0 24px}
   position:relative;
   overflow:hidden;
 }
-.philosophy-bg-stack{
-  position:absolute;inset:0;
-}
+.philosophy-bg-stack{position:absolute;inset:0}
 .philosophy-bg-stack > div{
   position:absolute;inset:0;
   background-size:cover;background-position:center;
   opacity:0;
   transition:opacity 1500ms ease;
-  filter:brightness(0.45) contrast(1.05);
+  filter:brightness(0.4) contrast(1.05);
 }
 .philosophy-bg-stack > div.active{opacity:1}
 .philosophy-bg-1{background-image:url('https://olegmonad.github.io/elyne-landing/maxim-lending/img/process-fire.jpg')}
 .philosophy-bg-2{background-image:url('https://olegmonad.github.io/elyne-landing/maxim-lending/img/process-knife.jpg')}
-.philosophy-bg-3{background-image:url('https://olegmonad.github.io/elyne-landing/maxim-lending/img/process-board.jpg')}
+.philosophy-bg-3{background-image:url('https://olegmonad.github.io/elyne-landing/maxim-lending/img/v3-ingredients-board.png')}
 .philosophy-text{
   position:relative;
   font-family:var(--display);
-  font-size:clamp(28px, 4.2vw, 56px);
+  font-variation-settings:"opsz" 72,"wght" 380,"SOFT" 35;
+  font-size:clamp(28px,4.4vw,60px);
   line-height:1.18;
-  letter-spacing:-0.015em;
-  max-width:880px;
+  letter-spacing:-0.018em;
+  max-width:920px;
   padding:0 24px;
   color:var(--highlight);
 }
 
-/* PROCESS */
+/* PROCESS — 3 кадра */
 .process{padding:24vh 24px 18vh}
 .process-label{
   font-family:var(--mono);
   text-align:center;
-  margin-bottom:64px;
+  margin-bottom:80px;
+  font-size:11px;
+  letter-spacing:0.18em;
+  color:var(--text-muted);
 }
 .process-grid{
   display:grid;
   grid-template-columns:1fr;
-  gap:8vh;
+  gap:10vh;
   max-width:1100px;
   margin:0 auto;
 }
@@ -202,7 +214,7 @@ section{position:relative;padding:0 24px}
   display:grid;
   grid-template-columns:1fr 1fr;
   align-items:center;
-  gap:48px;
+  gap:64px;
 }
 .process-shot:nth-child(even){direction:rtl}
 .process-shot:nth-child(even) > *{direction:ltr}
@@ -212,49 +224,65 @@ section{position:relative;padding:0 24px}
   object-fit:cover;
 }
 .process-caption{padding:0 32px}
-.process-caption .mono{margin-bottom:16px;color:var(--ember)}
+.process-caption .mono{margin-bottom:18px;color:var(--ember)}
 .process-caption h3{
   font-family:var(--display);
-  font-size:clamp(24px, 2.4vw, 36px);
+  font-variation-settings:"opsz" 36,"wght" 420,"SOFT" 25;
+  font-size:clamp(26px,2.6vw,40px);
   line-height:1.15;
-  margin-bottom:12px;
+  margin-bottom:14px;
   color:var(--highlight);
+  letter-spacing:-0.012em;
 }
 .process-caption p{
   font-size:16px;
   color:var(--text-muted);
   max-width:340px;
+  font-weight:300;
+  line-height:1.6;
 }
 
-/* SIGNATURE (placeholder — фото блюд позже) */
+/* SIGNATURE */
 .signature{padding:18vh 24px}
-.signature-head{text-align:center;margin-bottom:80px}
-.signature-head .mono{margin-bottom:16px}
+.signature-head{text-align:center;margin-bottom:64px}
+.signature-head .mono{margin-bottom:18px;color:var(--text-muted)}
 .signature-head h2{
   font-family:var(--display);
-  font-size:clamp(40px, 5.6vw, 72px);
+  font-variation-settings:"opsz" 72,"wght" 380,"SOFT" 35;
+  font-size:clamp(40px,5.6vw,72px);
   line-height:1;
   letter-spacing:-0.02em;
   color:var(--highlight);
 }
 .signature-empty{
-  max-width:520px;margin:0 auto;
+  max-width:640px;margin:0 auto;
   text-align:center;
   padding:64px 32px;
-  border:1px solid var(--line);
-  color:var(--text-muted);
-  font-size:15px;
-  line-height:1.7;
 }
-.signature-empty .mono{display:block;margin-bottom:12px;color:var(--ember)}
+.signature-empty .promise{
+  font-family:var(--display);
+  font-variation-settings:"opsz" 36,"wght" 360,"SOFT" 40;
+  font-size:clamp(22px,2.4vw,32px);
+  line-height:1.3;
+  color:var(--highlight);
+  margin-bottom:20px;
+  letter-spacing:-0.01em;
+}
+.signature-empty .desc{
+  font-size:15px;
+  color:var(--text-muted);
+  line-height:1.7;
+  font-weight:300;
+}
 
-/* FORMATS */
+/* FORMATS — click-accordion */
 .formats{padding:18vh 24px}
 .formats-head{text-align:center;margin-bottom:80px}
-.formats-head .mono{margin-bottom:16px}
+.formats-head .mono{margin-bottom:18px;color:var(--text-muted)}
 .formats-head h2{
   font-family:var(--display);
-  font-size:clamp(40px, 5.6vw, 72px);
+  font-variation-settings:"opsz" 72,"wght" 380,"SOFT" 35;
+  font-size:clamp(40px,5.6vw,72px);
   line-height:1;
   letter-spacing:-0.02em;
   color:var(--highlight);
@@ -264,33 +292,81 @@ section{position:relative;padding:0 24px}
   border-top:1px solid var(--line);
 }
 .format-row{
+  position:relative;
   display:grid;
   grid-template-columns:80px 1fr 2fr 80px;
   align-items:baseline;
   padding:32px 0;
   border-bottom:1px solid var(--line);
   cursor:pointer;
-  transition:padding 600ms ease, background 600ms ease;
+  transition:opacity 500ms ease;
 }
-.format-row:hover{
-  padding:48px 0;
-  background:rgba(184,101,31,0.04);
-}
-.format-num{font-family:var(--mono);color:var(--text-muted)}
+.format-row.dimmed{opacity:0.45}
+.format-num{font-family:var(--mono);color:var(--text-muted);font-size:11px;letter-spacing:0.16em}
 .format-name{
   font-family:var(--display);
-  font-size:clamp(22px, 2.6vw, 38px);
+  font-variation-settings:"opsz" 36,"wght" 400,"SOFT" 30;
+  font-size:clamp(22px,2.6vw,38px);
   color:var(--highlight);
-  letter-spacing:-0.01em;
+  letter-spacing:-0.012em;
 }
-.format-desc{font-size:15px;color:var(--text-muted);max-width:480px}
+.format-desc{font-size:15px;color:var(--text-muted);max-width:480px;font-weight:300;line-height:1.5}
 .format-arrow{
   text-align:right;
-  font-size:24px;
+  font-size:22px;
   color:var(--text-muted);
-  transition:transform 400ms ease, color 400ms ease;
+  transition:transform 400ms ease,color 400ms ease;
+  display:inline-block;
 }
-.format-row:hover .format-arrow{transform:translateX(8px);color:var(--ember)}
+.format-row.open .format-arrow{transform:rotate(90deg);color:var(--ember)}
+.format-expand{
+  grid-column:2 / span 3;
+  max-height:0;
+  overflow:hidden;
+  opacity:0;
+  transition:max-height 700ms cubic-bezier(.2,.6,.2,1),
+             opacity 500ms ease 100ms,
+             margin 700ms cubic-bezier(.2,.6,.2,1);
+  margin-top:0;
+}
+.format-row.open .format-expand{max-height:760px;opacity:1;margin-top:32px}
+.format-expand-grid{
+  display:grid;
+  grid-template-columns:2fr 3fr;
+  gap:48px;
+  align-items:start;
+  padding-bottom:32px;
+}
+.format-expand img{aspect-ratio:3/4;object-fit:cover;width:100%}
+.format-expand-text p{
+  font-size:16px;
+  line-height:1.7;
+  color:var(--text);
+  margin-bottom:14px;
+  max-width:440px;
+  font-weight:300;
+}
+.format-expand-meta{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:0.14em;
+  color:var(--text-muted);
+  text-transform:uppercase;
+  margin:24px 0;
+  padding:16px 0;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+}
+.format-expand-cta{
+  display:inline-block;
+  font-size:15px;
+  color:var(--highlight);
+  text-decoration:none;
+  border-bottom:1px solid var(--text-muted);
+  padding-bottom:3px;
+  transition:color 300ms,border-color 300ms;
+}
+.format-expand-cta:hover{color:var(--ember);border-color:var(--ember)}
 
 /* ABOUT */
 .about{
@@ -304,57 +380,74 @@ section{position:relative;padding:0 24px}
   gap:64px;
   align-items:center;
 }
-.about-img{
-  position:relative;
-  overflow:hidden;
-}
-.about-img img{
-  width:100%;
-  aspect-ratio:3/4;
-  object-fit:cover;
-}
+.about-img{position:relative;overflow:hidden}
+.about-img img{width:100%;aspect-ratio:3/4;object-fit:cover}
 .about-text{padding:0 16px}
 .about-text .mono{color:var(--cyan);margin-bottom:24px}
 .about-text h2{
   font-family:var(--display);
-  font-size:clamp(32px, 3.8vw, 56px);
+  font-variation-settings:"opsz" 56,"wght" 400,"SOFT" 35;
+  font-size:clamp(32px,3.8vw,52px);
   line-height:1.1;
   margin-bottom:32px;
   color:var(--highlight);
   letter-spacing:-0.015em;
 }
-.about-text p{
-  font-size:17px;
-  line-height:1.7;
-  color:var(--text);
-  margin-bottom:20px;
-  max-width:480px;
-}
-.about-text p.muted{color:var(--text-muted)}
+.about-text p{font-size:17px;line-height:1.75;color:var(--text);margin-bottom:18px;max-width:480px;font-weight:300}
+.about-text p.muted{color:var(--text-muted);font-size:15px}
 
-/* VOICES */
-.voices{
-  padding:14vh 24px;
-  text-align:center;
-}
-.voices-head{margin-bottom:80px}
+/* VOICES — full-width 80vh каждая, ember-кавычка */
+.voices{padding:0;text-align:left}
+.voices-head{padding:14vh 24px 0;text-align:center}
 .voices-head .mono{color:var(--text-muted)}
-.voices-grid{
-  max-width:880px;margin:0 auto;
-  display:grid;
-  gap:6vh;
-}
+.voices-grid{display:block;max-width:none}
 .voice{
+  position:relative;
+  min-height:80vh;
+  display:flex;align-items:center;
+  padding:0 8vw;
+}
+.voice:nth-child(odd){justify-content:flex-start}
+.voice:nth-child(even){justify-content:flex-end;text-align:right}
+.voice-quote{
+  position:relative;
   font-family:var(--display);
   font-style:italic;
-  font-size:clamp(20px, 2.2vw, 28px);
-  line-height:1.4;
+  font-variation-settings:"opsz" 36,"wght" 360,"SOFT" 60;
+  font-size:clamp(22px,2.6vw,34px);
+  line-height:1.45;
+  max-width:640px;
   color:var(--text);
-  padding:0 24px;
-  letter-spacing:-0.005em;
+  display:block;
 }
-.voice::before{content:"„ "}
-.voice::after{content:" \"\""}
+.voice-quote::before{
+  content:"\00AB";
+  position:absolute;
+  top:-0.55em;left:-0.7em;
+  font-size:7em;
+  font-style:normal;
+  font-variation-settings:"opsz" 144,"wght" 300,"SOFT" 30;
+  color:var(--ember);
+  opacity:0.18;
+  line-height:1;
+  pointer-events:none;
+  font-weight:300;
+}
+.voice:nth-child(even) .voice-quote::before{
+  left:auto;right:-0.7em;
+  content:"\00BB";
+}
+.voice-tail{
+  display:block;
+  margin-top:18px;
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:0.16em;
+  color:var(--text-muted);
+  text-transform:uppercase;
+  font-style:normal;
+}
+.voice-tail::before{content:"— "}
 
 /* BOOKING */
 .booking{
@@ -387,12 +480,13 @@ section{position:relative;padding:0 24px}
   max-width:560px;
   text-align:center;
 }
-.booking-pill .mono{margin-bottom:24px}
+.booking-pill .mono{margin-bottom:24px;color:var(--text-muted)}
 .booking-pill h2{
   font-family:var(--display);
-  font-size:clamp(32px, 4vw, 56px);
+  font-variation-settings:"opsz" 56,"wght" 400,"SOFT" 35;
+  font-size:clamp(30px,3.8vw,52px);
   line-height:1.1;
-  margin-bottom:20px;
+  margin-bottom:22px;
   letter-spacing:-0.015em;
   color:var(--highlight);
 }
@@ -403,6 +497,7 @@ section{position:relative;padding:0 24px}
   margin-bottom:32px;
   max-width:380px;
   margin-left:auto;margin-right:auto;
+  font-weight:300;
 }
 .booking-links{
   display:flex;
@@ -412,30 +507,24 @@ section{position:relative;padding:0 24px}
 }
 .booking-link{
   font-family:var(--body);
-  font-size:17px;
+  font-size:16px;
+  font-weight:300;
   color:var(--highlight);
   text-decoration:none;
   border-bottom:1px solid var(--line);
   padding-bottom:4px;
-  transition:border-color 400ms ease, color 400ms ease;
+  transition:border-color 400ms ease,color 400ms ease;
+  letter-spacing:0.01em;
 }
-.booking-link:hover{
-  border-color:var(--ember);
-  color:var(--ember);
-}
+.booking-link:hover{border-color:var(--ember);color:var(--ember)}
 
 /* FOOTER */
-footer{
-  padding:48px 24px;
-  border-top:1px solid var(--line);
-  text-align:center;
-}
+footer{padding:48px 24px;border-top:1px solid var(--line);text-align:center}
 footer .mono{color:var(--text-muted);font-size:11px}
 
-/* Reveal animation */
+/* Reveal */
 .reveal{
-  opacity:0;
-  transform:translateY(16px);
+  opacity:0;transform:translateY(16px);
   transition:opacity 1000ms cubic-bezier(.2,.6,.2,1) 100ms,
              transform 1000ms cubic-bezier(.2,.6,.2,1) 100ms;
 }
@@ -445,24 +534,23 @@ footer .mono{color:var(--text-muted);font-size:11px}
 @media (max-width:768px){
   body{font-size:16px}
   section{padding:0 16px}
+  section{filter:none !important}
   .hero{height:90vh}
-  .hero-name-block{padding:0 24px 56px}
-  .process-shot{
-    grid-template-columns:1fr;
-    gap:24px;
-  }
+  .hero-content{padding:0 24px 56px}
+  .hero-tagline{font-size:clamp(40px,11vw,56px);max-width:none}
+  .hero-name{margin-top:32px}
+  .process-shot{grid-template-columns:1fr;gap:24px}
   .process-shot:nth-child(even){direction:ltr}
   .process-caption{padding:0}
-  .about-grid{
-    grid-template-columns:1fr;
-    gap:32px;
-  }
-  .format-row{
-    grid-template-columns:48px 1fr 32px;
-    padding:24px 0;
-  }
-  .format-row:hover{padding:24px 0}
+  .about-grid{grid-template-columns:1fr;gap:32px}
+  .format-row{grid-template-columns:48px 1fr 32px;padding:24px 0}
   .format-desc{display:none}
+  .format-expand-grid{grid-template-columns:1fr;gap:24px}
+  .format-row.open .format-expand{max-height:1100px}
+  .voice{padding:0 24px;min-height:60vh}
+  .voice-quote{font-size:22px}
+  .voice-quote::before{font-size:5em;left:-0.4em;top:-0.3em}
+  .voice:nth-child(even) .voice-quote::before{right:-0.4em}
   .booking-pill{padding:32px 24px}
 }
 </style>
@@ -476,11 +564,17 @@ footer .mono{color:var(--text-muted);font-size:11px}
 
 <!-- HERO -->
 <section class="hero" id="hero">
-  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-stack">
+    <div class="hero-bg hero-bg-1 active"></div>
+    <div class="hero-bg hero-bg-2"></div>
+    <div class="hero-bg hero-bg-3"></div>
+    <div class="hero-bg hero-bg-4"></div>
+  </div>
   <div class="hero-overlay"></div>
-  <div class="hero-name-block">
-    <h1 class="hero-name">Максим<br>Рысин</h1>
-    <p class="hero-tagline">Кухня там, где блюдо собирается из ощущений, а не из техник. Авторские ужины, мастер-классы, частный шеф.</p>
+  <div class="hero-content">
+    <h1 class="hero-tagline">Приготовление — это&nbsp;не&nbsp;про&nbsp;рецепт.</h1>
+    <p class="hero-sub">Частный шеф. Ужины. Мастер-классы.</p>
+    <div class="hero-name">Максим Рысин</div>
   </div>
   <div class="hero-scroll-cue">scroll</div>
 </section>
@@ -492,10 +586,10 @@ footer .mono{color:var(--text-muted);font-size:11px}
     <div class="philosophy-bg-2"></div>
     <div class="philosophy-bg-3"></div>
   </div>
-  <p class="philosophy-text reveal">Я не занимаюсь авторской кухней. Я просто соединяю ингредиенты так, как чувствую вкус.</p>
+  <p class="philosophy-text reveal">Всё уже есть в продукте.<br>Я только не мешаю.</p>
 </section>
 
-<!-- PROCESS -->
+<!-- PROCESS — 3 кадра -->
 <section class="process">
   <div class="process-label reveal">— ремесло —</div>
   <div class="process-grid">
@@ -503,32 +597,24 @@ footer .mono{color:var(--text-muted);font-size:11px}
       <img src="https://olegmonad.github.io/elyne-landing/maxim-lending/img/process-knife.jpg" alt="нож">
       <div class="process-caption">
         <div class="mono">01 · нож</div>
-        <h3>Один инструмент. И тишина.</h3>
-        <p>Лезвие — продолжение руки. Всё остальное — суета.</p>
+        <h3>Один жест решает всё.</h3>
+        <p>Лезвие — продолжение руки. Всё остальное — лишние движения.</p>
       </div>
     </div>
     <div class="process-shot reveal">
-      <img src="https://olegmonad.github.io/elyne-landing/maxim-lending/img/process-board.jpg" alt="доска и ингредиенты">
+      <img src="https://olegmonad.github.io/elyne-landing/maxim-lending/img/v3-ingredients-board.png" alt="продукт">
       <div class="process-caption">
-        <div class="mono">02 · материал</div>
-        <h3>Доска, корень, соль.</h3>
-        <p>Никакой драмы — только то, что есть. Этого хватит.</p>
+        <div class="mono">02 · продукт</div>
+        <h3>Слышать, что есть.</h3>
+        <p>Корень, кислота, жир. Трёх вещей хватит — если понимаешь каждую.</p>
       </div>
     </div>
     <div class="process-shot reveal">
       <img src="https://olegmonad.github.io/elyne-landing/maxim-lending/img/process-fire.jpg" alt="огонь">
       <div class="process-caption">
         <div class="mono">03 · огонь</div>
-        <h3>Момент, когда продукт становится блюдом.</h3>
-        <p>Не контроль, а присутствие. Огонь делает половину работы.</p>
-      </div>
-    </div>
-    <div class="process-shot reveal">
-      <img src="https://olegmonad.github.io/elyne-landing/maxim-lending/img/v3-plating-pendant.png" alt="плейтинг">
-      <div class="process-caption">
-        <div class="mono">04 · плейтинг</div>
-        <h3>Тарелка не украшение. Тарелка — рамка.</h3>
-        <p>Минимум жестов. Каждый — со смыслом.</p>
+        <h3>Не контролируешь — присутствуешь.</h3>
+        <p>Секунда до и после — разные блюда. Огонь не ждёт.</p>
       </div>
     </div>
   </div>
@@ -541,8 +627,8 @@ footer .mono{color:var(--text-muted);font-size:11px}
     <h2>Авторские блюда</h2>
   </div>
   <div class="signature-empty reveal">
-    <span class="mono">скоро</span>
-    Шесть блюд снимаются для этой секции — каждое как отдельный кадр на чёрном. Названия будут короткими, как стихи: «свёкла, копчёный творог, лимон».
+    <p class="promise">Шесть блюд. Чёрный фон. Много воздуха.</p>
+    <p class="desc">Каждое — как отдельный кадр. Названия короткие: «свёкла, копчёный творог, лимон».</p>
   </div>
 </section>
 
@@ -553,30 +639,79 @@ footer .mono{color:var(--text-muted);font-size:11px}
     <h2>Как мы работаем</h2>
   </div>
   <div class="formats-grid">
-    <div class="format-row reveal">
+
+    <div class="format-row reveal" data-format>
       <div class="format-num">01</div>
       <div class="format-name">Частный ужин</div>
-      <div class="format-desc">Камерный сет на 4–12 гостей. Дома, на даче, в выбранном пространстве.</div>
+      <div class="format-desc">Камерный сет на 4–12. Твой дом, твоё время — готовлю под него.</div>
       <div class="format-arrow">→</div>
+      <div class="format-expand">
+        <div class="format-expand-grid">
+          <img src="https://olegmonad.github.io/elyne-landing/maxim-lending/img/v3-plating-pendant.png" alt="">
+          <div class="format-expand-text">
+            <p>Камерный ужин дома, на даче или в выбранном пространстве. Меню собирается под твой вечер — не из стандартного списка, не из Pinterest.</p>
+            <p>Привожу всё необходимое. Готовлю при гостях — это часть формата. Между блюдами — тишина или разговор, как захочется.</p>
+            <div class="format-expand-meta">от 4 до 12 гостей · 4–5 часов · меню под событие</div>
+            <a href="#booking" class="format-expand-cta">написать о таком вечере →</a>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="format-row reveal">
+
+    <div class="format-row reveal" data-format>
       <div class="format-num">02</div>
       <div class="format-name">Шеф на день</div>
-      <div class="format-desc">Готовлю у вас. Меню под событие — день рождения, годовщина, важная встреча.</div>
+      <div class="format-desc">Прихожу к тебе. Меню — под конкретный вечер, не из стандартного списка.</div>
       <div class="format-arrow">→</div>
+      <div class="format-expand">
+        <div class="format-expand-grid">
+          <img src="https://olegmonad.github.io/elyne-landing/maxim-lending/img/v4-front-fresh.png" alt="">
+          <div class="format-expand-text">
+            <p>Один день, один вечер, одна кухня — твоя. Беру на себя всё: меню, продукты, готовку, подачу.</p>
+            <p>Ты не решаешь логистику. Ты живёшь свой вечер. Я делаю свою работу так, чтобы её не было видно — пока не приходит блюдо.</p>
+            <div class="format-expand-meta">1 день · до 14 гостей · полный цикл</div>
+            <a href="#booking" class="format-expand-cta">обсудить день →</a>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="format-row reveal">
+
+    <div class="format-row reveal" data-format>
       <div class="format-num">03</div>
-      <div class="format-name">Кулинарный мастер-класс</div>
-      <div class="format-desc">Учу собирать вкус, не следовать рецепту. От 1 до 8 человек.</div>
+      <div class="format-name">Мастер-класс</div>
+      <div class="format-desc">Учишься не следовать рецепту — а слышать продукт. До 8 человек.</div>
       <div class="format-arrow">→</div>
+      <div class="format-expand">
+        <div class="format-expand-grid">
+          <img src="https://olegmonad.github.io/elyne-landing/maxim-lending/img/process-knife.jpg" alt="">
+          <div class="format-expand-text">
+            <p>Учу не повторять рецепт. Учу понимать, что произошло, когда соль легла на горячее масло. Что меняется, когда нож тупой.</p>
+            <p>Группа маленькая — 1 на 1 или до 8 человек. После — обед, который ты приготовил.</p>
+            <div class="format-expand-meta">от 1 до 8 человек · 3–4 часа · обед включён</div>
+            <a href="#booking" class="format-expand-cta">прийти →</a>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="format-row reveal">
+
+    <div class="format-row reveal" data-format>
       <div class="format-num">04</div>
-      <div class="format-name">Корпоративный ужин</div>
-      <div class="format-desc">Сет от 12 до 60 человек. Чувство события — не «обслуживание».</div>
+      <div class="format-name">Корпоративный сет</div>
+      <div class="format-desc">Стол на 12–60. Ощущение ужина — не обслуживания.</div>
       <div class="format-arrow">→</div>
+      <div class="format-expand">
+        <div class="format-expand-grid">
+          <img src="https://olegmonad.github.io/elyne-landing/maxim-lending/img/v3-ingredients-board.png" alt="">
+          <div class="format-expand-text">
+            <p>События, где собирается команда или клиенты. Сет на 12–60 человек, без банкетного шаблона.</p>
+            <p>Готовлю с командой. Вы получаете не «обслуживание», а вечер, который запоминается дольше слайдов и тостов.</p>
+            <div class="format-expand-meta">от 12 до 60 гостей · команда из 2–4 поваров · кейтеринг под пространство</div>
+            <a href="#booking" class="format-expand-cta">обсудить событие →</a>
+          </div>
+        </div>
+      </div>
     </div>
+
   </div>
 </section>
 
@@ -589,9 +724,10 @@ footer .mono{color:var(--text-muted);font-size:11px}
     <div class="about-text reveal">
       <div class="mono">— о шефе —</div>
       <h2>Максим Рысин</h2>
-      <p>Сейчас работаю в ресторане «Огни» и в проекте «Vinukka». Веду кулинарные мастер-классы — учу не повторять рецепт, а слышать продукт.</p>
-      <p>Готовлю там, где блюдо собирается из ощущений, а не из техник. Не люблю слово «концепция». Люблю момент, когда жар встречается с холодным маслом.</p>
-      <p class="muted">Снаружи кухни — чай, тишина, длинные пешие прогулки. И ещё — баня. Туда хорошо после смены.</p>
+      <p>Максим стоит за стойкой уже пятнадцать лет — из них большую часть на ресторанной кухне, где ошибка читается сразу и на языке, и на лице гостя.</p>
+      <p>Он не изобретает вкус. Он слышит, что уже есть в продукте — и убирает лишнее.</p>
+      <p>Ведёт кулинарные мастер-классы. Учит не повторять рецепт, а доверять руке.</p>
+      <p class="muted">Снаружи кухни — тишина, длинные прогулки и баня после смены.</p>
     </div>
   </div>
 </section>
@@ -600,9 +736,9 @@ footer .mono{color:var(--text-muted);font-size:11px}
 <section class="voices">
   <div class="voices-head reveal"><div class="mono">— что говорят —</div></div>
   <div class="voices-grid">
-    <p class="voice reveal">Это был не ужин. Это был тихий разговор через тарелку.</p>
-    <p class="voice reveal">Через час за столом я забыл, что это «работа повара». Это было что-то другое.</p>
-    <p class="voice reveal">Меньше всего ожидаешь, что от еды можно так замолчать.</p>
+    <p class="voice reveal"><span class="voice-quote">Не ждала, что за столом можно так замолчать.<span class="voice-tail">частный ужин, 8 гостей</span></span></p>
+    <p class="voice reveal"><span class="voice-quote">Еда закончилась — ощущение осталось. Не знаю как это называется.<span class="voice-tail">мастер-класс, 4 человека</span></span></p>
+    <p class="voice reveal"><span class="voice-quote">Я не запомнила что было на тарелке. Я запомнила как я себя чувствовала.<span class="voice-tail">корпоративный сет, 24 гостя</span></span></p>
   </div>
 </section>
 
@@ -612,8 +748,8 @@ footer .mono{color:var(--text-muted);font-size:11px}
   <div class="booking-overlay"></div>
   <div class="booking-pill reveal">
     <div class="mono">— связаться —</div>
-    <h2>Формирую под ваш вечер</h2>
-    <p>Напишите в любой удобный канал. В первых двух сообщениях обычно становится ясно, подходим ли мы друг другу.</p>
+    <h2>Формирую под твой вечер.</h2>
+    <p>В двух сообщениях обычно понятно, подходим ли мы друг другу. Просто напиши.</p>
     <div class="booking-links">
       <a href="https://t.me/" class="booking-link" target="_blank" rel="noopener">Telegram</a>
       <a href="tel:+79000000000" class="booking-link">+7 000 000-00-00</a>
@@ -627,6 +763,17 @@ footer .mono{color:var(--text-muted);font-size:11px}
 </footer>
 
 <script>
+// Section velvet-fade
+const sectionObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('lit');
+      sectionObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.25 });
+document.querySelectorAll('section:not(.hero)').forEach(s => sectionObs.observe(s));
+
 // Reveal on scroll
 const revealObs = new IntersectionObserver((entries) => {
   entries.forEach(e => {
@@ -638,10 +785,17 @@ const revealObs = new IntersectionObserver((entries) => {
 }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
 document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 
-// Hero slow zoom
-window.addEventListener('load', () => {
-  setTimeout(() => document.getElementById('heroBg').classList.add('zoomed'), 200);
-});
+// Hero cross-dissolve cycle (28s loop)
+const heroFrames = document.querySelectorAll('.hero-bg');
+const holdMs = [6000, 5000, 5000, 6000];
+let heroIdx = 0;
+function nextHero(){
+  heroFrames[heroIdx].classList.remove('active');
+  heroIdx = (heroIdx + 1) % heroFrames.length;
+  heroFrames[heroIdx].classList.add('active');
+  setTimeout(nextHero, holdMs[heroIdx] + 1600);
+}
+setTimeout(nextHero, holdMs[0] + 1600);
 
 // Chrome appears after hero
 const chrome = document.querySelector('.chrome');
@@ -664,7 +818,24 @@ setInterval(() => {
   philBgs[philIdx].classList.remove('active');
   philIdx = (philIdx + 1) % philBgs.length;
   philBgs[philIdx].classList.add('active');
-}, 4000);
+}, 4500);
+
+// Formats expand
+document.querySelectorAll('.format-row').forEach(row => {
+  row.addEventListener('click', () => {
+    const isOpen = row.classList.contains('open');
+    document.querySelectorAll('.format-row').forEach(r => {
+      r.classList.remove('open');
+      r.classList.add('dimmed');
+    });
+    if (!isOpen) {
+      row.classList.remove('dimmed');
+      row.classList.add('open');
+    } else {
+      document.querySelectorAll('.format-row').forEach(r => r.classList.remove('dimmed'));
+    }
+  });
+});
 </script>
 
 </body>
