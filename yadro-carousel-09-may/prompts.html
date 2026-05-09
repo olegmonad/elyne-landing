@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Карусель Ядра · 7 промтов для GPT Image</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="_1">Карусель Ядра · промты для генерации</h1>
+<p><strong>Что делать:</strong> скопировать промт → вставить в ChatGPT Image → сгенерить → если не зашло, нажать «варьировать» 2-3 раза. <strong>Текст на слайдах НЕ генерим в DALL-E</strong> (он плохо рисует кириллицу) — генерим только визуальный фон, потом текст накладывается в Figma/Canva отдельно.</p>
+<hr>
+<h2 id="_2">Универсальная стилистика (если не указано иное в слайде)</h2>
+<p><strong>Эти 7 anchors должны быть в каждом visual-промте. Можно скопировать как «прелюдию» к каждому промту.</strong></p>
+<pre><code>Square 1:1 aspect ratio, 1080x1080. Cinematic editorial photography, A24 film aesthetic, Apple product page mood. Dark warm charcoal background #0E0D0B, deep shadow detail. Single warm practical light source, 3000K, side or top-right. Subtle film grain, Kodak 500T feel, no digital sharpness. Warm shadows, slightly cool highlights, low contrast curve. Tactile real materials — aged wood, matte cast iron, linen, ceramic. Bradford Young cinematography reference, slow-cinema atmosphere. NO glossy, NO luxury, NO gold glitter, NO instagram aesthetic, NO vibrant saturation, NO clean white background, NO AI futurism, NO neon, NO gradient blobs, NO product packshot, NO motivational poster vibe.
+</code></pre>
+<hr>
+<h2 id="1-hook-20">Слайд 1 · HOOK · «20 мая · открытие»</h2>
+<p><strong>Визуальная задача:</strong> атмосферный hero-кадр. Один человек внутри пространства, которое «его». Тёмный кадр, но не загашенный — есть тёплый источник света, есть деталь. Состояние «внутри момента», не позирует.</p>
+<p><strong>Промт (копи-пасту):</strong></p>
+<pre><code>Square 1:1, 1080x1080. Cinematic editorial photograph. A man in his early 30s standing alone in a dim warm-lit room at dusk, looking thoughtfully out a tall window onto an empty soft-focus city street. He wears a simple charcoal sweater, no logos. His pose is still — not posed, not dramatic — just present. Single warm practical lamp glowing on a wooden side-table to his left, casting soft amber rim light on the side of his face and shoulder. Background is dark warm charcoal #0E0D0B, deep shadows with detail. Aged wood floor, linen curtain partly visible. 50mm lens, f/2.0, shallow depth of field, subtle Kodak 500T film grain. Slow-cinema mood, A24 cinematography, Bradford Young palette. NO glossy, NO luxury, NO gold, NO instagram, NO vibrant, NO clean white background, NO smile, NO product, NO logos, NO text in image, NO motivational pose, NO fitness aesthetic.
+</code></pre>
+<p><strong>Текст overlay (поверх в Figma):</strong>
+- Сверху мелко (mono uppercase, tracking +12%, off-white): <code>20 МАЯ</code>
+- По центру крупно (Cormorant Garamond Light, 64-72px, off-white #EFE7D6): <code>Открывается ранний доступ к Elyne.</code></p>
+<hr>
+<h2 id="2">Слайд 2 · ВОПРОС · «Из какого состояния мечтаем?»</h2>
+<p><strong>Визуальная задача:</strong> тихий тёмный кадр-метафора «двух состояний». Дуальность через визуал — не словами. Один объект на грани между светом и тенью.</p>
+<p><strong>Промт:</strong></p>
+<pre><code>Square 1:1, 1080x1080. Cinematic editorial still life. A single empty ceramic bowl on a dark aged wooden table, photographed from a slightly elevated angle. Half of the bowl is bathed in warm amber practical light from the left, the other half disappears into deep charcoal shadow. The transition between light and dark is the subject of the photograph. Background is warm charcoal #0E0D0B, almost black but warm. No food in the bowl — just the vessel itself. Subtle steam slowly rising from the warm side, barely visible. 50mm lens, f/2.8, subtle Kodak 500T film grain. Bradford Young palette, low contrast, slow-cinema mood. NO glossy, NO luxury, NO gold, NO instagram aesthetic, NO vibrant, NO white background, NO multiple objects, NO text in image, NO product photography vibe.
+</code></pre>
+<p><strong>Текст overlay:</strong>
+- По центру (Cormorant Garamond, 48-56px, off-white): <code>Из какого состояния / мы мечтаем?</code>
+- Ниже мельче (Geist Light, 18-20px, текст-muted): <code>Из истинного — своего, наполняющего, / или из дефицита, страха, зависти?</code></p>
+<hr>
+<h2 id="3">Слайд 3 · РАЗРЫВ · «Та же тревога с новым декором»</h2>
+<p><strong>Визуальная задача:</strong> кадр-разделитель. Тонкая горизонтальная линия делит кадр пополам — символ разрыва между двумя состояниями. Минимализм, типографическая ясность.</p>
+<p><strong>Промт:</strong></p>
+<pre><code>Square 1:1, 1080x1080. Minimalist editorial photograph. A single fine cracked thin line running horizontally through the centre of a dark warm charcoal #0E0D0B textured surface, like aged plaster or matte paint. The crack is subtle, hairline-thin, slightly off-centre, with one tiny piece of the surface flaked away showing a hint of warmer amber tone underneath. Top half of the frame is in slightly cooler shadow, bottom half in slightly warmer shadow — the same surface but read as two different worlds because of the lighting. Single warm practical light from upper right, soft falloff. 35mm lens, f/4, sharp focus on the crack itself. Subtle Kodak 500T film grain. Slow-cinema, Bradford Young palette. NO glossy, NO luxury, NO gold, NO bright, NO instagram, NO vibrant, NO white background, NO text in image, NO multiple cracks, NO destruction theme, NO horror.
+</code></pre>
+<p><strong>Текст overlay:</strong>
+- Над линией (Cormorant Garamond Light, 36-44px): <code>Если из дефицита —</code>
+- Под линией (Cormorant Garamond Italic, 36-44px): <code>получаем ту же тревогу / с новым декором.</code></p>
+<hr>
+<h2 id="4">Слайд 4 · ОТВЕТ · «Найти своё истинное состояние»</h2>
+<p><strong>Визуальная задача:</strong> «cinematic-сцена» в духе Elyne — человек внутри момента, который ощущается как «его». Узнавание, не презентация.</p>
+<p><strong>Промт:</strong></p>
+<pre><code>Square 1:1, 1080x1080. Cinematic editorial photograph. A woman in her late 20s sitting on a low wooden bench in a quiet sunlit interior — early morning soft daylight from a tall window on her left. She holds a warm ceramic cup in both hands, looks down into it, slight half-smile, eyes closed for a moment. Hair loose, simple beige linen sweater. Background — bare warm cream wall #E8DCC4, a few simple objects out of focus: a hardcover book, a clay vase with one dried branch. Wooden floor, no decoration. Soft warm white highlights, gentle warm shadows. 50mm lens, f/2.2, shallow depth of field, subtle Kodak 500T grain. Slow-cinema, A24 mood, Bradford Young palette, low contrast. NO glossy, NO luxury, NO gold, NO instagram aesthetic, NO vibrant, NO product photography, NO fashion editorial, NO posing, NO logos, NO text in image, NO multiple people.
+</code></pre>
+<p><strong>Текст overlay:</strong>
+- По центру (Cormorant Garamond, 44-56px): <code>Найти своё, / истинное состояние.</code>
+- Ниже мельче (Geist Light italic, 18-22px, muted): <code>И из него — увидеть сцены / своей жизни.</code></p>
+<hr>
+<h2 id="5">Слайд 5 · СОСТОЯНИЕ · «Оказаться внутри»</h2>
+<p><strong>Визуальная задача:</strong> atmospheric кадр от первого лица — будто зритель <strong>внутри</strong> сцены, не смотрит на неё снаружи. POV-композиция: руки, угол стола, то что видит сам человек.</p>
+<p><strong>Промт:</strong></p>
+<pre><code>Square 1:1, 1080x1080. First-person POV cinematic photograph, eye-level, looking down at one's own hands resting calmly on a worn wooden table. Hands are relaxed, fingers slightly curled, no jewellery, neutral. On the table — a half-empty glass of water in soft warm light, an open notebook with one barely-visible line of handwriting, and a single dried herb stem laid casually. Window light from upper-left at golden hour, warm 3000K, soft shadows. Charcoal warm wall #1C1916 in background, slightly out of focus. 35mm lens, f/2.0, shallow depth of field, subtle Kodak 500T grain. Slow-cinema, contemplative mood, A24 aesthetic, Bradford Young palette. Sense of presence, of being inside the moment. NO glossy, NO luxury, NO gold, NO bright, NO smartphone, NO laptop, NO instagram aesthetic, NO vibrant, NO white background, NO text in image, NO logos, NO posing.
+</code></pre>
+<p><strong>Текст overlay:</strong>
+- Слева (Cormorant Garamond Light, 32-40px): <code>Не визуализировать снаружи.</code>
+- Справа (Cormorant Garamond Italic, 44-52px): <code>Оказаться внутри.</code></p>
+<hr>
+<h2 id="6">Слайд 6 · МАНИФЕСТ · «Сцены — якоря состояния»</h2>
+<p><strong>Визуальная задача:</strong> text-only кадр с минималистичным фоном. Чёрный фон + одна тонкая деталь.</p>
+<p><strong>Промт (если хочешь генерить фон, не сплошную заливку):</strong></p>
+<pre><code>Square 1:1, 1080x1080. Pure dark warm charcoal #0E0D0B background with extremely subtle dust-particle texture, almost invisible. One very faint warm amber light spot in the upper-left corner, soft falloff into deep shadow — barely perceptible glow, like distant candle. No objects, no people, no text. Slow-cinema atmosphere, contemplative emptiness. NO glossy, NO luxury, NO gold particles, NO bright, NO instagram aesthetic, NO vibrant, NO gradient ramps, NO bokeh dots, NO pattern, NO white background, NO motivational vibe.
+</code></pre>
+<p><strong>Альтернативно — просто заливка #0E0D0B в Figma без генерации.</strong></p>
+<p><strong>Текст overlay (главный):</strong>
+- По центру верхней половины (Cormorant Garamond Light, 36-44px, off-white #EFE7D6): <code>Сцены — не цели.</code>
+- По центру нижней половины (Cormorant Garamond Bold или Medium, 48-60px, off-white): <code>Это якоря состояния.</code>
+- Между ними — тонкая горизонтальная линия 1px ember <code>#B8651F</code> шириной 80px.</p>
+<hr>
+<h2 id="7-cta-20-elyne_app">Слайд 7 · CTA · «20 мая · @elyne_app»</h2>
+<p><strong>Визуальная задача:</strong> финальный кадр-приглашение. Чистый, без визуальной перегрузки. Лого + дата + ссылка.</p>
+<p><strong>Промт (если хочешь генерить фон):</strong></p>
+<pre><code>Square 1:1, 1080x1080. Pure dark warm charcoal background #0E0D0B with very subtle vignette darkening at the corners. One single tiny warm amber light point at the centre, soft circular glow with very gentle falloff, like a single candle flame seen from far. No flame visible, just the warm light suggestion. Slow-cinema, atmospheric, calm. NO glossy, NO luxury, NO gold, NO bright, NO sparks, NO logos, NO text, NO instagram aesthetic, NO vibrant, NO product, NO motivational vibe.
+</code></pre>
+<p><strong>Альтернативно — просто заливка.</strong></p>
+<p><strong>Текст overlay (3 строки + лого):</strong>
+- Сверху (Cormorant Garamond Italic, 24-32px, muted): <code>— ранний доступ —</code>
+- По центру крупно (Cormorant Garamond, 60-72px, off-white): <code>20 мая</code>
+- Ниже (Geist Mono uppercase, 14-16px, ember): <code>@ELYNE_APP</code>
+- Снизу мелко (Geist Light, 14-16px, muted): <code>подписка — для тех, кому близко</code></p>
+<p>Если есть лого Elyne — поставить мелко в верхнем левом углу (max 24px).</p>
+<hr>
+<h2 id="-">Чек-лист перед публикацией</h2>
+<ul>
+<li>[ ] Все 7 слайдов в одинаковом аспекте (1:1, 1080×1080)</li>
+<li>[ ] На всех слайдах — единая палитра: charcoal #0E0D0B, off-white #EFE7D6, ember #B8651F (точечно)</li>
+<li>[ ] Один шрифт display везде (Cormorant Garamond) + один accent (Geist Mono)</li>
+<li>[ ] Имя @elyne_app — одинаковое написание на слайдах 1 и 7</li>
+<li>[ ] Нет лишних эмоджи, восклицательных знаков, «🔥», «✨»</li>
+<li>[ ] Все слайды читаются на мобиле — текст крупный, контраст высокий</li>
+<li>[ ] Слайды 6 и 7 — text-heavy, но не плотные (много воздуха)</li>
+</ul>
+<hr>
+<h2 id="tg-">TG-пост (копи-пастой под карусель)</h2>
+<blockquote>
+<p>Друзья, 20 мая открываем ранний доступ к Elyne.</p>
+<p>Это приложение о состоянии — помогает найти своё истинное и из него увидеть узнаваемые сцены своей жизни. Не визуализировать снаружи, а оказаться внутри.</p>
+<p>Я знаю, что многие из вас прошли практики Ядра, КОП, работали с состоянием руками. Поэтому пишу сюда — мне важно, чтобы первыми Elyne попробовали те, кто понимает разницу между «думать о жизни» и «проживать».</p>
+<p>Первая сцена — бесплатно.</p>
+<p>Если близко — подпишитесь на @elyne_app, я буду рад видеть вас среди первых.</p>
+</blockquote>
+<p><strong>~620 знаков.</strong> Хвостик «многие из вас прошли практики Ядра, КОП» — оставлять или убирать на твоё усмотрение (мост vs нейтральность).</p>
+<hr>
+<h2 id="_3">Опциональные альтернативы для слайдов</h2>
+<p>Если какая-то генерация не зашла — используй <strong>резерв</strong>:</p>
+<p><strong>Резерв для слайда 1 (HOOK):</strong></p>
+<blockquote>
+<p>A man&rsquo;s silhouette walking slowly down a softly lit empty hallway, viewed from behind, warm practical lights on the walls. POV-feel, contemplative, slow-cinema. Same anchors as base.</p>
+</blockquote>
+<p><strong>Резерв для слайда 4 (ОТВЕТ):</strong></p>
+<blockquote>
+<p>A woman walking barefoot across a sunlit wooden floor in a quiet bright room, viewed from behind, soft daylight, simple linen dress. Same anchors.</p>
+</blockquote>
+<p><strong>Резерв для слайда 5 (СОСТОЯНИЕ):</strong></p>
+<blockquote>
+<p>First-person POV looking up at a tall arched window from inside a dim quiet room, soft daylight pouring in, single armchair partially visible at frame edge. Same anchors.</p>
+</blockquote>
+<hr>
+<p><em>Если в ChatGPT Image не получится с первого раза — варьируй (3-4 generations) и выбирай ближайшее. DALL-E часто промахивается с lighting и атмосферой — обычно нужно 3-5 итераций на слайд.</em></p>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
