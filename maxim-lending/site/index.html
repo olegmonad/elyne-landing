@@ -106,10 +106,10 @@ section.lit{opacity:1;transform:scale(1);filter:brightness(1)}
   transition:opacity 1600ms cubic-bezier(.4,0,.2,1),transform 7000ms ease-out;
 }
 .hero-bg.active{opacity:1;transform:scale(1.04)}
-.hero-bg-1{background-image:url('https://olegmonad.github.io/elyne-landing/maxim-lending/img/hero-01-profile-pan.png')}
-.hero-bg-2{background-image:url('https://olegmonad.github.io/elyne-landing/maxim-lending/img/v3-plating-pendant.png')}
-.hero-bg-3{background-image:url('https://olegmonad.github.io/elyne-landing/maxim-lending/img/v4-front-fresh.png')}
-.hero-bg-4{background-image:url('https://olegmonad.github.io/elyne-landing/maxim-lending/img/v3-ingredients-board.png')}
+.hero-bg-1{background-image:url('https://olegmonad.github.io/elyne-landing/maxim-lending/img/real-portrait.jpg')}
+.hero-bg-2{background-image:url('https://olegmonad.github.io/elyne-landing/maxim-lending/img/real-plating-close.jpg')}
+.hero-bg-3{background-image:url('https://olegmonad.github.io/elyne-landing/maxim-lending/img/real-pastry-bag.jpg')}
+.hero-bg-4{background-image:url('https://olegmonad.github.io/elyne-landing/maxim-lending/img/real-fire.jpg')}
 .hero-overlay{
   position:absolute;inset:0;
   background:linear-gradient(to bottom, rgba(14,13,11,0.25) 0%, rgba(14,13,11,0.55) 65%, rgba(14,13,11,0.95) 100%);
@@ -254,25 +254,67 @@ section.lit{opacity:1;transform:scale(1);filter:brightness(1)}
   letter-spacing:-0.02em;
   color:var(--highlight);
 }
-.signature-empty{
-  max-width:640px;margin:0 auto;
-  text-align:center;
-  padding:64px 32px;
+.signature-feature{
+  max-width:1100px;margin:0 auto;
+  display:grid;
+  grid-template-columns:3fr 2fr;
+  gap:64px;
+  align-items:center;
 }
-.signature-empty .promise{
+.signature-feature img{
+  width:100%;
+  aspect-ratio:3/4;
+  object-fit:cover;
+}
+.signature-feature-text{padding:0 24px}
+.signature-feature-text .name{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:0.16em;
+  color:var(--ember);
+  text-transform:uppercase;
+  margin-bottom:16px;
+}
+.signature-feature-text h3{
+  font-family:var(--display);
+  font-variation-settings:"opsz" 56,"wght" 380,"SOFT" 35;
+  font-size:clamp(28px,3.4vw,44px);
+  line-height:1.15;
+  margin-bottom:20px;
+  color:var(--highlight);
+  letter-spacing:-0.015em;
+}
+.signature-feature-text p{
+  font-size:16px;
+  line-height:1.7;
+  color:var(--text-muted);
+  font-weight:300;
+  max-width:380px;
+}
+.signature-promise{
+  max-width:760px;margin:80px auto 0;
+  text-align:center;
+  padding:32px;
+  border-top:1px solid var(--line);
+}
+.signature-promise .promise{
   font-family:var(--display);
   font-variation-settings:"opsz" 36,"wght" 360,"SOFT" 40;
-  font-size:clamp(22px,2.4vw,32px);
+  font-size:clamp(22px,2.4vw,30px);
   line-height:1.3;
-  color:var(--highlight);
-  margin-bottom:20px;
+  color:var(--text);
+  margin-bottom:14px;
   letter-spacing:-0.01em;
 }
-.signature-empty .desc{
-  font-size:15px;
+.signature-promise .desc{
+  font-size:14px;
   color:var(--text-muted);
   line-height:1.7;
   font-weight:300;
+}
+@media (max-width:768px){
+  .signature-feature{grid-template-columns:1fr;gap:24px}
+  .signature-feature-text{padding:0}
 }
 
 /* FORMATS — click-accordion */
@@ -602,15 +644,15 @@ footer .mono{color:var(--text-muted);font-size:11px}
       </div>
     </div>
     <div class="process-shot reveal">
-      <img src="https://olegmonad.github.io/elyne-landing/maxim-lending/img/v3-ingredients-board.png" alt="продукт">
+      <img src="https://olegmonad.github.io/elyne-landing/maxim-lending/img/real-pastry-bag.jpg" alt="жест">
       <div class="process-caption">
-        <div class="mono">02 · продукт</div>
+        <div class="mono">02 · жест</div>
         <h3>Слышать, что есть.</h3>
-        <p>Корень, кислота, жир. Трёх вещей хватит — если понимаешь каждую.</p>
+        <p>Лезвие — продолжение руки. Корень, кислота, жир. Трёх вещей хватит — если понимаешь каждую.</p>
       </div>
     </div>
     <div class="process-shot reveal">
-      <img src="https://olegmonad.github.io/elyne-landing/maxim-lending/img/process-fire.jpg" alt="огонь">
+      <img src="https://olegmonad.github.io/elyne-landing/maxim-lending/img/real-fire.jpg" alt="огонь">
       <div class="process-caption">
         <div class="mono">03 · огонь</div>
         <h3>Не контролируешь — присутствуешь.</h3>
@@ -618,7 +660,7 @@ footer .mono{color:var(--text-muted);font-size:11px}
       </div>
     </div>
     <div class="process-shot reveal">
-      <img src="https://olegmonad.github.io/elyne-landing/maxim-lending/img/maxim-plating-real.jpg" alt="продукт и подача">
+      <img src="https://olegmonad.github.io/elyne-landing/maxim-lending/img/real-plating-close.jpg" alt="продукт и подача">
       <div class="process-caption">
         <div class="mono">04 · продукт</div>
         <h3>Всё начинается до кухни.</h3>
@@ -634,7 +676,15 @@ footer .mono{color:var(--text-muted);font-size:11px}
     <div class="mono">— signature —</div>
     <h2>Авторские блюда</h2>
   </div>
-  <div class="signature-empty reveal">
+  <div class="signature-feature reveal">
+    <img src="https://olegmonad.github.io/elyne-landing/maxim-lending/img/real-food-sauce.jpg" alt="Авторское блюдо">
+    <div class="signature-feature-text">
+      <div class="name">— из меню —</div>
+      <h3>Соус, мясо, микрозелень.</h3>
+      <p>Минимум жестов. Максимум температуры и времени. Полная коллекция блюд — скоро.</p>
+    </div>
+  </div>
+  <div class="signature-promise reveal">
     <p class="promise">Шесть блюд. Чёрный фон. Много воздуха.</p>
     <p class="desc">Каждое — как отдельный кадр. Названия короткие: «свёкла, копчёный творог, лимон».</p>
   </div>
@@ -691,7 +741,7 @@ footer .mono{color:var(--text-muted);font-size:11px}
       <div class="format-arrow">→</div>
       <div class="format-expand">
         <div class="format-expand-grid">
-          <img src="https://olegmonad.github.io/elyne-landing/maxim-lending/img/process-knife.jpg" alt="">
+          <img src="https://olegmonad.github.io/elyne-landing/maxim-lending/img/real-masterclass.jpg" alt="мастер-класс">
           <div class="format-expand-text">
             <p>Учу не повторять рецепт. Учу понимать, что произошло, когда соль легла на горячее масло. Что меняется, когда нож тупой.</p>
             <p>Группа маленькая — 1 на 1 или до 8 человек. После — обед, который ты приготовил.</p>
@@ -727,7 +777,7 @@ footer .mono{color:var(--text-muted);font-size:11px}
 <section class="about">
   <div class="about-grid">
     <div class="about-img reveal">
-      <img src="https://olegmonad.github.io/elyne-landing/maxim-lending/img/maxim-plating-real.jpg" alt="Максим за plating'ом">
+      <img src="https://olegmonad.github.io/elyne-landing/maxim-lending/img/real-coffee-portrait.jpg" alt="Максим вне кухни">
     </div>
     <div class="about-text reveal">
       <div class="mono">— о шефе —</div>
