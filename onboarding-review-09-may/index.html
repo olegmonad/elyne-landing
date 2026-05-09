@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Онбординг nextmeee · ревью 5 агентов</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="nextmeee">Онбординг nextmeee · что чинить</h1>
+<p><strong>Запрос Олега (msg_2992):</strong> «онбор не вовлекает, тяжёлый и сложный. Нужно усилить, сделать динамичнее. Что менять во фронте?»</p>
+<p><strong>5 агентов посмотрели одни и те же 22 экрана с 5 разных углов. Сходимость очень высокая</strong> — несколько проблем найдены тремя-четырьмя агентами одновременно. Это значит — это не вкусовщина, это структурный диагноз.</p>
+<hr>
+<h2 id="_1">Главный диагноз (то с чего начать)</h2>
+<h3 id="1-manifest-me-elyne">1. Бренд в хедере — <code>Manifest me</code>, не <code>Elyne</code></h3>
+<p>Найдено: <strong>creative-director + content-strategist</strong>.</p>
+<p>Фиолетовый <code>#6E37D8</code> CTA на 22 экранах + лого с женской фигуркой + центрованный безликий sans-serif. Это сейчас <strong>категория Reflectly/Fabulous</strong> — прямой конкурент того, чем Elyne хочет быть. Юзер смотрит на «Manifest me» в шапке — и ожидает manifestation-продукт. Получает manifestation-продукт. Никакого премиум-впечатления.</p>
+<p><strong>Пока эти 3 элемента (палитра + лого + типографика) в кадре, ревью копирайта бессмысленно</strong> — это базовая бренд-гигиена.</p>
+<h3 id="2-wow">2. WOW сломан в момент кульминации</h3>
+<p>Найдено: <strong>product-analyst + creative-director + narrative-designer + ux-designer</strong>.</p>
+<p>Шаг 9 (онбор-сцена) — единственный момент где история «открывается». Юзер ждёт <strong>себя</strong>, получает мужика 45+ с сединой и бородой. Это <strong>не разочарование от продукта</strong> — это разочарование от <strong>первого контакта с AI</strong>. Всё что после — уже в яме.</p>
+<p>Корень технический: <strong>плейсхолдер likeness не вписан в онбор-промт</strong> (мы это уже знаем из админки 8 мая). Денис чинил для сфер — для онбор-сцены не починено.</p>
+<h3 id="3-6-">3. Темп сломан 6 экранами-комментариями</h3>
+<p>Найдено: <strong>все 5 агентов</strong>.</p>
+<p>Из 22 шагов работает <strong>1</strong> — фото и сцена. Всё <strong>до</strong>: 3 обещания подряд («представь» → «мы поможем» → «ответь»). Всё <strong>после</strong>: 4 one-liner («это одна из версий» → «разные сценарии» → «больше чем одна сцена» → аффирмация-cringe). Эти 6 экранов = клики «Продолжить» <strong>в пустоту, без новой информации</strong>. Они <strong>обесценивают сцену на ходу</strong> — пока читатель ловит её, ему уже объясняют что она одна из многих.</p>
+<h3 id="4">4. Жанр неправильный</h3>
+<p>Найдено: <strong>content-strategist + creative-director + product-analyst</strong>.</p>
+<p>4 слова говорят юзеру «это vision-board / манифестация», не «премиум-инструмент»:
+- «Аффирмация» (как заголовок отдельного экрана)
+- «карта желаний» (старый flow)
+- «возможные версии жизни» (Олег убирал из позиционирования с msg_2896)
+- «это уже моя жизнь» (manifestation cringe)</p>
+<p>Олег эти 4 слова убирает несколько недель. Они до сих пор живы.</p>
+<h3 id="5-flow">5. Три голоса в одном flow</h3>
+<p>Найдено: <strong>narrative-designer + content-strategist + creative-director</strong>.</p>
+<p>Hook = book-prose. Аффирмация = manifestation Reflectly. Loader = tech-spec админки («коэффициенты профиля»). Плюс «ты» переключается на «вы» (фото-загрузка, лоадер, тарифы, Q4 в сферах). Юзер не замечает осознанно — чувствует: продукт говорит двумя-тремя голосами.</p>
+<hr>
+<h2 id="_2">Что менять во фронте (для Дениса)</h2>
+<p>Список конкретных изменений, отсортированных по эффекту-к-усилию.</p>
+<h3 id="_3">🔥 Критично — до запуска</h3>
+<p><strong>F1. Identity в онбор-промте.</strong> Применить тот же патч <code>{micro_adjustment_answers}</code> + likeness placeholder, что для сфер. Один файл (промт сферы 1 / онбор-сцены). Это снимает главный WOW-килл.</p>
+<p><strong>F2. Удалить 3 one-liner экрана.</strong> Маршруты: <code>/only-one-variant</code>, <code>/we-can-vision-different-level</code>, <code>/more-one-scene</code>. Просто перенаправление со сцены сразу на feedback (#12). Смысл этих фраз — перенести в сабтитр под сценой одной строкой.</p>
+<p><strong>F3. Удалить 2 пустых вступления.</strong> Маршруты: <code>/we-help</code>, <code>/prepared</code>. Юзер должен попасть с <code>/hook</code> сразу на <code>/recognition</code> (Q1). Hook сделать full-screen с фото-fade и одной фразой — не текст в углу.</p>
+<p><strong>F4. Скрыть «MVP Тест» из тарифной карточки.</strong> Условие в коде: <code>if (env === 'production') hideTariff('MVP Тест')</code>. Сейчас выглядит как баг.</p>
+<p><strong>F5. Убрать «Карту желаний».</strong> Маршрут <code>/collage-generation</code> — переход после payment. После «Оплатить» сразу на <code>/sphere-selection</code>. Старый флоу.</p>
+<p><strong>F6. Сменить заголовок «Аффирмация».</strong> Минимум — убрать слово как H1. Максимум — превратить в один кадр (без отдельного экрана), где фраза появляется поверх сцены через 2 сек после показа.</p>
+<h3 id="mvp">🟡 Важно — в первую неделю после MVP</h3>
+<p><strong>F7. Loader storytelling.</strong> Заменить «Создаём ваше фото / Обычно 15-30 секунд / коэффициенты профиля» на 3 чередующиеся фразы (по 5 сек каждая):
+- «Считываем вкус…»
+- «Подбираем свет и материал…»
+- «Это твой кадр.»</p>
+<p>Без процент-индикатора. Без слова «коэффициент».</p>
+<p><strong>F8. Tone «ты» везде.</strong> Замена 4 экранов где сейчас «вы»: фото-загрузка, лоадер, тарифы, Q4 в опросниках сфер. Sed по проекту: <code>Загрузите</code> → <code>Загрузи</code>, <code>Выберите</code> → <code>Выбери</code>, <code>Вы</code> → <code>Ты</code>, <code>вашей</code> → <code>твоей</code>.</p>
+<p><strong>F9. «Возможные версии жизни» убрать целиком.</strong> Один экран <code>/we-help</code> уже удаляется (F3). Если ещё где-то есть — найти grep и заменить на «другую версию» или вообще убрать.</p>
+<p><strong>F10. Тарифы — выделить рекомендованный.</strong> Сейчас 4 одинаковых карточки 0₽. Минимум — <code>popular</code>-бейдж на одном (например, на «Стандарт»). Описание тарифа в одну строку — что входит / для кого.</p>
+<h3 id="_4">🟢 Можно позже</h3>
+<p><strong>F11. Регистрация после первой сферы, не после сцены.</strong> Структурный фикс — перенести <code>/registration</code> с шага 17 на после первого захода в сферу. Идея: юзер уже эмоционально вовлечён (получил сцену + первый dashboard) → готов оставить email. Сейчас email просят пока юзер ещё в «оценочной» фазе.</p>
+<p><strong>F12. Шапка сайта.</strong> Лого <code>Manifest me</code> → <code>Elyne</code>. Палитра CTA <code>#6E37D8</code> → нейтральная (близкая к BRAND.md). Кнопка «Войти» в углу убрать с экранов онбора (она там не нужна — пользователь только регистрируется).</p>
+<p><strong>F13. First screen</strong> (hook). Сейчас текст в левом верхнем углу + 60% мёртвой зоны. Сделать full-bleed: сцена-намёк на фоне (тёмная), одна фраза в нижней трети.</p>
+<p><strong>F14. Поле «Другое» в опросниках.</strong> В каждом Q1-Q3 есть кнопка «+ Другое (свой вариант)» — сейчас не выделена визуально. Либо убрать (упрощение), либо визуально приподнять.</p>
+<hr>
+<h2 id="_5">Что менять в копирайте</h2>
+<p>Полный список из ревью content-strategist (см. файл). Ниже — топ-3:</p>
+<p><strong>1. Аффирмация после сцены.</strong> Сейчас: «Это ты. В своём деле. Я создаю значимое из любой точки мира. Это уже моя жизнь.» Замена (от creative-director, как пример другого вкуса):</p>
+<blockquote>
+<p><em>Здесь — ты в работе, которую узнаёшь как свою.</em></p>
+</blockquote>
+<p>Без слова «Аффирмация» в шапке. Без «уже моя жизнь». Один кадр, одна фраза.</p>
+<p><strong>2. Hook (#1).</strong> Сейчас: «Представь жизнь, в которую действительно хочется войти». Это «представь» — manifestation-команда. Замена-варианты:</p>
+<blockquote>
+<p><em>Сцена твоей жизни — на один шаг впереди.</em></p>
+<p><em>То, как ты чувствуешь свою жизнь — увидишь через минуту.</em></p>
+</blockquote>
+<p><strong>3. Loader.</strong> Сейчас: «ИИ генерирует ваш персонализированный образ на основе коэффициентов профиля.» Это разработческое описание. Замена — см. F7.</p>
+<hr>
+<h2 id="4-22-14">4 шага которые сожмут онбор с 22 → 14</h2>
+<pre><code>ДО                                     ПОСЛЕ
+─────────────────────────────────────────────────────
+1.  hook                              1. hook (full-bleed, F13)
+2.  we-help            ❌              2. recognition
+3.  prepared           ❌              3. environment
+4.  recognition                       4. style-clotches
+5.  environment                       5. sphere
+6.  style-clotches                    6. photo-upload
+7.  sphere                            7. loader+scene (F7)
+8.  photo-upload                      8. feedback
+9.  generation+scene                  9. what-deal
+10. affirmation        ❌              10. impact
+11. only-one-variant   ❌              11. registration (F11 — сейчас тут)
+12. feedback                          12. card-type (F4, F10)
+13. what-deal                         13. payment
+14. impact                            14. → sphere-selection (без collage)
+15. we-can-vision      ❌
+16. more-one-scene     ❌
+17. registration
+18. card-type
+19. payment
+20. collage-generation ❌
+</code></pre>
+<p>Удаляются: 2 (we-help), 3 (prepared), 10 (affirmation как отдельный экран — становится overlay в #7), 11, 15, 16, 20.</p>
+<hr>
+<h2 id="_6">Файлы агентов (детали)</h2>
+<ul>
+<li><code>vault/elyne/onboarding-review-2026-05-09/product-analyst.md</code> — ICE-приоритеты, метрики трекинга, drop-off гипотезы</li>
+<li><code>vault/elyne/onboarding-review-2026-05-09/ux-designer.md</code> — макеты, иерархия, переходы</li>
+<li><code>vault/elyne/onboarding-review-2026-05-09/creative-director.md</code> — brand expression, сравнение с эталонами</li>
+<li><code>vault/elyne/onboarding-review-2026-05-09/narrative-designer.md</code> — арка 22 шагов, эмоциональный gradient</li>
+<li><code>vault/elyne/onboarding-review-2026-05-09/content-strategist.md</code> — копирайт + замены 8 фраз</li>
+</ul>
+<hr>
+<h2 id="_7">Сводка для Дениса</h2>
+<p><strong>Что сделать на этой неделе (если Олег утвердит):</strong></p>
+<ol>
+<li>F1 — патч likeness в онбор-промт (один файл, аналог фикса для сфер)</li>
+<li>F2-F3 — удалить 5 one-liner маршрутов из онбора (we-help, prepared, only-one-variant, we-can-vision, more-one-scene)</li>
+<li>F4 — скрыть «MVP Тест» в проде</li>
+<li>F5 — убрать collage-generation flow</li>
+<li>F8 — sed по проекту «Вы → Ты», «вашей → твоей»</li>
+<li>F9 — grep &amp; replace «возможные версии жизни»</li>
+</ol>
+<p>Это даёт <strong>онбор 14 шагов вместо 22 + WOW-фикс + чистый «ты» + убраны луч-цыганщина-слова.</strong> За 1-2 дня кода.</p>
+<p>После — F6, F7, F10 (рекомендованный тариф, аффирмация-overlay, loader-storytelling).</p>
+<p>Структурное (F11, F12, F13) — отдельным RFC, в следующую итерацию.</p>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
