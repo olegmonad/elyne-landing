@@ -116,6 +116,7 @@ section.lit{opacity:1;transform:scale(1);filter:brightness(1)}
 .hero-bg-2{background-image:url('https://olegmonad.github.io/elyne-landing/maxim-lending/img/real-plating-close.jpg')}
 .hero-bg-3{background-image:url('https://olegmonad.github.io/elyne-landing/maxim-lending/img/real-pastry-bag.jpg')}
 .hero-bg-4{background-image:url('https://olegmonad.github.io/elyne-landing/maxim-lending/img/real-fire.jpg')}
+.hero-bg-5{background-image:url('https://olegmonad.github.io/elyne-landing/maxim-lending/img/real-masterclass-action.jpg')}
 .hero-overlay{
   position:absolute;inset:0;
   background:linear-gradient(to bottom, rgba(14,13,11,0.25) 0%, rgba(14,13,11,0.55) 65%, rgba(14,13,11,0.95) 100%);
@@ -617,6 +618,7 @@ footer .mono{color:var(--text-muted);font-size:11px}
     <div class="hero-bg hero-bg-2"></div>
     <div class="hero-bg hero-bg-3"></div>
     <div class="hero-bg hero-bg-4"></div>
+    <div class="hero-bg hero-bg-5"></div>
   </div>
   <div class="hero-overlay"></div>
   <div class="hero-content">
@@ -851,7 +853,7 @@ document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 
 // Hero cross-dissolve cycle (28s loop)
 const heroFrames = document.querySelectorAll('.hero-bg');
-const holdMs = [6000, 5000, 5000, 6000];
+const holdMs = [6000, 5000, 5000, 6000, 5000];
 let heroIdx = 0;
 function nextHero(){
   heroFrames[heroIdx].classList.remove('active');
