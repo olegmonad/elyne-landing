@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Карусель Ядра · 4 слайда · промты</title>
+<title>Карусель Ядра · 4 слайда · готовые промты</title>
 <style>
   :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
   body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
@@ -28,64 +28,118 @@
 </style>
 </head>
 <body>
-<h1 id="4">Карусель Ядра · 4 слайда · промты</h1>
-<p><strong>Решение Олега 2026-05-10:</strong> не 8/7, а <strong>4 кадра</strong>. Драматургия — 4 акта: hook → проблема → ответ → CTA.</p>
-<p><strong>Что делать:</strong> скопировать промт → вставить в ChatGPT Image → сгенерить → если не зашло, варьировать 2-3 раза. <strong>Текст на слайдах НЕ генерим в DALL-E</strong> (он плохо рисует кириллицу) — генерим только фон, потом текст накладывается в Figma/Canva.</p>
+<h1 id="4">Карусель Ядра · 4 слайда · готовые промты</h1>
+<p><strong>Драматургия:</strong> hook → проблема → ответ+манифест → CTA</p>
+<p><strong>Формат каждого промта:</strong> один блок, копипаст в ChatGPT Image, текст слайда <strong>встроен в промт</strong> — DALL-E попробует разместить его прямо на картинке.</p>
+<p>⚠️ <strong>Кириллица в DALL-E нестабильна.</strong> Если буквы съехали / получилась абракадабра — используй <strong>fallback</strong> (внизу каждого слайда): сгенери визуал без текста, текст наложи в Figma/Canva.</p>
 <hr>
-<h2 id="_1">Универсальная стилистика (вставить в каждый промт первой строкой)</h2>
-<pre><code>Square 1:1 aspect ratio, 1080x1080. Cinematic editorial photography, A24 film aesthetic, Apple product page mood. Dark warm charcoal background #0E0D0B, deep shadow detail. Single warm practical light source, 3000K, side or top-right. Subtle film grain, Kodak 500T feel, no digital sharpness. Warm shadows, slightly cool highlights, low contrast curve. Tactile real materials — aged wood, matte cast iron, linen, ceramic. Bradford Young cinematography reference, slow-cinema atmosphere. NO glossy, NO luxury, NO gold glitter, NO instagram aesthetic, NO vibrant saturation, NO clean white background, NO AI futurism, NO neon, NO gradient blobs, NO product packshot, NO motivational poster vibe.
+<h2 id="1-hook-20">СЛАЙД 1 · HOOK · 20 мая · открытие</h2>
+<h3 id="_1">Промт А (с встроенным текстом — пробуем)</h3>
+<pre><code>Create a 1080x1080 square Instagram-style cinematic editorial photograph for a premium product launch announcement.
+
+VISUAL: A man in his early 30s standing alone in a dim warm-lit room at dusk, looking thoughtfully out a tall window onto a soft-focus empty city street. He wears a simple charcoal sweater, no logos. Still pose, not posed, just present. Single warm practical lamp glowing on a wooden side-table to his left, casting amber rim light on his face and shoulder. Background: dark warm charcoal #0E0D0B, deep shadows with detail. Aged wood floor, linen curtain partly visible.
+
+STYLE: Slow-cinema mood, A24 cinematography, Bradford Young palette. 50mm lens, f/2.0, shallow depth of field, subtle Kodak 500T film grain. Warm shadows, slightly cool highlights, low contrast curve.
+
+TEXT ON IMAGE (Russian, place precisely as described):
+- TOP CENTER, very small, monospace uppercase font (like JetBrains Mono), color soft cream #EFE7D6, letter-spacing wide: «20 МАЯ»
+- LOWER CENTER, large elegant serif font (like Cormorant Garamond Light, weight 300), color warm cream #EFE7D6, single line: «Открывается ранний доступ к Elyne.»
+
+The text must be in Cyrillic (Russian) characters, perfectly legible, well-positioned, not overlapping with the man's silhouette.
+
+NEGATIVE: NO glossy, NO luxury, NO gold glitter, NO instagram saturation, NO white background, NO smile, NO product shots, NO logos, NO motivational vibes, NO Latin text — Russian only.
 </code></pre>
+<h3 id="fallback-figma">Fallback Б (визуал без текста, оверлей в Figma)</h3>
+<p>Тот же промт, но <strong>убери TEXT ON IMAGE блок целиком</strong> и добавь в NEGATIVE: <code>NO text in image at all</code>. Потом в Figma:
+- Сверху мелко (Geist Mono uppercase): <code>20 МАЯ</code>
+- По центру крупно (Cormorant Garamond Light, 64-72px, off-white): <code>Открывается ранний доступ к Elyne.</code></p>
 <hr>
-<h2 id="1-hook-20">Слайд 1 · HOOK · «20 мая · открытие»</h2>
-<p><strong>Визуальная задача:</strong> атмосферный hero-кадр. Один человек внутри пространства, которое «его». Тёмный кадр, но не загашенный — есть тёплый источник света. Состояние «внутри момента», не позирует.</p>
-<p><strong>Промт:</strong></p>
-<pre><code>Square 1:1, 1080x1080. Cinematic editorial photograph. A man in his early 30s standing alone in a dim warm-lit room at dusk, looking thoughtfully out a tall window onto an empty soft-focus city street. He wears a simple charcoal sweater, no logos. His pose is still — not posed, not dramatic — just present. Single warm practical lamp glowing on a wooden side-table to his left, casting soft amber rim light on the side of his face and shoulder. Background is dark warm charcoal #0E0D0B, deep shadows with detail. Aged wood floor, linen curtain partly visible. 50mm lens, f/2.0, shallow depth of field, subtle Kodak 500T film grain. Slow-cinema mood, A24 cinematography, Bradford Young palette. NO glossy, NO luxury, NO gold, NO instagram, NO vibrant, NO clean white background, NO smile, NO product, NO logos, NO text in image, NO motivational pose, NO fitness aesthetic.
+<h2 id="2">СЛАЙД 2 · ПРОБЛЕМА · «та же тревога с новым декором»</h2>
+<h3 id="_2">Промт А</h3>
+<pre><code>Create a 1080x1080 square cinematic editorial still life for a premium app launch carousel.
+
+VISUAL: A single empty ceramic bowl on a dark aged wooden table, photographed from a slightly elevated angle. Half of the bowl bathed in warm amber practical light from the left, the other half disappearing into deep charcoal shadow. The transition between light and dark is the subject of the photograph. Background: warm charcoal #0E0D0B, almost black but warm. Subtle steam rising from the warm-lit side, barely visible.
+
+STYLE: 50mm lens, f/2.8, subtle Kodak 500T film grain. Bradford Young palette, low contrast, slow-cinema A24 mood.
+
+TEXT ON IMAGE (Russian, place precisely):
+- UPPER THIRD, centered, elegant serif font (Cormorant Garamond, weight 400), warm cream #EFE7D6, two lines:
+  «Из какого состояния»
+  «мы мечтаем?»
+- A thin horizontal line of warm amber color #B8651F, 80px wide, exactly between the two text blocks
+- LOWER THIRD, centered, italic serif (Cormorant Italic), muted cream, three lines:
+  «Если из дефицита —»
+  «получаем ту же тревогу»
+  «с новым декором.»
+
+All text in Cyrillic (Russian), perfectly legible, balanced composition, text not overlapping the bowl.
+
+NEGATIVE: NO glossy, NO luxury, NO gold, NO instagram aesthetic, NO vibrant, NO white background, NO multiple objects, NO product shot vibes, NO Latin text — Russian only.
 </code></pre>
-<p><strong>Текст overlay (поверх в Figma):</strong>
-- Сверху мелко (Geist Mono uppercase, tracking +12%, off-white): <code>20 МАЯ</code>
-- По центру крупно (Cormorant Garamond Light, 64-72px, off-white #EFE7D6): <code>Открывается ранний доступ к Elyne.</code></p>
+<h3 id="fallback">Fallback Б</h3>
+<p>Промт без <code>TEXT ON IMAGE</code> блока + <code>NO text in image</code>. Текст в Figma:
+- Сверху (Cormorant Garamond, 36-44px, off-white): «Из какого состояния / мы мечтаем?»
+- Тонкая ember-линия 80px, 1px толщина
+- Снизу (Cormorant Italic, 32-40px, muted): «Если из дефицита — / получаем ту же тревогу / с новым декором.»</p>
 <hr>
-<h2 id="2">Слайд 2 · ПРОБЛЕМА · «Та же тревога с новым декором»</h2>
-<p><strong>Визуальная задача:</strong> объединяет вопрос «из какого состояния?» и разрыв «получаем не желаемое». Метафора через визуал — дуальность одного объекта в двух светах. Без слов внутри картинки.</p>
-<p><strong>Промт:</strong></p>
-<pre><code>Square 1:1, 1080x1080. Cinematic editorial still life. A single empty ceramic bowl on a dark aged wooden table, photographed from a slightly elevated angle. Half of the bowl is bathed in warm amber practical light from the left, the other half disappears into deep charcoal shadow. The transition between light and dark is the subject of the photograph. Background is warm charcoal #0E0D0B, almost black but warm. No food in the bowl — just the vessel itself. Subtle steam slowly rising from the warm side, barely visible. 50mm lens, f/2.8, subtle Kodak 500T film grain. Bradford Young palette, low contrast, slow-cinema mood. NO glossy, NO luxury, NO gold, NO instagram aesthetic, NO vibrant, NO white background, NO multiple objects, NO text in image, NO product photography vibe.
+<h2 id="3">СЛАЙД 3 · ОТВЕТ + МАНИФЕСТ · «Сцены — якоря состояния»</h2>
+<h3 id="_3">Промт А</h3>
+<pre><code>Create a 1080x1080 square cinematic editorial photograph for a premium consumer app announcement.
+
+VISUAL: A woman in her late 20s sitting on a low wooden bench in a quiet sunlit interior — early morning soft daylight from a tall window on her left. She holds a warm ceramic cup in both hands, looks down into it, slight half-smile, eyes closed for a moment. Hair loose, simple beige linen sweater. Background: bare warm cream wall #E8DCC4, simple objects out of focus — a hardcover book, a clay vase with one dried branch. Wooden floor, no decoration.
+
+STYLE: 50mm lens, f/2.2, shallow depth of field, subtle Kodak 500T grain. Slow-cinema, A24 mood, Bradford Young palette, low contrast. Soft warm highlights, gentle warm shadows.
+
+TEXT ON IMAGE (Russian, place precisely):
+- UPPER HALF, centered or left-aligned, elegant serif (Cormorant Garamond Light, weight 300), warm cream #EFE7D6 (against the lighter wall use slightly darker tone for legibility), four lines:
+  «Elyne помогает найти»
+  «своё, истинное состояние.»
+  «И уже из него —»
+  «увидеть сцены своей жизни.»
+- A thin horizontal divider line, color amber #B8651F, 60px wide, between the two text blocks
+- LOWER HALF, centered, italic serif Bold (Cormorant Italic Semibold), warm cream #EFE7D6, two lines:
+  «Сцены — не цели.»
+  «Это якоря состояния.»
+
+All text in Cyrillic (Russian), perfectly legible. Text positioned so it doesn't crowd the woman's figure — use negative space around her.
+
+NEGATIVE: NO glossy, NO luxury, NO gold, NO instagram, NO vibrant, NO product photography, NO fashion editorial, NO posing, NO logos, NO Latin text — Russian only, NO multiple people.
 </code></pre>
-<p><strong>Текст overlay (3 строки):</strong>
-- Сверху (Cormorant Garamond, 36-44px, off-white): <code>Из какого состояния / мы мечтаем?</code>
-- Тонкая горизонтальная линия 1px ember <code>#B8651F</code>, ширина 80px, по центру
-- Снизу (Cormorant Garamond Italic, 32-40px, text-muted): <code>Если из дефицита — / получаем ту же тревогу / с новым декором.</code></p>
+<h3 id="fallback_1">Fallback Б</h3>
+<p>Промт без <code>TEXT ON IMAGE</code> + <code>NO text in image</code>. Текст в Figma:
+- Верх (Cormorant Garamond, 36-44px, off-white): «Elyne помогает найти / своё, истинное состояние. / И уже из него — / увидеть сцены своей жизни.»
+- Тонкая ember-линия 60px, 1px
+- Низ (Cormorant Italic Semibold, 38-46px, off-white): «Сцены — не цели. / Это якоря состояния.»</p>
 <hr>
-<h2 id="3">Слайд 3 · ОТВЕТ + МАНИФЕСТ · «Сцены — якоря состояния»</h2>
-<p><strong>Визуальная задача:</strong> один герой внутри сцены, которая «его». Узнавание, не презентация. Это и есть «ответ» Elyne — состояние, не визуализация.</p>
-<p><strong>Промт:</strong></p>
-<pre><code>Square 1:1, 1080x1080. Cinematic editorial photograph. A woman in her late 20s sitting on a low wooden bench in a quiet sunlit interior — early morning soft daylight from a tall window on her left. She holds a warm ceramic cup in both hands, looks down into it, slight half-smile, eyes closed for a moment. Hair loose, simple beige linen sweater. Background — bare warm cream wall #E8DCC4, a few simple objects out of focus: a hardcover book, a clay vase with one dried branch. Wooden floor, no decoration. Soft warm white highlights, gentle warm shadows. 50mm lens, f/2.2, shallow depth of field, subtle Kodak 500T grain. Slow-cinema, A24 mood, Bradford Young palette, low contrast. NO glossy, NO luxury, NO gold, NO instagram aesthetic, NO vibrant, NO product photography, NO fashion editorial, NO posing, NO logos, NO text in image, NO multiple people.
+<h2 id="4-cta-20-elyne_app">СЛАЙД 4 · CTA · 20 мая · @elyne_app</h2>
+<h3 id="_4">Промт А</h3>
+<pre><code>Create a 1080x1080 square minimalist cinematic image for a premium app launch CTA card.
+
+VISUAL: Pure dark warm charcoal background #0E0D0B with very subtle vignette darkening at the corners. One single tiny warm amber light point at the center, soft circular glow with very gentle falloff, like a single candle flame seen from far. No flame visible, just the warm light suggestion. Slow-cinema, atmospheric, calm. Dust-particle texture barely visible.
+
+STYLE: Editorial minimalism, A24 mood, Bradford Young palette.
+
+TEXT ON IMAGE (Russian, vertically stacked, centered horizontally, place precisely):
+- TOP: italic serif (Cormorant Italic), 28-32px, muted color (gray-cream): «— ранний доступ —»
+- CENTER (large): elegant serif (Cormorant Garamond, weight 400), 60-72px, warm cream #EFE7D6: «20 мая»
+- BELOW center: monospace uppercase (JetBrains Mono Medium), 14-16px, amber #B8651F, letter-spacing wide: «@ELYNE_APP» (this is Latin text — keep it Latin)
+- BOTTOM: light sans-serif (Geist Light), 14-16px, muted cream: «подписка — для тех, кому близко»
+
+The «@ELYNE_APP» line is the only Latin/English text — everything else in Russian Cyrillic. All text perfectly legible, generous spacing between lines, vertically centered as a stack on the dark background.
+
+NEGATIVE: NO glossy, NO luxury, NO gold sparkle, NO bright spots, NO logos beyond text, NO instagram aesthetic, NO product shots, NO motivational vibes.
 </code></pre>
-<p><strong>Текст overlay (двухчастный):</strong>
-- Верхняя половина (Cormorant Garamond, 36-44px, off-white): <code>Elyne помогает найти / своё, истинное состояние. / И уже из него — / увидеть сцены своей жизни.</code>
-- Тонкая разделительная линия 1px ember <code>#B8651F</code>, ширина 60px
-- Нижняя половина (Cormorant Garamond Italic Bold, 38-46px, off-white): <code>Сцены — не цели. / Это якоря состояния.</code></p>
+<h3 id="fallback_2">Fallback Б</h3>
+<p>Просто залить <code>#0E0D0B</code> в Figma (без генерации) и добавить 4 строки текста как описано выше.</p>
 <hr>
-<h2 id="4-cta-20-elyne_app">Слайд 4 · CTA · «20 мая · @elyne_app»</h2>
-<p><strong>Визуальная задача:</strong> финал-приглашение. Чистый, без перегрузки. Одна светящаяся точка-намёк (свеча/лампа в дали).</p>
-<p><strong>Промт:</strong></p>
-<pre><code>Square 1:1, 1080x1080. Pure dark warm charcoal background #0E0D0B with very subtle vignette darkening at the corners. One single tiny warm amber light point at the centre, soft circular glow with very gentle falloff, like a single candle flame seen from far. No flame visible, just the warm light suggestion. Slow-cinema, atmospheric, calm. NO glossy, NO luxury, NO gold, NO bright, NO sparks, NO logos, NO text, NO instagram aesthetic, NO vibrant, NO product, NO motivational vibe.
-</code></pre>
-<p><strong>Альтернативно</strong> — просто залить <code>#0E0D0B</code> в Figma без генерации.</p>
-<p><strong>Текст overlay (4 строки сверху вниз):</strong>
-- Cormorant Garamond Italic, 24-32px, muted: <code>— ранний доступ —</code>
-- Cormorant Garamond, 60-72px, off-white: <code>20 мая</code>
-- Geist Mono uppercase, 14-16px, ember: <code>@ELYNE_APP</code>
-- Geist Light, 14-16px, muted: <code>подписка — для тех, кому близко</code></p>
-<hr>
-<h2 id="-">Чек-лист</h2>
-<ul>
-<li>[ ] Все 4 слайда в одинаковом аспекте (1:1, 1080×1080)</li>
-<li>[ ] На всех — единая палитра: charcoal <code>#0E0D0B</code>, off-white <code>#EFE7D6</code>, ember <code>#B8651F</code> (точечно)</li>
-<li>[ ] Один display-шрифт (Cormorant Garamond) + один accent (Geist Mono)</li>
-<li>[ ] Имя <code>@elyne_app</code> — одинаковое написание на слайдах 1 и 4</li>
-<li>[ ] Никаких эмоджи / восклицательных / «🔥»</li>
-<li>[ ] Все слайды читаются на мобиле — текст крупный, контраст высокий</li>
-</ul>
+<h2 id="-">Чек-лист после генерации</h2>
+<p>Для каждого слайда проверь:
+- [ ] <strong>Кириллица читается</strong> без артефактов и съехавших букв (DALL-E часто это ломает — если так, переходи на fallback Б)
+- [ ] Композиция не «сплющена» — текст и визуал сбалансированы
+- [ ] Палитра в charcoal/cream/ember (без розового/золотого/неона)
+- [ ] Атмосфера slow-cinema (без instagram-glow)
+- [ ] Имя <code>@elyne_app</code> написано <strong>точно так</strong> (без пробелов, без кавычек)</p>
+<p>Если 2-3 итерации в DALL-E подряд ломают кириллицу — <strong>смело переходи на fallback Б</strong> для всех 4 слайдов. Это нормально для DALL-E, не баг твоей попытки.</p>
 <hr>
 <h2 id="tg-">TG-пост под карусель</h2>
 <blockquote>
@@ -97,16 +151,7 @@
 </blockquote>
 <p><strong>~620 знаков.</strong> Хвостик про Ядро/КОП — оставлять или убирать на твоё усмотрение.</p>
 <hr>
-<h2 id="7-">Что выкинули из 7-слайдового концепта (сохраняем для архива)</h2>
-<p>В исходном концепте B было 7 слайдов: hook → вопрос → разрыв → ответ → состояние → манифест → cta. Сжали до 4:</p>
-<ul>
-<li><strong>Слайд 2 (вопрос) + слайд 3 (разрыв)</strong> объединены в текущий слайд 2 — одна метафора-картинка, текст-двухчастный</li>
-<li><strong>Слайд 4 (ответ) + слайд 5 (внутри) + слайд 6 (манифест)</strong> объединены в текущий слайд 3 — одна сцена, двухчастный текст с разделителем</li>
-<li><strong>Слайд 1 (hook) и слайд 7 (cta)</strong> — без изменений, переименованы в 1 и 4</li>
-</ul>
-<p>Если после первой публикации захочется длиннее — расширим обратно к 7.</p>
-<hr>
-<p><em>Если в ChatGPT Image не получится с первого раза — варьируй (3-4 generations) и выбирай ближайшее. DALL-E часто промахивается с lighting и атмосферой — обычно нужно 3-5 итераций на слайд.</em></p>
+<p><em>Если что-то не сработает — напиши скрин какой кадр получился и я подскажу как поправить промт.</em></p>
 <div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
 </body>
 </html>
