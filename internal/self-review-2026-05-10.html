@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weekly self-review · 04-10.05.2026</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="weekly-self-review-0410052026">Weekly self-review · 04–10.05.2026</h1>
+<h2 id="_1">Что произошло за неделю (по дням, кратко)</h2>
+<table>
+<thead>
+<tr>
+<th>День</th>
+<th>Главное событие</th>
+<th>Результат</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Пн 04.05</strong></td>
+<td>Риелсы Алфёрев — я интерпретировал референс как противоположность вместо повторения стиля</td>
+<td>Потеря дня + ~$8 на FAL</td>
+</tr>
+<tr>
+<td><strong>Вт 05.05</strong></td>
+<td>Yadro презентация — утверждал про дубль фразы без построчной проверки</td>
+<td>Олег поправил, ввели правило exact string match</td>
+</tr>
+<tr>
+<td><strong>Ср 06.05</strong></td>
+<td>КОП-бланк ДЗ — отвечал за Олега, подгоняя свои наблюдения под формат</td>
+<td>Правильный паттерн msg_2638: я задаю вопросы → он отвечает голосом → я оформляю</td>
+</tr>
+<tr>
+<td><strong>Чт 07.05</strong></td>
+<td>Метапромты nextmeee — переусложнил сообщения с JSON output format POV second pass</td>
+<td>Олег: «дико непонятно». Плюс забыл что v1 для 10 сфер уже есть в docs/, msg_2786 «братишка ты тупишь»</td>
+</tr>
+<tr>
+<td><strong>Пт 08.05</strong></td>
+<td>Walkthrough nextmeee + smoking gun Old Money</td>
+<td>10/10 identity-mismatch. Cinematographer-агент выявил 5 критических проблем за рамки моей оценки</td>
+</tr>
+<tr>
+<td><strong>Сб 09.05</strong></td>
+<td>Maxim lending v1→v3.5 + 5-agents онбор-ревью + карусель Ядра</td>
+<td>$1.68 на FAL, 8 секций, 7 финал-кадров, 14 фронт-фиксов F1-F14</td>
+</tr>
+<tr>
+<td><strong>Вс 10.05</strong></td>
+<td>Maxim lending real photos + chrome fix + <strong>большой pivot позиционирования</strong></td>
+<td>Все AI убраны кроме knife. Pivot 17:00 на «любовь к готовке + праздник» — переписываем v4</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="_2">Повторяющиеся паттерны (Олег давал больше одного раза)</h2>
+<h3 id="3">🚨 Главный (3 раза за неделю): «Простой русский, без англицизмов»</h3>
+<ul>
+<li><strong>04.05</strong> мета-промт с английскими структурами</li>
+<li><strong>07.05</strong> msg_2765 «JSON output format POV second pass» → «дико непонятно»</li>
+<li><strong>09.05</strong> msg_2911-2912 «smoking gun, 10 из 10, AI не умеет» → поправил</li>
+</ul>
+<p><strong>Существующее правило:</strong> <code>feedback_human_language.md</code> (с 24.04). <strong>Я продолжаю дрифтовать.</strong></p>
+<p><strong>Action:</strong> усилить — добавить <strong>pre-send check на англицизмы</strong> в любые тексты для Олега. Конкретно: перед TG-сообщением сделать ментальный pass «есть ли тут слова вне обычного русского лексикона». Сделал ❌ raw memory rule сегодня.</p>
+<h3 id="3_1">🚨 Второй (3 раза): «Перед утверждениями — проверь файлы»</h3>
+<ul>
+<li><strong>05.05</strong> дубль фразы без построчной проверки</li>
+<li><strong>07.05</strong> забыл что v1 для 10 сфер уже есть в <code>docs/elyne/content/micro-questionnaire/</code></li>
+<li><strong>08.05</strong> публиковал stock-фоны не посмотрев все 7 файлов глазами, доверяя metadata</li>
+</ul>
+<p><strong>Существующее правило:</strong> <code>feedback_self_review_discipline.md</code>. У меня <strong>проблема дисциплины</strong>, не правила.</p>
+<p><strong>Action:</strong> перед любым «утверждаю / отчитываюсь / опубликовал» — последняя строчка чек-листа: <strong>«я лично проверил каждый артефакт?»</strong> Если нет — переделать.</p>
+<h3 id="1">🟡 Третий (1 раз, новое): «Чанкинг — одна тема за раз»</h3>
+<ul>
+<li><strong>09.05</strong> msg_2899 «по порядку, не списки 10 пунктов»</li>
+</ul>
+<p><strong>Action:</strong> правило новое, фиксирую. <strong>Длинные простыни заменять на 1-2 темы за сообщение, ждать реакции Олега, потом продолжать.</strong></p>
+<h3 id="1-real-photos-ai">🟡 Четвёртый (1 раз, новое): «Real photos &gt; AI когда есть»</h3>
+<ul>
+<li><strong>09.05</strong> Олег прислал коллаж 8 фото → я перешёл на real, AI убрал</li>
+<li><strong>10.05</strong> довёл до 0 AI кроме одного process-knife</li>
+</ul>
+<p><strong>Action:</strong> правило новое, фиксирую.</p>
+<hr>
+<h2 id="-">Концепты которые ходили туда-сюда (не финализировать рано)</h2>
+<h3 id="1-a5-b7-c10-b7-4">1. Карусель Ядра — A5 / B7 / C10 → B7 → 4 слайда</h3>
+<ul>
+<li>09.05: предложил 3 варианта, Олег выбрал B7</li>
+<li>10.05: «не 8/7, а 4 кадра»</li>
+<li>Сейчас финал — 4 слайда</li>
+</ul>
+<h3 id="2-maxim-lending-positioning-premium-editorial">2. Maxim lending positioning — premium editorial → &ldquo;любовь+праздник&rdquo;</h3>
+<ul>
+<li>09.05: утверждено chef-as-brand premium dark editorial Awwwards/Apple/Michelin/A24</li>
+<li>10.05 17:00: <strong>полный pivot</strong> на «готовка как праздник, играючи, с душой, не Michelin»</li>
+<li>Большой откат после <strong>5 версий v3.x</strong> уже опубликованных. Урок: <strong>концепт можно тестировать, но не лить в итерации до финального согласования атмосферы.</strong></li>
+</ul>
+<h3 id="3-hero-1-maxim-lending-5-1005">3. Hero #1 в Maxim lending — менялся 5 раз за день 10.05</h3>
+<ul>
+<li>portrait → plating-close → event-cooking → итерации</li>
+<li>Сейчас event-cooking</li>
+</ul>
+<h3 id="4">4. Карусель Ядра — мост к КОП/Цалкину</h3>
+<ul>
+<li>09.05: оставлял в TG-посте «многие из вас прошли практики Ядра, КОП»</li>
+<li>Олег пока не подтвердил оставлять или убирать — висит</li>
+</ul>
+<hr>
+<h2 id="_3">Что работало успешно (продолжаем)</h2>
+<table>
+<thead>
+<tr>
+<th>Приём</th>
+<th>Эффект</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Спавн агентов параллельно в фоне</strong></td>
+<td>5 агентов / 2-3 минуты / синтез — сильный материал. 09.05 onboarding-review = главный артефакт недели</td>
+</tr>
+<tr>
+<td><strong>Cinematographer-агент</strong> для оценки визуала</td>
+<td>04.05 + 08.05 — оба раза оценка далеко за рамки моей. Делегирую визуал ему</td>
+</tr>
+<tr>
+<td><strong>Cache-buster <code>?v=N</code></strong> для Safari iOS</td>
+<td>Заработало после 3-й итерации с Олегом</td>
+</tr>
+<tr>
+<td><strong>Real photos pivot</strong></td>
+<td>Олег доволен, Maxim lending v3.5 работает</td>
+</tr>
+<tr>
+<td><strong>Face reference: studio + negative prompt</strong></td>
+<td>После провала с сауной — v4-front-fresh удался</td>
+</tr>
+<tr>
+<td><strong>Admin whitebox</strong></td>
+<td>1 снимок админки nextmeee = 2 часам blackbox walkthrough × 10</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="kg">Новые сущности и факты для KG</h2>
+<p>Уже добавил в течение недели (вчера):
+- Maxim_Rysin, Maxim_lending, Yadro_carousel, Onboarding_review, DNA_formula_v1-01, face_reference_sauna_distorts_identity, Safari_iOS_cache_buster</p>
+<p><strong>Сегодня добавлю новые</strong> (по итогам pivot):
+1. <code>Maxim_lending</code> <code>pivoted_positioning_to</code> <code>cooking_as_celebration_warm_joyful_not_premium_editorial</code> (valid_from 2026-05-10)
+2. <code>multi_agent_parallel_review</code> <code>is_pattern</code> <code>5_agents_in_background_2-3_min_delivers_strong_synthesis</code>
+3. <code>lesson_simple_russian_drift</code> <code>recurs_3_times_in_week_2026-05-04_to_10</code> <code>requires_pre_send_anglicism_check</code></p>
+<hr>
+<h2 id="memory-feedback-playbook">Что добавлю в memory (новые feedback / playbook файлы)</h2>
+<h3 id="new-feedback_safari_cache_bustermd">NEW — <code>feedback_safari_cache_buster.md</code></h3>
+<p><strong>Правило:</strong> для всех публикаций на elyne-landing давать клиенту URL <strong>с <code>?v=N</code> cache-buster</strong>, не голый URL. Safari iOS не рефрешит сам.</p>
+<h3 id="new-feedback_real_photos_prioritymd">NEW — <code>feedback_real_photos_priority.md</code></h3>
+<p><strong>Правило:</strong> AI-генерации только fallback. Если клиент прислал реальные фото — всегда использовать real, AI как замену <strong>только</strong> для secondary композиций (process, ambient, food без identity).</p>
+<h3 id="new-feedback_chunking_one_topicmd">NEW — <code>feedback_chunking_one_topic.md</code></h3>
+<p><strong>Правило:</strong> в TG-сообщениях максимум 1-2 темы. Не списки 10 пунктов. Длинные сводки → ссылка на полный markdown на elyne-landing, а в TG короткое summary 3-5 строк с одной мыслью.</p>
+<h3 id="new-playbook_multi_agent_reviewmd">NEW — <code>playbook_multi_agent_review.md</code></h3>
+<p><strong>Playbook:</strong> для любого артефакта который требует ревью — спавнить 3-5 специализированных агентов параллельно в фоне, каждый со своим углом, потом синтез. Эталон — onboarding-review-09-may.</p>
+<h3 id="new-playbook_landing_iterationmd">NEW — <code>playbook_landing_iteration.md</code></h3>
+<p><strong>Playbook:</strong> концепт-документ → 5-агентов creative-direction → HTML v1 (с заглушками) → правки клиента → real photos integration → v3.x → <strong>pre-tilda-portage decision</strong>. Не финализировать визуальный стиль до подтверждения tone клиентом.</p>
+<h3 id="update-project_maxim_lendingmd">UPDATE — <code>project_maxim_lending.md</code></h3>
+<p>Добавить pivot 10.05: позиционирование «любовь к готовке + праздник», не premium editorial.</p>
+<hr>
+<h2 id="_4">Что осталось неустаканенным (вернуться завтра / в понедельник)</h2>
+<ol>
+<li>
+<p><strong>Maxim lending v4</strong> — переписать копирайт под новое позиционирование. Олег генерит joyful-кадры через GPT Image 2 по моим промтам v4. Когда пришлёт — собрать v4 с warm палитрой, soft daylight grain, текстами «любовь / праздник / играючи».</p>
+</li>
+<li>
+<p><strong>Карусель Ядра</strong> — Олег генерит 4 кадра через GPT Image 2 (промты А с встроенным текстом + fallback Б). Жду готовые слайды.</p>
+</li>
+<li>
+<p><strong>CFO + lawyer планы</strong> — дедлайн 12.05 (понедельник). Спросить Олега в понедельник утром, как продвигается.</p>
+</li>
+<li>
+<p><strong>Press release v4 финализация</strong> — концепт «о состоянии» опубликован, ждёт final approval от Олега. Спросить во вторник.</p>
+</li>
+<li>
+<p><strong>Maxim lending — Tilda Free portage</strong> — после финала v4. Honest decision: 70% концепта вытянет, нужен Tilda Pro / Webflow для остального.</p>
+</li>
+<li>
+<p><strong>Signature dishes catalog</strong> — жду от Олега фото блюд. Сейчас в Signature один real food-shot, надо 5-6.</p>
+</li>
+</ol>
+<hr>
+<h2 id="tg">Отчёт в TG (готовый блок)</h2>
+<p>См. отдельно — для копи-пасты.</p>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
