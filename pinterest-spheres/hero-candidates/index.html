@@ -33,7 +33,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Elyne · Hero Image</title></p>
+<title>Elyne · Hero v2</title></p>
 <style>
   :root { --bg: #0E0D0B; --cream: #EFE7D6; --ember: #B8651F; --muted: #6b6560; --border: #2a2620; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -45,55 +45,50 @@
   .card:hover { transform: scale(1.01); }
   .card.selected { border-color: var(--ember); }
   .card.selected::after { content: '✓'; position: absolute; top: 10px; right: 10px; background: var(--ember); color: #fff; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-family: monospace; font-weight: bold; font-size: 14px; }
-  .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; background: #181612; }
-  /* Hero preview overlay */
-  .card .overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 40%, rgba(14,13,11,0.85)); display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+  .card img { width: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: center top; display: block; background: #181612; }
+  .card .overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(14,13,11,0.15) 0%, rgba(14,13,11,0.6) 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 24px; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
   .card:hover .overlay { opacity: 1; }
-  .overlay-text { font-size: 18px; font-weight: 400; color: var(--cream); letter-spacing: 0.04em; text-shadow: 0 1px 4px rgba(0,0,0,0.5); }
-  .overlay-sub { font-family: monospace; font-size: 11px; color: rgba(239,231,214,0.6); margin-top: 4px; }
+  .overlay-logo { font-size: 26px; font-weight: 300; letter-spacing: 0.12em; color: var(--cream); }
+  .overlay-tag { font-family: monospace; font-size: 11px; color: rgba(239,231,214,0.7); margin-top: 6px; letter-spacing: 0.06em; }
   .label { padding: 10px 12px; background: #181612; font-family: monospace; font-size: 11px; color: var(--muted); }
 </style>
 <p></head></p>
 <body>
 
-<h1>Elyne · Hero Image — 8 кандидатов</h1>
-<p class="sub">Нажми чтобы выбрать. При наведении — превью с текстом лендинга.</p>
+<h1>Elyne · Hero — жизнеутверждающие</h1>
+<p class="sub">Наведи — увидишь как будет с логотипом. Нажми чтобы выбрать.</p>
 
 <div class="grid" id="grid"></div>
 
 <script>
 const candidates = [
-  { f: "hero-01-window-eyes-closed.jpg",  label: "У окна, глаза закрыты, ветер в волосах" },
-  { f: "hero-02-silhouette-backlit.jpg",  label: "Силуэт на фоне окна — кинематографичный backlight" },
-  { f: "hero-03-back-to-window.jpg",      label: "Спиной к окну — интроверсия и покой" },
-  { f: "hero-04-dark-eyes-up.jpg",        label: "Темнота, глаза закрыты, голова запрокинута" },
-  { f: "hero-05-dark-turtleneck.jpg",     label: "Тёмный фон, водолазка, далёкий взгляд" },
-  { f: "hero-06-window-candle.jpg",       label: "Окно + свеча — тёплый вечер" },
-  { f: "hero-07-holding-candle.jpg",      label: "Держит свечу в темноте" },
-  { f: "hero-08-chair-window.jpg",        label: "В кресле у окна — тихий момент" },
+  { f: "hero-v2-01-wheat-field-smile.jpg",  label: "Пшеничное поле — улыбка, руки в стороны" },
+  { f: "hero-v2-02-laugh-wind-sun.jpg",     label: "Смех, ветер, солнце сзади — энергия" },
+  { f: "hero-v2-03-dress-sunset-walk.jpg",  label: "Идёт по траве, платье на ветру — закат" },
+  { f: "hero-v2-04-laughing-hair-wind.jpg", label: "Смеётся, волосы на ветру — жизнь" },
+  { f: "hero-v2-05-mountain-arms-out.jpg",  label: "На горе, руки в стороны — вершина" },
+  { f: "hero-v2-06-field-arms-sunset.jpg",  label: "В поле, руки открыты — закат за спиной" },
+  { f: "hero-v2-07-facing-sun-arms.jpg",    label: "Лицом к солнцу, руки вперёд — навстречу" },
+  { f: "hero-v2-08-ocean-table-wine.jpg",   label: "За столиком у океана — манящий момент" },
 ];
 
-let selected = null;
 const grid = document.getElementById('grid');
-
 candidates.forEach(c => {
   const card = document.createElement('div');
   card.className = 'card';
   card.innerHTML = `
     <img src="${c.f}" alt="${c.label}" loading="lazy">
     <div class="overlay">
-      <div class="overlay-text">Elyne</div>
-      <div class="overlay-sub">Визуализируй лучшую версию себя</div>
+      <div class="overlay-logo">Elyne</div>
+      <div class="overlay-tag">Визуализируй лучшую версию себя</div>
     </div>
     <div class="label">${c.label}</div>
   `;
   card.onclick = () => {
     document.querySelectorAll('.card').forEach(el => el.classList.remove('selected'));
     card.classList.add('selected');
-    selected = c.f;
-    const msg = `Выбрал: ${c.f}\n${c.label}`;
-    navigator.clipboard.writeText(msg).catch(() => {});
-    alert('Выбрал: ' + c.label + '\n\nСкопировано в буфер.');
+    navigator.clipboard.writeText(c.f + '\n' + c.label).catch(() => {});
+    alert('Выбрал: ' + c.label);
   };
   grid.appendChild(card);
 });
