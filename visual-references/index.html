@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elyne · Visual References · Landing</title>
+<style>
+  :root {
+    --bg: #0B0A09;
+    --surface: #161412;
+    --border: #252220;
+    --cream: #EDE6D8;
+    --ember: #A85C1A;
+    --ember-l: #C97230;
+    --muted: #5c5651;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--cream); font-family: Georgia, 'Times New Roman', serif; padding: 40px 24px 100px; }
+  h1 { font-size: 26px; font-weight: 400; letter-spacing: 0.05em; margin-bottom: 6px; }
+  .meta { color: var(--muted); font-size: 12px; font-family: monospace; margin-bottom: 48px; }
+  .section { margin-bottom: 60px; }
+  .section-head {
+    display: flex; align-items: baseline; gap: 16px;
+    margin-bottom: 6px; padding-bottom: 8px; border-bottom: 1px solid var(--border);
+  }
+  .section-title {
+    font-size: 12px; font-family: monospace; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--ember);
+  }
+  .section-desc {
+    font-size: 12px; color: var(--muted); font-family: monospace; flex: 1;
+  }
+  .section-count {
+    font-size: 11px; color: var(--muted); font-family: monospace;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .card {
+    position: relative; cursor: pointer; border-radius: 4px; overflow: hidden;
+    border: 2px solid transparent; transition: border-color 0.2s, transform 0.15s;
+  }
+  .card:hover { transform: scale(1.02); }
+  .card.selected { border-color: var(--ember); }
+  .card.selected::after {
+    content: '✓'; position: absolute; top: 6px; right: 6px;
+    background: var(--ember); color: #fff;
+    width: 22px; height: 22px; border-radius: 50%;
+    font-size: 12px; font-family: monospace; font-weight: bold;
+    display: grid; place-items: center;
+  }
+  .card img {
+    width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block;
+    background: var(--surface);
+  }
+  .card-caption {
+    padding: 6px 8px; background: var(--surface);
+    font-size: 10px; color: var(--muted); font-family: monospace;
+    line-height: 1.4; min-height: 32px;
+  }
+  #bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--surface); border-top: 1px solid var(--border);
+    padding: 12px 24px; font-family: monospace; font-size: 11px;
+    color: var(--cream); display: flex; gap: 14px; align-items: center; flex-wrap: wrap;
+  }
+  #count { color: var(--ember); font-weight: bold; }
+  #copy-btn {
+    margin-left: auto; background: var(--ember); color: #fff;
+    border: none; padding: 9px 22px; border-radius: 3px;
+    font-family: monospace; font-size: 11px; cursor: pointer;
+  }
+  #copy-btn:hover { background: var(--ember-l); }
+  #copied { color: var(--ember); display: none; }
+</style>
+</head>
+<body>
+
+<h1>Elyne · Visual References · Launch Landing</h1>
+<p class="meta">Pexels editorial · 149 изображений · 8 направлений · кликни чтобы выбрать</p>
+
+<div id="root"></div>
+
+<div id="bar">
+  <span>Выбрано: <span id="count">0</span></span>
+  <span id="copied">Скопировано!</span>
+  <button id="copy-btn" onclick="copySelected()">Скопировать выбранные</button>
+</div>
+
+<script>
+const BASE = 'images/';
+const DATA = {
+  "cinematic-moments": {"label": "Cinematic Life Moments", "desc": "\u0427\u0435\u043b\u043e\u0432\u0435\u043a \u0432 \u0441\u0432\u043e\u0451\u043c \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u0435 \u2014 \u0443\u0442\u0440\u043e, \u0432\u0435\u0447\u0435\u0440, \u0442\u0438\u0445\u0438\u0435 \u0441\u0446\u0435\u043d\u044b \u043f\u0440\u0438\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u044f", "images": [{"f": "cinematic-moments-30373323.jpg", "alt": "Sunlit plant by window casting beautiful shadows in a serene indoor setting.", "ph": "Tiarra Sorte"}, {"f": "cinematic-moments-30422461.jpg", "alt": "Warm sunlight filters through a window, illuminating a cozy living room in Indon", "ph": "Try Putro Utomo"}, {"f": "cinematic-moments-35494095.jpg", "alt": "Warm sunlight streaming through sheer curtains on a window at dawn, creating a c", "ph": "ansiveg"}, {"f": "cinematic-moments-18886987.jpg", "alt": "Warm sunlight creating soft shadows through a window frame indoors.", "ph": "yudith djo"}, {"f": "cinematic-moments-8358602.jpg", "alt": "Soft sunlight casting shadows through a wooden frame window in Istanbul.", "ph": "Kübra Arslaner"}, {"f": "cinematic-moments-13207111.jpg", "alt": "A dimly lit bedroom with soft light filtering through a window, creating a seren", "ph": "M1DDL3  M7N"}, {"f": "cinematic-moments-33870655.jpg", "alt": "A tranquil scene of a potted indoor plant by a sunlit window with sheer curtains", "ph": "Leticia  Curvelo"}, {"f": "cinematic-moments-32350980.jpg", "alt": "Golden sunlight casts shadows through lace curtains creating a warm, serene atmo", "ph": "Hilal Demirbaş"}, {"f": "cinematic-moments-7615523.jpg", "alt": "Warm sunlight filters through sheer curtains, revealing a cozy outdoor view with", "ph": "Mathias Reding"}, {"f": "cinematic-moments-13364144.jpg", "alt": "Warm sunlight streaming through open wooden window shutters in a cozy interior s", "ph": "Mahdi Bafande"}, {"f": "cinematic-moments-30669567.jpg", "alt": "Sunrise casting warm light through a frosted window, creating a serene atmospher", "ph": "Halyna Khomyk"}, {"f": "cinematic-moments-10635611.jpg", "alt": "Warm and peaceful room with floral curtains, a window letting in natural light, ", "ph": "Feyza  Altun"}, {"f": "cinematic-moments-37473248.jpg", "alt": "Soft morning light streaming through a window, casting shadows on a peaceful ind", "ph": "amir selfish"}, {"f": "cinematic-moments-33400687.jpg", "alt": "Warm sunlight streaming through a partially open window with red curtains in a c", "ph": "eberhard grossgasteiger"}, {"f": "cinematic-moments-15177069.jpg", "alt": "A tranquil setting with a coffee mug in a cozy seating area by a sunlit window.", "ph": "Julissa Pires"}, {"f": "cinematic-moments-28704826.jpg", "alt": "Warm coffee mug on window sill, creating a serene morning vibe.", "ph": "aisekaplan"}, {"f": "cinematic-moments-29587162.jpg", "alt": "Soft sunlight filters through window blinds, creating a pattern of light and sha", "ph": "Tito Zzzz"}, {"f": "cinematic-moments-16986778.jpg", "alt": "A cozy room illuminated by sunlight casting a plant's shadow on the wall.", "ph": "Amin Hope"}, {"f": "cinematic-moments-15028022.jpg", "alt": "Warm sunlight creating shadows on a wall in a cozy room setting.", "ph": "Punam Oishy"}, {"f": "cinematic-moments-6626216.jpg", "alt": "A sunlit window covered by a sheer, patterned curtain casting soft shadows indoo", "ph": "Yana Kuyan"}, {"f": "cinematic-moments-33382592.jpg", "alt": "An intimate moment in a modern kitchen with warm, moody lighting and a relaxed a", "ph": "Katie Mukhina"}, {"f": "cinematic-moments-19109109.jpg", "alt": "Couple enjoying a relaxing moment together in a cozy living room setting.", "ph": "Avery Arwood"}, {"f": "cinematic-moments-19109110.jpg", "alt": "A couple lounging comfortably on a couch in a modern, cozy living room setting.", "ph": "Avery Arwood"}, {"f": "cinematic-moments-19109102.jpg", "alt": "A couple relaxing on a couch, enjoying a quiet moment in a minimalist living roo", "ph": "Avery Arwood"}, {"f": "cinematic-moments-19109100.jpg", "alt": "A couple embraces warmly on the sofa in a modern living room, sharing a peaceful", "ph": "Avery Arwood"}]},
+  "premium-tech": {"label": "Premium Emotional Tech", "desc": "\u0418\u043d\u0442\u0435\u0440\u0444\u0435\u0439\u0441\u044b \u0438 \u043b\u0435\u043d\u0434\u0438\u043d\u0433\u0438 \u2014 Apple, Notion, Arc, Linear \u0441\u0442\u0438\u043b\u044c", "images": [{"f": "premium-tech-30530401.jpg", "alt": "A MacBook displaying an AI chat interface in a dimly lit setting, showcasing mod", "ph": "Matheus Bertelli"}, {"f": "premium-tech-7191172.jpg", "alt": "Modern laptop displaying a checkout form against a minimalist beige backdrop.", "ph": "Pavel Danilyuk"}, {"f": "premium-tech-102061.jpg", "alt": "Laptop with programming code on screen beside a vase with flowers, creating a mo", "ph": "Julien BRION"}, {"f": "premium-tech-30530417.jpg", "alt": "A close-up view of the DeepSeek AI chat interface displayed on a laptop screen i", "ph": "Matheus Bertelli"}, {"f": "premium-tech-14483025.jpg", "alt": "A sleek silver laptop lies closed on a dark surface, embodying modern technology", "ph": "Vans Skull"}, {"f": "premium-tech-12760383.jpg", "alt": "A detailed view of a MacBook Pro displaying Adobe InDesign and other design tool", "ph": "thiago japyassu"}, {"f": "premium-tech-30530413.jpg", "alt": "Image of a laptop showing an interactive AI interface with DeepSeek application.", "ph": "Matheus Bertelli"}, {"f": "premium-tech-30530408.jpg", "alt": "Close-up view of an AI chat interface on a laptop screen in a dimly lit room.", "ph": "Matheus Bertelli"}, {"f": "premium-tech-25078930.jpg", "alt": "Black and white image of a close-up music playlist interface on a laptop screen.", "ph": "Marco Antonio  Casique Reyes"}, {"f": "premium-tech-16027822.jpg", "alt": "Vertical shot of ChatGPT interface on screen highlighting AI capabilities.", "ph": "Matheus Bertelli"}, {"f": "premium-tech-8534093.jpg", "alt": "Sleek minimalist laptop with black screen, ideal for mockups or graphic placemen", "ph": "Hanna Pad"}, {"f": "premium-tech-4736047.jpg", "alt": "Close-up of an open laptop on a table displaying a website outdoors.", "ph": "www.kaboompics.com"}, {"f": "premium-tech-7190947.jpg", "alt": "Open laptop displaying checkout screen on a wooden stand, ideal for e-commerce t", "ph": "Pavel Danilyuk"}, {"f": "premium-tech-19414833.jpg", "alt": "A man sitting at a desk with a laptop under moody lighting setup, evoking late-n", "ph": "Anas Ahmed SQ"}, {"f": "premium-tech-14094059.jpg", "alt": "Simple black coffee cup beside a sleek laptop, embodying a minimalist workspace.", "ph": "Esra Nur Kalay"}]},
+  "visual-atmosphere": {"label": "Visual Atmosphere \u2014 A24 Mood", "desc": "Warm charcoal palette, Bradford Young light, tactile interiors, emotional realism", "images": [{"f": "visual-atmosphere-30669396.jpg", "alt": "Woman bathed in golden hour light in a North Carolina field.", "ph": "Daniel & Hannah Snipes"}, {"f": "visual-atmosphere-30669412.jpg", "alt": "A peaceful outdoor portrait capturing warm autumn tones and natural light.", "ph": "Daniel & Hannah Snipes"}, {"f": "visual-atmosphere-30669349.jpg", "alt": "Ethereal portrait of a woman in golden light, evoking serene beauty and natural ", "ph": "Daniel & Hannah Snipes"}, {"f": "visual-atmosphere-30669352.jpg", "alt": "A serene portrait of a woman in a field during golden hour, capturing soft, eart", "ph": "Daniel & Hannah Snipes"}, {"f": "visual-atmosphere-30669397.jpg", "alt": "Serene outdoor portrait of a woman at golden hour in an autumn field.", "ph": "Daniel & Hannah Snipes"}, {"f": "visual-atmosphere-30669413.jpg", "alt": "A serene portrait of a woman in an autumn field during golden hour, embodying na", "ph": "Daniel & Hannah Snipes"}, {"f": "visual-atmosphere-30669398.jpg", "alt": "Woman enjoying an autumn afternoon, surrounded by golden fields in North Carolin", "ph": "Daniel & Hannah Snipes"}, {"f": "visual-atmosphere-30669395.jpg", "alt": "Woman in warm autumn light, capturing serene beauty outdoors.", "ph": "Daniel & Hannah Snipes"}, {"f": "visual-atmosphere-6284129.jpg", "alt": "Captivating portrait of a woman in a sunlit autumn forest evoking warmth and mys", "ph": "Jonathan Nenemann"}, {"f": "visual-atmosphere-30669387.jpg", "alt": "Captivating portrait of a woman in natural light, showcasing earthy tones and et", "ph": "Daniel & Hannah Snipes"}, {"f": "visual-atmosphere-30669341.jpg", "alt": "A serene portrait of a woman in a sunlit autumn field, capturing peaceful beauty", "ph": "Daniel & Hannah Snipes"}, {"f": "visual-atmosphere-30669369.jpg", "alt": "Cinematic portrait of a woman in a field during golden hour in Brevard, NC.", "ph": "Daniel & Hannah Snipes"}, {"f": "visual-atmosphere-30669382.jpg", "alt": "Peaceful portrait of a woman basking in golden autumn sunlight.", "ph": "Daniel & Hannah Snipes"}, {"f": "visual-atmosphere-30669402.jpg", "alt": "A serene portrait capturing a woman in a rustic autumn setting with soft light.", "ph": "Daniel & Hannah Snipes"}, {"f": "visual-atmosphere-30669399.jpg", "alt": "Serene portrait in a sunlit field capturing the essence of autumn", "ph": "Daniel & Hannah Snipes"}, {"f": "visual-atmosphere-17860329.jpg", "alt": "Elegant portrait of a woman with sunglasses under warm sunlight outdoors. Fashio", "ph": "Wolrider YURTSEVEN"}, {"f": "visual-atmosphere-30669361.jpg", "alt": "A serene portrait of a woman in a flowing coat amid autumn foliage in Brevard, N", "ph": "Daniel & Hannah Snipes"}, {"f": "visual-atmosphere-30669384.jpg", "alt": "A woman in a flowing dress stands peacefully in a sunlit autumn field.", "ph": "Daniel & Hannah Snipes"}, {"f": "visual-atmosphere-30669411.jpg", "alt": "A graceful portrait of a woman in an autumn field during golden hour in Brevard,", "ph": "Daniel & Hannah Snipes"}, {"f": "visual-atmosphere-30669407.jpg", "alt": "Peaceful portrait of a woman in an autumn field during golden hour.", "ph": "Daniel & Hannah Snipes"}, {"f": "visual-atmosphere-3589891.jpg", "alt": "A vintage room interior featuring armchairs, a lamp, and a vase against a dark t", "ph": "Inga Seliverstova"}, {"f": "visual-atmosphere-13736630.jpg", "alt": "Artistic vintage scene with ornate mirror, floral decor, and warm lighting, capt", "ph": "Ricardo Oliveira"}, {"f": "visual-atmosphere-13860915.jpg", "alt": "Cozy empty cafe interior with ambient lighting and stylish furniture.", "ph": "Bruno Silva"}, {"f": "visual-atmosphere-16975593.jpg", "alt": "A warm and calming indoor scene featuring a glowing lamp beside gentle curtains.", "ph": "Bruno Silva"}, {"f": "visual-atmosphere-17848875.jpg", "alt": "A tranquil room with warm yellow lighting, featuring drawers, plants, and decor.", "ph": "Elif"}]},
+  "human-presence": {"label": "Human Presence \u2014 Documentary", "desc": "\u041d\u0430\u0441\u0442\u043e\u044f\u0449\u0438\u0435 \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u044f, documentary feeling, subtle emotion, \u043d\u0435 \u043f\u043e\u0437\u0438\u0440\u0443\u044e\u0449\u0438\u0435 \u043b\u044e\u0434\u0438", "images": [{"f": "human-presence-9129024.jpg", "alt": "A captivating portrait of a young girl with a gentle smile, captured outdoors in", "ph": "Baset Alhasan"}, {"f": "human-presence-7663238.jpg", "alt": "A joyful woman holding a cup, sitting indoors in a grayscale setting. Captures s", "ph": "Anastasia  Shuraeva"}, {"f": "human-presence-13718730.jpg", "alt": "Black and white portrait of a child outdoors, capturing candid emotions.", "ph": "Daniil Kondrashin"}, {"f": "human-presence-5813893.jpg", "alt": "Black and white portrait of a smiling Asian woman in nature, wearing a pearl nec", "ph": "Mary Ann Cortez"}, {"f": "human-presence-5480358.jpg", "alt": "Portrait of a woman with curly hair, looking upwards outdoors, showcasing natura", "ph": "Yan Krukau"}, {"f": "human-presence-20367704.jpg", "alt": "Portrait of a cheerful woman with brown hair, smiling in an outdoor setting, wea", "ph": "Gülşah Aydoğan"}, {"f": "human-presence-8688721.jpg", "alt": "A monochrome portrait of a laughing Asian woman in an outdoor setting with folia", "ph": "Jeff Vinluan"}, {"f": "human-presence-14750785.jpg", "alt": "Close-up portrait of a woman with curly hair smiling in a black and white settin", "ph": "Marlon Alves"}, {"f": "human-presence-30055487.jpg", "alt": "Close-up portrait of a pensive woman with green eyes, golden hair in natural lig", "ph": "Jeff Denlea"}, {"f": "human-presence-11091528.jpg", "alt": "A candid portrait of a brunette woman laughing joyfully with sunlight streaming ", "ph": "Rupinder Singh"}, {"f": "human-presence-10648348.jpg", "alt": "Close-up portrait of a woman with long hair, gazing softly in an outdoor setting", "ph": "cottonbro studio"}, {"f": "human-presence-8066641.jpg", "alt": "Close-up portrait of a woman expressing intense emotion by yelling. Highlighting", "ph": "Anna Tarazevich"}, {"f": "human-presence-16229590.jpg", "alt": "A young girl with curly hair laughing joyfully, hand on mouth, in an urban setti", "ph": "Gabriel Frank"}, {"f": "human-presence-11424786.jpg", "alt": "Black and white portrait of a smiling woman in dramatic lighting, showcasing her", "ph": "Marina Gr"}, {"f": "human-presence-8557732.jpg", "alt": "Close-up black and white portrait of a woman smiling brightly.", "ph": "Francois Van Vuuren"}, {"f": "human-presence-20051869.jpg", "alt": "Black and white portrait of a woman laughing indoors, showcasing joy.", "ph": "Yasin Fotohi"}, {"f": "human-presence-8557743.jpg", "alt": "Black and white close-up portrait of a smiling woman with hoop earrings.", "ph": "Francois Van Vuuren"}, {"f": "human-presence-10681646.jpg", "alt": "A woman smiles warmly on a windy day outdoors, wrapped in a cozy jacket.", "ph": "Eugene Laszczewski"}, {"f": "human-presence-34857593.jpg", "alt": "A happy woman smiling joyfully with natural indoor lighting, creating a warm and", "ph": "Guillermo Berlin"}, {"f": "human-presence-5424947.jpg", "alt": "Grayscale portrait capturing the serene smile of an elegant woman in classic mon", "ph": "seesouk souvannaphongsay"}, {"f": "human-presence-37435937.jpg", "alt": "Monochrome photo capturing entry into historic building, featuring woman in trad", "ph": "Esra"}, {"f": "human-presence-16750056.jpg", "alt": "Expressive black and white portrait of a young boy with a thoughtful expression.", "ph": "Earl Andre Roca"}, {"f": "human-presence-3019401.jpg", "alt": "Candid street portrait of a seated man with a thoughtful expression.", "ph": "Ajeet  Singh"}, {"f": "human-presence-20406564.jpg", "alt": "Portrait of a joyful elderly man wearing traditional knitwear, captured in Srina", "ph": "Sam Clickx"}, {"f": "human-presence-13007454.jpg", "alt": "Black and white portrait of a senior Indian woman with a warm smile, wearing tra", "ph": "Omaid Andrabi"}]},
+  "life-energy": {"label": "Life Energy / Quiet Expansion", "desc": "\u041b\u0451\u0433\u043a\u043e\u0441\u0442\u044c, \u043e\u0449\u0443\u0449\u0435\u043d\u0438\u0435 \u043d\u0430\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u044f \u2014 \u0431\u0435\u0437 \u043c\u043e\u0442\u0438\u0432\u0430\u0446\u0438\u043e\u043d\u043d\u043e\u0433\u043e \u0432\u0438\u0437\u0443\u0430\u043b\u044c\u043d\u043e\u0433\u043e \u044f\u0437\u044b\u043a\u0430", "images": [{"f": "life-energy-10060439.jpg", "alt": "Top view of a comforting breakfast with black coffee, granola, and an open book ", "ph": "Nataliya Vaitkevich"}, {"f": "life-energy-30373323.jpg", "alt": "Sunlit plant by window casting beautiful shadows in a serene indoor setting.", "ph": "Tiarra Sorte"}, {"f": "life-energy-34981262.jpg", "alt": "A peaceful bedroom with a brass bed, natural textures, and a bull terrier by the", "ph": "Tiffany Christie Freeman"}, {"f": "life-energy-3673313.jpg", "alt": "Cozy morning scene of a woman savoring freshly brewed coffee in a wooden kitchen", "ph": "Ali Pazani"}, {"f": "life-energy-35004368.jpg", "alt": "A cozy morning scene with espresso in bed, epitomizing relaxation.", "ph": "Anastasiya Yarats"}, {"f": "life-energy-15897401.jpg", "alt": "A comfortable bean bag in a minimalist room with soft shadows on the wall, creat", "ph": "Jennifer Krug"}, {"f": "life-energy-18342415.jpg", "alt": "A close-up of a hand holding a coffee cup with figs on a bed, exuding warmth and", "ph": "Aljona Ovtšinnikova"}, {"f": "life-energy-28644184.jpg", "alt": "A warm cup of coffee on a blanket in soft morning light, evoking cozy vibes.", "ph": "Dilara"}, {"f": "life-energy-4112895.jpg", "alt": "A woman savoring the sunlight through an open window in a cozy, minimalist room.", "ph": "Tiana"}, {"f": "life-energy-3999062.jpg", "alt": "A sunlit tray with dried flowers, creating a cozy at-home atmosphere.", "ph": "Nadine Wuchenauer"}, {"f": "life-energy-6822521.jpg", "alt": "A warm breakfast setting on a bed with croissants, yogurt, and smoothie, perfect", "ph": "Jasmijn Van der Maaten"}, {"f": "life-energy-6653925.jpg", "alt": "Close-up of a woman holding and smelling a coffee mug, capturing a cozy and rela", "ph": "Arina Krasnikova"}, {"f": "life-energy-34851856.jpg", "alt": "A woman in a sunlit kitchen holds a cup, enjoying a peaceful moment.", "ph": "Guillermo Berlin"}, {"f": "life-energy-14794423.jpg", "alt": "Yellow flowers in a glass vase casting shadows on a sunlit floor in a cozy home ", "ph": "Alina Skazka"}, {"f": "life-energy-6945766.jpg", "alt": "A warm and inviting setup with a book, flower, and milk on bed linen, perfect fo", "ph": "Polina ⠀"}, {"f": "life-energy-11117515.jpg", "alt": "A warm coffee held in cozy attire, enjoyed indoors. Perfect for relaxation theme", "ph": "Zeynep"}, {"f": "life-energy-7269435.jpg", "alt": "Close-up of a woman holding a coffee cup while sitting comfortably indoors.", "ph": "Anete Lusina"}, {"f": "life-energy-36681311.jpg", "alt": "A person knitting indoors on a sofa, bathed in warm sunlight, creating a serene ", "ph": "Vladislovas Sketerskis"}, {"f": "life-energy-4512766.jpg", "alt": "A serene vase of calla lilies with leafy greens catches sunlight by a window, ca", "ph": "Anastasia  Shuraeva"}, {"f": "life-energy-12298423.jpg", "alt": "A cozy close-up of coffee being poured into a clay cup, wrapped in a plaid blank", "ph": "Анна Малышева (Заволока)"}]},
+  "hero-candidates": {"label": "Hero Image Candidates", "desc": "10 \u0441\u0438\u043b\u044c\u043d\u044b\u0445 \u043a\u0430\u043d\u0434\u0438\u0434\u0430\u0442\u043e\u0432 \u0434\u043b\u044f \u043f\u0435\u0440\u0432\u043e\u0433\u043e \u044d\u043a\u0440\u0430\u043d\u0430 \u043b\u0435\u043d\u0434\u0438\u043d\u0433\u0430", "images": [{"f": "hero-candidates-36455649.jpg", "alt": "Stylish silhouette of a man in a dramatic evening city scene, exuding a cinemati", "ph": "Lucas  Lagos"}, {"f": "hero-candidates-32281234.jpg", "alt": "An artistic and moody portrait of a woman with dramatic lighting creating a myst", "ph": "Sebastiaan Stam"}, {"f": "hero-candidates-19590514.jpg", "alt": "A close-up portrait of a woman with a matchstick flame creating dramatic lightin", "ph": "mahdi chaghari"}, {"f": "hero-candidates-29823375.jpg", "alt": "Moody portrait of a man standing indoors with soft lighting, creating a dramatic", "ph": "khezez  | خزاز"}, {"f": "hero-candidates-33846995.jpg", "alt": "Artistic portrait of a woman bathed in warm, dramatic lighting creating a moody ", "ph": "Alexander Mass"}, {"f": "hero-candidates-7277962.jpg", "alt": "Dramatic portrait of a woman in a dark hoodie, illuminated by warm lighting.", "ph": "MART  PRODUCTION"}, {"f": "hero-candidates-17386254.jpg", "alt": "Artistic fashion portrait of a woman in red lighting wearing a black bodysuit.", "ph": "Göksu Taymaz"}, {"f": "hero-candidates-19501140.jpg", "alt": "A young woman in a white sweater enjoys a moment with coffee in a sunlit urban e", "ph": "Sherman Trotz"}, {"f": "hero-candidates-29736379.jpg", "alt": "A woman's mysterious silhouette with dramatic lighting on her eyes, creating a c", "ph": "rasul lotfi"}, {"f": "hero-candidates-20788958.jpg", "alt": "Artistic portrait of a contemplative woman under dramatic red lighting.", "ph": "Phuc Lai"}, {"f": "hero-candidates-21839013.jpg", "alt": "Ethereal night portrait of a woman in a fur coat with a cinematic mood.", "ph": "NIKITA SH"}, {"f": "hero-candidates-16099179.jpg", "alt": "Silhouette of a woman standing by a sunlit window, creating a mystical atmospher", "ph": "Breno Cardoso"}, {"f": "hero-candidates-1906830.jpg", "alt": "Captivating portrait of a blonde woman bathed in warm golden hour light.", "ph": "Alessio Cesario"}, {"f": "hero-candidates-20584069.jpg", "alt": "Mysterious portrait of a woman with dramatic lighting through metal bars at nigh", "ph": "Alireza  Najaf"}, {"f": "hero-candidates-18466231.jpg", "alt": "Moody portrait of a woman in vivid lighting during twilight, featuring bold fash", "ph": "Beyzaa Yurtkuran"}]},
+  "mobile-mood": {"label": "Mobile Launch Mood", "desc": "\u041c\u043e\u0431\u0438\u043b\u044c\u043d\u044b\u0439 \u0432\u0438\u0437\u0443\u0430\u043b \u2014 \u0442\u0451\u043c\u043d\u044b\u0439, editorial, \u044d\u043c\u043e\u0446\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u044b\u0439", "images": [{"f": "mobile-mood-13570137.jpg", "alt": "A sleek smartphone displayed elegantly against a black background, top view.", "ph": "Luis Quintero"}, {"f": "mobile-mood-9045119.jpg", "alt": "Elegant flatlay featuring a smartphone displaying 07:45 AM on a textured dark su", "ph": "Shreesha bhat"}, {"f": "mobile-mood-6278748.jpg", "alt": "Monochrome photo of a smartphone held over a laptop for tech-themed design.", "ph": "Artem Podrez"}, {"f": "mobile-mood-11028408.jpg", "alt": "Smartphone on a table with a leaf shadow, showcasing wireless technology and min", "ph": "Yulia H."}, {"f": "mobile-mood-3999536.jpg", "alt": "Close-up of a smartphone showing a bird on a street lamp with a cloudy sky in th", "ph": "Gantas Vaičiulėnas"}, {"f": "mobile-mood-17249214.jpg", "alt": "Close-up of a smartphone displaying apps and weather on a dark background.", "ph": "Abdulvahap Demir"}, {"f": "mobile-mood-8490071.jpg", "alt": "Minimalist composition featuring a smartphone and geometric heart ornament on a ", "ph": "PNW Production"}, {"f": "mobile-mood-11934173.jpg", "alt": "Black smartphone on a plain white background showcasing simplicity and minimalis", "ph": "Zaidan Falaah"}, {"f": "mobile-mood-11989313.jpg", "alt": "A smartphone showing a music playlist on a streaming app with a dark background.", "ph": "Pew Nguyen"}, {"f": "mobile-mood-16052363.jpg", "alt": "A glass of iced coffee and a smartphone placed on a wooden table, captured in a ", "ph": "Efnan Yılmaz"}, {"f": "mobile-mood-6686426.jpg", "alt": "A vertical shot of a smartphone displaying a podcast interface on a dark surface", "ph": "cottonbro studio"}, {"f": "mobile-mood-10737000.jpg", "alt": "A smartphone on a stand displays time and date, surrounded by tech decor.", "ph": "Theia Sight"}]},
+  "typography-layout": {"label": "Typography / Layout References", "desc": "\u0422\u0438\u043f\u043e\u0433\u0440\u0430\u0444\u0438\u043a\u0430 \u0438 \u043a\u043e\u043c\u043f\u043e\u043d\u043e\u0432\u043a\u0430 \u2014 editorial minimal dark", "images": [{"f": "typography-layout-14696284.jpg", "alt": "Stylish minimal setup featuring a laptop and magazine on white fabric.", "ph": "Loow Invernissi"}, {"f": "typography-layout-9215772.jpg", "alt": "A dimly lit wall showcasing the Russian word for 'love' in relief lettering.", "ph": "Arthur Sparinskij"}, {"f": "typography-layout-9758164.jpg", "alt": "Papers with headlines floating against a dark background, creating a dramatic an", "ph": "Ron Lach"}, {"f": "typography-layout-12877800.jpg", "alt": "Glowing turquoise neon sign with 'air conditionné' text on a dark background.", "ph": "Ruben Da Costa"}, {"f": "typography-layout-5981925.jpg", "alt": "Green alphabet blocks forming 'Look Up' on a dark, minimalist background.", "ph": "Thirdman"}, {"f": "typography-layout-5767377.jpg", "alt": "Minimalistic Black Friday poster featuring 'Up to 70% Off' and 'Shop Now'.", "ph": "Thirdman"}, {"f": "typography-layout-6322344.jpg", "alt": "Artistic arrangement of wooden letters on a dark flat lay with a conceptual them", "ph": "Ann H"}, {"f": "typography-layout-29795535.jpg", "alt": "Artistic portrait of a young adult in a stylish pose against a bold geometric ba", "ph": "kwnos  Iv"}, {"f": "typography-layout-34186704.jpg", "alt": "Artistic shot of a book page with text and sunlight shadows creating a minimalis", "ph": "Zeya"}, {"f": "typography-layout-6322346.jpg", "alt": "Creative minimalist art featuring wooden letters spelling 'Blah Blah Blah' on a ", "ph": "Ann H"}, {"f": "typography-layout-13342040.jpg", "alt": "An open book displaying typography on a desk, ideal for designers or educators.", "ph": "thiago japyassu"}, {"f": "typography-layout-7140021.jpg", "alt": "Black poster with urban message on a street pavement.", "ph": "cottonbro studio"}]}
+};
+
+const selected = new Set();
+
+function render() {
+  const root = document.getElementById('root');
+  for (const [key, sec] of Object.entries(DATA)) {
+    const section = document.createElement('div');
+    section.className = 'section';
+    section.innerHTML = `
+      <div class="section-head">
+        <div class="section-title">${sec.label}</div>
+        <div class="section-desc">${sec.desc}</div>
+        <div class="section-count">${sec.images.length} шт</div>
+      </div>
+      <div class="grid" id="grid-${key}"></div>
+    `;
+    root.appendChild(section);
+    const grid = document.getElementById(`grid-${key}`);
+    sec.images.forEach(img => {
+      const k = `${key}::${img.f}`;
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `<img src="${BASE}${img.f}" alt="${img.alt}" loading="lazy"><div class="card-caption">${img.alt.slice(0,70)}${img.ph ? ' · ' + img.ph : ''}</div>`;
+      card.onclick = () => {
+        selected.has(k) ? selected.delete(k) : selected.add(k);
+        card.classList.toggle('selected');
+        document.getElementById('count').textContent = selected.size;
+      };
+      grid.appendChild(card);
+    });
+  }
+}
+
+function copySelected() {
+  const lines = [];
+  for (const [key, sec] of Object.entries(DATA)) {
+    const picks = sec.images.filter(img => selected.has(`${key}::${img.f}`));
+    if (picks.length) {
+      lines.push(`\n## ${sec.label}`);
+      picks.forEach(img => lines.push(`- ${img.f}\n  ${img.alt}`));
+    }
+  }
+  if (!lines.length) { alert('Выбери хотя бы одно'); return; }
+  navigator.clipboard.writeText(lines.join('\n')).then(() => {
+    const m = document.getElementById('copied');
+    m.style.display = 'inline';
+    setTimeout(() => m.style.display = 'none', 2000);
+  });
+}
+
+render();
+</script>
+</body>
+</html>
