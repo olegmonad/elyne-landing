@@ -3,222 +3,220 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Elyne — варианты фото v2</title>
+<title>Elyne — варианты фото v3</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, sans-serif; background: #f5f2ee; padding: 20px; color: #1a1a1a; }
-h1 { font-family: Georgia, serif; font-size: 24px; margin-bottom: 6px; }
-p.sub { color: #666; margin-bottom: 32px; font-size: 14px; }
-section { margin-bottom: 48px; }
-h2 { font-family: Georgia, serif; font-size: 18px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #ddd; }
-.grid { display: flex; flex-wrap: wrap; gap: 12px; }
-.card { flex: 0 0 calc(25% - 9px); min-width: 140px; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
-.img-wrap { height: 200px; overflow: hidden; }
-.img-wrap img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
-.label { padding: 8px 10px; display: flex; align-items: flex-start; gap: 8px; }
-.num { background: #1a1a1a; color: #fff; border-radius: 4px; font-size: 11px; font-weight: 700; padding: 2px 6px; flex-shrink: 0; margin-top: 1px; }
-.alt { font-size: 11px; color: #555; line-height: 1.3; }
-@media (max-width: 600px) { .card { flex: 0 0 calc(50% - 6px); } }
+body { font-family: -apple-system, sans-serif; background: #f5f2ee; padding: 16px; color: #1a1a1a; }
+h1 { font-family: Georgia, serif; font-size: 22px; margin-bottom: 4px; }
+p.sub { color: #666; margin-bottom: 28px; font-size: 13px; }
+section { margin-bottom: 40px; }
+h2 { font-family: Georgia, serif; font-size: 17px; margin-bottom: 14px; padding-bottom: 6px; border-bottom: 1px solid #ddd; }
+.grid { display: flex; flex-wrap: wrap; gap: 10px; }
+.card { flex: 0 0 calc(25% - 8px); min-width: 130px; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+.card img { width: 100%; height: auto; display: block; }
+.label { padding: 8px 10px; font-size: 12px; color: #444; line-height: 1.3; }
+.label b { background: #1a1a1a; color: #fff; border-radius: 4px; font-size: 11px; padding: 1px 5px; margin-right: 4px; }
+@media (max-width: 600px) { .card { flex: 0 0 calc(50% - 5px); } }
 </style>
 </head>
 <body>
-<h1>Варианты фото — расширенный выбор</h1>
-<p class="sub">Напиши раздел + номер фото (например: «Состояние 4, Вопросы 7, Hero 2, Главный 9»)</p>
+<h1>Варианты фото</h1>
+<p class="sub">Напиши раздел + номер: «Состояние 4, Вопросы 7, Hero 2, Главный 9»</p>
 
     <section>
       <h2>Состояние</h2>
       <div class="grid">
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/7623613/pexels-photo-7623613.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Young woman journaling in comfort with a cozy blanket, expressing crea"></div>
-          <div class="label"><span class="num">1</span><span class="alt">Young woman journaling in comfort with a cozy blan</span></div>
+          <img src="https://images.pexels.com/photos/7623613/pexels-photo-7623613.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Young woman journaling in comfort with a cozy blanket, expressing crea">
+          <div class="label"><b>1</b> Young woman journaling in comfort with a cozy blan</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/5390689/pexels-photo-5390689.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman enjoying a relaxing moment while journaling on a bed with a mu"></div>
-          <div class="label"><span class="num">2</span><span class="alt">A woman enjoying a relaxing moment while journalin</span></div>
+          <img src="https://images.pexels.com/photos/5390689/pexels-photo-5390689.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman enjoying a relaxing moment while journaling on a bed with a mu">
+          <div class="label"><b>2</b> A woman enjoying a relaxing moment while journalin</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/7622875/pexels-photo-7622875.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman writing in a notebook while sitting cozy in bed with a blanket"></div>
-          <div class="label"><span class="num">3</span><span class="alt">A woman writing in a notebook while sitting cozy i</span></div>
+          <img src="https://images.pexels.com/photos/7622875/pexels-photo-7622875.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman writing in a notebook while sitting cozy in bed with a blanket">
+          <div class="label"><b>3</b> A woman writing in a notebook while sitting cozy i</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/7020042/pexels-photo-7020042.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Woman enjoying a peaceful bath with incense and self-care routine."></div>
-          <div class="label"><span class="num">4</span><span class="alt">Woman enjoying a peaceful bath with incense and se</span></div>
+          <img src="https://images.pexels.com/photos/7020042/pexels-photo-7020042.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Woman enjoying a peaceful bath with incense and self-care routine.">
+          <div class="label"><b>4</b> Woman enjoying a peaceful bath with incense and se</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/6724406/pexels-photo-6724406.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman enjoys a relaxing bath surrounded by candles and flowers for a"></div>
-          <div class="label"><span class="num">5</span><span class="alt">A woman enjoys a relaxing bath surrounded by candl</span></div>
+          <img src="https://images.pexels.com/photos/6724406/pexels-photo-6724406.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman enjoys a relaxing bath surrounded by candles and flowers for a">
+          <div class="label"><b>5</b> A woman enjoys a relaxing bath surrounded by candl</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/6724575/pexels-photo-6724575.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman relaxes in a bathtub with flowers, candles, and a wooden tray,"></div>
-          <div class="label"><span class="num">6</span><span class="alt">A woman relaxes in a bathtub with flowers, candles</span></div>
+          <img src="https://images.pexels.com/photos/6724575/pexels-photo-6724575.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman relaxes in a bathtub with flowers, candles, and a wooden tray,">
+          <div class="label"><b>6</b> A woman relaxes in a bathtub with flowers, candles</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/6697129/pexels-photo-6697129.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Adult woman performing a yoga stretch on a mat in a cozy home setting,"></div>
-          <div class="label"><span class="num">7</span><span class="alt">Adult woman performing a yoga stretch on a mat in </span></div>
+          <img src="https://images.pexels.com/photos/6697129/pexels-photo-6697129.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Adult woman performing a yoga stretch on a mat in a cozy home setting,">
+          <div class="label"><b>7</b> Adult woman performing a yoga stretch on a mat in </div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/6193559/pexels-photo-6193559.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Woman in activewear performing a yoga twist in a bright indoor setting"></div>
-          <div class="label"><span class="num">8</span><span class="alt">Woman in activewear performing a yoga twist in a b</span></div>
+          <img src="https://images.pexels.com/photos/6193559/pexels-photo-6193559.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Woman in activewear performing a yoga twist in a bright indoor setting">
+          <div class="label"><b>8</b> Woman in activewear performing a yoga twist in a b</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/6697398/pexels-photo-6697398.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman performs a yoga pose on a mat indoors with sunlight streaming "></div>
-          <div class="label"><span class="num">9</span><span class="alt">A woman performs a yoga pose on a mat indoors with</span></div>
+          <img src="https://images.pexels.com/photos/6697398/pexels-photo-6697398.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman performs a yoga pose on a mat indoors with sunlight streaming ">
+          <div class="label"><b>9</b> A woman performs a yoga pose on a mat indoors with</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/8835400/pexels-photo-8835400.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Asian woman lying on green grass in a black coat with a thoughtful exp"></div>
-          <div class="label"><span class="num">10</span><span class="alt">Asian woman lying on green grass in a black coat w</span></div>
+          <img src="https://images.pexels.com/photos/8835400/pexels-photo-8835400.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Asian woman lying on green grass in a black coat with a thoughtful exp">
+          <div class="label"><b>10</b> Asian woman lying on green grass in a black coat w</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/19516760/pexels-photo-19516760.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A young woman lying on grass with her arm raised, enjoying a sunny day"></div>
-          <div class="label"><span class="num">11</span><span class="alt">A young woman lying on grass with her arm raised, </span></div>
+          <img src="https://images.pexels.com/photos/19516760/pexels-photo-19516760.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A young woman lying on grass with her arm raised, enjoying a sunny day">
+          <div class="label"><b>11</b> A young woman lying on grass with her arm raised, </div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/29659766/pexels-photo-29659766.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A young woman in a school uniform rests peacefully on a sunny grass fi"></div>
-          <div class="label"><span class="num">12</span><span class="alt">A young woman in a school uniform rests peacefully</span></div>
+          <img src="https://images.pexels.com/photos/29659766/pexels-photo-29659766.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A young woman in a school uniform rests peacefully on a sunny grass fi">
+          <div class="label"><b>12</b> A young woman in a school uniform rests peacefully</div>
         </div></div>
     </section>
     <section>
       <h2>Вопросы в глубь</h2>
       <div class="grid">
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/2186966/pexels-photo-2186966.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A lone woman stands on a hilltop beneath a vast, clear sky, capturing "></div>
-          <div class="label"><span class="num">1</span><span class="alt">A lone woman stands on a hilltop beneath a vast, c</span></div>
+          <img src="https://images.pexels.com/photos/2186966/pexels-photo-2186966.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A lone woman stands on a hilltop beneath a vast, clear sky, capturing ">
+          <div class="label"><b>1</b> A lone woman stands on a hilltop beneath a vast, c</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/33491077/pexels-photo-33491077.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A serene silhouette of a woman against a vibrant sunset, evoking calm "></div>
-          <div class="label"><span class="num">2</span><span class="alt">A serene silhouette of a woman against a vibrant s</span></div>
+          <img src="https://images.pexels.com/photos/33491077/pexels-photo-33491077.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A serene silhouette of a woman against a vibrant sunset, evoking calm ">
+          <div class="label"><b>2</b> A serene silhouette of a woman against a vibrant s</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/35765253/pexels-photo-35765253.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman sitting alone on a bench, gazing at distant mountains under a "></div>
-          <div class="label"><span class="num">3</span><span class="alt">A woman sitting alone on a bench, gazing at distan</span></div>
+          <img src="https://images.pexels.com/photos/35765253/pexels-photo-35765253.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman sitting alone on a bench, gazing at distant mountains under a ">
+          <div class="label"><b>3</b> A woman sitting alone on a bench, gazing at distan</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/2748650/pexels-photo-2748650.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman sits alone on a suspension bridge amidst lush forest greenery."></div>
-          <div class="label"><span class="num">4</span><span class="alt">A woman sits alone on a suspension bridge amidst l</span></div>
+          <img src="https://images.pexels.com/photos/2748650/pexels-photo-2748650.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman sits alone on a suspension bridge amidst lush forest greenery.">
+          <div class="label"><b>4</b> A woman sits alone on a suspension bridge amidst l</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/33141866/pexels-photo-33141866.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman sitting contemplatively by a serene forest lake, surrounded by"></div>
-          <div class="label"><span class="num">5</span><span class="alt">A woman sitting contemplatively by a serene forest</span></div>
+          <img src="https://images.pexels.com/photos/33141866/pexels-photo-33141866.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman sitting contemplatively by a serene forest lake, surrounded by">
+          <div class="label"><b>5</b> A woman sitting contemplatively by a serene forest</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/14060715/pexels-photo-14060715.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Young woman wearing white long sleeves sitting on a moss-covered log i"></div>
-          <div class="label"><span class="num">6</span><span class="alt">Young woman wearing white long sleeves sitting on </span></div>
+          <img src="https://images.pexels.com/photos/14060715/pexels-photo-14060715.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Young woman wearing white long sleeves sitting on a moss-covered log i">
+          <div class="label"><b>6</b> Young woman wearing white long sleeves sitting on </div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/10200611/pexels-photo-10200611.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Close-up of a hand reaching towards its reflection on a water surface,"></div>
-          <div class="label"><span class="num">7</span><span class="alt">Close-up of a hand reaching towards its reflection</span></div>
+          <img src="https://images.pexels.com/photos/10200611/pexels-photo-10200611.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Close-up of a hand reaching towards its reflection on a water surface,">
+          <div class="label"><b>7</b> Close-up of a hand reaching towards its reflection</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/5897278/pexels-photo-5897278.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A man is silhouetted against a sunset while sitting on a lake, creatin"></div>
-          <div class="label"><span class="num">8</span><span class="alt">A man is silhouetted against a sunset while sittin</span></div>
+          <img src="https://images.pexels.com/photos/5897278/pexels-photo-5897278.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A man is silhouetted against a sunset while sitting on a lake, creatin">
+          <div class="label"><b>8</b> A man is silhouetted against a sunset while sittin</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/2113560/pexels-photo-2113560.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman stands by a reflective water surface under a vibrant blue sky,"></div>
-          <div class="label"><span class="num">9</span><span class="alt">A woman stands by a reflective water surface under</span></div>
+          <img src="https://images.pexels.com/photos/2113560/pexels-photo-2113560.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman stands by a reflective water surface under a vibrant blue sky,">
+          <div class="label"><b>9</b> A woman stands by a reflective water surface under</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/34172406/pexels-photo-34172406.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A young woman gazes out a window, enjoying a peaceful moment indoors o"></div>
-          <div class="label"><span class="num">10</span><span class="alt">A young woman gazes out a window, enjoying a peace</span></div>
+          <img src="https://images.pexels.com/photos/34172406/pexels-photo-34172406.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A young woman gazes out a window, enjoying a peaceful moment indoors o">
+          <div class="label"><b>10</b> A young woman gazes out a window, enjoying a peace</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/5430077/pexels-photo-5430077.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Through glass side view of thoughtful teen pondering alone in gloomy r"></div>
-          <div class="label"><span class="num">11</span><span class="alt">Through glass side view of thoughtful teen ponderi</span></div>
+          <img src="https://images.pexels.com/photos/5430077/pexels-photo-5430077.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Through glass side view of thoughtful teen pondering alone in gloomy r">
+          <div class="label"><b>11</b> Through glass side view of thoughtful teen ponderi</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/8702466/pexels-photo-8702466.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Monochrome portrait of a woman gazing through a rainy window, exuding "></div>
-          <div class="label"><span class="num">12</span><span class="alt">Monochrome portrait of a woman gazing through a ra</span></div>
+          <img src="https://images.pexels.com/photos/8702466/pexels-photo-8702466.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Monochrome portrait of a woman gazing through a rainy window, exuding ">
+          <div class="label"><b>12</b> Monochrome portrait of a woman gazing through a ra</div>
         </div></div>
     </section>
     <section>
       <h2>Hero (второй экран)</h2>
       <div class="grid">
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/33762717/pexels-photo-33762717.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Smiling young woman with sunglasses in a sunny sunflower field enjoyin"></div>
-          <div class="label"><span class="num">1</span><span class="alt">Smiling young woman with sunglasses in a sunny sun</span></div>
+          <img src="https://images.pexels.com/photos/33762717/pexels-photo-33762717.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Smiling young woman with sunglasses in a sunny sunflower field enjoyin">
+          <div class="label"><b>1</b> Smiling young woman with sunglasses in a sunny sun</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/10040245/pexels-photo-10040245.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman in a red dress stands in a golden wheat field, basking in the "></div>
-          <div class="label"><span class="num">2</span><span class="alt">A woman in a red dress stands in a golden wheat fi</span></div>
+          <img src="https://images.pexels.com/photos/10040245/pexels-photo-10040245.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman in a red dress stands in a golden wheat field, basking in the ">
+          <div class="label"><b>2</b> A woman in a red dress stands in a golden wheat fi</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/9621683/pexels-photo-9621683.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Silhouette of a woman standing with arms raised at sunrise, embracing "></div>
-          <div class="label"><span class="num">3</span><span class="alt">Silhouette of a woman standing with arms raised at</span></div>
+          <img src="https://images.pexels.com/photos/9621683/pexels-photo-9621683.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Silhouette of a woman standing with arms raised at sunrise, embracing ">
+          <div class="label"><b>3</b> Silhouette of a woman standing with arms raised at</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/16190427/pexels-photo-16190427.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Happy woman in a blue dress sitting and laughing by a building during "></div>
-          <div class="label"><span class="num">4</span><span class="alt">Happy woman in a blue dress sitting and laughing b</span></div>
+          <img src="https://images.pexels.com/photos/16190427/pexels-photo-16190427.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Happy woman in a blue dress sitting and laughing by a building during ">
+          <div class="label"><b>4</b> Happy woman in a blue dress sitting and laughing b</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/22632054/pexels-photo-22632054.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Black and white portrait of a young woman laughing joyfully in a rural"></div>
-          <div class="label"><span class="num">5</span><span class="alt">Black and white portrait of a young woman laughing</span></div>
+          <img src="https://images.pexels.com/photos/22632054/pexels-photo-22632054.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Black and white portrait of a young woman laughing joyfully in a rural">
+          <div class="label"><b>5</b> Black and white portrait of a young woman laughing</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/13871734/pexels-photo-13871734.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A young woman laughing amidst a sunlit, bokeh-filled forest setting, r"></div>
-          <div class="label"><span class="num">6</span><span class="alt">A young woman laughing amidst a sunlit, bokeh-fill</span></div>
+          <img src="https://images.pexels.com/photos/13871734/pexels-photo-13871734.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A young woman laughing amidst a sunlit, bokeh-filled forest setting, r">
+          <div class="label"><b>6</b> A young woman laughing amidst a sunlit, bokeh-fill</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/11759953/pexels-photo-11759953.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Woman joyfully stretches arms beside car on a sunny rural road, embrac"></div>
-          <div class="label"><span class="num">7</span><span class="alt">Woman joyfully stretches arms beside car on a sunn</span></div>
+          <img src="https://images.pexels.com/photos/11759953/pexels-photo-11759953.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Woman joyfully stretches arms beside car on a sunny rural road, embrac">
+          <div class="label"><b>7</b> Woman joyfully stretches arms beside car on a sunn</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/17848400/pexels-photo-17848400.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Smiling woman twirling in a sunlit field during summer, expressing joy"></div>
-          <div class="label"><span class="num">8</span><span class="alt">Smiling woman twirling in a sunlit field during su</span></div>
+          <img src="https://images.pexels.com/photos/17848400/pexels-photo-17848400.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Smiling woman twirling in a sunlit field during summer, expressing joy">
+          <div class="label"><b>8</b> Smiling woman twirling in a sunlit field during su</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/5615912/pexels-photo-5615912.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman in a white dress joyfully runs barefoot across a green meadow "></div>
-          <div class="label"><span class="num">9</span><span class="alt">A woman in a white dress joyfully runs barefoot ac</span></div>
+          <img src="https://images.pexels.com/photos/5615912/pexels-photo-5615912.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman in a white dress joyfully runs barefoot across a green meadow ">
+          <div class="label"><b>9</b> A woman in a white dress joyfully runs barefoot ac</div>
         </div></div>
     </section>
     <section>
       <h2>Главный hero (первая страница)</h2>
       <div class="grid">
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/36039199/pexels-photo-36039199.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Warm sunlight casts a tranquil shadow of pampas grass on a minimalist "></div>
-          <div class="label"><span class="num">1</span><span class="alt">Warm sunlight casts a tranquil shadow of pampas gr</span></div>
+          <img src="https://images.pexels.com/photos/36039199/pexels-photo-36039199.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Warm sunlight casts a tranquil shadow of pampas grass on a minimalist ">
+          <div class="label"><b>1</b> Warm sunlight casts a tranquil shadow of pampas gr</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/35549746/pexels-photo-35549746.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Warm sunlight casting shadows through a window, creating a peaceful in"></div>
-          <div class="label"><span class="num">2</span><span class="alt">Warm sunlight casting shadows through a window, cr</span></div>
+          <img src="https://images.pexels.com/photos/35549746/pexels-photo-35549746.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Warm sunlight casting shadows through a window, creating a peaceful in">
+          <div class="label"><b>2</b> Warm sunlight casting shadows through a window, cr</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/35962922/pexels-photo-35962922.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Warm sunlight casting shadows over a modern chair and coffee cup, crea"></div>
-          <div class="label"><span class="num">3</span><span class="alt">Warm sunlight casting shadows over a modern chair </span></div>
+          <img src="https://images.pexels.com/photos/35962922/pexels-photo-35962922.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Warm sunlight casting shadows over a modern chair and coffee cup, crea">
+          <div class="label"><b>3</b> Warm sunlight casting shadows over a modern chair </div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/10069248/pexels-photo-10069248.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman looks through window blinds, bathed in soft morning light indo"></div>
-          <div class="label"><span class="num">4</span><span class="alt">A woman looks through window blinds, bathed in sof</span></div>
+          <img src="https://images.pexels.com/photos/10069248/pexels-photo-10069248.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman looks through window blinds, bathed in soft morning light indo">
+          <div class="label"><b>4</b> A woman looks through window blinds, bathed in sof</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/10069246/pexels-photo-10069246.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman stands by a window, embraced by gentle morning light filtering"></div>
-          <div class="label"><span class="num">5</span><span class="alt">A woman stands by a window, embraced by gentle mor</span></div>
+          <img src="https://images.pexels.com/photos/10069246/pexels-photo-10069246.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman stands by a window, embraced by gentle morning light filtering">
+          <div class="label"><b>5</b> A woman stands by a window, embraced by gentle mor</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/35494095/pexels-photo-35494095.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Warm sunlight streaming through sheer curtains on a window at dawn, cr"></div>
-          <div class="label"><span class="num">6</span><span class="alt">Warm sunlight streaming through sheer curtains on </span></div>
+          <img src="https://images.pexels.com/photos/35494095/pexels-photo-35494095.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Warm sunlight streaming through sheer curtains on a window at dawn, cr">
+          <div class="label"><b>6</b> Warm sunlight streaming through sheer curtains on </div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/12181383/pexels-photo-12181383.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A young woman with curly hair poses in a denim jacket during a golden "></div>
-          <div class="label"><span class="num">7</span><span class="alt">A young woman with curly hair poses in a denim jac</span></div>
+          <img src="https://images.pexels.com/photos/12181383/pexels-photo-12181383.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A young woman with curly hair poses in a denim jacket during a golden ">
+          <div class="label"><b>7</b> A young woman with curly hair poses in a denim jac</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/35742087/pexels-photo-35742087.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman sitting in a sunlit meadow during sunset, enjoying the golden "></div>
-          <div class="label"><span class="num">8</span><span class="alt">A woman sitting in a sunlit meadow during sunset, </span></div>
+          <img src="https://images.pexels.com/photos/35742087/pexels-photo-35742087.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman sitting in a sunlit meadow during sunset, enjoying the golden ">
+          <div class="label"><b>8</b> A woman sitting in a sunlit meadow during sunset, </div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/9841927/pexels-photo-9841927.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman stands in a field at sunset, surrounded by golden light and re"></div>
-          <div class="label"><span class="num">9</span><span class="alt">A woman stands in a field at sunset, surrounded by</span></div>
+          <img src="https://images.pexels.com/photos/9841927/pexels-photo-9841927.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="A woman stands in a field at sunset, surrounded by golden light and re">
+          <div class="label"><b>9</b> A woman stands in a field at sunset, surrounded by</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/30457596/pexels-photo-30457596.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Charming bedroom scene with unmade bed and soft lighting creating an i"></div>
-          <div class="label"><span class="num">10</span><span class="alt">Charming bedroom scene with unmade bed and soft li</span></div>
+          <img src="https://images.pexels.com/photos/30457596/pexels-photo-30457596.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Charming bedroom scene with unmade bed and soft lighting creating an i">
+          <div class="label"><b>10</b> Charming bedroom scene with unmade bed and soft li</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/34864844/pexels-photo-34864844.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Serene bedroom scene with sunlight casting leaf shadows on vibrant pil"></div>
-          <div class="label"><span class="num">11</span><span class="alt">Serene bedroom scene with sunlight casting leaf sh</span></div>
+          <img src="https://images.pexels.com/photos/34864844/pexels-photo-34864844.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Serene bedroom scene with sunlight casting leaf shadows on vibrant pil">
+          <div class="label"><b>11</b> Serene bedroom scene with sunlight casting leaf sh</div>
         </div>
         <div class="card">
-          <div class="img-wrap"><img src="https://images.pexels.com/photos/30056384/pexels-photo-30056384.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Sunlit morning breakfast with sculptures and pastries on a bed tray. C"></div>
-          <div class="label"><span class="num">12</span><span class="alt">Sunlit morning breakfast with sculptures and pastr</span></div>
+          <img src="https://images.pexels.com/photos/30056384/pexels-photo-30056384.jpeg?auto=compress&cs=tinysrgb&h=350" loading="lazy" alt="Sunlit morning breakfast with sculptures and pastries on a bed tray. C">
+          <div class="label"><b>12</b> Sunlit morning breakfast with sculptures and pastr</div>
         </div></div>
     </section>
 </body>
