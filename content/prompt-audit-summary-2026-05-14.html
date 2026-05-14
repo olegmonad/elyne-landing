@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elyne Prompt Architecture Audit — 2026-05-14</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="elyne-prompt-architecture-post-hotfix-audit-summary">Elyne Prompt Architecture — Post-Hotfix Audit Summary</h1>
+<p><strong>Данные:</strong> elyne.online/admin · 2026-05-14<br>
+<strong>Hotfix versions:</strong> v3.1 + v3.2 + hotfix_v1<br>
+<strong>Полный dump:</strong> vault/elyne/prompt-engineering/architecture-audit-after-hotfix-2026-05-14.md</p>
+<hr>
+<h2 id="verification">Verification — все секции на месте</h2>
+<table>
+<thead>
+<tr>
+<th>Prompt</th>
+<th>Секция</th>
+<th>Статус</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ID=1 profile_photo</td>
+<td>First Scene Emotional Entry Logic</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>ID=1 profile_photo</td>
+<td>User Answers Priority for First Scene</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>ID=1 profile_photo</td>
+<td>First Scene Style Interpretation</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>ID=11 scene_system</td>
+<td>First Scene Role-Performance Control</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>ID=11 scene_system</td>
+<td>Style Overpowering Check</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>ID=11 scene_system</td>
+<td>Visual Cliché Control</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>ID=11 scene_system</td>
+<td>Clothing Realism Check</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>ID=15 profile_summary</td>
+<td>Visual Identity Interpretation</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>ID=15 profile_summary</td>
+<td>Visual Identity Weight Control</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<h3 id="field_scene-ids-210-32">field_scene IDs 2–10 + 32</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Поле</th>
+<th>Multi-Style (new)</th>
+<th>Style Not Scene</th>
+<th>Style Interp.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2</td>
+<td>Образ я</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Достаток</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Проявленность</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Отношения</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Очаг</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Творчество</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Образование</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Развитие и мудрость</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Социальность</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>32</td>
+<td>Окружение</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="_1">Конфликты</h2>
+<ul>
+<li><strong>Old Multi-Style pattern</strong> (&lsquo;жакет + худи + лоферы&rsquo;): ❌ не найден ни в одном промте — замена прошла чисто</li>
+<li><strong>Anti-cliché дубли</strong>: каждая секция (Visual Cliché Control, Clothing Realism Check, Style Overpowering Check) присутствует ровно в 1 промте → ✅ нет дублирования</li>
+<li><strong>Workshop/office в промтах</strong>: слова &lsquo;мастерская/кабинет/офис/ноутбук&rsquo; присутствуют в контексте &lsquo;запрещено/избегать&rsquo; → ✅ не конфликт, это anti-pattern guards</li>
+</ul>
+<h2 id="id22-sphere_metaprompt-fn1">ID=22 (sphere_metaprompt fn=1)</h2>
+<p>⚠️ Запись <strong>не найдена</strong> в таблице <code>generation_prompts</code> (HTTP 404).<br>
+Нужно уточнить у Дениса — в какой таблице/модели хранится sphere_metaprompt.</p>
+<hr>
+<h2 id="influence-hierarchy">Influence Hierarchy (краткая)</h2>
+<p><strong>HIGH → LOW по влиянию на сцену:</strong></p>
+<ol>
+<li><strong>onboarding_answers + profile_summary</strong> — смысловой вектор</li>
+<li><strong>sphere_id</strong> → field_scene prompt (тема сцены)</li>
+<li><strong>Key Answer Locks</strong> — жёсткие ограничения</li>
+<li><strong>scene_system ID=11</strong> — финальные проверки (role-performance, cliché, style overpowering)</li>
+<li><strong>clothing_style description</strong> — визуальное направление (не архетип)</li>
+<li><strong>image_instructions ID=12</strong> — rendering правила</li>
+<li><strong>image_suffix</strong> — суффикс к FAL (есть у ID=1 и ID=2)</li>
+</ol>
+<p><strong>Стиль одежды больше не определяет:</strong> профессию, место, lifestyle archetype, сценарий.</p>
+<hr>
+<h2 id="first-scene-assembly-ids">First-Scene Assembly (IDs задействованы)</h2>
+<pre><code>Онбординг → ID=15 (OpenRouter) → profile_summary
+         → clothing_styles (description_male|female)
+         → ID=1 profile_photo (OpenRouter)
+              Emotional Entry Logic + User Answers Priority
+         → detailed_description
+         → ID=11 scene_system + ID=12 image_instructions (FAL)
+              Role-Performance Control + Style Overpowering Check
+              Visual Cliché Control + Clothing Realism Check
+         → FAL image generation
+</code></pre>
+<p><em>Полный dump всех meta_prompts + clothing styles: см. архив в vault</em></p>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
