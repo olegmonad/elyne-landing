@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elyne — Sphere Behavioral Architecture Audit</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="elyne-sphere-behavioral-architecture-audit">Elyne — Sphere Behavioral Architecture Audit</h1>
+<p><strong>Дата:</strong> 2026-05-15<br>
+<strong>Статус:</strong> Applied to production ✅<br>
+<strong>GP IDs обновлены:</strong> 2, 3, 4, 5, 6, 7, 8, 9, 10, 32<br>
+<strong>Верификация:</strong> 10/10 verified=true</p>
+<hr>
+<h2 id="summary">SUMMARY</h2>
+<p>Все 10 sphere metaprompts переведены из <strong>декларативных prompt-описаний</strong> в <strong>behavioral architecture</strong>.</p>
+<p>Каждая сфера теперь отличается не только темой, но и:
+- ритмом жизни (Life Pacing)
+- логикой движения (Movement Logic)
+- поведением пространства (Environmental Behavior)
+- эмоциональной плотностью (Emotional Density)
+- взаимодействием с миром (World Interaction)
+- плотностью отношений (Relational Density)
+- типами сцен (Scene Types)
+- клише-рисками (Cliché Risks)
+- нарративным поведением (Narrative Behavior)</p>
+<hr>
+<h2 id="_1">ДОБАВЛЕННЫЕ СЕКЦИИ (общие для всех сфер)</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Секция</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>## Sphere Behavioral Engine</code></td>
+<td>5 sub-dimensions: пейсинг/движение/среда/эмоции/мир</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>## Sphere Differentiation Rule</code></td>
+<td>Проверка уникальности сцены vs другие сферы</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>## Relatives / Close People Optional Layer</code></td>
+<td>Optional layer — близкие НЕ автоматические</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>## Relational Density By Sphere</code></td>
+<td>Low/Medium/High density per sphere</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>## Scene-Type Per Sphere</code></td>
+<td>Dominant scene types (movement/restoration/connection/&hellip;)</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>## Sphere Behavioral Profile</code></td>
+<td>Sphere-specific 11-field profile</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="sphere-behavioral-profiles">SPHERE BEHAVIORAL PROFILES</h2>
+<h3 id="gp-2">GP 2 — Я и состояние</h3>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Значение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Life Pacing</td>
+<td>медленный, интимный, сосредоточенный, тихий, внутренний</td>
+</tr>
+<tr>
+<td>Movement Logic</td>
+<td>пауза, остановка, возвращение к себе, восстановление</td>
+</tr>
+<tr>
+<td>Relational Density</td>
+<td><strong>Low</strong></td>
+</tr>
+<tr>
+<td>Best Scene Types</td>
+<td>restoration, embodied_presence, private_life, contemplation</td>
+</tr>
+<tr>
+<td>Avoided</td>
+<td>публичные сцены, деловая активность, толпа</td>
+</tr>
+<tr>
+<td>Cliché Risks</td>
+<td>йога у окна, медитация со свечой, ванна с пеной, wellness poster</td>
+</tr>
+<tr>
+<td>Narrative</td>
+<td>жизнь замедляется и возвращается к себе; не действие — а присутствие</td>
+</tr>
+</tbody>
+</table>
+<h3 id="gp-3">GP 3 — Ресурсы и уровень жизни</h3>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Значение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Life Pacing</td>
+<td>устойчивый, свободный, уверенный, без спешки</td>
+</tr>
+<tr>
+<td>Movement Logic</td>
+<td>выбор, доступ, спокойное управление, перемещение</td>
+</tr>
+<tr>
+<td>Relational Density</td>
+<td><strong>Medium</strong></td>
+</tr>
+<tr>
+<td>Best Scene Types</td>
+<td>resource_access, private_life, transition, world_expansion</td>
+</tr>
+<tr>
+<td>Avoided</td>
+<td>executive cliché, crypto flex, laptop wealth, luxury bragging</td>
+</tr>
+<tr>
+<td>Cliché Risks</td>
+<td>мужчина у окна, экран с деньгами, небоскрёб, богатство в лоб</td>
+</tr>
+<tr>
+<td>Narrative</td>
+<td>ресурсы как расширение возможностей, не объект обладания</td>
+</tr>
+</tbody>
+</table>
+<h3 id="gp-4">GP 4 — Реализация и влияние</h3>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Значение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Life Pacing</td>
+<td>собранный, вовлечённый, живой, направленный</td>
+</tr>
+<tr>
+<td>Movement Logic</td>
+<td>создание, участие, контакт, подготовка, проявление</td>
+</tr>
+<tr>
+<td>Relational Density</td>
+<td><strong>Medium to High</strong></td>
+</tr>
+<tr>
+<td>Best Scene Types</td>
+<td>engagement, influence, meaningful_process, backstage, creation</td>
+</tr>
+<tr>
+<td>Avoided</td>
+<td>generic office, laptop productivity, motivational poster</td>
+</tr>
+<tr>
+<td>Cliché Risks</td>
+<td>человек у ноутбука, презентация без смысла, &ldquo;успешный эксперт&rdquo;</td>
+</tr>
+<tr>
+<td>Narrative</td>
+<td>жизнь в процессе проявления, не символ успеха</td>
+</tr>
+</tbody>
+</table>
+<h3 id="gp-5">GP 5 — Любовь и партнёрство</h3>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Значение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Life Pacing</td>
+<td>нежный, близкий, живой, двигающийся вместе, интимный</td>
+</tr>
+<tr>
+<td>Movement Logic</td>
+<td>встреча, прикосновение, взгляд, совместное движение</td>
+</tr>
+<tr>
+<td>Relational Density</td>
+<td><strong>High</strong> (партнёр — обязательный центр)</td>
+</tr>
+<tr>
+<td>Best Scene Types</td>
+<td>intimacy, connection, private_life, belonging</td>
+</tr>
+<tr>
+<td>Avoided</td>
+<td>stock couple cliché, staged romance, luxury date pose</td>
+</tr>
+<tr>
+<td>Cliché Risks</td>
+<td>пара на закате, ресторан при свечах, поцелуй на фоне неба</td>
+</tr>
+<tr>
+<td>Narrative</td>
+<td>разделённый момент; двое в общем пространстве</td>
+</tr>
+</tbody>
+</table>
+<h3 id="gp-6">GP 6 — Дом, семья и близкие</h3>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Значение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Life Pacing</td>
+<td>устойчивый, тёплый, живой, ритмичный, домашний</td>
+</tr>
+<tr>
+<td>Movement Logic</td>
+<td>приход домой, приготовление, совместное действие, уют</td>
+</tr>
+<tr>
+<td>Relational Density</td>
+<td><strong>High</strong> (близкие — часть сцены если есть в профиле)</td>
+</tr>
+<tr>
+<td>Best Scene Types</td>
+<td>belonging, private_life, connection, restoration</td>
+</tr>
+<tr>
+<td>Avoided</td>
+<td>perfect family stock, staged decor, real estate listing vibe</td>
+</tr>
+<tr>
+<td>Cliché Risks</td>
+<td>семья за идеальным столом, дети бегут навстречу</td>
+</tr>
+<tr>
+<td>Narrative</td>
+<td>дом как продолжение человека, жизнь внутри</td>
+</tr>
+</tbody>
+</table>
+<h3 id="gp-7">GP 7 — Дети и наследие</h3>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Значение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Life Pacing</td>
+<td>живой, нежный, немного хаотичный, тёплый, с ощущением роста</td>
+</tr>
+<tr>
+<td>Movement Logic</td>
+<td>игра, передача, обучение, наблюдение, забота</td>
+</tr>
+<tr>
+<td>Relational Density</td>
+<td><strong>High</strong> (дети/младшее поколение — центр сцены)</td>
+</tr>
+<tr>
+<td>Best Scene Types</td>
+<td>connection, belonging, creation, embodied_presence</td>
+</tr>
+<tr>
+<td>Avoided</td>
+<td>perfect family portrait, staged children, generic playground</td>
+</tr>
+<tr>
+<td>Cliché Risks</td>
+<td>дети бегут по полю, идеальная семья у дерева</td>
+</tr>
+<tr>
+<td>Narrative</td>
+<td>передача чего-то важного следующему поколению; момент имеет вес</td>
+</tr>
+</tbody>
+</table>
+<h3 id="gp-8">GP 8 — Творчество и новые начинания</h3>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Значение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Life Pacing</td>
+<td>увлечённый, исследующий, живой, с ощущением открытия</td>
+</tr>
+<tr>
+<td>Movement Logic</td>
+<td>создание, начало, экспериментирование, первый шаг</td>
+</tr>
+<tr>
+<td>Relational Density</td>
+<td><strong>Low to Medium</strong> (личный процесс)</td>
+</tr>
+<tr>
+<td>Best Scene Types</td>
+<td>creation, exploration, engagement, embodied_presence</td>
+</tr>
+<tr>
+<td>Avoided</td>
+<td>generic artist cliché, empty gallery pose, coffeeshop brainstorming</td>
+</tr>
+<tr>
+<td>Cliché Risks</td>
+<td>художник у мольбертом, белый лист, творческая муза</td>
+</tr>
+<tr>
+<td>Narrative</td>
+<td>процесс важнее результата, начало важнее финала</td>
+</tr>
+</tbody>
+</table>
+<h3 id="gp-9">GP 9 — Развитие и мудрость</h3>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Значение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Life Pacing</td>
+<td>глубокий, неспешный, внимательный, созерцательный</td>
+</tr>
+<tr>
+<td>Movement Logic</td>
+<td>чтение, разговор, слушание, наблюдение, интеграция</td>
+</tr>
+<tr>
+<td>Relational Density</td>
+<td><strong>Low to Medium</strong> (личный путь)</td>
+</tr>
+<tr>
+<td>Best Scene Types</td>
+<td>exploration, contemplation, embodied_presence, transition</td>
+</tr>
+<tr>
+<td>Avoided</td>
+<td>graduation cliché, TEDx speaker, success visualization</td>
+</tr>
+<tr>
+<td>Cliché Risks</td>
+<td>человек с книгой в парке-открытке, мудрец в горах</td>
+</tr>
+<tr>
+<td>Narrative</td>
+<td>путь внутреннего расширения; каждый момент — открытие</td>
+</tr>
+</tbody>
+</table>
+<h3 id="gp-10">GP 10 — Свобода и масштаб жизни</h3>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Значение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Life Pacing</td>
+<td>лёгкий, открытый, подвижный, с ощущением выбора</td>
+</tr>
+<tr>
+<td>Movement Logic</td>
+<td>движение, переход, прибытие, выход в новое пространство</td>
+</tr>
+<tr>
+<td>Relational Density</td>
+<td><strong>Low to Medium</strong></td>
+</tr>
+<tr>
+<td>Best Scene Types</td>
+<td>movement, exploration, transition, world_expansion, arrival</td>
+</tr>
+<tr>
+<td>Avoided</td>
+<td>static contemplation, lonely mountain, generic travel postcard</td>
+</tr>
+<tr>
+<td>Cliché Risks</td>
+<td>одинокий в горах, аэропорт как luxury travel, чемодан без смысла</td>
+</tr>
+<tr>
+<td>Narrative</td>
+<td>путь: прибытие, выбор, движение, открытие, новый поворот</td>
+</tr>
+</tbody>
+</table>
+<h3 id="gp-32">GP 32 — Окружение</h3>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th>Значение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Life Pacing</td>
+<td>живой, социальный, включённый, с ощущением принадлежности</td>
+</tr>
+<tr>
+<td>Movement Logic</td>
+<td>встреча, разговор, включение в круг, принадлежность</td>
+</tr>
+<tr>
+<td>Relational Density</td>
+<td><strong>High</strong> (люди обязательны, без них сфера не раскрывается)</td>
+</tr>
+<tr>
+<td>Best Scene Types</td>
+<td>belonging, connection, engagement, social_presence</td>
+</tr>
+<tr>
+<td>Avoided</td>
+<td>networking event, conference poster, empty group photo</td>
+</tr>
+<tr>
+<td>Cliché Risks</td>
+<td>бизнес-нетворкинг, бейджики, корпоративная вечеринка</td>
+</tr>
+<tr>
+<td>Narrative</td>
+<td>принадлежность; &ldquo;это мои люди, это моя среда&rdquo;</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="_2">КАК БЛИЗКИЕ УЧИТЫВАЮТСЯ</h2>
+<table>
+<thead>
+<tr>
+<th>Сфера</th>
+<th>Плотность</th>
+<th>Поведение близких</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Я и состояние</td>
+<td>Low</td>
+<td>Не появляются без явного запроса</td>
+</tr>
+<tr>
+<td>Ресурсы</td>
+<td>Medium</td>
+<td>Как часть среды/команды, не театр</td>
+</tr>
+<tr>
+<td>Реализация</td>
+<td>Medium–High</td>
+<td>Если влияние связано с людьми</td>
+</tr>
+<tr>
+<td>Любовь и партнёрство</td>
+<td>High</td>
+<td>Партнёр — обязательный центр</td>
+</tr>
+<tr>
+<td>Дом</td>
+<td>High</td>
+<td>Близкие часть сцены если есть в профиле</td>
+</tr>
+<tr>
+<td>Дети</td>
+<td>High</td>
+<td>Дети — центр если есть в профиле</td>
+</tr>
+<tr>
+<td>Творчество</td>
+<td>Low–Medium</td>
+<td>Соавторы возможны, не обязательны</td>
+</tr>
+<tr>
+<td>Развитие</td>
+<td>Low–Medium</td>
+<td>Ментор/собеседник возможны</td>
+</tr>
+<tr>
+<td>Свобода</td>
+<td>Low–Medium</td>
+<td>Если поддерживают движение, не семейный кадр</td>
+</tr>
+<tr>
+<td>Окружение</td>
+<td>High</td>
+<td>Люди обязательны, это и есть сфера</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Правило для всех:</strong> Близкие могут появляться — в кадре, частично, со спины, в движении, через жест, через следы жизни. НЕ придумывать партнёра/детей без данных пользователя.</p>
+<hr>
+<h2 id="_3">ГДЕ СФЕРЫ СТАЛИ ОТЛИЧАТЬСЯ</h2>
+<p><strong>До обновления:</strong> Разные сферы могли генерировать визуально похожие сцены — &ldquo;красивая жизнь&rdquo; с разными названиями.</p>
+<p><strong>После обновления:</strong>
+- <strong>Я и состояние</strong> vs <strong>Ресурсы</strong>: Первое — тихое, внутреннее, без людей. Второе — устойчивое, качественное, доступ к возможностям.
+- <strong>Реализация</strong> vs <strong>Окружение</strong>: Реализация — фокус на действии и влиянии. Окружение — фокус на принадлежности и среде.
+- <strong>Любовь</strong> vs <strong>Дом</strong>: Любовь — интимность вдвоём. Дом — ритмичный быт и тепло пространства.
+- <strong>Творчество</strong> vs <strong>Развитие</strong>: Творчество — создание нового. Развитие — впитывание и рост.</p>
+<hr>
+<h2 id="overlap">ГДЕ ОСТАЁТСЯ OVERLAP</h2>
+<ol>
+<li><strong>Свобода vs Ресурсы</strong> — оба используют transition/world_expansion. Differentiator: Свобода = движение и выбор маршрута; Ресурсы = качество доступа, не сам маршрут.</li>
+<li><strong>Дом vs Любовь</strong> — оба high relational density. Differentiator: Дом = пространство и ритуалы быта; Любовь = интимность двоих.</li>
+<li><strong>Творчество vs Реализация</strong> — оба могут включать создание. Differentiator: Творчество = процесс и начало; Реализация = влияние и проявление.</li>
+</ol>
+<hr>
+<h2 id="_4">РАЗМЕРЫ ПРОМПТОВ ПОСЛЕ ОБНОВЛЕНИЯ</h2>
+<table>
+<thead>
+<tr>
+<th>GP ID</th>
+<th>Сфера</th>
+<th>До</th>
+<th>После</th>
+<th>Прирост</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2</td>
+<td>Я и состояние</td>
+<td>10 956</td>
+<td>15 903</td>
+<td>+4 947</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Ресурсы</td>
+<td>8 282</td>
+<td>13 263</td>
+<td>+4 981</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Реализация</td>
+<td>26 142</td>
+<td>30 961</td>
+<td>+4 819</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Любовь</td>
+<td>11 368</td>
+<td>16 363</td>
+<td>+4 995</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Дом</td>
+<td>10 954</td>
+<td>15 910</td>
+<td>+4 956</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Дети</td>
+<td>11 654</td>
+<td>16 565</td>
+<td>+4 911</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Творчество</td>
+<td>26 752</td>
+<td>31 748</td>
+<td>+4 996</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Развитие</td>
+<td>15 524</td>
+<td>20 486</td>
+<td>+4 962</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Свобода</td>
+<td>26 172</td>
+<td>31 148</td>
+<td>+4 976</td>
+</tr>
+<tr>
+<td>32</td>
+<td>Окружение</td>
+<td>26 172</td>
+<td>31 080</td>
+<td>+4 908</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="_5">ГЛАВНЫЙ КРИТЕРИЙ</h2>
+<blockquote>
+<p>Каждая сфера должна ощущаться как <strong>отдельный способ жить</strong>.</p>
+<p>Не: одна и та же красивая жизнь с разными названиями.<br>
+А: разные эмоциональные режимы будущей жизни пользователя.</p>
+</blockquote>
+<hr>
+<p><em>Applied: 2026-05-15T16:58:00+03:00 via Playwright/Livewire. Verified: 10/10.</em></p>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
