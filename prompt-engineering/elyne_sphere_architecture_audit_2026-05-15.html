@@ -1,0 +1,1768 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elyne · Аудит архитектуры сфер 15.05.2026</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="elyne-sphere-architecture-audit">Elyne — Sphere Architecture Audit</h1>
+<p><strong>Дата:</strong> 2026-05-15<br>
+<strong>Источник:</strong> elyne.online/admin — Playwright extraction<br>
+<strong>Статус:</strong> Production snapshot. Read-only. Никаких изменений не вносилось.<br>
+<strong>Цель:</strong> Данные для redesign sphere semantics, emotional differentiation, scene behavior, experiential logic.</p>
+<hr>
+<h2 id="executive-summary">EXECUTIVE SUMMARY — КРИТИЧЕСКИЕ НАХОДКИ</h2>
+<blockquote>
+<p><strong>3 production bug-класса, требующих немедленного внимания при redesign:</strong></p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Тип</th>
+<th>Описание</th>
+<th>Severity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BUG-1</td>
+<td><strong>Prompt Rotation Error</strong></td>
+<td>Сферы 7–10 и 32 подключены к НЕПРАВИЛЬНЫМ промптам (полная ротация)</td>
+<td>🔴 CRITICAL</td>
+</tr>
+<tr>
+<td>BUG-2</td>
+<td><strong>Missing <code>{onboarding_answers}</code></strong></td>
+<td>9 из 10 sphere prompts не получают онбординг-ответы пользователя</td>
+<td>🔴 CRITICAL</td>
+</tr>
+<tr>
+<td>BUG-3</td>
+<td><strong>Duplicate Prompt</strong></td>
+<td>ID=10 (Свобода) и ID=32 (Окружение) — идентичные промпты</td>
+<td>🔴 CRITICAL</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="1-sphere-architecture-map">1. SPHERE ARCHITECTURE MAP</h2>
+<h3 id="11">1.1 Сферы — полный список</h3>
+<table>
+<thead>
+<tr>
+<th>Sphere ID</th>
+<th>Slug</th>
+<th>Короткое название</th>
+<th>Полное название</th>
+<th>GP ID</th>
+<th>Field Name</th>
+<th>Prompt Len</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>self</td>
+<td>Я и состояние</td>
+<td>Я и состояние</td>
+<td>2</td>
+<td>Образ я</td>
+<td>10 956</td>
+</tr>
+<tr>
+<td>2</td>
+<td>resources</td>
+<td>Ресурсы</td>
+<td>Ресурсы и уровень жизни</td>
+<td>3</td>
+<td>Достаток</td>
+<td>8 282</td>
+</tr>
+<tr>
+<td>3</td>
+<td>realization</td>
+<td>Реализация и влияние</td>
+<td>Реализация и влияние</td>
+<td>4</td>
+<td>Проявленность</td>
+<td>26 142</td>
+</tr>
+<tr>
+<td>4</td>
+<td>love</td>
+<td>Любовь и партнёрство</td>
+<td>Любовь и партнёрство</td>
+<td>5</td>
+<td>Отношения</td>
+<td>11 368</td>
+</tr>
+<tr>
+<td>5</td>
+<td>home</td>
+<td>Дом, семья и близкие</td>
+<td>Дом, семья и близкие</td>
+<td>6</td>
+<td>Очаг</td>
+<td>10 954</td>
+</tr>
+<tr>
+<td>6</td>
+<td>children</td>
+<td>Дети и наследие</td>
+<td>Дети и наследие</td>
+<td>7</td>
+<td>Творчество</td>
+<td>11 654</td>
+</tr>
+<tr>
+<td>7</td>
+<td>creativity</td>
+<td>Творчество и новые начинания</td>
+<td>Творчество и новые начинания</td>
+<td>8</td>
+<td>Образование</td>
+<td>26 752</td>
+</tr>
+<tr>
+<td>8</td>
+<td>wisdom</td>
+<td>Развитие и мудрость</td>
+<td>Развитие и мудрость</td>
+<td>9</td>
+<td>Развитие и мудрость</td>
+<td>15 524</td>
+</tr>
+<tr>
+<td>9</td>
+<td>freedom</td>
+<td>Свобода и масштаб жизни</td>
+<td>Свобода и масштаб жизни</td>
+<td>10</td>
+<td>Социальность</td>
+<td>26 172</td>
+</tr>
+<tr>
+<td>10</td>
+<td>environment</td>
+<td>Окружение</td>
+<td>Окружение</td>
+<td>32</td>
+<td>Окружение</td>
+<td>26 172</td>
+</tr>
+</tbody>
+</table>
+<h3 id="12-pipeline">1.2 Системные промпты (pipeline)</h3>
+<table>
+<thead>
+<tr>
+<th>GP ID</th>
+<th>Название</th>
+<th>Len</th>
+<th>Роль в pipeline</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>11</td>
+<td>System prompt генерации сцен</td>
+<td>9 707</td>
+<td>LLM system prompt → генерирует scene description из <code>{count}</code> вариантов</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Инструкции генерации изображений</td>
+<td>3 345</td>
+<td>Фиксированный суффикс к FAL prompt (visual realism rules)</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Промпт генерации Profile Summary</td>
+<td>2 874</td>
+<td>Генерирует <code>{profile_summary}</code> из онбординг-ответов</td>
+</tr>
+<tr>
+<td>20</td>
+<td>Фотосессия</td>
+<td>11 117</td>
+<td>Photo session continuation prompts (Narrative Continuity Engine)</td>
+</tr>
+<tr>
+<td>1*</td>
+<td>Sphere Selector / three_angles_prompt</td>
+<td>7 688</td>
+<td>Выбирает стиль одежды + 3 угла по сфере</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>*ID=1 = sphere-selector prompt (clothing style selection + three angles logic)</p>
+</blockquote>
+<hr>
+<h2 id="2-sphere-generation-chain">2. SPHERE → GENERATION CHAIN</h2>
+<pre><code>USER FLOW
+─────────────────────────────────────────────────────────
+                    ┌─────────────────────┐
+                    │   ONBOARDING        │
+                    │  (global answers)   │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │  PROFILE SUMMARY    │◄── GP ID=15
+                    │  (profile_summary)  │    {gender, age, onboarding_answers,
+                    └──────────┬──────────┘     clothing_styles}
+                               │
+                    ┌──────────▼──────────┐
+                    │  MICRO QUESTIONNAIRE │
+                    │  (per sphere Q1-Q3) │
+                    └──────────┬──────────┘
+                               │
+         ┌─────────────────────▼─────────────────────┐
+         │         SPHERE SELECTOR                   │◄── GP ID=1 (three_angles)
+         │  Picks clothing style + 3 angle types     │    {sphere_title, sphere_slug,
+         │  emotional_entry / world_interaction /    │     profile_summary,
+         │  movement_choice                          │     onboarding_answers,
+         └─────────────────────┬─────────────────────┘     micro_adjustment_answers}
+                               │
+                               ▼
+         ┌─────────────────────────────────────────────┐
+         │           SCENE SYSTEM PROMPT              │◄── GP ID=11
+         │  Generates {count} scene descriptions     │    {count}
+         │  using sphere_metaprompt + user data      │
+         └────────────┬────────────────────────────────┘
+                      │
+                      │  For each sphere:
+         ┌────────────▼────────────────────────────────┐
+         │       SPHERE METAPROMPT (GP ID 2–10, 32)   │
+         │  Sphere-specific scene generation logic    │
+         │  → Produces: scene description (text)      │
+         └────────────┬────────────────────────────────┘
+                      │
+                      ▼
+         ┌────────────────────────────────────────────┐
+         │      IMAGE INSTRUCTIONS (GP ID=12)         │
+         │  Fixed visual realism suffix appended      │
+         │  to every FAL prompt                       │
+         └────────────┬────────────────────────────────┘
+                      │
+                      ▼
+         ┌────────────────────────────────────────────┐
+         │           FAL.AI GENERATION                │
+         │  ultra-realistic, cinematic, flux/dev      │
+         │  → Returns: image URL                      │
+         └────────────┬────────────────────────────────┘
+                      │
+          ┌───────────▼───────────────┐
+          │  PHOTO SESSION CONTINUE?  │◄── GP ID=20
+          │  User taps &quot;Ещё кадр&quot;     │    Narrative Continuity Engine
+          │  → New scene from same    │
+          │    scene context          │
+          └───────────────────────────┘
+</code></pre>
+<h3 id="21-assembled-meta-prompt-per-sphere">2.1 Assembled Meta-Prompt Per Sphere</h3>
+<p>Для каждой сферы финальный промпт собирается так:</p>
+<pre><code>[SPHERE_METAPROMPT]       ← GP ID 2–10, 32
++ [IMAGE_INSTRUCTIONS]    ← GP ID 12 (fixed suffix)
++ [STYLE_DESCRIPTION]     ← chosen_clothing_style text block
+= FINAL FAL PROMPT        → отправляется в FAL.ai
+</code></pre>
+<hr>
+<h2 id="3-placeholder-audit">3. PLACEHOLDER AUDIT</h2>
+<h3 id="31">3.1 Полная таблица плейсхолдеров</h3>
+<table>
+<thead>
+<tr>
+<th>GP ID</th>
+<th>Sphere</th>
+<th><code>{profile_summary}</code></th>
+<th><code>{onboarding_answers}</code></th>
+<th><code>{micro_adjustment_answers}</code></th>
+<th><code>{chosen_clothing_style}</code></th>
+<th><code>{sphere_title}</code></th>
+<th><code>{gender}</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2</td>
+<td>self</td>
+<td>×1 ✅</td>
+<td>×1 ✅</td>
+<td>×1 ✅</td>
+<td>×1 ✅</td>
+<td>×0 ⚠️</td>
+<td>×1 ✅</td>
+</tr>
+<tr>
+<td>3</td>
+<td>resources</td>
+<td>×2 🔴</td>
+<td>×0 🔴</td>
+<td>×1 ✅</td>
+<td>×1 ✅</td>
+<td>×1 ✅</td>
+<td>×0 ⚠️</td>
+</tr>
+<tr>
+<td>4</td>
+<td>realization</td>
+<td>×2 🔴</td>
+<td>×0 🔴</td>
+<td>×1 ✅</td>
+<td>×1 ✅</td>
+<td>×1 ✅</td>
+<td>×0 ⚠️</td>
+</tr>
+<tr>
+<td>5</td>
+<td>love</td>
+<td>×2 🔴</td>
+<td>×0 🔴</td>
+<td>×1 ✅</td>
+<td>×1 ✅</td>
+<td>×1 ✅</td>
+<td>×0 ⚠️</td>
+</tr>
+<tr>
+<td>6</td>
+<td>home</td>
+<td>×2 🔴</td>
+<td>×0 🔴</td>
+<td>×1 ✅</td>
+<td>×1 ✅</td>
+<td>×1 ✅</td>
+<td>×0 ⚠️</td>
+</tr>
+<tr>
+<td>7</td>
+<td>children</td>
+<td>×2 🔴</td>
+<td>×0 🔴</td>
+<td>×1 ✅</td>
+<td>×1 ✅</td>
+<td>×1 ✅</td>
+<td>×0 ⚠️</td>
+</tr>
+<tr>
+<td>8</td>
+<td>creativity</td>
+<td>×2 🔴</td>
+<td>×0 🔴</td>
+<td>×1 ✅</td>
+<td>×1 ✅</td>
+<td>×1 ✅</td>
+<td>×0 ⚠️</td>
+</tr>
+<tr>
+<td>9</td>
+<td>wisdom</td>
+<td>×2 🔴</td>
+<td>×0 🔴</td>
+<td>×1 ✅</td>
+<td>×1 ✅</td>
+<td>×1 ✅</td>
+<td>×0 ⚠️</td>
+</tr>
+<tr>
+<td>10</td>
+<td>freedom</td>
+<td>×2 🔴</td>
+<td>×0 🔴</td>
+<td>×1 ✅</td>
+<td>×1 ✅</td>
+<td>×1 ✅</td>
+<td>×0 ⚠️</td>
+</tr>
+<tr>
+<td>32</td>
+<td>environment</td>
+<td>×2 🔴</td>
+<td>×0 🔴</td>
+<td>×1 ✅</td>
+<td>×1 ✅</td>
+<td>×1 ✅</td>
+<td>×0 ⚠️</td>
+</tr>
+</tbody>
+</table>
+<h3 id="32-bug-2-onboarding_answers-9-10-sphere-prompts">3.2 BUG-2: {onboarding_answers} не попадает в 9 из 10 sphere prompts</h3>
+<p><strong>Что происходит:</strong><br>
+В GP ID 3–10, 32 в ВХОДНЫЕ ДАННЫЕ написано:</p>
+<pre><code>Общие ответы пользователя:
+{profile_summary}          ← ЭТО profile_summary, НЕ onboarding_answers!
+</code></pre>
+<p>Вместо:</p>
+<pre><code>Общие ответы пользователя:
+{onboarding_answers}       ← должно быть это
+</code></pre>
+<p><strong>Следствие:</strong> Sphere generation prompts получают <code>{profile_summary}</code> дважды (анализ профиля + онбординг-раздел). Реальные онбординг-ответы пользователя (<code>{onboarding_answers}</code>) в сцену НЕ попадают.</p>
+<p><strong>Исключение:</strong> GP ID=2 (self) — единственный промпт с правильной структурой: использует <code>{profile_summary}</code> ×1 и <code>{onboarding_answers}</code> ×1.</p>
+<h3 id="33-placeholder-resolution-status">3.3 Placeholder resolution status</h3>
+<table>
+<thead>
+<tr>
+<th>Placeholder</th>
+<th>Статус</th>
+<th>Примечание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{profile_summary}</code></td>
+<td>✅ резолвится</td>
+<td>Генерируется GP ID=15</td>
+</tr>
+<tr>
+<td><code>{onboarding_answers}</code></td>
+<td>✅ резолвится (в GP ID=2) / 🔴 не используется (GP 3–32)</td>
+<td>BUG-2</td>
+</tr>
+<tr>
+<td><code>{micro_adjustment_answers}</code></td>
+<td>✅ резолвится</td>
+<td>Sphere questionnaire Q1-Q3</td>
+</tr>
+<tr>
+<td><code>{chosen_clothing_style}</code></td>
+<td>✅ резолвится</td>
+<td>Из sphere selector</td>
+</tr>
+<tr>
+<td><code>{sphere_title}</code></td>
+<td>✅ резолвится</td>
+<td>Из sphere record</td>
+</tr>
+<tr>
+<td><code>{gender}</code></td>
+<td>✅ резолвится в GP ID=2 / ⚠️ не используется в GP 3–32</td>
+<td>Только self-sphere</td>
+</tr>
+<tr>
+<td><code>{scene_description}</code></td>
+<td>🔴 Denis bug</td>
+<td>В photo_session не резолвится → повторяющиеся FAL</td>
+</tr>
+<tr>
+<td><code>{user_comment}</code></td>
+<td>🔴 Denis bug</td>
+<td>В photo_session игнорируется</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="4-sphere-influence-mapping">4. SPHERE INFLUENCE MAPPING</h2>
+<h3 id="generation-behavior">Влияние каждой сферы на generation behavior</h3>
+<blockquote>
+<p>Анализ на основе sphere prompts и production примеров.</p>
+</blockquote>
+<h4 id="41-sphere-1-self-gp-id2">4.1 Sphere 1 — Я и состояние (self) — GP ID=2</h4>
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Поведение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Emotional direction</strong></td>
+<td>Внутреннее состояние: спокойствие, устойчивость, лёгкость, ясность</td>
+</tr>
+<tr>
+<td><strong>Scene type</strong></td>
+<td>Transitional moments — человек в движении между состояниями</td>
+</tr>
+<tr>
+<td><strong>Movement</strong></td>
+<td>Лёгкий шаг, переход через пространство, микродвижения (касание поверхности)</td>
+</tr>
+<tr>
+<td><strong>Pacing</strong></td>
+<td>Slow, deliberate, ресурсное</td>
+</tr>
+<tr>
+<td><strong>Action logic</strong></td>
+<td>НЕ продуктивность. Emotional entry moment — до/после действия</td>
+</tr>
+<tr>
+<td><strong>Environment</strong></td>
+<td>Открытые пространства с высокими окнами, природа, переходные зоны</td>
+</tr>
+<tr>
+<td><strong>Atmosphere</strong></td>
+<td>Утренний свет, тепло, воздух, текстура</td>
+</tr>
+<tr>
+<td><strong>Privacy level</strong></td>
+<td>Приватное до semi-public</td>
+</tr>
+<tr>
+<td><strong>Openness</strong></td>
+<td>Высокая — человек открыт среде</td>
+</tr>
+<tr>
+<td><strong>Social signal</strong></td>
+<td>Тихая уверенность, присутствие</td>
+</tr>
+<tr>
+<td><strong>Narrative</strong></td>
+<td>&ldquo;Вход в жизнь&rdquo; — эмоциональная точка входа</td>
+</tr>
+<tr>
+<td><strong>Visual tone</strong></td>
+<td>Warm neutral, natural light, organic</td>
+</tr>
+<tr>
+<td><strong>Cinematic</strong></td>
+<td>Future-memory scene — как воспоминание из будущего</td>
+</tr>
+<tr>
+<td><strong>Sensory</strong></td>
+<td>Прохладный воздух, текстура ткани, свет</td>
+</tr>
+<tr>
+<td><strong>Style adaptation</strong></td>
+<td>Casual читается как самая расслабленная версия</td>
+</tr>
+<tr>
+<td><strong>Key mechanism</strong></td>
+<td>STATUS THROUGH NORMALITY — статус через обыденность</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Production example (GP ID=2):</strong><br>
+Scene #586 &ldquo;Утренний переход в открытом пространстве&rdquo;<br>
+Sphere: Я и состояние (ID=1)<br>
+<img alt="Production" src="https://dreammap.storage.yandexcloud.net/generations/586/542d407a-e472-4a2c-90a1-1d21ce143516.jpg">  </p>
+<blockquote>
+<p>Человек движется через просторное помещение с высокими окнами, утренний свет, рука касается подоконника, шаг уверенный но не спешащий.</p>
+</blockquote>
+<hr>
+<h4 id="42-sphere-2-resources-gp-id3">4.2 Sphere 2 — Ресурсы и уровень жизни (resources) — GP ID=3</h4>
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Поведение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Emotional direction</strong></td>
+<td>Качество жизни, достаток, уровень среды</td>
+</tr>
+<tr>
+<td><strong>Scene type</strong></td>
+<td>Life moment внутри качественной среды</td>
+</tr>
+<tr>
+<td><strong>Movement</strong></td>
+<td>Органичный ритм пространства</td>
+</tr>
+<tr>
+<td><strong>Pacing</strong></td>
+<td>Устойчивое, без спешки</td>
+</tr>
+<tr>
+<td><strong>Action logic</strong></td>
+<td>Качество взаимодействия с пространством и предметами</td>
+</tr>
+<tr>
+<td><strong>Environment</strong></td>
+<td>Среда с ресурсными сигналами (качество материалов, пространство)</td>
+</tr>
+<tr>
+<td><strong>Atmosphere</strong></td>
+<td>Warmth, quality, abundance — без демонстративности</td>
+</tr>
+<tr>
+<td><strong>Privacy level</strong></td>
+<td>Домашнее / приватное</td>
+</tr>
+<tr>
+<td><strong>Openness</strong></td>
+<td>Средняя</td>
+</tr>
+<tr>
+<td><strong>Resource signals</strong></td>
+<td>Качество, не luxury-декорация</td>
+</tr>
+<tr>
+<td><strong>Narrative</strong></td>
+<td>Probing question: &ldquo;что значит для тебя достаток?&rdquo;</td>
+</tr>
+<tr>
+<td><strong>Visual tone</strong></td>
+<td>Warm, качественный</td>
+</tr>
+<tr>
+<td><strong>Key sections</strong></td>
+<td>ФОКУС СФЕРЫ, RESOURCE SIGNALS, МАСШТАБ И ТИП СЦЕНЫ</td>
+</tr>
+<tr>
+<td><strong>Unique rule</strong></td>
+<td>ЖИЗНЬ ДОЛЖНА ПРОИСХОДИТЬ — запрет на пустой интерьер</td>
+</tr>
+</tbody>
+</table>
+<p><strong>⚠️ Shortest prompt (8282 chars)</strong> — наименее детально проработанная сфера</p>
+<hr>
+<h4 id="43-sphere-3-realization-gp-id4">4.3 Sphere 3 — Реализация и влияние (realization) — GP ID=4</h4>
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Поведение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Emotional direction</strong></td>
+<td>Видимость, влияние, форма проявления</td>
+</tr>
+<tr>
+<td><strong>Scene type</strong></td>
+<td>&ldquo;Слава / реализация&rdquo; — момент проявленности</td>
+</tr>
+<tr>
+<td><strong>Movement</strong></td>
+<td>Действие, деятельность, engagement</td>
+</tr>
+<tr>
+<td><strong>Pacing</strong></td>
+<td>Динамика при сохранении internal stillness</td>
+</tr>
+<tr>
+<td><strong>Action logic</strong></td>
+<td>Публичная деятельность, проекты, влияние</td>
+</tr>
+<tr>
+<td><strong>Environment</strong></td>
+<td>Деловая / творческая / публичная среда</td>
+</tr>
+<tr>
+<td><strong>Social signal</strong></td>
+<td>Признание, влияние, лидерство</td>
+</tr>
+<tr>
+<td><strong>Privacy level</strong></td>
+<td>Semi-public / public</td>
+</tr>
+<tr>
+<td><strong>Narrative</strong></td>
+<td>&ldquo;Моя реальная форма проявления, моя видимость&rdquo;</td>
+</tr>
+<tr>
+<td><strong>Key risk</strong></td>
+<td>Corporate drift → prompting counter-force needed</td>
+</tr>
+<tr>
+<td><strong>Prompt size</strong></td>
+<td>26 142 chars — одна из самых детальных</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4 id="44-sphere-4-love-gp-id5">4.4 Sphere 4 — Любовь и партнёрство (love) — GP ID=5</h4>
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Поведение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Emotional direction</strong></td>
+<td>Близость, связь, &ldquo;моя настоящая близость&rdquo;</td>
+</tr>
+<tr>
+<td><strong>Scene type</strong></td>
+<td>Момент контакта — живой, не постановочный</td>
+</tr>
+<tr>
+<td><strong>Movement</strong></td>
+<td>Совместное движение, тактильность, proximity</td>
+</tr>
+<tr>
+<td><strong>Pacing</strong></td>
+<td>Медленное, внимательное</td>
+</tr>
+<tr>
+<td><strong>Action logic</strong></td>
+<td>Взаимодействие, не демонстрация</td>
+</tr>
+<tr>
+<td><strong>Relationship dynamics</strong></td>
+<td>Партнёр в кадре (bokeh / силуэт если нет фото)</td>
+</tr>
+<tr>
+<td><strong>Privacy level</strong></td>
+<td>Очень приватное</td>
+</tr>
+<tr>
+<td><strong>Narrative</strong></td>
+<td>&ldquo;Моя связь, мои живые отношения&rdquo;</td>
+</tr>
+<tr>
+<td><strong>Unique challenge</strong></td>
+<td>Показать живую близость без стоковой романтики</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4 id="45-sphere-5-home-gp-id6">4.5 Sphere 5 — Дом, семья и близкие (home) — GP ID=6</h4>
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Поведение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Emotional direction</strong></td>
+<td>&ldquo;Мой настоящий дом, моя опора, моё пространство&rdquo;</td>
+</tr>
+<tr>
+<td><strong>Scene type</strong></td>
+<td>Lived-in home moment</td>
+</tr>
+<tr>
+<td><strong>Movement</strong></td>
+<td>Домашний ритм, natural gestures</td>
+</tr>
+<tr>
+<td><strong>Pacing</strong></td>
+<td>Медленное, settled</td>
+</tr>
+<tr>
+<td><strong>Environment</strong></td>
+<td>Жилое пространство с lived-in качеством</td>
+</tr>
+<tr>
+<td><strong>Life rendering</strong></td>
+<td>Не инстаграмный интерьер, а реальный дом</td>
+</tr>
+<tr>
+<td><strong>Privacy level</strong></td>
+<td>Максимально приватное</td>
+</tr>
+<tr>
+<td><strong>Narrative</strong></td>
+<td>&ldquo;Где я живу, а не просто нахожусь&rdquo;</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4 id="46-sphere-6-children-gp-id7-wrong-prompt">4.6 Sphere 6 — Дети и наследие (children) — GP ID=7 ⚠️ WRONG PROMPT</h4>
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Задекларировано</th>
+<th>Реальный промпт</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Sphere intent</strong></td>
+<td>Дети, наследие, продолжение рода</td>
+<td>&ldquo;новое / создание / продолжение&rdquo;</td>
+</tr>
+<tr>
+<td><strong>Identity claim</strong></td>
+<td>&ldquo;Это момент, где в моей жизни появляется что-то новое — живое, настоящее, моё&rdquo;</td>
+<td>→ описывает ТВОРЧЕСТВО, не детей</td>
+</tr>
+<tr>
+<td><strong>🔴 BUG-1</strong></td>
+<td>Промпт предназначен для сферы Творчество</td>
+<td>Sphere &ldquo;children&rdquo; получила промпт сферы &ldquo;creativity&rdquo;</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Что генерируется вместо:</strong> Сцены &ldquo;нового начинания&rdquo;, &ldquo;создания чего-то&rdquo;, без детей, без наследия.</p>
+<hr>
+<h4 id="47-sphere-7-creativity-gp-id8-wrong-prompt">4.7 Sphere 7 — Творчество и новые начинания (creativity) — GP ID=8 ⚠️ WRONG PROMPT</h4>
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Задекларировано</th>
+<th>Реальный промпт</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Sphere intent</strong></td>
+<td>Творчество, новые начинания</td>
+<td>&ldquo;знания / развитие / мудрость&rdquo;</td>
+</tr>
+<tr>
+<td><strong>Identity claim</strong></td>
+<td>&ldquo;Это моя живая глубина, мой рост, мой доступ к знанию, пониманию&rdquo;</td>
+<td>→ описывает МУДРОСТЬ/РАЗВИТИЕ, не творчество</td>
+</tr>
+<tr>
+<td><strong>🔴 BUG-1</strong></td>
+<td>Промпт предназначен для сферы Развитие и мудрость</td>
+<td>Sphere &ldquo;creativity&rdquo; получила промпт сферы &ldquo;wisdom&rdquo;</td>
+</tr>
+<tr>
+<td><strong>Prompt size</strong></td>
+<td>26 752 chars</td>
+<td>Самый длинный промпт в системе</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Что генерируется вместо:</strong> Сцены развития, обучения, глубины — не творческих процессов.</p>
+<hr>
+<h4 id="48-sphere-8-wisdom-gp-id9-wrong-prompt">4.8 Sphere 8 — Развитие и мудрость (wisdom) — GP ID=9 ⚠️ WRONG PROMPT</h4>
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Задекларировано</th>
+<th>Реальный промпт</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Sphere intent</strong></td>
+<td>Развитие, мудрость, рост</td>
+<td>&ldquo;свобода / путешествия / масштаб жизни&rdquo;</td>
+</tr>
+<tr>
+<td><strong>Identity claim</strong></td>
+<td>&ldquo;Это не путешествие — это мой образ жизни, мой масштаб, моя свобода&rdquo;</td>
+<td>→ описывает СВОБОДУ, не мудрость</td>
+</tr>
+<tr>
+<td><strong>🔴 BUG-1</strong></td>
+<td>Промпт предназначен для сферы Свобода</td>
+<td>Sphere &ldquo;wisdom&rdquo; получила промпт сферы &ldquo;freedom&rdquo;</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Что генерируется вместо:</strong> Сцены свободы передвижения, путешествий, масштаба — не внутреннего роста.</p>
+<hr>
+<h4 id="49-sphere-9-freedom-gp-id10-wrong-prompt">4.9 Sphere 9 — Свобода и масштаб жизни (freedom) — GP ID=10 ⚠️ WRONG PROMPT</h4>
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Задекларировано</th>
+<th>Реальный промпт</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Sphere intent</strong></td>
+<td>Свобода, масштаб жизни</td>
+<td>&ldquo;окружение / социальная среда&rdquo;</td>
+</tr>
+<tr>
+<td><strong>Identity claim</strong></td>
+<td>&ldquo;Это не картинка — это мой круг, моя среда, мои люди&rdquo;</td>
+<td>→ описывает ОКРУЖЕНИЕ, не свободу</td>
+</tr>
+<tr>
+<td><strong>🔴 BUG-1</strong></td>
+<td>Промпт предназначен для сферы Окружение</td>
+<td>Sphere &ldquo;freedom&rdquo; получила промпт сферы &ldquo;environment&rdquo;</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Что генерируется вместо:</strong> Социальные сцены, окружение, люди вокруг — не личная свобода.</p>
+<p><strong>NB:</strong> Реальные production генерации (IDs 587-591) для этой сферы были сделаны через sphere_selector (three_angles_prompt), который правильно описывает &ldquo;Свобода и масштаб жизни&rdquo;. Поэтому сцены выглядели более релевантными. Но сам sphere metaprompt (GP ID=10) генерировал wrong scene context.</p>
+<hr>
+<h4 id="410-sphere-10-environment-gp-id32-wrong-duplicate">4.10 Sphere 10 — Окружение (environment) — GP ID=32 ⚠️ WRONG + DUPLICATE</h4>
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Задекларировано</th>
+<th>Реальный промпт</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Sphere intent</strong></td>
+<td>Окружение, люди вокруг</td>
+<td>&ldquo;окружение / социальная среда&rdquo;</td>
+</tr>
+<tr>
+<td><strong>🔴 BUG-1 + BUG-3</strong></td>
+<td>GP ID=32 ИДЕНТИЧЕН GP ID=10</td>
+<td>Два sphere prompts — одинаковый текст</td>
+</tr>
+<tr>
+<td><strong>Result</strong></td>
+<td>Свобода и Окружение генерируют идентичные сцены</td>
+<td>Полный визуальный overlap</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="5-style-behavior-per-sphere">5. STYLE BEHAVIOR PER SPHERE</h2>
+<h3 id="51-clothing-style-selection-mechanism">5.1 Clothing style selection mechanism</h3>
+<p>Стиль одежды выбирается через GP ID=1 (sphere_selector / three_angles_prompt):
+- Inputs: {sphere_title}, {sphere_short}, {sphere_definition}, {profile_summary}, {micro_adjustment_answers}
+- Output: ОДИН стиль из {user_clothing_styles}
+- Принцип: &ldquo;как этот человек РЕАЛЬНО выглядел бы, если бы уже жил этой жизнью&rdquo;</p>
+<h3 id="52-style-anti-patterns">5.2 Style anti-patterns (глобальные)</h3>
+<p>Во всех сферах система блокирует:
+- startup founder cliché
+- crypto bro aesthetic
+- airport luxury traveler vibe
+- generic entrepreneur uniform
+- influencer energy
+- overdressed luxury
+- rich-person stock photo
+- techwear stereotype
+- fashion editorial vibe
+- AI-generated perfection</p>
+<h3 id="53-style-adaptation-per-sphere">5.3 Style adaptation per sphere</h3>
+<table>
+<thead>
+<tr>
+<th>Sphere</th>
+<th>Expected Style Adaptation</th>
+<th>Actual Risk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>self</td>
+<td>Самая расслабленная версия стиля</td>
+<td>Домашний overdress</td>
+</tr>
+<tr>
+<td>resources</td>
+<td>Качественные материалы, subtle luxury</td>
+<td>Luxury stock photo</td>
+</tr>
+<tr>
+<td>realization</td>
+<td>Собранная, публичная версия</td>
+<td>Corporate drift</td>
+</tr>
+<tr>
+<td>love</td>
+<td>Мягкая, тактильная, intimate</td>
+<td>Pinterest романтика</td>
+</tr>
+<tr>
+<td>home</td>
+<td>Самая домашняя, lived-in</td>
+<td>Бесформенность</td>
+</tr>
+<tr>
+<td>children</td>
+<td>(wrong prompt → creation context)</td>
+<td>Художник stereotype</td>
+</tr>
+<tr>
+<td>creativity</td>
+<td>(wrong prompt → wisdom context)</td>
+<td>Library scholar</td>
+</tr>
+<tr>
+<td>wisdom</td>
+<td>(wrong prompt → freedom context)</td>
+<td>Travel blogger</td>
+</tr>
+<tr>
+<td>freedom</td>
+<td>(wrong prompt → social context)</td>
+<td>Social influencer</td>
+</tr>
+<tr>
+<td>environment</td>
+<td>(wrong prompt = freedom&rsquo;s wrong prompt)</td>
+<td>Same as freedom</td>
+</tr>
+</tbody>
+</table>
+<h3 id="54-recurring-style-collapses-production-observations">5.4 Recurring style collapses (production observations)</h3>
+<p>Из audit sessions 2026-05-14/15:</p>
+<p><strong>1. Горы + холодный свет + чашка</strong> (IDs 587-589):<br>
+Три угла sphere &ldquo;Свобода&rdquo; — все три получили одинаковую FAL-сцену (горный перевал, холодный свет, человек с чашкой). Причина: <code>{scene_description}</code> placeholder не резолвится в photo_session → три итерации генерировали одну и ту же scene.</p>
+<p><strong>2. Corporate aspiration collapse (realization sphere)</strong>:<br>
+ID=4 prompt описывает &ldquo;слава / реализация&rdquo; — в слабых профилях коллапсирует в офисные сцены, ноутбуки, дорогие кресла.</p>
+<p><strong>3. Lifestyle collapse (freedom sphere)</strong>:<br>
+ID=10 prompt (который генерирует &ldquo;социальные сцены&rdquo; вместо свободы) → generic social gathering, wine bar aesthetics.</p>
+<hr>
+<h2 id="6-real-production-examples">6. REAL PRODUCTION EXAMPLES</h2>
+<h3 id="61-sphere-1-self">6.1 Sphere 1 (self) — Я и состояние</h3>
+<p><strong>Generation #586 — &ldquo;Утренний переход в открытом пространстве&rdquo;</strong><br>
+Date: May 14, 2026 22:24:34 | User: monad@elyne.online | Iteration: 1 | Status: completed</p>
+<p><img alt="" src="https://dreammap.storage.yandexcloud.net/generations/586/542d407a-e472-4a2c-90a1-1d21ce143516.jpg"></p>
+<p><strong>FAL Prompt (excerpt):</strong></p>
+<blockquote>
+<p>Сцена фиксирует не статичный портрет, а живой момент перехода: человек движется через просторное помещение с высокими окнами, где утренний свет мягко рассеивается&hellip; Действие простое и причинно связанное с ритмом жизни: рука легко касается поверхности широкого подоконника&hellip; Эмоциональная плотность сцены строится на контрасте внутренней тишины и внешней открытости: нет напряжения «успешного успеха», есть уверенность человека, который чувствует себя хозяином своего времени и пространства.</p>
+</blockquote>
+<p><strong>Clothing:</strong> Casual | &ldquo;современная расслабленность с хорошими пропорциями&rdquo;</p>
+<p><strong>Assessment:</strong> ✅ Scene correctly captures emotional entry moment. Good life probability. No corporate drift.</p>
+<hr>
+<h3 id="62-sphere-9-freedom">6.2 Sphere 9 (freedom) — Свобода и масштаб жизни</h3>
+<p><strong>Three Angles (IDs 587-589) — BEFORE upgrades:</strong></p>
+<p><strong>#587 — &ldquo;Одиночество на краю мира&rdquo;</strong> | Emotional register: internal/quiet<br>
+<img alt="" src="https://dreammap.storage.yandexcloud.net/generations/587/2fada216-8c5e-4943-919a-8b7964b1e8d9.jpg"></p>
+<blockquote>
+<p>Крупный план, горная терраса, холодный рассеянный свет, чашка, взгляд в туманную даль.</p>
+</blockquote>
+<p><strong>#588 — &ldquo;Эпицентр влияния&rdquo;</strong> | Emotional register: world_interaction ❌<br>
+<img alt="" src="https://dreammap.storage.yandexcloud.net/generations/588/64c38e6d-b1f6-48f6-a3c9-631a054dd9bc.jpg"></p>
+<blockquote>
+<p>Средний план, городская среда, жестикулирует группе людей.</p>
+</blockquote>
+<p><strong>#589 — &ldquo;Движение без карты&rdquo;</strong> | Emotional register: movement_choice ❌<br>
+<img alt="" src="https://dreammap.storage.yandexcloud.net/generations/589/8b92d42c-3ed1-474d-bbad-4654a71dedbe.jpg"></p>
+<blockquote>
+<p>Общий план, открытая местность, движение в пути.</p>
+</blockquote>
+<p><strong>Assessment:</strong> 587, 588, 589 визуально ИДЕНТИЧНЫ по атмосфере (горы, холодный свет, одиночество). Три угла не дифференцированы. Причина: <code>{scene_description}</code> не резолвился — все три итерации получили одну и ту же scene.</p>
+<hr>
+<p><strong>Photo Session (ID=591) — AFTER emotional_v2 upgrade:</strong></p>
+<p><strong>#591 — &ldquo;Движение без карты&rdquo; iteration 3</strong><br>
+<img alt="" src="https://dreammap.storage.yandexcloud.net/generations/591/..."></p>
+<blockquote>
+<p>Крупный план, грунтовая тропа, золотой час, контровой свет, первый шаг. Решимость, импульс, необратимость выбора.</p>
+</blockquote>
+<p><strong>Assessment:</strong> ✅ BREAKTHROUGH — emotional specificity значительно лучше. Это benchmark для sphere 9.</p>
+<hr>
+<h2 id="7-sphere-differentiation-analysis">7. SPHERE DIFFERENTIATION ANALYSIS</h2>
+<h3 id="71-prompt-rotation-bug-bug-1">7.1 Prompt Rotation Bug (BUG-1) — полная карта</h3>
+<pre><code>СФЕРА (slug)          ПРОМПТ (GP)     ЧТО РЕАЛЬНО ОПИСЫВАЕТ ПРОМПТ
+─────────────────────────────────────────────────────────────────
+self (1)          →   GP ID=2    → &quot;Я и состояние&quot; ✅ ВЕРНО
+resources (2)     →   GP ID=3    → &quot;Ресурсы и уровень жизни&quot; ✅ ВЕРНО
+realization (3)   →   GP ID=4    → &quot;слава / реализация&quot; ✅ ВЕРНО
+love (4)          →   GP ID=5    → &quot;любовь и партнёрство&quot; ✅ ВЕРНО
+home (5)          →   GP ID=6    → &quot;дом, опора, пространство&quot; ✅ ВЕРНО
+children (6)      →   GP ID=7    → &quot;новое / создание / продолжение&quot; 🔴 МИМО
+creativity (7)    →   GP ID=8    → &quot;знания / развитие / мудрость&quot; 🔴 МИМО
+wisdom (8)        →   GP ID=9    → &quot;свобода / путешествия / масштаб&quot; 🔴 МИМО
+freedom (9)       →   GP ID=10   → &quot;окружение / социальная среда&quot; 🔴 МИМО
+environment (10)  →   GP ID=32   → &quot;окружение / социальная среда&quot; 🔴 ДУБЛИКАТ
+</code></pre>
+<p><strong>Гипотеза о происхождении:</strong><br>
+GP ID=7 изначально был написан для сферы &ldquo;creativity&rdquo; (новое/создание). При создании сфер children (6), creativity (7), wisdom (8), freedom (9), environment (10) промпты были назначены со смещением на один ID вперёд. GP ID=32 (environment) был клонирован с GP ID=10 (freedom) без кастомизации.</p>
+<h3 id="72-overlap-analysis">7.2 Overlap analysis</h3>
+<table>
+<thead>
+<tr>
+<th>Пара сфер</th>
+<th>Визуальный overlap</th>
+<th>Эмоциональный overlap</th>
+<th>Причина</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>freedom ↔ environment</td>
+<td>🔴 ПОЛНЫЙ</td>
+<td>🔴 ПОЛНЫЙ</td>
+<td>Одинаковый промпт (BUG-3)</td>
+</tr>
+<tr>
+<td>children ↔ creativity</td>
+<td>🔴 ВЫСОКИЙ</td>
+<td>🔴 ВЫСОКИЙ</td>
+<td>Rotation error (BUG-1)</td>
+</tr>
+<tr>
+<td>wisdom ↔ freedom</td>
+<td>🔴 ВЫСОКИЙ</td>
+<td>🔴 ВЫСОКИЙ</td>
+<td>Rotation error (BUG-1)</td>
+</tr>
+<tr>
+<td>realization ↔ resources</td>
+<td>🟡 СРЕДНИЙ</td>
+<td>🟡 СРЕДНИЙ</td>
+<td>Оба про успех/достаток</td>
+</tr>
+<tr>
+<td>home ↔ love</td>
+<td>🟡 СРЕДНИЙ</td>
+<td>Низкий</td>
+<td>Разные emotional cores</td>
+</tr>
+<tr>
+<td>self ↔ home</td>
+<td>Низкий</td>
+<td>🟡 СРЕДНИЙ</td>
+<td>Оба приватные</td>
+</tr>
+</tbody>
+</table>
+<h3 id="73-narrative-structures-that-repeat">7.3 Narrative structures that repeat</h3>
+<ol>
+<li><strong>&ldquo;Горный перевал + одиночество&rdquo;</strong> — появляется при любой сфере со свободой/масштабом</li>
+<li><strong>&ldquo;Утренний переход через пространство&rdquo;</strong> — универсальный emotional entry</li>
+<li><strong>&ldquo;Человек в движении / идёт&rdquo;</strong> — default для movement_choice в любой сфере</li>
+<li><strong>&ldquo;Собранный кэжуал в городской среде&rdquo;</strong> — доминирующий style output</li>
+</ol>
+<hr>
+<h2 id="8-behavioral-architecture-analysis">8. BEHAVIORAL ARCHITECTURE ANALYSIS</h2>
+<h3 id="81">8.1 Что делает каждую сферу уникальной (в теории)</h3>
+<table>
+<thead>
+<tr>
+<th>Sphere</th>
+<th>Ядро уникальности</th>
+<th>Behaviorally distinct?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>self</td>
+<td>Emotional state as subject — не место и не люди, а STATE</td>
+<td>✅ СИЛЬНО</td>
+</tr>
+<tr>
+<td>resources</td>
+<td>Quality of environment signals — материалы, пространство</td>
+<td>🟡 СРЕДНЕ</td>
+</tr>
+<tr>
+<td>realization</td>
+<td>Visibility mechanics — кто видит, где виден</td>
+<td>✅ СИЛЬНО</td>
+</tr>
+<tr>
+<td>love</td>
+<td>Relationship proximity logic — другой человек как anchor</td>
+<td>✅ СИЛЬНО</td>
+</tr>
+<tr>
+<td>home</td>
+<td>Space ownership signals — lived-in vs. showroom</td>
+<td>✅ СИЛЬНО</td>
+</tr>
+<tr>
+<td>children</td>
+<td>(Должно быть: наследие, continuity, legacy)</td>
+<td>🔴 НЕТ — wrong prompt</td>
+</tr>
+<tr>
+<td>creativity</td>
+<td>(Должно быть: creative act, process, making)</td>
+<td>🔴 НЕТ — wrong prompt</td>
+</tr>
+<tr>
+<td>wisdom</td>
+<td>(Должно быть: depth, understanding, accumulated insight)</td>
+<td>🔴 НЕТ — wrong prompt</td>
+</tr>
+<tr>
+<td>freedom</td>
+<td>(Должно быть: scale of life, mobility, self-determination)</td>
+<td>🔴 НЕТ — wrong prompt</td>
+</tr>
+<tr>
+<td>environment</td>
+<td>(Должно быть: social fabric, chosen people, belonging)</td>
+<td>🔴 НЕТ — duplicate</td>
+</tr>
+</tbody>
+</table>
+<h3 id="82-per-sphere">8.2 Как человек движется (per sphere)</h3>
+<table>
+<thead>
+<tr>
+<th>Sphere</th>
+<th>Движение</th>
+<th>Тип движения</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>self</td>
+<td>Переход, легкий шаг, микродвижение</td>
+<td>Органичное, живое</td>
+</tr>
+<tr>
+<td>resources</td>
+<td>Привычное движение в своём пространстве</td>
+<td>Settled, owned</td>
+</tr>
+<tr>
+<td>realization</td>
+<td>Целенаправленное, активное, engaging</td>
+<td>Динамичное</td>
+</tr>
+<tr>
+<td>love</td>
+<td>Совместное, proximity-driven</td>
+<td>Тактильное, плавное</td>
+</tr>
+<tr>
+<td>home</td>
+<td>Домашний ритм, естественные жесты</td>
+<td>Routine, embodied</td>
+</tr>
+<tr>
+<td>children</td>
+<td>(wrong: creation-process movement)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>creativity</td>
+<td>(wrong: studious, contemplative)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>wisdom</td>
+<td>(wrong: traveler movement)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>freedom</td>
+<td>(wrong: social gathering dynamics)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>environment</td>
+<td>(wrong: same as freedom)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3 id="83-atmosphere-per-sphere">8.3 Как строится atmosphere (per sphere)</h3>
+<table>
+<thead>
+<tr>
+<th>Sphere</th>
+<th>Light</th>
+<th>Space</th>
+<th>Density</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>self</td>
+<td>Morning/transition, warm-neutral</td>
+<td>Open, airy</td>
+<td>Low</td>
+</tr>
+<tr>
+<td>resources</td>
+<td>Quality warm, natural</td>
+<td>Generous, lived-in</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>realization</td>
+<td>Dramatic, directional</td>
+<td>Public, layered</td>
+<td>High</td>
+</tr>
+<tr>
+<td>love</td>
+<td>Soft, intimate</td>
+<td>Close, private</td>
+<td>Very high (2 people)</td>
+</tr>
+<tr>
+<td>home</td>
+<td>Domestic, settled</td>
+<td>Familiar</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>children</td>
+<td>(wrong)</td>
+<td>(wrong)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>creativity</td>
+<td>(wrong)</td>
+<td>(wrong)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>wisdom</td>
+<td>(wrong)</td>
+<td>(wrong)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>freedom</td>
+<td>(wrong)</td>
+<td>(wrong)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>environment</td>
+<td>(wrong)</td>
+<td>(wrong)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="9-current-weak-points">9. CURRENT WEAK POINTS</h2>
+<h3 id="91-bug-1-prompt-rotation-error-5-10">9.1 BUG-1: Prompt Rotation Error — 5 из 10 сфер</h3>
+<p><strong>Affected spheres:</strong> children, creativity, wisdom, freedom, environment</p>
+<p><strong>Impact:</strong>
+- Sphere &ldquo;children&rdquo; генерирует creation/novelty сцены (без детей, без наследия)
+- Sphere &ldquo;creativity&rdquo; генерирует wisdom/knowledge сцены (без творческого процесса)
+- Sphere &ldquo;wisdom&rdquo; генерирует freedom/travel сцены (без глубины/роста)
+- Sphere &ldquo;freedom&rdquo; генерирует social environment сцены (без личной свободы)
+- Sphere &ldquo;environment&rdquo; — дубликат freedom&rsquo;s wrong prompt → identical outputs</p>
+<p><strong>Severity:</strong> Пользователи получают нерелевантные сцены для половины сфер.</p>
+<h3 id="92-bug-2-onboarding_answers-missing">9.2 BUG-2: {onboarding_answers} missing</h3>
+<p><strong>Impact:</strong> 9 из 10 sphere prompts работают фактически без персонализации через онбординг-ответы. <code>{profile_summary}</code> — это синтез, но в нём может отсутствовать специфика отдельных ответов, нужных для visual scene building.</p>
+<p><strong>Исключение:</strong> GP ID=2 (self) правильно получает оба источника.</p>
+<h3 id="93-bug-3-duplicate-prompts-freedom-environment">9.3 BUG-3: Duplicate prompts (freedom = environment)</h3>
+<p><strong>Impact:</strong> Две сферы генерируют идентичные сцены — нулевая дифференциация.</p>
+<h3 id="94-overly-abstract-spheres">9.4 Overly abstract spheres</h3>
+<table>
+<thead>
+<tr>
+<th>Sphere</th>
+<th>Проблема</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>children (wrong prompt)</td>
+<td>Абстракция &ldquo;нового&rdquo; без конкретики детей/наследия</td>
+</tr>
+<tr>
+<td>wisdom (wrong prompt)</td>
+<td>Путешествие как метафора роста — слишком банально</td>
+</tr>
+</tbody>
+</table>
+<h3 id="95-prompt-size-inequality">9.5 Prompt size inequality</h3>
+<table>
+<thead>
+<tr>
+<th>Sphere</th>
+<th>Размер</th>
+<th>Проблема</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>resources</td>
+<td>8 282 chars</td>
+<td>Самый короткий — наименее детальный</td>
+</tr>
+<tr>
+<td>self</td>
+<td>10 956 chars</td>
+<td>Средний</td>
+</tr>
+<tr>
+<td>love</td>
+<td>11 368 chars</td>
+<td>Средний</td>
+</tr>
+<tr>
+<td>home</td>
+<td>10 954 chars</td>
+<td>Средний</td>
+</tr>
+<tr>
+<td>freedom (wrong)</td>
+<td>26 172 chars</td>
+<td>Большой, но wrong sphere</td>
+</tr>
+</tbody>
+</table>
+<p>Разница в 3× между resources и realization → неравномерное качество генерации.</p>
+<h3 id="96-spheres-collapsing-into-patterns">9.6 Spheres collapsing into patterns</h3>
+<table>
+<thead>
+<tr>
+<th>Sphere</th>
+<th>Collapse Pattern</th>
+<th>Frequency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>realization</td>
+<td>Corporate aspiration (офис, ноутбук, дорогое кресло)</td>
+<td>High</td>
+</tr>
+<tr>
+<td>resources</td>
+<td>Luxury stock photo (villa pool, branded items)</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>freedom (wrong)</td>
+<td>Social influencer gathering</td>
+<td>High</td>
+</tr>
+<tr>
+<td>home</td>
+<td>Pinterest interior</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>any sphere</td>
+<td>&ldquo;Горы + одиночество + чашка&rdquo; — универсальный fallback</td>
+<td>High</td>
+</tr>
+</tbody>
+</table>
+<h3 id="97-scene-mechanics-that-repeat">9.7 Scene mechanics that repeat</h3>
+<ol>
+<li><strong>Profile_summary error → generic scenes:</strong> Когда profile_summary = error string (новый пользователь без онбординга), все сферы коллапсируют в generic &ldquo;успешный человек в горах&rdquo;</li>
+<li><strong>{scene_description} bug (Denis):</strong> Повторяющиеся FAL-промты в photo_session — каждая итерация получает одинаковый сцена</li>
+<li><strong>Three angles visual homogeneity:</strong> Три угла одной сферы выглядят одинаково</li>
+</ol>
+<hr>
+<h2 id="10-final-summary">10. FINAL SUMMARY</h2>
+<h3 id="101-strongest-spheres">10.1 Strongest spheres</h3>
+<table>
+<thead>
+<tr>
+<th>Sphere</th>
+<th>Почему сильная</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>self (Я и состояние)</strong></td>
+<td>Единственный правильно настроенный промпт с onboarding_answers, чёткий emotional vector, богатая архитектура секций (15 named sections)</td>
+</tr>
+<tr>
+<td><strong>love (Любовь и партнёрство)</strong></td>
+<td>Чёткий anchor (другой человек), уникальная proximity логика</td>
+</tr>
+<tr>
+<td><strong>home (Дом, семья и близкие)</strong></td>
+<td>Lived-in vs. showroom distinction хорошо задекларирована</td>
+</tr>
+<tr>
+<td><strong>realization (Реализация и влияние)</strong></td>
+<td>Longest substantive prompt (26K chars), visibility mechanics детальны</td>
+</tr>
+</tbody>
+</table>
+<h3 id="102-weakest-spheres">10.2 Weakest spheres</h3>
+<table>
+<thead>
+<tr>
+<th>Sphere</th>
+<th>Почему слабая</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>freedom (Свобода)</strong></td>
+<td>🔴 Wrong prompt — генерирует social scenes вместо personal freedom</td>
+</tr>
+<tr>
+<td><strong>environment (Окружение)</strong></td>
+<td>🔴 Duplicate = identical to freedom&rsquo;s wrong prompt</td>
+</tr>
+<tr>
+<td><strong>children (Дети и наследие)</strong></td>
+<td>🔴 Wrong prompt — генерирует creation scenes без детей</td>
+</tr>
+<tr>
+<td><strong>resources (Ресурсы)</strong></td>
+<td>Самый короткий промпт, наименее детальный</td>
+</tr>
+</tbody>
+</table>
+<h3 id="103-most-emotionally-differentiated-vs">10.3 Most emotionally differentiated (теория vs. реальность)</h3>
+<table>
+<thead>
+<tr>
+<th>Sphere</th>
+<th>Теория</th>
+<th>Реальность</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>self</td>
+<td>✅ Уникальная state-as-subject механика</td>
+<td>✅ Подтверждено productions</td>
+</tr>
+<tr>
+<td>love</td>
+<td>✅ Relationship proximity anchor</td>
+<td>⚠️ Нет production примеров</td>
+</tr>
+<tr>
+<td>home</td>
+<td>✅ Space ownership mechanics</td>
+<td>⚠️ Нет production примеров</td>
+</tr>
+<tr>
+<td>freedom</td>
+<td>✅ Scale + mobility intention</td>
+<td>🔴 НЕТ — wrong prompt</td>
+</tr>
+</tbody>
+</table>
+<h3 id="104-most-visually-differentiated">10.4 Most visually differentiated</h3>
+<p>По production примерам (ограниченная выборка — только сферы 1 и 9):
+- <strong>sphere 1 vs sphere 9:</strong> Хороший visual contrast — warm interior vs. open landscape
+- <strong>Все остальные:</strong> Нет production данных</p>
+<h3 id="105-strongest-continuity">10.5 Strongest continuity</h3>
+<ul>
+<li><strong>Photo session (ID=20):</strong> Narrative Continuity Engine (11 117 chars) обеспечивает наилучшую scene-to-scene связность</li>
+<li><strong>three_angles_prompt:</strong> Three Angles Logic правильно дифференцирует эмоциональные регистры внутри сферы</li>
+</ul>
+<h3 id="106-strongest-experiential-generation">10.6 Strongest experiential generation</h3>
+<p><strong>ID=591 (sphere 9, photo session iteration 3)</strong> — benchmark:</p>
+<blockquote>
+<p>&ldquo;Грунтовая тропа, золотой час, контровой свет, поднимает лёгкую пыль, текстура ткани, первый шаг. Решимость, импульс, необратимость выбора, радость.&rdquo;</p>
+</blockquote>
+<p>Это лучший пример живой сцены — конкретная сенсорная деталь + emotional charge + motion.</p>
+<hr>
+<h2 id="11-hierarchy-pipeline-diagrams-prompt-relationships">11. HIERARCHY, PIPELINE DIAGRAMS, PROMPT RELATIONSHIPS</h2>
+<h3 id="111-full-prompt-relationship-graph">11.1 Full Prompt Relationship Graph</h3>
+<pre><code>PIPELINE ARCHITECTURE
+═══════════════════════════════════════════════════════════
+
+ONBOARDING ANSWERS
+    │
+    ├──► GP ID=15 (Profile Summary) ─────────────────────────┐
+    │    Input: {gender, age, profile_extra,                  │
+    │            onboarding_answers, clothing_styles}          │
+    │    Output: profile_summary JSON                          │
+    │                                                          │
+    └──► sphere Q1-Q3 answers ──────────────────────────────►│
+                                                              │
+                                          ┌───────────────────▼────────────┐
+                                          │        GP ID=1                 │
+                                          │   SPHERE SELECTOR              │
+                                          │   three_angles_prompt          │
+                                          │   7688 chars                   │
+                                          │   Output: clothing_style +     │
+                                          │   3 angle types                │
+                                          └───────────┬────────────────────┘
+                                                      │
+    ┌─────────────────────────────────────────────────▼──────────────────┐
+    │                    GP ID=11                                        │
+    │              SCENE SYSTEM PROMPT                                   │
+    │              9707 chars                                            │
+    │              Input: {count}, sphere_metaprompt, user data         │
+    │              Output: {count} scene descriptions                    │
+    └───────────────────────────┬────────────────────────────────────────┘
+                                │  For each sphere:
+    ┌───────────────────────────▼────────────────────────────────────────┐
+    │                 SPHERE METAPROMPT                                  │
+    │                                                                    │
+    │  self (1) ────── GP ID=2  ──── 10 956 chars  ✅ correct           │
+    │  resources (2) ── GP ID=3  ──── 8 282 chars  ✅ correct           │
+    │  realization (3) GP ID=4  ─── 26 142 chars  ✅ correct           │
+    │  love (4) ─────── GP ID=5  ─── 11 368 chars  ✅ correct           │
+    │  home (5) ─────── GP ID=6  ─── 10 954 chars  ✅ correct           │
+    │  children (6) ─── GP ID=7  ─── 11 654 chars  🔴 WRONG SPHERE     │
+    │  creativity (7) ─ GP ID=8  ─── 26 752 chars  🔴 WRONG SPHERE     │
+    │  wisdom (8) ───── GP ID=9  ─── 15 524 chars  🔴 WRONG SPHERE     │
+    │  freedom (9) ──── GP ID=10 ─── 26 172 chars  🔴 WRONG SPHERE     │
+    │  environment (10) GP ID=32 ─── 26 172 chars  🔴 DUPLICATE ID=10  │
+    │                                                                    │
+    └───────────────────────────┬────────────────────────────────────────┘
+                                │
+    ┌───────────────────────────▼────────────────────────────────────────┐
+    │                    GP ID=12                                        │
+    │             IMAGE INSTRUCTIONS                                     │
+    │             3345 chars (fixed suffix)                              │
+    │             Visual Realism + Emotional Amplification               │
+    │             Identity Continuity + Identity Refinement              │
+    └───────────────────────────┬────────────────────────────────────────┘
+                                │
+                       FAL.ai generation
+                                │
+                (User taps &quot;Ещё кадр&quot;)
+                                │
+    ┌───────────────────────────▼────────────────────────────────────────┐
+    │                    GP ID=20                                        │
+    │             PHOTO SESSION / Narrative Continuity                   │
+    │             11 117 chars                                           │
+    │             Input: scene_description, sphere, profile,            │
+    │             previous iterations                                    │
+    │             🔴 {scene_description} not resolving (Denis bug)      │
+    └────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="112-intended-vs-actual-sphere-prompt-mapping">11.2 Intended vs. Actual Sphere Prompt Mapping</h3>
+<pre><code>INTENDED ASSIGNMENT           ACTUAL ASSIGNMENT
+═══════════════════════════   ═══════════════════════════════════════════
+sphere=children  → &quot;legacy&quot;  sphere=children  → &quot;creation/novelty&quot; 🔴
+sphere=creativity → &quot;making&quot;  sphere=creativity → &quot;wisdom/knowledge&quot; 🔴
+sphere=wisdom    → &quot;depth&quot;   sphere=wisdom    → &quot;freedom/travel&quot; 🔴
+sphere=freedom   → &quot;scale&quot;   sphere=freedom   → &quot;social environment&quot; 🔴
+sphere=environ.  → &quot;circle&quot;  sphere=environ.  → &quot;social environment&quot; 🔴 (=freedom)
+</code></pre>
+<h3 id="113-data-quality-matrix">11.3 Data Quality Matrix</h3>
+<table>
+<thead>
+<tr>
+<th>Data Type</th>
+<th>Status</th>
+<th>Source</th>
+<th>Quality</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sphere list</td>
+<td>✅ Complete</td>
+<td>/admin/spheres</td>
+<td>Full</td>
+</tr>
+<tr>
+<td>GP prompts (sphere)</td>
+<td>✅ Complete</td>
+<td>/admin/generation-prompts</td>
+<td>Full text</td>
+</tr>
+<tr>
+<td>GP prompts (system)</td>
+<td>✅ Complete</td>
+<td>/admin/generation-prompts</td>
+<td>Full text</td>
+</tr>
+<tr>
+<td>Sphere questionnaires</td>
+<td>⚠️ Partial</td>
+<td>/admin/spheres/1/edit</td>
+<td>Only sphere 1 full</td>
+</tr>
+<tr>
+<td>Production generations</td>
+<td>⚠️ Partial</td>
+<td>vault/user-monad</td>
+<td>Spheres 1 + 9 only</td>
+</tr>
+<tr>
+<td>Image outputs</td>
+<td>⚠️ Partial</td>
+<td>Yandex Object Storage</td>
+<td>Spheres 1 + 9 only</td>
+</tr>
+<tr>
+<td>profile_summary errors</td>
+<td>✅ Documented</td>
+<td>admin/users/7267</td>
+<td>Test user</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="appendix-full-generation-prompt-texts">APPENDIX: FULL GENERATION PROMPT TEXTS</h2>
+<h3 id="gp-id2-self-10-956-chars">GP ID=2 (self / Я и состояние) — 10 956 chars</h3>
+<details>
+<summary>Развернуть полный промпт</summary>
+
+
+<pre><code>[Промпт сохранён в: /home/oleg/Monada/.playwright-mcp/gp_id2.json]
+Ключевые секции: ИСТОЧНИК ДАННЫХ / SOURCE OF TRUTH / ГЛАВНЫЙ ПРИНЦИП /
+MOMENT-BASED SCENE GENERATION / ЖИВОЙ МОМЕНТ / STATUS THROUGH NORMALITY /
+DIRECT VISUAL MAPPING / СРЕДА / КОМПОЗИЦИЯ / ОДЕЖДА / ЛИЦО И ИДЕНТИЧНОСТЬ /
+РЕАЛИЗМ / АНТИ-ШАБЛОН / ФИНАЛЬНАЯ ЦЕЛЬ
+</code></pre>
+
+
+</details>
+
+<h3 id="gp-id3-resources-8-282-chars">GP ID=3 (resources / Ресурсы) — 8 282 chars</h3>
+<details>
+<summary>Развернуть полный промпт</summary>
+
+
+<pre><code>[Промпт сохранён в: /home/oleg/Monada/.playwright-mcp/gp_id3.json]
+Ключевые секции: ВХОДНЫЕ ДАННЫЕ / ГЛАВНЫЙ ПРИНЦИП / ФОКУС СФЕРЫ /
+RESOURCE SIGNALS / ОСНОВНЫЕ ПРАВИЛА / ЖИЗНЬ ДОЛЖНА ПРОИСХОДИТЬ /
+МАСШТАБ И ТИП СЦЕНЫ / ПЕРСПЕКТИВА СЦЕНЫ / ВИЗУАЛЬНЫЙ ЯЗЫК СФЕРЫ /
+ВЫХОДНОЙ ФОРМАТ / СТИЛЬ ИЗОБРАЖЕНИЯ / ГЛАВНАЯ ЦЕЛЬ
+🔴 BUG: {profile_summary}×2, {onboarding_answers}×0
+</code></pre>
+
+
+</details>
+
+<h3 id="gp-id11-scene-system-prompt-9-707-chars">GP ID=11 (Scene System Prompt) — 9 707 chars</h3>
+<details>
+<summary>Развернуть полный промпт</summary>
+
+
+<pre><code>[Промпт сохранён в: /home/oleg/Monada/.playwright-mcp/gp_id11.json]
+Роль: Ты — креативный сценарист визуализаций Elyne.
+Генерирует {count} вариантов сцены.
+Строгий JSON output.
+</code></pre>
+
+
+</details>
+
+<h3 id="gp-id12-image-instructions-3-345-chars">GP ID=12 (Image Instructions) — 3 345 chars</h3>
+<details>
+<summary>Развернуть полный промпт</summary>
+
+
+<pre><code>[Промпт сохранён в: /home/oleg/Monada/.playwright-mcp/gp_id12.json]
+Секции: FIRST SCENE VISUAL REALISM / Visual Realism Rules / Human Presence Rules /
+Cinematic Atmosphere Rules / Modern Clothing Rendering / Emotional Visual Amplification /
+Identity Refinement Layer
+</code></pre>
+
+
+</details>
+
+<h3 id="gp-id20-photo-session-narrative-continuity-11-117-chars">GP ID=20 (Photo Session / Narrative Continuity) — 11 117 chars</h3>
+<details>
+<summary>Развернуть полный промпт</summary>
+
+
+<pre><code>[Промпт сохранён в: /home/oleg/Monada/.playwright-mcp/gp_id20.json]
+Секции: Identity Anchor Continuity / Narrative Continuity Engine /
+Story Momentum / World Unfolding Logic / Narrative Events Layer / Curiosity Pull /
+Scene Continuation Modes / User Continuation Input / Mini-Film Feeling /
+Avoid Repetition Across Session
+🔴 BUG: {scene_description} не резолвится → Denis pending
+</code></pre>
+
+
+</details>
+
+<hr>
+<p><em>Подготовлено: 2026-05-15 | Монад | Production architecture snapshot</em><br>
+<em>Источник данных: elyne.online/admin (Playwright/Livewire v3)</em><br>
+<em>Все данные — read-only. Никаких изменений в production не вносилось.</em></p>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
