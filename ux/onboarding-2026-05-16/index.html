@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elyne — Аудит онбординга 2026-05-16</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f0eb; color: #2c2416; }
+  header { background: #2c2416; color: #f5f0eb; padding: 24px 32px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; }
+  header h1 { font-size: 18px; font-weight: 600; letter-spacing: 0.05em; }
+  header span { font-size: 13px; opacity: 0.6; }
+  .summary { background: #fff; border-left: 4px solid #8B6914; padding: 20px 32px; margin: 24px 32px; border-radius: 4px; }
+  .summary h2 { font-size: 14px; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.08em; }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .summary-block { background: #f5f0eb; padding: 14px 16px; border-radius: 4px; }
+  .summary-block h3 { font-size: 12px; font-weight: 700; text-transform: uppercase; color: #8B6914; margin-bottom: 8px; letter-spacing: 0.06em; }
+  .summary-block ul { font-size: 13px; line-height: 1.7; padding-left: 16px; }
+  .summary-block li { margin-bottom: 2px; }
+  .badge-critical { background: #fee2e2; color: #991b1b; border-radius: 3px; padding: 1px 6px; font-size: 11px; font-weight: 700; }
+  .controls { padding: 16px 32px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .controls label { font-size: 13px; font-weight: 600; }
+  .add-btn { background: #8B6914; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600; }
+  .add-btn:hover { background: #6d520f; }
+  .filter-btn { background: white; border: 1px solid #d4c4a0; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600; color: #555; }
+  .filter-btn.active, .filter-btn:hover { background: #2c2416; color: white; border-color: #2c2416; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 24px; padding: 0 32px 48px; }
+  .card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.08); position: relative; transition: box-shadow 0.2s; }
+  .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+  .card.hidden { display: none; }
+  .card-header { padding: 14px 16px 10px; display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+  .card-num { font-size: 11px; font-weight: 700; color: #8B6914; letter-spacing: 0.06em; }
+  .card-title { font-size: 14px; font-weight: 700; color: #2c2416; line-height: 1.3; flex: 1; }
+  .delete-btn { background: none; border: none; cursor: pointer; color: #ccc; font-size: 18px; line-height: 1; padding: 0 2px; flex-shrink: 0; }
+  .delete-btn:hover { color: #e53e3e; }
+  .badges { display: flex; flex-wrap: wrap; gap: 4px; padding: 0 16px 10px; }
+  .badge { font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 3px; }
+  .badge-mandatory { background: #fef3c7; color: #92400e; }
+  .badge-optional { background: #f0fdf4; color: #166534; }
+  .badge-info { background: #eff6ff; color: #1e40af; }
+  .badge-postwow { background: #fdf4ff; color: #7e22ce; }
+  .badge-paywall { background: #fff1f2; color: #9f1239; }
+  .badge-wow { background: #ecfdf5; color: #065f46; }
+  .badge-usedin { background: #fff7ed; color: #9a3412; }
+  .badge-nodata { background: #f1f5f9; color: #475569; }
+  .screenshot { width: 100%; max-height: 340px; object-fit: contain; object-position: top; background: #faf9f7; border-top: 1px solid #eee; border-bottom: 1px solid #eee; cursor: zoom-in; }
+  .screenshot:hover { object-fit: cover; }
+  .card-body { padding: 12px 16px; }
+  .q-text { font-size: 13px; font-weight: 700; color: #2c2416; margin-bottom: 6px; }
+  .answers { list-style: none; }
+  .answers li { font-size: 12px; color: #555; padding: 2px 0; padding-left: 12px; position: relative; line-height: 1.4; }
+  .answers li::before { content: '·'; position: absolute; left: 0; color: #8B6914; }
+  .note { font-size: 12px; color: #777; background: #f9f6f0; padding: 8px 10px; border-radius: 4px; margin-top: 8px; border-left: 3px solid #d4c4a0; line-height: 1.5; }
+  .note.warn { border-left-color: #f59e0b; background: #fffbeb; color: #78350f; }
+  .note.crit { border-left-color: #ef4444; background: #fef2f2; color: #7f1d1d; }
+  .section-title { padding: 8px 32px 0; font-size: 11px; font-weight: 700; text-transform: uppercase; color: #8B6914; letter-spacing: 0.1em; }
+
+  /* Lightbox */
+  .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 90vw; max-height: 90vh; object-fit: contain; border-radius: 4px; }
+  .lightbox-close { position: fixed; top: 20px; right: 24px; color: white; font-size: 32px; cursor: pointer; line-height: 1; z-index: 1001; }
+
+  /* Upload zone */
+  .upload-zone { border: 2px dashed #d4c4a0; border-radius: 8px; padding: 24px; text-align: center; color: #8B6914; font-size: 13px; cursor: pointer; background: white; transition: border-color 0.2s; }
+  .upload-zone:hover, .upload-zone.drag { border-color: #8B6914; background: #fdf9f0; }
+  .upload-card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 16px; }
+
+  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; padding: 0 16px 32px; } header, .controls, .summary, .section-title { padding-left: 16px; padding-right: 16px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>ELYNE · Аудит онбординга</h1>
+  <span>2026-05-16 · 23 экрана</span>
+</header>
+
+<!-- SUMMARY -->
+<div class="summary">
+  <h2>Быстрый ответ на ключевые вопросы</h2>
+  <div class="summary-grid">
+
+    <div class="summary-block">
+      <h3>Что используется в первой генерации</h3>
+      <ul>
+        <li><strong>Фото профиля</strong> — identity anchor, обязательно</li>
+        <li><strong>Q3 Стиль одежды</strong> → clothing block в промпте</li>
+        <li><strong>Q2 Среда жизни</strong> → в profile_summary</li>
+        <li><strong>Q1 Что важно</strong> → в profile_summary</li>
+        <li><strong>Q4 Сфера результата</strong> → выбор sphere-промпта</li>
+        <li>Q5–Q10 в первой генерации <strong>не задействованы</strong></li>
+      </ul>
+    </div>
+
+    <div class="summary-block">
+      <h3>Что реально влияет на качество сцены</h3>
+      <ul>
+        <li>Фото (лицо, поза, одежда на фото)</li>
+        <li>Q3 стиль → clothing block (жёстко встроен в код)</li>
+        <li>Какая сфера первой открыта (sphere-промпт)</li>
+        <li>profile_summary — синтез Q1+Q2+Q4 через OpenRouter</li>
+        <li><span class="badge-critical">BUG</span> profile_summary = «Profile ERROR» для тест-аккаунтов (нет onboarding_answers)</li>
+      </ul>
+    </div>
+
+    <div class="summary-block">
+      <h3>Что можно перенести ПОСЛЕ регистрации</h3>
+      <ul>
+        <li><strong>Q6</strong> «Через что нравится проявляться» — не идёт в первую gen</li>
+        <li><strong>Q7</strong> «На каком уровне» — не идёт в первую gen</li>
+        <li><strong>Q8</strong> «Когда люди видят твою жизнь» — не идёт в первую gen</li>
+        <li><strong>Q9</strong> «Что важнее в результате (what-you-need)» — не идёт в первую gen</li>
+        <li><strong>Q10</strong> «Что хочешь усилить» — не идёт в первую gen</li>
+        <li>Affirmation screen — можно убрать или переместить</li>
+      </ul>
+    </div>
+
+    <div class="summary-block">
+      <h3>Paywall & цены (КРИТИЧНО)</h3>
+      <ul>
+        <li><span class="badge-critical">CRITICAL BUG</span> Все цены = 0.00 ₽</li>
+        <li>Стандарт: <strong>0.00₽ · 36 ген</strong></li>
+        <li>VIP: <strong>0.00₽ · 54 ген</strong></li>
+        <li>MVP Тест: <strong>0.00₽ · 54 ген</strong></li>
+        <li>Базовый: <strong>699₽ · 18 ген</strong> (единственный с ценой)</li>
+        <li>Нет описания что входит в тариф</li>
+        <li>Нет бесплатного trial-тарифа явно</li>
+      </ul>
+    </div>
+
+    <div class="summary-block">
+      <h3>Mandatory экраны (без них не пройти)</h3>
+      <ul>
+        <li><strong>Q1</strong> Что сейчас важно — кнопка Далее заблокирована</li>
+        <li><strong>Q2</strong> Среда жизни — заблокирована</li>
+        <li><strong>Q3</strong> Стиль одежды — заблокирована</li>
+        <li><strong>Q4</strong> Сфера результата — заблокирована</li>
+        <li><strong>Фото</strong> — обязательно + чекбокс согласия</li>
+        <li><strong>Регистрация</strong> — email+пароль</li>
+        <li>Q5 feedback, Q6–Q10 — технически нет жёсткого блока</li>
+      </ul>
+    </div>
+
+    <div class="summary-block">
+      <h3>WOW-экран</h3>
+      <ul>
+        <li>URL: /onboarding/7510/generation-loader</li>
+        <li>Заголовок: «Ваш образ»</li>
+        <li>Подпись: сгенерированная фраза («Жизнь в своём ритме»)</li>
+        <li>Кнопки: Перегенерировать · Поделиться · Далее</li>
+        <li>Нет: имя пользователя, прогресс генерации, объяснение что это значит</li>
+        <li>Лоадер: spinning dot без прогресс-бара, «Обычно 15–30 секунд»</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- FILTERS -->
+<div class="controls">
+  <label>Фильтр:</label>
+  <button class="filter-btn active" onclick="filterCards('all', this)">Все (23)</button>
+  <button class="filter-btn" onclick="filterCards('mandatory', this)">Mandatory</button>
+  <button class="filter-btn" onclick="filterCards('question', this)">Вопросы</button>
+  <button class="filter-btn" onclick="filterCards('postwow', this)">Post-WOW</button>
+  <button class="filter-btn" onclick="filterCards('usedin', this)">Влияет на генерацию</button>
+  <button class="filter-btn" onclick="filterCards('candefer', this)">Можно перенести</button>
+
+  <label style="margin-left:auto; cursor:pointer;" for="add-file">
+    <span class="add-btn">+ Добавить скрин</span>
+  </label>
+  <input type="file" id="add-file" accept="image/*" multiple style="display:none" onchange="addScreenshots(this)">
+</div>
+
+<div class="section-title">Экраны онбординга</div>
+
+<div class="grid" id="grid">
+
+  <!-- 01 -->
+  <div class="card" data-tags="info">
+    <div class="card-header">
+      <div>
+        <div class="card-num">01 · hook</div>
+        <div class="card-title">Хук — первый экран</div>
+      </div>
+      <button class="delete-btn" onclick="deleteCard(this)" title="Удалить">×</button>
+    </div>
+    <div class="badges">
+      <span class="badge badge-info">Информационный</span>
+      <span class="badge badge-nodata">Данные не собираются</span>
+    </div>
+    <img class="screenshot" src="01-hook.png" alt="Hook screen" onclick="openLightbox(this.src)">
+    <div class="card-body">
+      <div class="q-text">«Представь жизнь, в которую действительно хочется войти»</div>
+      <div class="note">Единственная кнопка — Продолжить. Нет выбора, нет вопроса. Прогресс-бар пустой (0%).</div>
+    </div>
+  </div>
+
+  <!-- 02 -->
+  <div class="card" data-tags="info">
+    <div class="card-header">
+      <div>
+        <div class="card-num">02 · we-help</div>
+        <div class="card-title">Объяснение продукта</div>
+      </div>
+      <button class="delete-btn" onclick="deleteCard(this)" title="Удалить">×</button>
+    </div>
+    <div class="badges">
+      <span class="badge badge-info">Информационный</span>
+      <span class="badge badge-nodata">Данные не собираются</span>
+    </div>
+    <img class="screenshot" src="02-we-help.png" alt="We help" onclick="openLightbox(this.src)">
+    <div class="card-body">
+      <div class="q-text">«Мы поможем тебе увидеть возможные версии твоей жизни»</div>
+      <div class="q-text" style="font-weight:400; font-size:12px; color:#777;">через ощущения, приоритеты и внутренний фокус</div>
+      <div class="note">Второй подряд информационный экран без интерактива. Дублирует идею первого.</div>
+    </div>
+  </div>
+
+  <!-- 03 -->
+  <div class="card" data-tags="info">
+    <div class="card-header">
+      <div>
+        <div class="card-num">03 · prepared</div>
+        <div class="card-title">Предупреждение о вопросах</div>
+      </div>
+      <button class="delete-btn" onclick="deleteCard(this)" title="Удалить">×</button>
+    </div>
+    <div class="badges">
+      <span class="badge badge-info">Информационный</span>
+      <span class="badge badge-nodata">Данные не собираются</span>
+    </div>
+    <img class="screenshot" src="03-prepared.png" alt="Prepared" onclick="openLightbox(this.src)">
+    <div class="card-body">
+      <div class="q-text">«Ответь на несколько вопросов. Это займёт меньше минуты и повлияет на то, что ты увидишь дальше.»</div>
+      <div class="note warn">3 информационных экрана подряд (01, 02, 03) без единого действия от пользователя — антипаттерн. Рекомендация: объединить в 1 или убрать 02+03.</div>
+    </div>
+  </div>
+
+  <!-- 04 -->
+  <div class="card" data-tags="question mandatory usedin">
+    <div class="card-header">
+      <div>
+        <div class="card-num">04 · recognition / Q1</div>
+        <div class="card-title">Что сейчас важно?</div>
+      </div>
+      <button class="delete-btn" onclick="deleteCard(this)" title="Удалить">×</button>
+    </div>
+    <div class="badges">
+      <span class="badge badge-mandatory">Mandatory</span>
+      <span class="badge badge-usedin">→ profile_summary</span>
+    </div>
+    <img class="screenshot" src="04-recognition-scroll.png" alt="Recognition" onclick="openLightbox(this.src)">
+    <div class="card-body">
+      <div class="q-text">Что для тебя сейчас важно? <span style="color:#8B6914; font-size:11px;">до 3</span></div>
+      <ul class="answers">
+        <li>Быть признанным и увиденным</li>
+        <li>Глубоко понимать себя и свою жизнь</li>
+        <li>Выражать себя и своё творчество</li>
+        <li>Реализовать себя и создать что-то значимое</li>
+        <li>Быть свободным и жить как хочется</li>
+        <li>Чувствовать любовь и близость</li>
+        <li>Выглядеть и ощущаться как лучшая версия себя</li>
+        <li>Влиять и быть значимым</li>
+      </ul>
+      <div class="note">Идёт в profile_summary → влияет на тональность первой сцены.</div>
+    </div>
+  </div>
+
+  <!-- 05 -->
+  <div class="card" data-tags="question mandatory usedin">
+    <div class="card-header">
+      <div>
+        <div class="card-num">05 · environment / Q2</div>
+        <div class="card-title">Среда жизни</div>
+      </div>
+      <button class="delete-btn" onclick="deleteCard(this)" title="Удалить">×</button>
+    </div>
+    <div class="badges">
+      <span class="badge badge-mandatory">Mandatory</span>
+      <span class="badge badge-usedin">→ profile_summary</span>
+    </div>
+    <img class="screenshot" src="05-environment.png" alt="Environment" onclick="openLightbox(this.src)">
+    <div class="card-body">
+      <div class="q-text">В какой среде ты видишь свою жизнь?</div>
+      <ul class="answers">
+        <li>Современный мегаполис</li>
+        <li>Тихий город или пригород</li>
+        <li>Природа</li>
+        <li>Жизнь у моря</li>
+        <li>Свободная жизнь в разных странах</li>
+      </ul>
+      <div class="note">Один из ключевых сигналов для background/location в генерации сцены.</div>
+    </div>
+  </div>
+
+  <!-- 06 -->
+  <div class="card" data-tags="question mandatory usedin">
+    <div class="card-header">
+      <div>
+        <div class="card-num">06 · style-clothes / Q3</div>
+        <div class="card-title">Стиль одежды</div>
+      </div>
+      <button class="delete-btn" onclick="deleteCard(this)" title="Удалить">×</button>
+    </div>
+    <div class="badges">
+      <span class="badge badge-mandatory">Mandatory</span>
+      <span class="badge badge-usedin">→ clothing block (напрямую в промпт)</span>
+    </div>
+    <img class="screenshot" src="06-style-clothes.png" alt="Style clothes" onclick="openLightbox(this.src)">
+    <div class="card-body">
+      <div class="q-text">Какой образ тебе ближе всего? <span style="color:#8B6914; font-size:11px;">[Мужской / Женский]</span></div>
+      <ul class="answers">
+        <li>Old money — тихая роскошь</li>
+        <li>Y2K</li>
+        <li>Boho</li>
+        <li>Sport casual</li>
+        <li>Streetwear</li>
+        <li>Casual</li>
+        <li>Classic</li>
+        <li>Business style — власть через силуэт</li>
+        <li>Glam</li>
+        <li>Romantic / Feminine</li>
+      </ul>
+      <div class="note crit">КРИТИЧНО: выбор стиля идёт напрямую в clothing block FAL-промпта. При Casual+Classic+Boho система не может синтезировать визуальный стиль → Profile ERROR. Допускать мультиселект стилей — баг архитектуры.</div>
+    </div>
+  </div>
+
+  <!-- 07 -->
+  <div class="card" data-tags="question mandatory usedin">
+    <div class="card-header">
+      <div>
+        <div class="card-num">07 · sphere / Q4</div>
+        <div class="card-title">Что важнее в результате</div>
+      </div>
+      <button class="delete-btn" onclick="deleteCard(this)" title="Удалить">×</button>
+    </div>
+    <div class="badges">
+      <span class="badge badge-mandatory">Mandatory</span>
+      <span class="badge badge-usedin">→ выбор sphere-промпта</span>
+    </div>
+    <img class="screenshot" src="07-sphere.png" alt="Sphere" onclick="openLightbox(this.src)">
+    <div class="card-body">
+      <div class="q-text">Что для тебя важнее в результате? <span style="color:#8B6914; font-size:11px;">до 2</span></div>
+      <ul class="answers">
+        <li>Собственное дело</li>
+        <li>Карьера и профессиональный рост</li>
+        <li>Инвестиции и капитал</li>
+        <li>Творчество и личные проекты</li>
+        <li>Свободный образ жизни</li>
+        <li>Влияние и общественная роль</li>
+      </ul>
+      <div class="note">Определяет какой sphere-промпт будет использован в первой генерации. Сильно влияет на тематику сцены.</div>
+    </div>
+  </div>
+
+  <!-- 08 -->
+  <div class="card" data-tags="question mandatory usedin">
+    <div class="card-header">
+      <div>
+        <div class="card-num">08 · photo-upload</div>
+        <div class="card-title">Загрузка фото профиля</div>
+      </div>
+      <button class="delete-btn" onclick="deleteCard(this)" title="Удалить">×</button>
+    </div>
+    <div class="badges">
+      <span class="badge badge-mandatory">Mandatory</span>
+      <span class="badge badge-usedin">→ identity anchor (главный инпут генерации)</span>
+    </div>
+    <img class="screenshot" src="08-photo-upload.png" alt="Photo upload" onclick="openLightbox(this.src)">
+    <div class="card-body">
+      <div class="q-text">Фото профиля</div>
+      <div class="q-text" style="font-weight:400; font-size:12px; color:#555;">Загрузите от 1 до 10 фотографий. Выберите главное фото, нажав на звёздочку.</div>
+      <ul class="answers">
+        <li>Чекбокс: «Я разрешаю использовать мои фотографии для генерации»</li>
+        <li>Без чекбокса → кнопка Далее заблокирована</li>
+      </ul>
+      <div class="note warn">Нет объяснения ЗАЧЕМ нужно фото. По данным UX-аудита ~20% пользователей дропаются именно здесь. Рекомендация: добавить 1 строку «Мы используем фото только для создания твоих сцен».</div>
+    </div>
+  </div>
+
+  <!-- 09 -->
+  <div class="card" data-tags="info">
+    <div class="card-header">
+      <div>
+        <div class="card-num">09 · generation-loader</div>
+        <div class="card-title">Лоадер генерации</div>
+      </div>
+      <button class="delete-btn" onclick="deleteCard(this)" title="Удалить">×</button>
+    </div>
+    <div class="badges">
+      <span class="badge badge-info">Системный экран</span>
+    </div>
+    <img class="screenshot" src="09-generation-loader.png" alt="Loader" onclick="openLightbox(this.src)">
+    <div class="card-body">
+      <div class="q-text">«Ваш образ — ИИ генерирует ваш персонализированный образ на основе коэффициентов профиля»</div>
+      <div class="note warn">Анимация: spinning dot без прогресс-бара. Занимает 15–90 сек. Нет индикатора прогресса (критичный баг UX). Рекомендация: добавить прогресс-бар или текстовые этапы («Анализируем профиль… Создаём сцену…»).</div>
+    </div>
+  </div>
+
+  <!-- 10 -->
+  <div class="card" data-tags="wow">
+    <div class="card-header">
+      <div>
+        <div class="card-num">10 · WOW-экран</div>
+        <div class="card-title">Первая сгенерированная сцена</div>
+      </div>
+      <button class="delete-btn" onclick="deleteCard(this)" title="Удалить">×</button>
+    </div>
+    <div class="badges">
+      <span class="badge badge-wow">WOW-момент</span>
+      <span class="badge badge-info">Кульминация онбординга</span>
+    </div>
+    <img class="screenshot" src="10-wow-screen.png" alt="WOW screen" onclick="openLightbox(this.src)">
+    <div class="card-body">
+      <div class="q-text">«Ваш образ» + динамическая подпись («Жизнь в своём ритме»)</div>
+      <ul class="answers">
+        <li>Кнопка Перегенерировать</li>
+        <li>Кнопка Поделиться</li>
+        <li>Кнопка Далее</li>
+      </ul>
+      <div class="note">Это главный момент продукта. После него идут 9 экранов до оплаты — антикульминация. Рекомендация: сократить post-WOW до 5–6 экранов, убрать информационные.</div>
+    </div>
+  </div>
+
+  <!-- 11 -->
+  <div class="card" data-tags="postwow info">
+    <div class="card-header">
+      <div>
+        <div class="card-num">11 · affirmation</div>
+        <div class="card-title">Аффирмация</div>
+      </div>
+      <button class="delete-btn" onclick="deleteCard(this)" title="Удалить">×</button>
+    </div>
+    <div class="badges">
+      <span class="badge badge-postwow">Post-WOW</span>
+      <span class="badge badge-nodata">Данные не собираются</span>
+    </div>
+    <img class="screenshot" src="11-affirmation.png" alt="Affirmation" onclick="openLightbox(this.src)">
+    <div class="card-body">
+      <div class="q-text">«Я узнаю себя в этом моменте, и мне разрешено просто быть здесь.»</div>
+      <ul class="answers">
+        <li>Кнопка Скачать</li>
+        <li>Кнопка Поделиться</li>
+      </ul>
+      <div class="note crit">BRAND VIOLATION: слово «аффирмация» запрещено в Elyne. Тон manifestation. Рекомендация: переименовать в «Твой момент» или убрать экран — он разрывает поток к оплате.</div>
+    </div>
+  </div>
+
+  <!-- 12 -->
+  <div class="card" data-tags="postwow info">
+    <div class="card-header">
+      <div>
+        <div class="card-num">12 · only-one-variant</div>
+        <div class="card-title">«Это только одна версия»</div>
+      </div>
+      <button class="delete-btn" onclick="deleteCard(this)" title="Удалить">×</button>
+    </div>
+    <div class="badges">
+      <span class="badge badge-postwow">Post-WOW</span>
+      <span class="badge badge-info">Информационный</span>
+    </div>
+    <img class="screenshot" src="12-only-one-variant.png" alt="Only one variant" onclick="openLightbox(this.src)">
+    <div class="card-body">
+      <div class="q-text">«Это только одна из возможных версий твоей жизни»</div>
+      <div class="note">Переходный экран без данных. Хорошая идея — плохое место. Может быть встроен в WOW-экран как подпись под изображением.</div>
+    </div>
+  </div>
+
+  <!-- 13 -->
+  <div class="card" data-tags="postwow question candefer">
+    <div class="card-header">
+      <div>
+        <div class="card-num">13 · feedback / Q5</div>
+        <div class="card-title">Что точно про тебя?</div>
+      </div>
+      <button class="delete-btn" onclick="deleteCard(this)" title="Удалить">×</button>
+    </div>
+    <div class="badges">
+      <span class="badge badge-postwow">Post-WOW</span>
+      <span class="badge badge-optional">Можно перенести</span>
+    </div>
+    <img class="screenshot" src="13-feedback.png" alt="Feedback" onclick="openLightbox(this.src)">
+    <div class="card-body">
+      <div class="q-text">Что точно про тебя?</div>
+      <ul class="answers">
+        <li>Вся сцена — это я</li>
+        <li>Общая идея верная, детали уточню</li>
+        <li>Атмосфера попала, но образ не до конца</li>
+        <li>Это не я — попробую другую сцену</li>
+        <li>+ Другое (свой вариант)</li>
+      </ul>
+      <div class="note warn">Это feedback по WOW, но формулировка «Что точно про тебя?» — двусмысленна. Рекомендация заменить на «Это похоже на тебя?» (по мнению 4/5 агентов аудита).</div>
+    </div>
+  </div>
+
+  <!-- 14 -->
+  <div class="card" data-tags="postwow question candefer">
+    <div class="card-header">
+      <div>
+        <div class="card-num">14 · what-deal / Q6</div>
+        <div class="card-title">Через что нравится проявляться</div>
+      </div>
+      <button class="delete-btn" onclick="deleteCard(this)" title="Удалить">×</button>
+    </div>
+    <div class="badges">
+      <span class="badge badge-postwow">Post-WOW</span>
+      <span class="badge badge-optional">Можно перенести в профиль</span>
+      <span class="badge badge-nodata">Не влияет на первую gen</span>
+    </div>
+    <img class="screenshot" src="14-what-deal.png" alt="What deal" onclick="openLightbox(this.src)">
+    <div class="card-body">
+      <div class="q-text">Через что тебе нравится проявляться больше всего? <span style="color:#8B6914; font-size:11px;">до 3</span></div>
+      <ul class="answers">
+        <li>через действия и результат</li>
+        <li>через образ и внешний вид</li>
+        <li>через эмоции и отношения</li>
+        <li>через свободу и движение</li>
+        <li>через влияние на других</li>
+        <li>через творчество и создание</li>
+        <li>через понимание и осознанность</li>
+        <li>через стиль жизни</li>
+      </ul>
+      <div class="note">Ценный профилинг, но не нужен до первой генерации. Перенести в «Настройки профиля» или в дашборд после регистрации.</div>
+    </div>
+  </div>
+
+  <!-- 15 -->
+  <div class="card" data-tags="postwow question candefer">
+    <div class="card-header">
+      <div>
+        <div class="card-num">15 · impact / Q7</div>
+        <div class="card-title">На каком уровне проявляться</div>
+      </div>
+      <button class="delete-btn" onclick="deleteCard(this)" title="Удалить">×</button>
+    </div>
+    <div class="badges">
+      <span class="badge badge-postwow">Post-WOW</span>
+      <span class="badge badge-optional">Можно перенести в профиль</span>
+      <span class="badge badge-nodata">Не влияет на первую gen</span>
+    </div>
+    <img class="screenshot" src="15-impact.png" alt="Impact" onclick="openLightbox(this.src)">
+    <div class="card-body">
+      <div class="q-text">На каком уровне ты хочешь проявлять себя?</div>
+      <ul class="answers">
+        <li>Для себя и близкого круга</li>
+        <li>На уровне своего дела или команды</li>
+        <li>На уровне сообщества</li>
+        <li>На уровне крупных проектов</li>
+        <li>На широком уровне и с большим влиянием</li>
+        <li>Мировой уровень</li>
+      </ul>
+      <div class="note">Не используется в pipeline первой генерации. Перенести в профиль.</div>
+    </div>
+  </div>
+
+  <!-- 16 -->
+  <div class="card" data-tags="postwow info">
+    <div class="card-header">
+      <div>
+        <div class="card-num">16 · we-can-vision</div>
+        <div class="card-title">«Мы можем показать разные сценарии»</div>
+      </div>
+      <button class="delete-btn" onclick="deleteCard(this)" title="Удалить">×</button>
+    </div>
+    <div class="badges">
+      <span class="badge badge-postwow">Post-WOW</span>
+      <span class="badge badge-info">Информационный</span>
+    </div>
+    <img class="screenshot" src="16-we-can-vision.png" alt="We can vision" onclick="openLightbox(this.src)">
+    <div class="card-body">
+      <div class="q-text">«Мы можем показать тебе разные сценарии: разные уровни · разные направления · разные версии тебя»</div>
+      <div class="note">Продающий экран, по сути pitch для paywall. Логика правильная — место неправильное (7-й экран после WOW). Перенести ближе к paywall.</div>
+    </div>
+  </div>
+
+  <!-- 16b -->
+  <div class="card" data-tags="postwow question candefer">
+    <div class="card-header">
+      <div>
+        <div class="card-num">16b · first-impression / Q8</div>
+        <div class="card-title">Что должно ощущаться первым</div>
+      </div>
+      <button class="delete-btn" onclick="deleteCard(this)" title="Удалить">×</button>
+    </div>
+    <div class="badges">
+      <span class="badge badge-postwow">Post-WOW</span>
+      <span class="badge badge-optional">Можно перенести в профиль</span>
+      <span class="badge badge-nodata">Не влияет на первую gen</span>
+    </div>
+    <img class="screenshot" src="16b-first-impression.png" alt="First impression" onclick="openLightbox(this.src)">
+    <div class="card-body">
+      <div class="q-text">Когда люди видят твою жизнь, что должно ощущаться первым? <span style="color:#8B6914; font-size:11px;">до 3</span></div>
+      <ul class="answers">
+        <li>вау</li>
+        <li>масштаб</li>
+        <li>свобода</li>
+        <li>красота</li>
+        <li>легкость</li>
+        <li>глубина</li>
+        <li>тепло</li>
+        <li>стиль</li>
+        <li>сила</li>
+      </ul>
+      <div class="note">Хороший профилинговый вопрос для persona refinement, но не нужен до регистрации.</div>
+    </div>
+  </div>
+
+  <!-- 16c -->
+  <div class="card" data-tags="postwow question candefer">
+    <div class="card-header">
+      <div>
+        <div class="card-num">16c · what-you-need / Q9</div>
+        <div class="card-title">Что важнее в результате (детально)</div>
+      </div>
+      <button class="delete-btn" onclick="deleteCard(this)" title="Удалить">×</button>
+    </div>
+    <div class="badges">
+      <span class="badge badge-postwow">Post-WOW</span>
+      <span class="badge badge-optional">Можно перенести в профиль</span>
+      <span class="badge badge-nodata">Не влияет на первую gen</span>
+    </div>
+    <img class="screenshot" src="16c-what-you-need.png" alt="What you need" onclick="openLightbox(this.src)">
+    <div class="card-body">
+      <div class="q-text">Что для тебя важнее в результате?</div>
+      <ul class="answers">
+        <li>чтобы это было максимально похоже на меня</li>
+        <li>чтобы это была моя более сильная версия</li>
+        <li>чтобы это выглядело эстетично и вау</li>
+        <li>чтобы это вдохновляло меня на новый уровень</li>
+      </ul>
+      <div class="note warn">Семантически дублирует Q7 sphere (07). Юзер видит похожий вопрос второй раз — воспринимается как баг.</div>
+    </div>
+  </div>
+
+  <!-- 16d -->
+  <div class="card" data-tags="postwow question candefer">
+    <div class="card-header">
+      <div>
+        <div class="card-num">16d · want-enhance / Q10</div>
+        <div class="card-title">Что хочешь усилить в жизни</div>
+      </div>
+      <button class="delete-btn" onclick="deleteCard(this)" title="Удалить">×</button>
+    </div>
+    <div class="badges">
+      <span class="badge badge-postwow">Post-WOW</span>
+      <span class="badge badge-optional">Можно перенести в профиль</span>
+      <span class="badge badge-nodata">Не влияет на первую gen</span>
+    </div>
+    <img class="screenshot" src="16d-want-enhance.png" alt="Want enhance" onclick="openLightbox(this.src)">
+    <div class="card-body">
+      <div class="q-text">Что ты хочешь усилить в своей жизни?</div>
+      <ul class="answers">
+        <li>деньги</li>
+        <li>свободу</li>
+        <li>здоровье</li>
+        <li>отношения</li>
+        <li>влияние</li>
+        <li>спокойствие</li>
+        <li>реализация</li>
+      </ul>
+      <div class="note">Ценный сигнал для sphere personalization в последующих генерациях. Не нужен до оплаты.</div>
+    </div>
+  </div>
+
+  <!-- 17 -->
+  <div class="card" data-tags="postwow info">
+    <div class="card-header">
+      <div>
+        <div class="card-num">17 · more-one-scene</div>
+        <div class="card-title">«Больше чем одна сцена»</div>
+      </div>
+      <button class="delete-btn" onclick="deleteCard(this)" title="Удалить">×</button>
+    </div>
+    <div class="badges">
+      <span class="badge badge-postwow">Post-WOW</span>
+      <span class="badge badge-info">Информационный</span>
+    </div>
+    <img class="screenshot" src="17-more-one-scene.png" alt="More one scene" onclick="openLightbox(this.src)">
+    <div class="card-body">
+      <div class="q-text">«больше чем одна сцена»</div>
+      <div class="note warn">Только три слова строчными буквами на весь экран — выглядит как незаконченный экран. Нет контекста, нет объяснения. Перед paywall должен быть более убедительный pitch.</div>
+    </div>
+  </div>
+
+  <!-- 18 -->
+  <div class="card" data-tags="mandatory">
+    <div class="card-header">
+      <div>
+        <div class="card-num">18 · registration</div>
+        <div class="card-title">Регистрация</div>
+      </div>
+      <button class="delete-btn" onclick="deleteCard(this)" title="Удалить">×</button>
+    </div>
+    <div class="badges">
+      <span class="badge badge-mandatory">Mandatory</span>
+    </div>
+    <img class="screenshot" src="18-registration.png" alt="Registration" onclick="openLightbox(this.src)">
+    <div class="card-body">
+      <div class="q-text">«Регистрация — Создайте аккаунт, чтобы сохранить результаты.»</div>
+      <ul class="answers">
+        <li>Email (обязательное)</li>
+        <li>Пароль (мин. 8 символов)</li>
+        <li>Подтверждение пароля</li>
+      </ul>
+      <div class="note warn">Нет входа через Apple / Google / Telegram — только email+пароль. Высокий дроп на этом этапе. Рекомендация: добавить хотя бы Google-login. Регистрация происходит ПОСЛЕ 9 post-WOW экранов — нарративная долина.</div>
+    </div>
+  </div>
+
+  <!-- 19 -->
+  <div class="card" data-tags="paywall">
+    <div class="card-header">
+      <div>
+        <div class="card-num">19 · card-type / PAYWALL</div>
+        <div class="card-title">Выбор тарифа</div>
+      </div>
+      <button class="delete-btn" onclick="deleteCard(this)" title="Удалить">×</button>
+    </div>
+    <div class="badges">
+      <span class="badge badge-paywall">Paywall</span>
+    </div>
+    <img class="screenshot" src="19-card-type-full.png" alt="Card type" onclick="openLightbox(this.src)">
+    <div class="card-body">
+      <div class="q-text">«Выберите тариф»</div>
+      <ul class="answers">
+        <li>Стандарт — 0.00₽ · 36 генераций</li>
+        <li>VIP — 0.00₽ · 54 генерации</li>
+        <li>MVP Тест — 0.00₽ · 54 генерации</li>
+        <li>Базовый — 699.00₽ · 18 генераций</li>
+      </ul>
+      <div class="note crit">CRITICAL: 3 тарифа с ценой 0.00₽ — нельзя запускать с такими данными. Нет описания что входит в каждый тариф. Нет визуального выделения рекомендованного тарифа. Нет бесплатного пробного.</div>
+    </div>
+  </div>
+
+  <!-- 20 -->
+  <div class="card" data-tags="paywall">
+    <div class="card-header">
+      <div>
+        <div class="card-num">20 · payment</div>
+        <div class="card-title">Оплата</div>
+      </div>
+      <button class="delete-btn" onclick="deleteCard(this)" title="Удалить">×</button>
+    </div>
+    <div class="badges">
+      <span class="badge badge-paywall">Paywall</span>
+    </div>
+    <img class="screenshot" src="20-payment.png" alt="Payment" onclick="openLightbox(this.src)">
+    <div class="card-body">
+      <div class="q-text">«Оплата — Базовый — 699.00₽»</div>
+      <ul class="answers">
+        <li>Кнопка «Оплатить» (эквайринг)</li>
+        <li>Кнопка «← Назад»</li>
+      </ul>
+      <div class="note">Минималистичный экран. Нет safe-payment badges, нет гарантии возврата, нет описания что получает юзер. После нажатия «Оплатить» — предположительно переход на collage/dashboard.</div>
+    </div>
+  </div>
+
+  <!-- Upload card -->
+  <div class="upload-card" id="upload-card">
+    <label for="add-file" style="cursor:pointer; display:block;">
+      <div class="upload-zone" id="upload-zone">
+        <div style="font-size: 32px; margin-bottom: 8px;">+</div>
+        <div style="font-weight: 600;">Добавить скрин</div>
+        <div style="font-size: 12px; color: #aaa; margin-top: 4px;">Перетащите файл или кликните</div>
+      </div>
+    </label>
+  </div>
+
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <span class="lightbox-close" onclick="closeLightbox()">×</span>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+function deleteCard(btn) {
+  const card = btn.closest('.card');
+  card.style.opacity = '0';
+  card.style.transform = 'scale(0.95)';
+  card.style.transition = 'all 0.2s';
+  setTimeout(() => card.remove(), 200);
+}
+
+function openLightbox(src) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('open');
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLightbox(); });
+
+function filterCards(tag, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.card').forEach(card => {
+    if(card.id === 'upload-card') return;
+    if(tag === 'all') {
+      card.classList.remove('hidden');
+    } else {
+      const tags = card.dataset.tags || '';
+      card.classList.toggle('hidden', !tags.includes(tag));
+    }
+  });
+}
+
+function addScreenshots(input) {
+  const grid = document.getElementById('grid');
+  const uploadCard = document.getElementById('upload-card');
+  [...input.files].forEach(file => {
+    const url = URL.createObjectURL(file);
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.tags = 'added';
+    card.innerHTML = `
+      <div class="card-header">
+        <div>
+          <div class="card-num">+ Добавлено</div>
+          <div class="card-title">${file.name}</div>
+        </div>
+        <button class="delete-btn" onclick="deleteCard(this)" title="Удалить">×</button>
+      </div>
+      <div class="badges"><span class="badge badge-info">Добавлено вручную</span></div>
+      <img class="screenshot" src="${url}" onclick="openLightbox(this.src)">
+      <div class="card-body">
+        <textarea style="width:100%;font-size:12px;border:1px solid #eee;border-radius:4px;padding:8px;min-height:60px;resize:vertical;" placeholder="Добавьте описание экрана..."></textarea>
+      </div>
+    `;
+    grid.insertBefore(card, uploadCard);
+  });
+  input.value = '';
+}
+
+// Drag & drop
+const zone = document.getElementById('upload-zone');
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
+zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
+zone.addEventListener('drop', e => {
+  e.preventDefault();
+  zone.classList.remove('drag');
+  const fakeInput = { files: e.dataTransfer.files };
+  addScreenshots(fakeInput);
+});
+</script>
+</body>
+</html>
