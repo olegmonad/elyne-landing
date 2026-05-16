@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Wish Interpretation — diff-план для Дениса</title>
+<title>Diff-план п.11 Option C (Hybrid)</title>
 <style>
   :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
   body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
@@ -28,18 +28,20 @@
 </style>
 </head>
 <body>
-<h1 id="diff-wish-interpretation-layer-11">Diff-план: Wish Interpretation Layer (п.11)</h1>
-<p><strong>Задача:</strong> пожелание пользователя (&ldquo;Я иду у Кайласа&rdquo;) сейчас идёт напрямую в FAL без обработки OpenRouter. Нужно добавить промежуточный шаг: OpenRouter интерпретирует пожелание → строит сцену → FAL.</p>
-<p><strong>Файлы:</strong> 4 изменения + 1 новый файл.</p>
+<h1 id="diff-wish-interpretation-layer-11-option-c-hybrid">Diff-план: Wish Interpretation Layer (п.11) — Option C (Hybrid)</h1>
+<p><strong>Архитектура:</strong> OpenRouter сначала классифицирует комментарий пользователя.<br>
+- «Локальная правка» (цвет, поза, деталь) → оставляем image-edit по предыдущей сцене (текущее поведение).<br>
+- «Смена контекста» (новое место, другой нарратив) → обогащаем через OpenRouter, генерим заново с selfie.</p>
+<p><strong>Файлы:</strong> 5 изменений + 1 новый файл.</p>
 <hr>
 <h2 id="1-appenumsgenerationprompttypephp">1. <code>app/Enums/GenerationPromptType.php</code> — новый тип промпта</h2>
 <pre><code class="language-diff">     case PhotoSession = 'photo_session';
      case AiQuestionnaireQuestion = 'ai_questionnaire_question';
 +    case WishScene = 'wish_scene';
 </code></pre>
-<p>И в методах <code>label()</code> и <code>description()</code>:</p>
+<p>В методах <code>label()</code> и <code>description()</code>:</p>
 <pre><code class="language-diff">+    self::WishScene =&gt; 'Пожелание (обогащение через OpenRouter)',
-+    self::WishScene =&gt; 'Метапромпт для интерпретации пожелания пользователя в сцену перед отправкой в FAL.',
++    self::WishScene =&gt; 'Метапромпт для обогащения пожелания-смены-контекста перед отправкой в FAL.',
 </code></pre>
 <hr>
 <h2 id="2-admin-elyneonlineadmingeneration-prompts-create">2. Новый промпт в admin (<code>elyne.online/admin/generation-prompts → Create</code>)</h2>
@@ -53,7 +55,7 @@
 Его текущая сцена:
 {original_scene}
 
-Его пожелание:
+Его пожелание (смена контекста):
 {user_wish}
 
 Профиль пользователя:
@@ -63,27 +65,32 @@
 {onboarding_answers}
 
 == ЗАДАЧА ==
-Возьми пожелание пользователя как direction signal.
-НЕ используй его буквально.
-Встрой пожелание в существующую нарративную линию сцены.
-
-Сохрани:
-- идентичность и визуальный стиль человека (из профиля);
-- эмоциональную тональность сферы;
-- continuity среды и времени суток.
-
-Построй одну cinematic сцену, которая:
+Пожелание пользователя — это direction signal, не буквальная инструкция.
+Построй новую cinematic сцену, которая:
 1. Воплощает суть пожелания (не букву);
-2. Продолжает жизнь человека в этой сфере;
-3. Ощущается как &quot;жизнь в которую хочется войти&quot;.
+2. Сохраняет идентичность и стиль человека из профиля;
+3. Держит эмоциональную тональность сферы;
+4. Ощущается как &quot;жизнь в которую хочется войти&quot;.
+
+Описывай локацию, свет, одежду, время суток ЯВНО.
+Верни самодостаточный FAL-промпт.
 
 КРИТИЧНО: верни строго JSON БЕЗ markdown.
 Схема: { &quot;detailed_description&quot;: &quot;...&quot; }
 </code></pre>
 <hr>
-<h2 id="3-appcontractstextaiserviceinterfacephp">3. <code>app/Contracts/TextAiServiceInterface.php</code> — новый метод</h2>
+<h2 id="3-appcontractstextaiserviceinterfacephp">3. <code>app/Contracts/TextAiServiceInterface.php</code> — два новых метода</h2>
 <pre><code class="language-diff">+    /**
-+     * Interpret a user wish direction signal into a full cinematic scene description.
++     * Classify whether a user comment is a local edit or a context shift.
++     * Returns true for context shift (needs full regen), false for local edit (keep image edit).
++     */
++    public function classifyWishComment(
++        string $userComment,
++        string $currentScene,
++    ): bool;
++
++    /**
++     * Enrich a context-shift wish into a full cinematic scene description.
 +     */
 +    public function generateWishScene(
 +        string $resolvedPrompt,
@@ -92,26 +99,45 @@
 +    ): ?string;
 </code></pre>
 <hr>
-<h2 id="4-appservicesaiopenrouterservicephp">4. <code>app/Services/Ai/OpenRouterService.php</code> — реализация метода</h2>
+<h2 id="4-appservicesaiopenrouterservicephp">4. <code>app/Services/Ai/OpenRouterService.php</code> — две реализации</h2>
 <p>Добавить после <code>generatePhotoSessionScene()</code>:</p>
-<pre><code class="language-php">public function generateWishScene(
+<pre><code class="language-php">public function classifyWishComment(string $userComment, string $currentScene): bool
+{
+    $result = $this-&gt;callJsonStrict(
+        userPrompt: &lt;&lt;&lt;TXT
+        Текущая сцена:
+        {$currentScene}
+
+        Комментарий пользователя:
+        &quot;{$userComment}&quot;
+
+        Задача: определи тип комментария.
+        - LOCAL_EDIT: небольшая правка текущей сцены (цвет, деталь, поза, свет, выражение).
+        - CONTEXT_SHIFT: смена места, нарратива, сценария — принципиально другая сцена.
+
+        Верни строго JSON без markdown: {&quot;type&quot;: &quot;local_edit&quot;} или {&quot;type&quot;: &quot;context_shift&quot;}
+        TXT,
+        maxTokens: 50,
+        maxRetries: 2,
+        validator: fn ($r) =&gt; isset($r['type']) &amp;&amp; in_array($r['type'], ['local_edit', 'context_shift']),
+    );
+
+    return ($result['type'] ?? 'local_edit') === 'context_shift';
+}
+
+public function generateWishScene(
     string $resolvedPrompt,
     string $originalScene,
     string $userWish,
 ): ?string {
     $contextBlock = &lt;&lt;&lt;TXT
-    ============== ТЕКУЩАЯ СЦЕНА (FAL-промпт) ==============
+    ============== ТЕКУЩАЯ СЦЕНА ==============
     {$originalScene}
 
     ============== ПОЖЕЛАНИЕ ПОЛЬЗОВАТЕЛЯ ==============
     {$userWish}
 
-    ============== ИНСТРУКЦИЯ ==============
-    Встрой пожелание в сцену. Не цитируй его буквально.
-    Описывай локацию, свет, одежду, время суток ЯВНО.
-    Верни самодостаточный FAL-промпт.
     ============== МЕТАПРОМПТ ==============
-
 
     TXT;
 
@@ -141,7 +167,6 @@ use App\Models\GenerationPrompt;
 use App\Models\GenerationRequest;
 use App\Models\GenerationResult;
 use App\Models\Sphere;
-use App\Models\UserRelative;
 use App\Services\PromptGenerationService;
 use App\Services\PromptPlaceholderService;
 use Illuminate\Foundation\Queue\Queueable;
@@ -149,14 +174,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Async wish interpretation for sphere regen with user comment.
- *
- * Replaces the direct buildCommentOnlyPrompt() → FAL path (Branch A) in
- * DispatchSpherePhotoAction. Routes wish through OpenRouter first so the
- * &quot;Я иду у Кайласа&quot; style inputs produce a proper cinematic scene instead
- * of a raw literal prompt.
- *
- * Flow: wish + iter=1 scene + profile → OpenRouter → enriched scene → FAL
+ * Option C (Hybrid): classify user comment, then route:
+ *  - local edit  → simple prompt + image-edit over previous scene (fast)
+ *  - context shift → OpenRouter enrichment + text-to-image with selfie (full regen)
  */
 class InterpretWishAndGenerateJob implements ShouldQueue
 {
@@ -168,6 +188,7 @@ class InterpretWishAndGenerateJob implements ShouldQueue
     public function __construct(
         public readonly int $generationRequestId,
         public readonly int $generationResultId,
+        public readonly ?string $baseGenerationUrl,
     ) {}
 
     public function handle(
@@ -187,11 +208,53 @@ class InterpretWishAndGenerateJob implements ShouldQueue
             return;
         }
 
-        $userScene = $request-&gt;userScene;
-        $card = $userScene-&gt;card;
-        $sphere = Sphere::where('field_number', $userScene-&gt;field_number)-&gt;first();
+        $userScene  = $request-&gt;userScene;
+        $card       = $userScene-&gt;card;
+        $userComment = $request-&gt;user_comment ?? '';
+        $sphere     = Sphere::where('field_number', $userScene-&gt;field_number)-&gt;first();
 
-        // Fetch the wish interpretation prompt from admin
+        // Get iter=1 scene as narrative anchor for classification + enrichment
+        $iter1 = GenerationRequest::where('user_scene_id', $userScene-&gt;id)
+            -&gt;where('iteration', 1)
+            -&gt;first();
+        $originalScene = $iter1?-&gt;final_prompt_text
+            ?? $iter1?-&gt;scene_prompt_text
+            ?? $userScene-&gt;scene?-&gt;detailed_description
+            ?? '';
+
+        // Step 1: Classify comment type
+        $isContextShift = $ai-&gt;classifyWishComment($userComment, $originalScene);
+
+        if (! $isContextShift) {
+            // LOCAL EDIT — keep image-edit path (fast, preserves scene continuity)
+            $simplePrompt = PromptGenerationService::buildCommentOnlyPrompt(
+                $userComment,
+                hasRelatives: false,
+                fieldNumber: $userScene-&gt;field_number,
+                isProfilePhoto: (bool) $userScene-&gt;is_profile_photo,
+            );
+
+            if ($sphere) {
+                $clothingBlock = $placeholderService-&gt;formatChosenClothingStyleBlockForImage($card, $sphere);
+                if ($clothingBlock !== '') {
+                    $simplePrompt .= $clothingBlock;
+                }
+            }
+
+            $request-&gt;update(['final_prompt_text' =&gt; $simplePrompt]);
+
+            GenerateImageJob::dispatch(
+                generationRequestId: $request-&gt;id,
+                generationResultId:  $this-&gt;generationResultId,
+                promptText:          $simplePrompt,
+                userPhotoUrl:        null,                   // image edit, selfie not needed
+                baseGenerationUrl:   $this-&gt;baseGenerationUrl, // edit over previous scene
+            )-&gt;onQueue('images');
+
+            return;
+        }
+
+        // Step 2: CONTEXT SHIFT — enrich wish via OpenRouter, then full regen with selfie
         $wishPrompt = GenerationPrompt::query()
             -&gt;where('type', GenerationPromptType::WishScene-&gt;value)
             -&gt;whereNull('field_number')
@@ -203,25 +266,14 @@ class InterpretWishAndGenerateJob implements ShouldQueue
             return;
         }
 
-        // Get iter=1 scene as narrative anchor
-        $iter1 = GenerationRequest::where('user_scene_id', $userScene-&gt;id)
-            -&gt;where('iteration', 1)
-            -&gt;first();
-        $originalScene = $iter1?-&gt;final_prompt_text
-            ?? $iter1?-&gt;scene_prompt_text
-            ?? $userScene-&gt;scene?-&gt;detailed_description
-            ?? '';
-
-        // Resolve placeholders in the wish prompt
         $resolvedPrompt = $sphere
             ? $placeholderService-&gt;resolveForSphere($wishPrompt-&gt;meta_prompt, $card, $sphere)
             : $placeholderService-&gt;resolve($wishPrompt-&gt;meta_prompt, $card);
 
-        // Call OpenRouter
         $enrichedScene = $ai-&gt;generateWishScene(
             resolvedPrompt: $resolvedPrompt,
-            originalScene: $originalScene,
-            userWish: $request-&gt;user_comment ?? '',
+            originalScene:  $originalScene,
+            userWish:       $userComment,
         );
 
         if ($enrichedScene === null) {
@@ -233,10 +285,7 @@ class InterpretWishAndGenerateJob implements ShouldQueue
         }
 
         // Build final FAL prompt
-        $finalPrompt = $enrichedScene;
-
-        // Append image instructions + clothing block (same as DispatchSpherePhotoAction branch C)
-        $finalPrompt .= &quot;\n\n&quot; . PromptGenerationService::getImageInstructions();
+        $finalPrompt = $enrichedScene . &quot;\n\n&quot; . PromptGenerationService::getImageInstructions();
 
         if ($sphere) {
             $clothingBlock = $placeholderService-&gt;formatChosenClothingStyleBlockForImage($card, $sphere);
@@ -245,19 +294,19 @@ class InterpretWishAndGenerateJob implements ShouldQueue
             }
         }
 
-        // Persist
         $request-&gt;update([
             'scene_prompt_text' =&gt; $enrichedScene,
             'meta_prompt_text'  =&gt; $resolvedPrompt,
             'final_prompt_text' =&gt; $finalPrompt,
         ]);
 
-        // Dispatch image generation
+        // Text-to-image with user selfie as source (no base scene)
         GenerateImageJob::dispatch(
             generationRequestId: $request-&gt;id,
-            generationResultId: $this-&gt;generationResultId,
-            promptText: $finalPrompt,
-            userPhotoUrl: $card-&gt;photo_url,
+            generationResultId:  $this-&gt;generationResultId,
+            promptText:          $finalPrompt,
+            userPhotoUrl:        $card-&gt;photo_url, // selfie as source
+            baseGenerationUrl:   null,              // fresh generation, not image-edit
         )-&gt;onQueue('images');
     }
 
@@ -265,7 +314,7 @@ class InterpretWishAndGenerateJob implements ShouldQueue
     {
         Log::error('InterpretWishAndGenerateJob: job failed', [
             'request_id' =&gt; $this-&gt;generationRequestId,
-            'error' =&gt; $exception?-&gt;getMessage(),
+            'error'      =&gt; $exception?-&gt;getMessage(),
         ]);
         $this-&gt;markFailed();
     }
@@ -279,9 +328,9 @@ class InterpretWishAndGenerateJob implements ShouldQueue
 </code></pre>
 <hr>
 <h2 id="6-appactionsspheresdispatchspherephotoactionphp-branch-a">6. <code>app/Actions/Spheres/DispatchSpherePhotoAction.php</code> — изменение Branch A</h2>
-<p>Найти блок (примерно строки 170–195):</p>
+<p>Найти блок перегенерации с комментарием и диспатч <code>GenerateImageJob</code> внутри него.</p>
+<p>Было:</p>
 <pre><code class="language-php">if ($isPreviousGeneration &amp;&amp; $userComment) {
-    // Force-empty relatives in comment-refinement regen.
     $relativeIds = [];
     $jobPromptText = PromptGenerationService::buildCommentOnlyPrompt(
         $userComment,
@@ -292,41 +341,46 @@ class InterpretWishAndGenerateJob implements ShouldQueue
     if ($clothingBlock !== '') {
         $jobPromptText .= $clothingBlock;
     }
+}
+
+// ...
+
+GenerateImageJob::dispatch(
+    generationRequestId: $generationRequest-&gt;id,
+    generationResultId:  $processingResult-&gt;id,
+    promptText:          $jobPromptText,
+    userPhotoUrl:        $useBaseAsSource ? null : $card-&gt;photo_url,
+    referencePhotoUrl:   $referencePhotoUrl,
+    baseGenerationUrl:   $useBaseAsSource ? $baseGenerationUrl : null,
+    relativePhotoUrls:   $relativeData['photoUrls'],
+)-&gt;onQueue('images')-&gt;afterCommit();
 </code></pre>
-<p>Заменить на:</p>
+<p>Стало:</p>
 <pre><code class="language-php">if ($isPreviousGeneration &amp;&amp; $userComment) {
-    // Wish interpretation branch: route through OpenRouter for scene enrichment.
-    // Leave final_prompt_text empty — InterpretWishAndGenerateJob will fill it.
+    // Hybrid wish routing — classification happens async in the job.
     $relativeIds = [];
-    $jobPromptText = ''; // populated async by InterpretWishAndGenerateJob
-</code></pre>
-<p>И в конце блока найти вызов <code>GenerateImageJob::dispatch(...)</code>. Его нужно заменить условным вызовом:</p>
-<pre><code class="language-diff">-GenerateImageJob::dispatch(
--    generationRequestId: $generationRequest-&gt;id,
--    generationResultId:  $processingResult-&gt;id,
--    promptText:          $jobPromptText,
--    userPhotoUrl:        $useBaseAsSource ? null : $card-&gt;photo_url,
--    referencePhotoUrl:   $referencePhotoUrl,
--    baseGenerationUrl:   $useBaseAsSource ? $baseGenerationUrl : null,
--    relativePhotoUrls:   $relativeData['photoUrls'],
--)-&gt;onQueue('images')-&gt;afterCommit();
-+if ($isPreviousGeneration &amp;&amp; $userComment) {
-+    // Wish branch: interpret via OpenRouter first, then image.
-+    \App\Jobs\InterpretWishAndGenerateJob::dispatch(
-+        $generationRequest-&gt;id,
-+        $processingResult-&gt;id,
-+    )-&gt;onQueue('images')-&gt;afterCommit();
-+} else {
-+    GenerateImageJob::dispatch(
-+        generationRequestId: $generationRequest-&gt;id,
-+        generationResultId:  $processingResult-&gt;id,
-+        promptText:          $jobPromptText,
-+        userPhotoUrl:        $useBaseAsSource ? null : $card-&gt;photo_url,
-+        referencePhotoUrl:   $referencePhotoUrl,
-+        baseGenerationUrl:   $useBaseAsSource ? $baseGenerationUrl : null,
-+        relativePhotoUrls:   $relativeData['photoUrls'],
-+    )-&gt;onQueue('images')-&gt;afterCommit();
-+}
+    $jobPromptText = ''; // filled by InterpretWishAndGenerateJob
+}
+
+// ...
+
+if ($isPreviousGeneration &amp;&amp; $userComment) {
+    \App\Jobs\InterpretWishAndGenerateJob::dispatch(
+        $generationRequest-&gt;id,
+        $processingResult-&gt;id,
+        $useBaseAsSource ? $baseGenerationUrl : null, // pass previous scene URL for local-edit path
+    )-&gt;onQueue('images')-&gt;afterCommit();
+} else {
+    GenerateImageJob::dispatch(
+        generationRequestId: $generationRequest-&gt;id,
+        generationResultId:  $processingResult-&gt;id,
+        promptText:          $jobPromptText,
+        userPhotoUrl:        $useBaseAsSource ? null : $card-&gt;photo_url,
+        referencePhotoUrl:   $referencePhotoUrl,
+        baseGenerationUrl:   $useBaseAsSource ? $baseGenerationUrl : null,
+        relativePhotoUrls:   $relativeData['photoUrls'],
+    )-&gt;onQueue('images')-&gt;afterCommit();
+}
 </code></pre>
 <hr>
 <h2 id="_1">Итого</h2>
@@ -344,15 +398,15 @@ class InterpretWishAndGenerateJob implements ShouldQueue
 </tr>
 <tr>
 <td><code>app/Contracts/TextAiServiceInterface.php</code></td>
-<td>+1 метод <code>generateWishScene()</code></td>
+<td>+2 метода: <code>classifyWishComment()</code> + <code>generateWishScene()</code></td>
 </tr>
 <tr>
 <td><code>app/Services/Ai/OpenRouterService.php</code></td>
-<td>+реализация <code>generateWishScene()</code></td>
+<td>+2 реализации</td>
 </tr>
 <tr>
 <td><code>app/Jobs/InterpretWishAndGenerateJob.php</code></td>
-<td>новый файл</td>
+<td>новый файл (classify → route)</td>
 </tr>
 <tr>
 <td><code>app/Actions/Spheres/DispatchSpherePhotoAction.php</code></td>
@@ -364,13 +418,23 @@ class InterpretWishAndGenerateJob implements ShouldQueue
 </tr>
 </tbody>
 </table>
+<h3 id="routing-job">Логика routing внутри job</h3>
+<pre><code>comment → classifyWishComment()
+   ├─ local_edit  → buildCommentOnlyPrompt() → FAL image-edit (базируется на предыдущей сцене)
+   └─ context_shift → generateWishScene() via OpenRouter → FAL text-to-image (с selfie)
+</code></pre>
+<p><strong>Примеры:</strong>
+- «Сделай волосы темнее» → <code>local_edit</code> → image-edit, быстро
+- «Я иду у Кайласа» → <code>context_shift</code> → OpenRouter обогащает → новая сцена с selfie</p>
 <p><strong>Порядок деплоя:</strong>
 1. Смёрджить код
-2. Создать промпт в admin (тип WishScene)
-3. Протестировать на <code>monad@elyne.online</code> — пожелание &ldquo;Я иду у Кайласа&rdquo; → должен появиться enriched scene_prompt_text в debug</p>
+2. Создать промпт в admin (тип <code>WishScene</code>)
+3. Протестировать на <code>monad@elyne.online</code>:
+   - Пожелание «поменяй цвет платья» → должен получиться image-edit с предыдущей сценой
+   - Пожелание «Я иду у Кайласа» → должен появиться <code>scene_prompt_text</code> в debug + свежая генерация с selfie</p>
 <p><strong>Оценка:</strong> ~3-4 часа работы Дениса.</p>
 <hr>
-<p><em>Подготовлено Монадом 2026-05-16 для Дениса.</em></p>
+<p><em>Подготовлено Монадом 2026-05-16 для Дениса. Option C (Hybrid).</em></p>
 <div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
 </body>
 </html>
