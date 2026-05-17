@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elyne — Audit ID=15 profile_summary_system fix</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="audit-generation_prompt-id15-profile_summary_system">Audit: generation_prompt ID=15 (profile_summary_system)</h1>
+<h2 id="2026-05-17">Правка от 2026-05-17</h2>
+<hr>
+<h2 id="_1">ЗАДАЧА</h2>
+<p>Добавить 5 placeholders в начало meta_prompt (ID=15), чтобы код мог подставлять данные пользователя.<br>
+Без этих placeholders profile_summary = ERROR для всех пользователей.</p>
+<p><strong>5 поддерживаемых placeholders:</strong> <code>{gender}</code>, <code>{age}</code>, <code>{profile_extra}</code>, <code>{onboarding_answers}</code>, <code>{clothing_styles}</code></p>
+<hr>
+<h2 id="before-">BEFORE — мета-промпт ДО правки</h2>
+<p><strong>Длина:</strong> 7924 символа<br>
+<strong>Placeholders найдены:</strong> НЕТ (ни одного из 5)</p>
+<pre><code>---
+
+## FIRST SCENE IDENTITY CONTINUITY ADDITIONS
+
+Character Profile должен описывать одного устойчивого человека.
+
+Не просто суммируй ответы пользователя. Определи устойчивое ядро личности, которое будет сохраняться в первой сцене и во всех последующих сценах.
+
+Профиль должен фиксировать:
+- внутренние мотивы;
+- эмоциональное направление;
+- способ проявления;
+- визуальную идентичность;
+- уровень жизни;
+- тип среды;
+- социальный сигнал;
+- Key Answer Locks.
+
+## Key Answer Locks
+
+Key Answer Locks — это ответы пользователя, которые ОБЯЗАНЫ проявиться в первой сцене.
+
+В этот блок должны попасть:
+- главный приоритет пользователя;
+- желаемая среда;
+- желаемый уровень жизни;
+- способ проявления;
+- визуальный образ;
+- социальный сигнал;
+- режим генерации;
+- фокус усиления.
+
+Если сцена не содержит хотя бы 3 Key Answer Locks, такая сцена считается слабой и должна быть пересобрана на следующем этапе.
+
+## No Synthetic Personality
+
+Не придумывай отсутствующие данные.
+
+Запрещено:
+- выдумывать психологические травмы;
+- ставить диагнозы;
+- придумывать скрытые мотивации;
+- создавать fake archetype;
+- делать generic self-help profile.
+
+Все выводы должны вытекать только из реальных ответов пользователя.
+
+
+## Visual Identity Interpretation
+
+Выбранные стили одежды не являются прямым списком вещей, которые нужно надеть на пользователя.
+
+Интерпретируй выбранные стили как визуальное направление личности:
+- какой человек по ощущению;
+- насколько он собранный или расслабленный;
+- насколько он современный;
+- насколько образ смелый или сдержанный;
+- как стиль связан с его жизненным вектором;
+- какие элементы стиля являются главными, а какие второстепенными.
+
+В поле Visual Identity опиши не только предметы одежды, а способ визуального присутствия человека.
+
+Если выбрано несколько стилей, не перечисляй их механически. Собери общий визуальный вектор.
+
+Пример хорошей интерпретации:
+«Современный городской образ с расслабленной уверенностью: чистые формы, актуальные пропорции, качественные материалы, минимум демонстрации, но заметное чувство вкуса.»
+
+Пример плохой интерпретации:
+«Носит кашемировый свитер, бежевые брюки и лоферы.»
+
+## Visual Identity Weight Control
+
+Visual Identity должна описывать способ визуального присутствия человека, но не должна подменять его жизненный сценарий.
+
+Стиль одежды может помогать понять:
+- степень собранности или расслабленности;
+- мягкость или выразительность;
+- отношение к телу;
+- отношение к вниманию;
+- уровень формальности;
+- визуальный вкус;
+- тип эстетической чувствительности.
+
+Стиль одежды НЕ должен использоваться для вывода:
+- профессии;
+- жизненной сферы;
+- карьерной роли;
+- места жизни;
+- уровня дохода;
+- психологического архетипа без поддержки ответами;
+- конкретного сценария сцены.
+
+Если пользователь выбрал несколько стилей, опиши общий визуальный вектор, но не превращай его в список вещей или в fashion-hybrid.
+
+---
+
+## Controlled Interpretation Layer
+
+Система МОЖЕТ интерпретировать визуальные и поведенческие паттерны пользователя.
+
+Это НЕ считается synthetic personality.
+
+Разрешено:
+- интерпретировать визуальные сигналы из выбранных стилей;
+- интерпретировать поведенческие паттерны из приоритетов и ответов;
+- определять dominant style среди нескольких выбранных;
+- определять compatible secondary influences;
+- строить coherent visual identity на основе реальных данных;
+- агрегировать ответы пользователя в единый жизненный вектор.
+
+Запрещено только:
+- выдумывать травмы или биографию;
+- выдумывать скрытые психологические мотивации;
+- создавать психологические архетипы без явных сигналов;
+- создавать fake personality.
+
+Visual synthesis — допустим.
+Behavioral synthesis — допустим.
+Environmental synthesis — допустим.
+
+## Composite Style Resolution System
+
+Если пользователь выбрал несколько стилей одежды, НЕ делай:
+- механическое перечисление стилей;
+- hybrid fashion collage;
+- конфликтующий визуальный микс.
+
+Вместо этого:
+1. Определи dominant style (наиболее сильный сигнал).
+2. Определи compatible secondary influences (как они усиливают или смягчают dominant).
+3. Выведи общий visual direction — единый визуальный вектор.
+4. Опиши social signal, silhouette behavior, lifestyle expression.
+
+Secondary styles влияют мягко — они не обязаны визуально присутствовать напрямую.
+
+Примеры резолюции:
+- Casual + Classic + Boho → relaxed cultured aesthetic → modern relaxed sophistication → natural textures without costume feeling
+- Sporty + Minimalist → clean athletic ease → understated vitality → functional confidence
+
+Это interpretation. Это НЕ synthetic personality.
+
+## Profile ERROR Raw Identity Fallback
+
+КРИТИЧНО: если profile_summary generation завершился с ошибкой — НЕ использовать sphere defaults как primary identity.
+
+Вместо этого применяй Raw Identity Fallback — строй сцену напрямую из:
+- onboarding answers пользователя;
+- выбранных стилей одежды;
+- приоритетов (что важно сейчас);
+- эмоциональных направлений (что хочет чувствовать);
+- предпочитаемой среды жизни;
+- модели проявления;
+- freedom signals;
+- lifestyle signals.
+
+Даже partial profile лучше, чем sphere default identity.
+Sphere defaults — крайний случай только при полном отсутствии данных пользователя.
+
+## Style Influence Map
+
+Для каждого выбранного стиля извлекай не список вещей, а визуальные сигналы:
+
+Casual:
+- ease, naturalness, comfort;
+- movement, low performativity;
+- relaxed body presence.
+
+Classic:
+- structure, polish, maturity;
+- coherence, visual intentionality;
+- quiet authority.
+
+Boho:
+- softness, texture, natural materials;
+- warmth, freedom feeling;
+- tactile presence.
+
+Sport / Active:
+- energy, mobility, confidence;
+- functional aesthetic;
+- physical vitality.
+
+После извлечения сигналов — собери общий visual direction.
+
+Пример:
+Casual + Classic + Boho
+→ relaxed modern sophistication;
+→ natural warmth with clean proportions;
+→ soft texture, mature but not corporate;
+→ free but not costume-boho.
+
+## Contextual Style Weighting
+
+Не все стили проявляются в каждой сцене одинаково. В зависимости от сферы:
+
+Свобода / движение / путешествие:
+- усиливай ease, movement, naturalness;
+- допускай мягкую фактурность;
+- ослабляй classic rigidity.
+
+Реализация / публичное присутствие / влияние:
+- усиливай structure, polish, maturity;
+- сохраняй relaxed human presence;
+- не превращай в corporate executive.
+
+Дом / интимность / отношения:
+- усиливай softness, warmth, tactile materials;
+- избегай нарядности ради кадра.
+
+Ресурсы / достаток:
+- усиливай quality, polish, ease, quiet confidence;
+- избегай luxury flex, crypto cliché.
+
+Творчество:
+- допускай больше texture, individuality, relaxed asymmetry;
+- не делать costume artist stereotype.
+
+Одна сцена не обязана показывать все стили.
+Она должна показывать цельный вкус одного человека в конкретном жизненном контексте.
+
+## Visual Identity Output Format
+
+В profile_summary всегда включай явный блок:
+
+Visual Identity:
+- dominant visual direction: [описание]
+- secondary influences: [описание]
+- contextual style behavior: [как меняется по сферам]
+- avoid: [что запрещено в этом образе]
+
+Пример:
+Visual Identity:
+- dominant visual direction: relaxed modern sophistication
+- secondary influences: classic structure, natural tactile warmth
+- contextual style behavior: в движении — расслабленный и мобильный; в реализации — более структурированный и polished; в интимных сценах — мягче и тактильнее
+- avoid: fashion collage, costume boho, corporate stiffness, luxury flex
+
+## Multi-Style Error Prevention
+
+КРИТИЧНО: нельзя возвращать ERROR только потому, что выбрано несколько стилей.
+
+Если выбрано несколько стилей:
+1. Определи dominant direction.
+2. Остальные — secondary influences.
+3. Укажи conflict risks (если есть).
+4. Опиши contextual usage по сферам.
+
+Ошибка допустима ТОЛЬКО если реально отсутствуют входные данные пользователя.
+
+Конфликт стилей НЕ является отсутствием данных.
+
+Три стиля у пользователя = три визуальных влияния = контекстная система.
+НЕ = synthetic personality.
+НЕ = ERROR.
+</code></pre>
+<hr>
+<h2 id="after-">AFTER — мета-промпт ПОСЛЕ правки</h2>
+<p><strong>Длина:</strong> 8276 символа (+352 символа — ВХОДНЫЕ ДАННЫЕ блок)<br>
+<strong>Дата:</strong> 2026-05-17T12:02+03:00</p>
+<p><strong>Верификация (перезагрузка страницы после save):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Проверка</th>
+<th>Результат</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{gender}</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>{age}</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>{profile_extra}</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>{onboarding_answers}</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>{clothing_styles}</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>## Style Influence Map</code> (B2)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>## Contextual Style Weighting</code> (B2)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>## Visual Identity Output Format</code> (B2)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>## Multi-Style Error Prevention</code> (B2)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>## Controlled Interpretation Layer</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>## Composite Style Resolution System</code></td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Начало нового мета-промпта:</strong></p>
+<pre><code>================================ ВХОДНЫЕ ДАННЫЕ ================================
+Пол пользователя: {gender}
+Возраст / контекст возраста: {age}
+Дополнительный профильный контекст: {profile_extra}
+Ответы пользователя: {onboarding_answers}
+Выбранные стили одежды: {clothing_styles}
+================================ ЗАДАЧА ================================
+
+---
+
+## FIRST SCENE IDENTITY CONTINUITY ADDITIONS
+...
+</code></pre>
+<hr>
+<h2 id="resolved-prompt-monadelyneonline-card_id7271">RESOLVED PROMPT — для monad@elyne.online (card_id=7271)</h2>
+<p><strong>Статус:</strong> Административный refresh через <code>mountTableAction('refreshProfileSummary', '7271')</code> вызван, Livewire вернул success.</p>
+<p><strong>Важная архитектурная деталь:</strong><br>
+Секция &ldquo;Refresh Profile Summary (последний прогон)&rdquo; в admin/users показывает incremental-update prompt (сфер-опросник), НЕ initial profile_summary_system. Это отдельный механизм.</p>
+<p><strong>Данные для monad@elyne.online:</strong>
+- Стили одежды: Casual (Окружение), Boho (Развитие), Classic (Реализация) ✅
+- Onboarding answers: частичные (только 2 сферы из полного онбординга)</p>
+<p><strong>Следствие:</strong> После нашего фикса ID=15, при СЛЕДУЮЩЕЙ генерации initial profile_summary:
+- <code>{gender}</code> → <code>male</code>
+- <code>{clothing_styles}</code> → Casual, Boho, Classic
+- <code>{onboarding_answers}</code> → ответы онбординга (если есть)</p>
+<hr>
+<h2 id="result">RESULT — итог</h2>
+<p><strong>Основной результат:</strong> ✅ <strong>FIX ПРИМЕНЁН</strong></p>
+<ul>
+<li>ID=15 meta_prompt теперь содержит все 5 placeholders</li>
+<li>Все B2 секции сохранены</li>
+<li>Для ЛЮБОГО нового пользователя initial profile_summary теперь получит реальные данные</li>
+<li>Для существующих пользователей требуется ре-генерация (через backend/artisan или новый admin action)</li>
+</ul>
+<p><strong>Корневая причина была:</strong> В meta_prompt отсутствовали placeholder&rsquo;ы — код правильно подставлял данные, но LLM их не получал, всегда отвечал &ldquo;нет данных&rdquo;</p>
+<p><strong>Для Denis (понедельник 18.05.2026):</strong><br>
+При починке B1 paywall — проверить есть ли admin action для re-trigger initial profile_summary для конкретного card_id. Если нет — добавить.</p>
+<p><strong>Проверка для gcfgcfg@tyvty.ru (новый пользователь с полным онбордингом):</strong><br>
+Если зарегистрируется и пройдёт полный онбординг после нашей правки — profile_summary должен сгенерироваться корректно, с Visual Identity блоком, Casual+/своими стилями.</p>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
