@@ -161,7 +161,7 @@ Identity Continuity Rules, Scene Continuation Modes (6 типов), Mini-Film Fe
 — Narrative → сменить базовую единицу с «смысловая капсула» на «точка в пространстве-времени» через persistent scene_state.</p>
 <hr>
 <h2 id="3">3. Кинематографический разбор</h2>
-<p>Полная выкладка: <a href="./cinematographer-review.md"><code>cinematographer-review.md</code></a>.<br>
+<p>Полная выкладка: <a href="https://olegmonad.github.io/elyne-landing/audit/explore-engine-2026-05-17/cinematographer-review.html">cinematographer-review</a>.<br>
 Ключевые наблюдения:</p>
 <h3 id="pattern-detection">Pattern detection — куда коллапсирует</h3>
 <p>«Eye-level centered medium portrait, герой шагает или смотрит, среда декоративна». Ни одного:
@@ -184,7 +184,7 @@ Identity Continuity Rules, Scene Continuation Modes (6 типов), Mini-Film Fe
 </blockquote>
 <hr>
 <h2 id="4">4. Нарративный разбор</h2>
-<p>Полная выкладка: <a href="./narrative-review.md"><code>narrative-review.md</code></a>.<br>
+<p>Полная выкладка: <a href="https://olegmonad.github.io/elyne-landing/audit/explore-engine-2026-05-17/narrative-review.html">narrative-review</a>.<br>
 Ключевые наблюдения:</p>
 <h3 id="631-vs-634">631 vs 634 — нарративный тест</h3>
 <p>Парадокс: 634 более <strong>событийный</strong>, чем 631 (там есть конкретное действие — работа за ноутбуком, отправка), но <strong>менее любопытный</strong>, потому что событие подано как <strong>итог</strong>, а не как <strong>процесс</strong>. Кадр сообщает «я уже сделал», а не «я делаю». Любопытство держится только на «делаю» или «вот-вот сделаю».</p>
@@ -205,7 +205,7 @@ Identity Continuity Rules, Scene Continuation Modes (6 типов), Mini-Film Fe
 <p><strong><code>scene_open_loop</code> + <code>scene_position</code></strong> как два скрытых поля, которые first scene возвращает наряду с описанием, и которые подаются в каждое explore выше профиля и <code>previously_generated_variants</code>. Это одна правка на уровне data model, которая может сделать больше, чем все 10 секций метапромпта, сложенные вместе.</p>
 <hr>
 <h2 id="5">5. Архитектура три режима</h2>
-<p>Полная выкладка: <a href="./architecture-three-modes.md"><code>architecture-three-modes.md</code></a>.<br>
+<p>Полная выкладка: <a href="https://olegmonad.github.io/elyne-landing/audit/explore-engine-2026-05-17/architecture-three-modes.html">architecture-three-modes</a>.<br>
 Сжатая сводка:</p>
 <h3 id="_5">Нарративные роли</h3>
 <table>
@@ -442,9 +442,9 @@ LLM не должна писать:
 <hr>
 <h2 id="9">9. Приложения</h2>
 <ul>
-<li><strong><code>cinematographer-review.md</code></strong> — полное operator-ревью 8 кадров (camera grammar inventory, dominant pattern detection, rhythm variability, identity check).</li>
-<li><strong><code>narrative-review.md</code></strong> — нарративный разбор цепочки 631 → 634, 5 системных причин коллапса в вариацию, 7 production-realistic механик.</li>
-<li><strong><code>architecture-three-modes.md</code></strong> — архитектурный разбор explore / context_shift / local_edit, карта сигналов на каждый режим, persistent scene_state.</li>
+<li><strong><a href="https://olegmonad.github.io/elyne-landing/audit/explore-engine-2026-05-17/cinematographer-review.html">cinematographer-review</a></strong> — полное operator-ревью 8 кадров (camera grammar inventory, dominant pattern detection, rhythm variability, identity check).</li>
+<li><strong><a href="https://olegmonad.github.io/elyne-landing/audit/explore-engine-2026-05-17/narrative-review.html">narrative-review</a></strong> — нарративный разбор цепочки 631 → 634, 5 системных причин коллапса в вариацию, 7 production-realistic механик.</li>
+<li><strong><a href="https://olegmonad.github.io/elyne-landing/audit/explore-engine-2026-05-17/architecture-three-modes.html">architecture-three-modes</a></strong> — архитектурный разбор explore / context_shift / local_edit, карта сигналов на каждый режим, persistent scene_state.</li>
 <li><strong><code>generations.json</code></strong> — список 8 разобранных генераций с метаданными.</li>
 <li><strong><code>prompts/</code></strong> — выгрузки финальных промптов (FAL) и метапромптов (OpenRouter) для каждой из 8 генераций + сам <code>photo_session_id20_meta.txt</code> (21K символов).</li>
 <li><strong><code>images/</code></strong> — 8 сгенерированных кадров + selfie пользователя.</li>
