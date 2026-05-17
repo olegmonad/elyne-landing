@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Architecture: 3 Modes · Explore Engine</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="explore-context_shift-local_edit">Архитектура: explore / context_shift / local_edit — где сходятся, где должны расходиться</h1>
+<p><strong>Дата:</strong> 2026-05-17<br>
+<strong>Контекст:</strong> Денис только что выкатил wish-классификатор (<code>InterpretWishAndGenerateJob</code>) — пожелания пользователя автоматически делятся на <code>local_edit</code> vs <code>context_shift</code>. Параллельно есть <code>explore</code> (continuation без пожелания) — самая старая ветка. Все три ветки сейчас живут в одной воронке «новый кадр», и эта смешанность — часть причины, по которой explore «коллапсирует в вариацию».</p>
+<hr>
+<h2 id="1-production">1. Что есть сейчас (production)</h2>
+<h3 id="_1">Три точки входа — одна воронка</h3>
+<table>
+<thead>
+<tr>
+<th>Действие пользователя</th>
+<th>UI кнопка</th>
+<th>Backend ветка</th>
+<th>Что отправляется в FAL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>«Хочу сейчас ещё один кадр этой сцены»</td>
+<td>«Исследовать»</td>
+<td><code>base_source=previous_generation</code>, без <code>userComment</code></td>
+<td>photo_session prompt (ID=20) + scene_title + previous_variants → OpenRouter → FAL text2image с user-photo как anchor</td>
+</tr>
+<tr>
+<td>«Сделай кофту синего цвета»</td>
+<td>«Регенерировать с комментарием»</td>
+<td><code>base_source=previous_generation</code>, с <code>userComment</code></td>
+<td>Wish classifier → <code>local_edit</code> → photo_session prompt + scope-guard → FAL <strong>image-edit</strong> с previous_image как base</td>
+</tr>
+<tr>
+<td>«Я иду у горы Кайлас»</td>
+<td>«Регенерировать с комментарием»</td>
+<td><code>base_source=previous_generation</code>, с <code>userComment</code></td>
+<td>Wish classifier → <code>context_shift</code> → wish_scene prompt (ID=34) + selfie → FAL <strong>text-to-image</strong> с selfie как anchor</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_2">Где разделение уже работает</h3>
+<p>После работы Дениса 2026-05-17:
+- <strong><code>local_edit</code></strong> правильно отделён: image-edit режим + scope-guard «не меняй лицо, возраст, образ, фон, композицию, одежду — только то, что в пожелании». ✅
+- <strong><code>context_shift</code></strong> правильно отделён: text-to-image + selfie face-lock + новый метапромпт wish_scene (ID=34, <strong>сейчас пустой</strong>, нужно наполнять).</p>
+<h3 id="_3">Где смешано до сих пор</h3>
+<p><strong><code>explore</code></strong> (continuation без пожелания) — самая давняя ветка, остался <strong>на том же photo_session prompt</strong> (ID=20), что и был. По логике он = «context_shift без пользовательского пожелания, с автоматическим continuation сигналом». Но архитектурно он живёт <strong>как раньше</strong> и не получил отдельного narrative-движка.</p>
+<p>Это и есть структурная причина, почему explore генерирует вариации, а не следующий момент: его обслуживает прампт, написанный как «универсальный continuation», в котором смешаны и развитие момента, и расширение мира, и углубление эмоции, и параллельный угол — шесть равноценных режимов одновременно. Модель выбирает безопасный путь = декорация.</p>
+<hr>
+<h2 id="2">2. Нарративная роль каждого режима (зафиксировать)</h2>
+<table>
+<thead>
+<tr>
+<th>Режим</th>
+<th>Кинематографический аналог</th>
+<th>Что меняет</th>
+<th>Что держит</th>
+<th>Когда триггерится</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>local_edit</code></strong></td>
+<td>re-touch / colour correction</td>
+<td>только то, что назвал пользователь</td>
+<td>всё остальное (поза, локация, момент, костюм-минус-правка)</td>
+<td>wish + classifier=local_edit</td>
+</tr>
+<tr>
+<td><strong><code>explore</code></strong></td>
+<td>next shot в той же сцене</td>
+<td>следующий микро-момент в пределах часа, новый ракурс, развитие действия</td>
+<td>локацию, день, костюм, эмоциональный регистр</td>
+<td>без wish, base=previous</td>
+</tr>
+<tr>
+<td><strong><code>context_shift</code></strong></td>
+<td>cut to новой сцене</td>
+<td>локация, контекст, событие, иногда время дня</td>
+<td>идентичность, эмоциональный вектор, уровень жизни</td>
+<td>wish + classifier=context_shift</td>
+</tr>
+<tr>
+<td><strong>«sphere shift»</strong> <em>(пока нет)</em></td>
+<td>cut to новой главе фильма</td>
+<td>новая сфера, новая жизненная тема, новые сцены</td>
+<td>идентичность, профиль</td>
+<td>первичный выбор сферы пользователем</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Важно:</strong> <code>explore</code> сейчас претендует на роль «next shot в той же сцене», но фактически выдаёт что-то ближе к мини-context_shift («ещё одна сцена на ту же тему сферы»). Это первое, что нужно починить.</p>
+<hr>
+<h2 id="3">3. Карта сигналов — что каждый режим должен получать</h2>
+<p>Сейчас архитектура примерно симметрична: все три режима делят photo_session prompt (с небольшими модификациями для local_edit). Это неправильно — у них разные нарративные роли, значит разные сигналы.</p>
+<h3 id="local-edit">Local edit</h3>
+<p><strong>Получает:</strong>
+- previous image (для image-edit base)
+- wish text (что менять)
+- scope-guard суффикс (что не трогать)</p>
+<p><strong>Не должен получать:</strong>
+- profile_summary (избыточно для re-skin)
+- previous variants list (нет relevance)
+- continuation logic (нет смысла)
+- spatial/temporal logic (тоже)</p>
+<p><strong>Сейчас в gen 632 — получает ВСЁ это.</strong> photo_session prompt в полном объёме, плюс полный профиль одежды, плюс инструкции по continuation. Это шум, который потенциально может всё-таки «толкнуть» модель сменить позу или фон. Сейчас работает чисто только потому, что image-edit режим биасован против больших изменений.</p>
+<p><strong>Идеально — radical simplification:</strong> local_edit получает 200-словный промпт «edit X in this image, preserve everything else» + image. Это всё.</p>
+<h3 id="context-shift">Context shift</h3>
+<p><strong>Получает (после новой архитектуры Дениса):</strong>
+- selfie (identity anchor)
+- wish text
+- original scene description (для эмоциональной преемственности)
+- sphere_title + sphere_definition
+- profile_summary
+- wish_scene prompt (ID=34, <strong>пустой</strong>)</p>
+<p><strong>Не должен получать:</strong>
+- previous image (text-to-image, не image-edit)
+- previous_generated_variants (новая сцена — нерелевантно)</p>
+<p><strong>Это правильная архитектура.</strong> Осталось наполнить ID=34 — там должно быть НЕ photo_session, а другой, более компактный промт, заточенный под «свобода в новой локации, держим идентичность и эмоциональный вектор, не держим композицию и блокинг».</p>
+<p>Из кинематографического ревью: <strong>главная проблема 633 (Кайлас) — постановка скопирована один-в-один с 631</strong>. Это значит, что метапромпт wish_scene должен <strong>явно разрешать</strong> менять блокинг, ракурс, дистанцию, выбирать camera grammar под локацию (Кайлас → environmental wide, не medium шага).</p>
+<h3 id="explore">Explore</h3>
+<p><strong>Сейчас получает (gen 634):</strong>
+- scene_title (зафиксирован)
+- scene_description
+- sphere_title + definition
+- profile_summary (полный)
+- onboarding_answers (полные, частично избыточно)
+- previously_generated_variants (3 предыдущих описания целиком)
+- photo_session prompt ID=20 (21149 символов с 10 секциями)</p>
+<p><strong>Должен получать (после правок):</strong>
+- scene_title + scene_open_loop + scene_position (narrative-designer&rsquo;s пункт 5.1+5.2)
+- anchor_object (continuity prop)
+- spatial_zones (где мы внутри локации)
+- emotional_beat (текущий бит из 4-битовой структуры)
+- previously_generated_variants как <strong>«откуда мы пришли»</strong>, не как <strong>«что не повторять»</strong>
+- compressed profile (200-300 символов, не 5К)
+- explore-specific prompt (новый, не photo_session ID=20)</p>
+<p><strong>Не должен получать:</strong>
+- onboarding_answers (избыточно при наличии profile_summary)
+- full sphere_definition (она уже отражена в scene_title)
+- 10 дублирующих секций continuity (Narrative Continuity Engine ≈ Story Momentum ≈ World Unfolding Logic — оставить одну)</p>
+<hr>
+<h2 id="4-scene_state">4. Структурный пробел — отсутствие <code>scene_state</code></h2>
+<p>Главное архитектурное упущение: <strong>у сцены нет state</strong>. Каждый explore генерируется как stateless вызов «вот сцена, вот предыдущие варианты, сделай следующий». Между explore-ами не сохраняется никакая прогрессия.</p>
+<p>Сейчас:
+- iter 1: сгенерировали кадр в хабе
+- iter 2 (local edit): тот же кадр, цвет кофты
+- iter 3 (context shift): другая сцена (Кайлас)
+- iter 4 (explore): обратно в хабе, но в лаунже — <strong>этот переход никто не отслеживает</strong></p>
+<p>Должно быть так:
+- сцена 631 имеет state: <code>{position: "midway", clock: 30min, open_loop: "встреча с инвестором", anchor: "кожаный баул olive", zones: ["coridor","lounge","exit"], current_zone: "coridor", emotional_beat: "движение"}</code>
+- iter 4 (explore) читает этот state, продвигает clock на 20min, перемещает в lounge, продвигает emotional_beat к «ожидание / собранность», сохраняет anchor, держит open_loop неразрешённым.
+- Когда open_loop разрешается (например, на 4-м explore) — сцена закрылась, дальше идёт context shift в новую сцену.</p>
+<p>Это <strong>persistent scene state</strong> на уровне data model — то, что narrative-designer назвал «scene clock + open loop в first scene». Это <strong>самая большая структурная правка</strong>, и она важнее всех изменений промптов.</p>
+<hr>
+<h2 id="5">5. Что менять в коде (по приоритетам)</h2>
+<h3 id="1-persistent-scene-state-data-model">Приоритет 1 — Persistent scene state (data model)</h3>
+<p>Добавить в <code>GenerationRequest</code> или <code>Scene</code> сущность поля:
+- <code>scene_open_loop: string</code> (что должно произойти; не показывается пользователю; держится скрытым)
+- <code>scene_position: enum {start, middle, end}</code> (где мы в сцене)
+- <code>scene_clock: int</code> (условные минуты от начала; +10-30 на каждый explore)
+- <code>anchor_object: string</code> (continuity prop, например &ldquo;кожаный баул olive&rdquo;)
+- <code>spatial_zones: array&lt;string&gt;</code> (карта пространства)
+- <code>current_zone: string</code> (где сейчас)
+- <code>emotional_beat: enum {entry, recognition, contact, resonance, exit}</code> (микро-arc)</p>
+<p><code>first scene generator</code> отдаёт эти поля наряду с описанием. <code>explore generator</code> читает их и продвигает.</p>
+<p><strong>Усилие:</strong> 1 миграция БД + правка first scene metaprompt (просит LLM вернуть JSON с этими полями) + правка explore metaprompt (использует их).</p>
+<p><strong>Эффект:</strong> базовый — explore перестанет быть stateless, начнёт двигаться по карте сцены.</p>
+<h3 id="2-explore-prompt-photo_session-prompt">Приоритет 2 — Разделить explore prompt от photo_session prompt</h3>
+<p>Сейчас <code>explore</code> использует photo_session ID=20 (21149 символов с 10 секциями). Создать <strong>отдельный prompt</strong> для explore (например ID=35) — компактный, заточенный под:
+- читает scene_state (новые поля выше)
+- использует previously_generated_variants <strong>как историю, не как тормоз</strong>
+- двигает scene_clock и emotional_beat
+- 1500-2500 символов вместо 21K</p>
+<p>photo_session ID=20 пусть останется для context_shift / sphere-init scenes (другая роль, можно отдельно тюнить).</p>
+<p><strong>Усилие:</strong> написать новый prompt + одна точка-роутер в коде.</p>
+<p><strong>Эффект:</strong> explore перестанет получать противоречивые инструкции «продолжай / не повторяй / делай что угодно».</p>
+<h3 id="3-wish_scene-prompt-id34">Приоритет 3 — Наполнить wish_scene prompt ID=34</h3>
+<p>Сейчас пустой. Денис ждёт нашего метапромпта для context_shift. Должен быть:
+- 1500-3000 символов
+- НЕ photo_session (другая роль)
+- держит identity + emotional_vector + lifestyle_level (не локацию, не блокинг)
+- разрешает смену camera grammar под локацию (Кайлас ≠ хаб)
+- не дублирует scope-guard правила local_edit
+- ожидает что код добавляет structured context block (Денис уже это делает)</p>
+<p><strong>Усилие:</strong> написать prompt ~2K символов.</p>
+<p><strong>Эффект:</strong> context_shift перестанет выдавать «green screen replacement» из идентичной постановки.</p>
+<h3 id="4-sphere-arc-3-4">Приоритет 4 — Sphere arc (3-4 узловые сцены)</h3>
+<p>Сейчас сфера = 3 первые сцены, каждая существует параллельно, между ними нет логики «утро → день → закат». Перестроить структуру сферы: вместо 3 параллельных «углов» — 3-4 <strong>узловые точки одного дня жизни</strong>.</p>
+<p><strong>Усилие:</strong> изменение sphere metaprompts, миграция данных — это не одна неделя.</p>
+<p><strong>Эффект:</strong> сфера ощущается как «проживаемый день», а не «галерея кадров».</p>
+<h3 id="5-camera-grammar-diversity-operator-side">Приоритет 5 — Camera grammar diversity (operator-side)</h3>
+<p>Кинематографическое ревью показало, что 8/8 кадров — eye-level centered medium. Это собственно вообще не narrative проблема, это <strong>operator vocabulary</strong>. Промпты должны <strong>явно</strong> запрашивать разнообразие grammar:
+- 30% explore = wide environmental (герой 1/8 кадра)
+- 20% = close-up fragment (руки, объект, отражение)
+- 20% = OTS / POV (с плеча героя или его глазами)
+- 30% = medium (текущий дефолт)</p>
+<p>Это можно встроить либо как <strong>тип бита</strong> (entry = wide, contact = medium, resonance = close-up), либо как явный параметр в explore prompt.</p>
+<p><strong>Усилие:</strong> добавление параметра + 5-10 строк в prompt.</p>
+<p><strong>Эффект:</strong> визуальный ритм появится автоматически.</p>
+<hr>
+<h2 id="6">6. Что НЕ делать архитектурно</h2>
+<h3 id="_4">Не объединять три режима обратно в один</h3>
+<p>Соблазн «упростить» воронку до одного universal-prompt — провалит свежее разделение Дениса и вернёт смешанность. Три режима должны оставаться <strong>архитектурно независимыми</strong>, делиться только базовыми сигналами (identity, profile).</p>
+<h3 id="_5">Не отдавать выбор режима пользователю</h3>
+<p>Кнопка «explore / shift / edit» наружу = разрушит интуитивность. Классификация остаётся в backend (для wish — через LLM-классификатор, для explore — implicit «нет wish + есть previous»).</p>
+<h3 id="persistent-state">Не делать persistent state «прозрачным» для пользователя</h3>
+<p><code>scene_open_loop = "встреча с инвестором"</code> — это <strong>внутренний</strong> скрытый state. Пользователь не должен его видеть, иначе ломается ощущение «жизни». Это движок, не interface.</p>
+<h3 id="scene_state-ui">Не вытаскивать scene_state из БД в UI</h3>
+<p>Соблазн показать «вы прошли 30% сцены». Не нужно. Это narrative tool для LLM, не геймификация для пользователя.</p>
+<h3 id="identity-anchoring">Не дублировать identity anchoring логику в трёх местах</h3>
+<p>Сейчас identity preservation описана и в photo_session (Identity Continuity Rules + Identity Anchor Continuity), и в новом wish_scene будет, и в local_edit scope-guard. <strong>Один шейред блок</strong> identity_lock на 300-500 символов, который <strong>импортируется</strong> во все три prompt-а. Без дублей.</p>
+<hr>
+<h2 id="7-shipping-plan">7. Минимальный shipping plan</h2>
+<p>Если выбирать <strong>одну</strong> правку с максимальным эффектом — это <strong>Приоритет 1 (persistent scene state)</strong> + <strong>частично Приоритет 2</strong> (разделить prompts).</p>
+<p>Конкретный flow:</p>
+<ol>
+<li><strong>Сегодня-завтра</strong> (Олег + Моня): набросать схему scene_state полей (5-7 полей, как выше).</li>
+<li><strong>Понедельник 18.05</strong> (Денис): миграция БД + обновление first_scene generation чтобы возвращал scene_state JSON.</li>
+<li><strong>18-19.05</strong> (Олег + Моня): написать новый explore_prompt (ID=35), который читает scene_state.</li>
+<li><strong>20.05</strong>: A/B на oleg@elyne.online — старый photo_session vs новый explore — смотрим 4 cепочки на сферу.</li>
+<li><strong>22.05</strong>: если работает — заполнить wish_scene ID=34 (context_shift) тоже с учётом scene_state.</li>
+</ol>
+<p><strong>KPI:</strong> проверка проста — взять цепочку 631→634 и спросить «это два кадра одного эпизода или две сцены». Если первое — починили.</p>
+<hr>
+<h2 id="8">8. Финальный анкер</h2>
+<p>Архитектурно три режима должны жить <strong>раздельно</strong>, но делиться:
+- общим identity anchor module
+- общим profile_summary (compressed)
+- общим scene_state (когда применимо)</p>
+<p>И у каждого должна быть <strong>своя точка истины</strong> в виде отдельного prompt с понятной нарративной ролью:
+- <code>local_edit</code> = retouch (минимальный prompt)
+- <code>explore</code> = next shot в той же сцене (с scene_state)
+- <code>context_shift</code> = cut to новой сцене (с identity carry)</p>
+<p>Когда эти роли разведены архитектурно и каждый prompt подаёт <strong>только нужные</strong> сигналы — путаница «explore = вариация» исчезает на уровне инфраструктуры, не на уровне ещё одной директивы в промпте.</p>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
