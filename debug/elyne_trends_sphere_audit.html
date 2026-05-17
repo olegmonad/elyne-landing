@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elyne Тренды — Audit</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="elyne-sphere_id11-generation_prompt_id33">Elyne — Аудит сферы «Тренды» (sphere_id=11, generation_prompt_id=33)</h1>
+<p><strong>Дата:</strong> 2026-05-17<br>
+<strong>Статус:</strong> ✅ Промпт залит в БД  </p>
+<hr>
+<h2 id="1">1. Что сделано</h2>
+<ul>
+<li>Создана новая сфера <code>Тренды</code> (sphere_id=11, slug=trends, order=11) в таблице <code>spheres</code></li>
+<li>Создана запись <code>generation_prompts</code> ID=33 (sphere_id=11, type=field_scene)</li>
+<li>Промпт (27 426 символов) залит через Livewire <code>$wire.call('$set', 'data.meta_prompt', ...)</code> + <code>save</code></li>
+<li>Верификация: перезагрузка <code>/admin/generation-prompts/33/edit</code> → 27 426 символов сохранены в БД</li>
+</ul>
+<hr>
+<h2 id="2">2. Архитектура промпта — структура</h2>
+<table>
+<thead>
+<tr>
+<th>Блок</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Роль</td>
+<td>AI визуальный режиссёр + архитектор культурных кадров</td>
+</tr>
+<tr>
+<td>Входные данные</td>
+<td>sphere_title, profile_summary, micro_adjustment_answers, chosen_clothing_style</td>
+</tr>
+<tr>
+<td>Шаг 1.1</td>
+<td>Тип визуальной энергии (7 типов)</td>
+</tr>
+<tr>
+<td>Шаг 1.2</td>
+<td>Визуальный магнетизм</td>
+</tr>
+<tr>
+<td>Шаг 1.3</td>
+<td>Культурный контекст (6 типов)</td>
+</tr>
+<tr>
+<td>Anti-pattern module</td>
+<td>5 проверок вариативности сцен</td>
+</tr>
+<tr>
+<td>Шаг 2</td>
+<td>Характер сферы Тренды + критический фильтр</td>
+</tr>
+<tr>
+<td>Шаг 2.1</td>
+<td>Тип сцены (5) + тип действия (5)</td>
+</tr>
+<tr>
+<td>Шаг 2.2</td>
+<td>Визуальная роль в кадре (5)</td>
+</tr>
+<tr>
+<td>Шаг 3–4</td>
+<td>База сцен (5 категорий) + выбор лучшего</td>
+</tr>
+<tr>
+<td>Шаг 5–9</td>
+<td>Среда, кадрирование, одежда, действие, эмоция, реализм</td>
+</tr>
+<tr>
+<td>Шаг 10</td>
+<td>Финальный промпт (без списков, только сцена)</td>
+</tr>
+<tr>
+<td>Стиль (inline)</td>
+<td>ultra realistic, cinematic, film grain, 35mm/50mm, natural skin texture</td>
+</tr>
+<tr>
+<td>Shared framework</td>
+<td>Style Interpretation, Multi-Style, Sphere Engine, Differentiation Rule, Relatives Layer, Relational Density, Scene-Type</td>
+</tr>
+<tr>
+<td><strong>NEW: Sphere Behavioral Profile</strong></td>
+<td>Life pacing: динамичный; Scene types: movement/embodied_presence/world_expansion/transition</td>
+</tr>
+<tr>
+<td><strong>NEW: Trend Sphere Visual Language</strong></td>
+<td>Допустимо / запрещено для этой сферы</td>
+</tr>
+<tr>
+<td><strong>NEW: Emotional Social Magnetism</strong></td>
+<td>9 триггеров притяжения; не через богатство</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="3">3. Отличия от стандартных сфер</h2>
+<h3 id="relaxed">Relaxed (ослаблено для Тренды)</h3>
+<table>
+<thead>
+<tr>
+<th>Ограничение</th>
+<th>Стандарт</th>
+<th>Тренды</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Anti-editorial</td>
+<td>Запрещено</td>
+<td>Разрешено если органично</td>
+</tr>
+<tr>
+<td>Anti-Pinterest</td>
+<td>Запрещено</td>
+<td>Разрешено если усиливает сцену</td>
+</tr>
+<tr>
+<td>Anti-fashion-forward</td>
+<td>Запрещено</td>
+<td>Разрешено если соответствует человеку</td>
+</tr>
+<tr>
+<td>Anti-gloss</td>
+<td>Запрещено</td>
+<td>Допустим editorial energy</td>
+</tr>
+<tr>
+<td>Цветовая экспрессия</td>
+<td>Нейтральная</td>
+<td>More expressive cinematic color</td>
+</tr>
+<tr>
+<td>Dynamic framing</td>
+<td>Осторожно</td>
+<td>Допустим активно</td>
+</tr>
+<tr>
+<td>Visual boldness</td>
+<td>Ограничено</td>
+<td>Разрешено</td>
+</tr>
+</tbody>
+</table>
+<h3 id="kept-strict">Kept Strict (сохранены строгие ограничения)</h3>
+<ul>
+<li>Никакого fake luxury</li>
+<li>Никакого plastic AI perfection</li>
+<li>Никакого cringe flex culture</li>
+<li>Никакого influencer emptiness / excessive posing</li>
+<li>Никакого shallow glamour</li>
+<li>Никакого generic viral aesthetics</li>
+<li>Human realism: лицо узнаваемое, без пластики, без потери индивидуальности</li>
+<li>Анатомическая правдоподобность тела</li>
+<li>Запрет: позирование у дорогой машины/яхты, selfie-поза, luxury backdrop без атмосферы</li>
+</ul>
+<hr>
+<h2 id="4">4. Примеры сцен (Тренды)</h2>
+<h3 id="a-editorial_cool-contemporary_urban">Сцена A — editorial_cool / contemporary_urban</h3>
+<blockquote>
+<p>Мужчина в тёмном оверсайз-пальто пересекает широкий брусчатый переулок в центре города — шаг уверенный, взгляд чуть вперёд. Позднее утро, синий рассеянный свет. Фоном — архитектура с историческим характером, вывески размыты боке. Кинематографический medium shot, 35mm. Film grain. Никакого постановочного взгляда в камеру. Ощущение: кто-то поймал кадр из его утра.</p>
+</blockquote>
+<h3 id="b-warm_cinematic-boutique_life">Сцена B — warm_cinematic / boutique_life</h3>
+<blockquote>
+<p>Женщина выходит из узкого кафе на улицу — кофе в одной руке, плащ небрежно перекинут через другую. Золотой час, тёплый боковой свет через стекло. Slow freeze-кадр: момент между &ldquo;внутри&rdquo; и &ldquo;снаружи&rdquo;. Wide-medium композиция, глубина за счёт открытой двери. Cinematic color grading с тёплыми тенями. Ощущение: &ldquo;хочется туда зайти и остаться&rdquo;.</p>
+</blockquote>
+<h3 id="c-dynamic_motion-global_nomad">Сцена C — dynamic_motion / global_nomad</h3>
+<blockquote>
+<p>Девушка быстро идёт сквозь многолюдный рынок — живые цвета тканей, уличный шум размыт. Средний план, движение размыто у края кадра. Яркий рассеянный свет, насыщенная тёплая атмосфера. Взгляд — вперёд, не в камеру. Образ: хорошо подобранный casual с характером, ничего лишнего. Ощущение: &ldquo;кадр из другого города, в который хочется&rdquo;.</p>
+</blockquote>
+<hr>
+<h2 id="5-safety-checklist">5. Safety checklist</h2>
+<ul>
+<li>[x] Лицо: сохраняется узнаваемым, без пластики, без AI-perfect skin</li>
+<li>[x] Тела: анатомически правдоподобные</li>
+<li>[x] Fake luxury запрещена явно в двух блоках</li>
+<li>[x] Influencer posturing запрещено явно</li>
+<li>[x] Cringe flex запрещён явно</li>
+<li>[x] Plastic perfection запрещена явно</li>
+<li>[x] Богатство может проявляться только через вкус/атмосферу/качество среды</li>
+<li>[x] Anti-pattern module проверяет сцену до генерации</li>
+<li>[x] Режим редкости (Step 9) требует минимум 2 из 5 quality markers</li>
+<li>[x] Sphere Differentiation Rule требует проверку &ldquo;не повторяет другую сферу&rdquo;</li>
+</ul>
+<hr>
+<h2 id="6">6. Технические детали</h2>
+<ul>
+<li>Метод инъекции: <code>browser_run_code</code> → <code>page.evaluate(fn, content)</code> → <code>lw.$wire.call('$set', 'data.meta_prompt', content)</code> → <code>lw.$wire.call('save')</code></li>
+<li>Проблемы пути: <code>require('fs')</code> недоступен в browser_run_code context → решено через hardcoded template literal в Python-generated JS</li>
+<li>CORS заблокировал fetch с localhost и GitHub Pages → решено через inject файл</li>
+<li>Sphere creation: поле <code>clone_from_sphere_id</code> обязательно → использован sphere_id=10 (Окружение) как donor</li>
+</ul>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
