@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elyne Production Debug Report — 2026-05-18</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; line-height: 1.5; color: #111; background: #f8f9fa; }
+
+  .page-header { background: #0f172a; color: #f1f5f9; padding: 24px 32px; position: sticky; top: 0; z-index: 100; }
+  .page-header h1 { font-size: 20px; font-weight: 700; }
+  .page-header .sub { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+
+  .layout { display: flex; min-height: 100vh; }
+
+  .sidebar { width: 260px; flex-shrink: 0; background: #1e293b; padding: 16px; position: sticky; top: 60px; height: calc(100vh - 60px); overflow-y: auto; }
+  .nav-link { display: block; color: #94a3b8; text-decoration: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; margin-bottom: 2px; }
+  .nav-link:hover { background: #334155; color: #f1f5f9; }
+  .nav-link.nav-gen { padding-left: 20px; color: #64748b; }
+  .nav-section-label { color: #475569; font-size: 10px; font-weight: 600; text-transform: uppercase; padding: 8px 8px 4px; }
+
+  .main { flex: 1; padding: 24px; max-width: calc(100% - 260px); }
+
+  .user-section { background: white; border-radius: 12px; margin-bottom: 32px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+
+  .user-header { background: #1e293b; color: white; padding: 24px; display: flex; gap: 20px; align-items: flex-start; }
+  .user-meta h2 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .user-meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; }
+  .meta-item { font-size: 12px; color: #cbd5e1; }
+  .user-stats { display: flex; gap: 16px; }
+  .stat { text-align: center; background: rgba(255,255,255,0.08); padding: 8px 14px; border-radius: 8px; }
+  .stat-n { font-size: 22px; font-weight: 700; color: #60a5fa; }
+
+  .profile-details { border-bottom: 1px solid #f1f5f9; }
+  .profile-summary-toggle { padding: 12px 24px; cursor: pointer; font-size: 12px; font-weight: 600; color: #374151; background: #f8fafc; list-style: none; user-select: none; }
+  .profile-summary-toggle::-webkit-details-marker { display: none; }
+  .profile-summary-toggle::before { content: "▶ "; font-size: 10px; }
+  details[open] .profile-summary-toggle::before { content: "▼ "; }
+  .profile-summary-body { padding: 16px 24px; background: #fafafa; font-size: 12px; color: #374151; }
+  .profile-summary-body p { margin-bottom: 8px; }
+
+  .gens-list { padding: 16px; }
+
+  .gen-card { border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 16px; overflow: hidden; }
+  .gen-header { background: #f9fafb; padding: 10px 16px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; border-bottom: 1px solid #e5e7eb; }
+  .gen-id { font-weight: 700; font-size: 13px; color: #0f172a; }
+  .gen-sphere { font-size: 11px; color: #6b7280; background: #f3f4f6; padding: 2px 8px; border-radius: 10px; }
+  .gen-ts { font-size: 11px; color: #9ca3af; margin-left: auto; }
+  .gen-title { padding: 10px 16px; font-size: 14px; font-weight: 600; color: #1f2937; border-bottom: 1px solid #f3f4f6; }
+
+  .wish-block { padding: 8px 16px; background: #faf5ff; border-left: 3px solid #7c3aed; font-size: 12px; color: #374151; }
+
+  .gen-body { display: grid; grid-template-columns: auto 260px 1fr; gap: 0; }
+
+  .images-col { padding: 12px 16px; border-right: 1px solid #f3f4f6; }
+  .col-label { font-size: 10px; font-weight: 600; text-transform: uppercase; color: #9ca3af; margin-bottom: 6px; }
+  .img-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .img-wrap { position: relative; }
+  .img-label { font-size: 10px; color: #9ca3af; text-align: center; margin-top: 3px; }
+  .img-placeholder { width: 160px; height: 160px; background: #f3f4f6; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #9ca3af; font-size: 11px; }
+
+  .audits-col { padding: 12px 16px; border-right: 1px solid #f3f4f6; }
+  .audit-section { margin-bottom: 12px; }
+  .audit-title { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #6b7280; margin-bottom: 6px; letter-spacing: 0.05em; }
+
+  .mini-table { width: 100%; font-size: 11px; border-collapse: collapse; }
+  .mini-table tr { border-bottom: 1px solid #f3f4f6; }
+  .mini-table td { padding: 3px 0; vertical-align: top; }
+  .td-label { color: #9ca3af; width: 110px; }
+
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+
+  .prompt-col { padding: 12px 16px; overflow-x: auto; }
+  .fal-prompt { font-family: 'Courier New', monospace; font-size: 10px; line-height: 1.6; color: #374151; white-space: pre-wrap; word-break: break-word; max-height: 600px; overflow-y: auto; background: #f8fafc; padding: 12px; border-radius: 6px; }
+
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; color: white; }
+
+  @media (max-width: 1200px) {
+    .gen-body { grid-template-columns: 1fr; }
+    .images-col, .audits-col { border-right: none; border-bottom: 1px solid #f3f4f6; }
+  }
+
+  .toc-header { color: #60a5fa; font-size: 11px; font-weight: 700; padding: 8px 8px 4px; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Elyne · Production Debug Report</h1>
+  <div class="sub">Users 7806 (dashakibl@gmail.com) + 7616 (hdhrjdj@hdjd.ru) · Generated 2026-05-18 · 12 generations total</div>
+</div>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="toc-header">Users & Generations</div>
+    <a href="#user-7806" class="nav-link">#7806 dashakibl@gmail.com (8 gens)</a>
+<a href="#gen-662" class="nav-link nav-gen">gen #662 · 1 — Я и состояние</a>
+<a href="#gen-663" class="nav-link nav-gen">gen #663 · 9 — Свобода и масшта</a>
+<a href="#gen-664" class="nav-link nav-gen">gen #664 · 9 — Свобода и масшта</a>
+<a href="#gen-665" class="nav-link nav-gen">gen #665 · 9 — Свобода и масшта</a>
+<a href="#gen-666" class="nav-link nav-gen">gen #666 · 7 — Творчество и нов</a>
+<a href="#gen-667" class="nav-link nav-gen">gen #667 · 7 — Творчество и нов</a>
+<a href="#gen-668" class="nav-link nav-gen">gen #668 · 7 — Творчество и нов</a>
+<a href="#gen-669" class="nav-link nav-gen">gen #669 · 7 — Творчество и нов</a>
+<a href="#user-7616" class="nav-link">#7616 hdhrjdj@hdjd.ru (4 gens)</a>
+<a href="#gen-657" class="nav-link nav-gen">gen #657 · 1 — Я и состояние</a>
+<a href="#gen-659" class="nav-link nav-gen">gen #659 · 7 — Творчество и нов</a>
+<a href="#gen-660" class="nav-link nav-gen">gen #660 · 7 — Творчество и нов</a>
+<a href="#gen-661" class="nav-link nav-gen">gen #661 · 7 — Творчество и нов</a>
+  </nav>
+
+  <main class="main">
+    <div id="user-7806">
+<section class="user-section">
+  <div class="user-header">
+    <div class="user-avatar">
+      <div class="img-wrap">
+      <a href="https://dreammap.storage.yandexcloud.net/card-photos/NuUalYhp0WU0CIaiGXx4BNiZ04U8dMcrCrqS3Zyl.jpg" target="_blank">
+        <img src="https://dreammap.storage.yandexcloud.net/card-photos/NuUalYhp0WU0CIaiGXx4BNiZ04U8dMcrCrqS3Zyl.jpg" width="120" style="border-radius:8px;object-fit:cover;height:120px;"
+             onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div style="display:none;padding:8px;color:#999;font-size:11px">Image unavailable</div>
+      </a>
+      <div class="img-label">Selfie</div>
+    </div>
+    </div>
+    <div class="user-meta">
+      <h2>User #7806 — dashakibl@gmail.com</h2>
+      <div class="user-meta-row">
+        <span class="meta-item"><strong>Gender:</strong> female</span>
+        <span class="meta-item"><strong>Age:</strong> 25</span>
+        <span class="meta-item"><strong>Styles:</strong> <span class="badge" style="background:#374151">Sport Casual</span> </span>
+      </div>
+      <div class="user-stats">
+        <div class="stat"><span class="stat-n">8</span><br>total gens</div>
+        <div class="stat"><span class="stat-n">8</span><br>completed</div>
+        <div class="stat"><span class="stat-n">3</span><br>spheres</div>
+        <div class="stat"><span class="stat-n">1</span><br>wishes</div>
+        <div class="stat"><span class="stat-n">2</span><br>regenerations</div>
+        <div class="stat"><span class="stat-n">1</span><br>clarifications</div>
+      </div>
+    </div>
+  </div>
+
+  <details class="profile-details">
+    <summary class="profile-summary-toggle">Profile Summary (Character + Visual Identity)</summary>
+    <div class="profile-summary-body"><p>Character Profile: Устойчивое ядро личности — современная женщина (25 лет), чья идентичность строится на синтезе внутренней свободы и осознанного масштаба. Её главный мотив — расширение горизонтов жизни через перемещение между странами, сохраняя при этом ощущение спокойствия и внутренней силы. Она проявляет себя через эстетику образа и стиля жизни, стремясь к красивому и вдохновляющему существованию. Эмоциональный вектор направлен от поиска легкости к обретению уверенности в больших возможностях.</p><p>Visual Identity: Доминирующее направление — &#x27;Sport Casual&#x27; как философия городской мобильности.</p><p>Key Answer Locks (first scene): 1) Среда: жизнь между разными странами; 2) Ощущение: свобода, легкость и внутренняя сила; 3) Проявление: через стиль и образ жизни; 4) Визуальный код: чистые линии, сочетание свободного и облегающего; 5) Атмосфера: масштабная, наполненная, вдохновляющая.</p></div>
+  </details>
+
+  <div class="gens-list">
+    
+<div class="gen-card" id="gen-662">
+  <div class="gen-header">
+    <span class="gen-id">gen #662</span>
+    <span class="gen-sphere">1 — Я и состояние</span>
+    <span class="badge" style="background:#2563eb">Первая генерация</span>
+    <span class="badge" style="background:#16a34a">completed</span>
+    <span class="gen-ts">May 18, 2026 12:42:37</span>
+    <span style="color:#9ca3af;font-size:11px">iter 1 · src: profile_photo</span>
+  </div>
+
+  <div class="gen-title">Утренний переход в городе</div>
+
+  
+
+  <div class="gen-body">
+    <!-- Images column -->
+    <div class="images-col">
+      <div class="col-label">Source photo</div>
+      <div class="img-row"><div class="img-wrap">
+      <a href="https://dreammap.storage.yandexcloud.net/card-photos/NuUalYhp0WU0CIaiGXx4BNiZ04U8dMcrCrqS3Zyl.jpg" target="_blank">
+        <img src="https://dreammap.storage.yandexcloud.net/card-photos/NuUalYhp0WU0CIaiGXx4BNiZ04U8dMcrCrqS3Zyl.jpg" width="180" style="border-radius:8px;object-fit:cover;height:180px;"
+             onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div style="display:none;padding:8px;color:#999;font-size:11px">Image unavailable</div>
+      </a>
+      <div class="img-label">Source #1</div>
+    </div></div>
+      <div class="col-label" style="margin-top:12px">Generated result</div>
+      <div class="img-row"><div class="img-wrap">
+      <a href="https://dreammap.storage.yandexcloud.net/generations/662/8d6e27d8-22c8-42a2-a3cf-10c02b7f3401.jpg" target="_blank">
+        <img src="https://dreammap.storage.yandexcloud.net/generations/662/8d6e27d8-22c8-42a2-a3cf-10c02b7f3401.jpg" width="220" style="border-radius:8px;object-fit:cover;height:220px;"
+             onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div style="display:none;padding:8px;color:#999;font-size:11px">Image unavailable</div>
+      </a>
+      <div class="img-label">Result #1</div>
+    </div></div>
+    </div>
+
+    <!-- Audits column -->
+    <div class="audits-col">
+      <div class="audit-section">
+        <div class="audit-title">Camera Grammar</div>
+        <table class='mini-table'><tr><td class='td-label'>Shot type</td><td>medium (side-follow)</td></tr><tr><td class='td-label'>Camera angle</td><td>low-angle</td></tr><tr><td class='td-label'>Framing</td><td>observational</td></tr><tr><td class='td-label'>Movement present</td><td>yes</td></tr><tr><td class='td-label'>Lookbook risk</td><td><span style="color:#dc2626;font-weight:600">high</span></td></tr></table>
+      </div>
+      <div class="audit-section">
+        <div class="audit-title">Identity Continuity</div>
+        <table class='mini-table'><tr><td class='td-label'>Facial identity</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Age preserved</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Style preserved</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Body language</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Emotional energy</td><td><span class="dot" style="background:#16a34a" title="high"></span> high</td></tr><tr><td class="td-label">Drifted</td><td style="color:#dc2626">—</td></tr><tr><td class="td-label">Cause</td><td style="color:#6b7280;font-style:italic">standard generation</td></tr></table>
+      </div>
+      <div class="audit-section">
+        <div class="audit-title">Sphere / Cliché Audit</div>
+        <div style="font-size:12px">
+        <div>Sphere match: <strong>-</strong></div>
+        <div style="margin-top:4px">Luxury clichés: <span class="badge" style="background:#dc2626">вино</span> </div>
+    </div>
+      </div>
+    </div>
+
+    <!-- Prompt column -->
+    <div class="prompt-col">
+      <div class="audit-title">FAL Prompt (sent)</div>
+      <div class="fal-prompt"><strong style="color:#2563eb">Camera Type: Side-follow movement.</strong><br><br>Сцена фиксирует не статичный портрет, а процесс движения — женщина идет по широкому тротуару современного района, где архитектура уже пропустила утренний свет, но тени еще длинные и глубокие. Это не спешка по делам, а ритмичный, уверенный шаг человека, который чувствует свое тело и пространство вокруг. Воздух прохладный, с тем характерным утренним запахом города, который бывает только в первые часы: смесь чистоты, бетона и далекого шума просыпающегося трафика.<br><br>Она одета в современную версию спортивного стиля, который стал ее второй кожей: мягкие, но структурированные широкие брюки из технической ткани цвета графита, которые свободно двигаются при ходьбе, не сковывая, и укороченный свитшот молочного оттенка, создающий чистый, собранный силуэт. На плече — компактная сумка из плотного нейлона, в руке — стакан с кофе, но это не реквизит для фото, а реальный элемент утреннего ритуала, который она держит естественно, как продолжение руки. На ногах — аккуратные, новые кроссовки, готовые к долгому пути.<br><br>Ее взгляд направлен не в камеру и не в телефон, а чуть вперед, сканируя маршрут, оценивая поток людей, который обтекает ее с двух сторон. В этом движении нет напряжения «успешного успеха», есть спокойная энергия человека, который знает, куда идет, и наслаждается самим процессом пути. Солнце бьет сбоку, подсвечивая текстуру ткани куртки, наброшенной на руку, и создавая живой контраст между теплым светом и прохладными тенями зданий.<br><br>За пределами кадра чувствуется продолжение улицы, перекресток, куда она вот-вот выйдет, звук открывающейся двери кафе или шум подъехавшего транспорта. Это не изолированный момент красоты, а фрагмент непрерывной жизни — «life-in-progress», где главный герой не позирует, а проживает свое утро. Ощущение сцены строится на телесной уверенности: она занимает свое место в городе легко, без попыток доказать что-то окружающим. Это визуализация свободы через движение и права быть собой в потоке большого города.<br><br><span style="color:#d1d5db">---</span><br><br>FIRST SCENE TECHNICAL STABILIZATION ADDITIONS<br><br>Maintain facial identity as close as possible to the source photo. Preserve realistic human proportions, natural skin texture, believable body posture, natural camera perspective, and realistic lighting. Avoid AI beauty artifacts, hyper-symmetry, artificial perfection, mannequin feeling, plastic skin, luxury advertising look, and stock photography aesthetics. The person must feel naturally present inside a real-life moment, not inserted into a decorative background.<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## FIRST SCENE VISUAL REALISM ADDITIONS</strong><br><br>Изображение должно выглядеть как настоящий кадр из жизни человека, а не как luxury campaign.<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## Visual Realism Rules</strong><br><br>Избегай:<br>- overly polished skin;<br>- plastic beauty;<br>- excessive glamour;<br>- fashion-commercial look;<br>- influencer aesthetics;<br>- stock photography lighting;<br>- hyper-clean unrealistic interiors;<br>- artificial posing.<br><br>Предпочитай:<br>- natural skin texture;<br>- lived-in spaces;<br>- soft natural lighting;<br>- realistic environments;<br>- imperfect human presence;<br>- atmospheric realism;<br>- emotional subtlety.<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## Human Presence Rules</strong><br><br>Человек должен ощущаться:<br>- живым;<br>- присутствующим;<br>- эмоционально включённым;<br>- находящимся внутри момента.<br><br>Добавляй:<br>- микродвижения;<br>- естественную posture;<br>- real-life gestures;<br>- authentic interaction with environment.<br><br>Не делай человека статичной фигурой, вставленной в красивый фон.<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## Cinematic Atmosphere Rules</strong><br><br>Создавай:<br>- cinematic realism;<br>- emotional atmosphere;<br>- depth;<br>- texture;<br>- air;<br>- natural framing;<br>- realistic lighting behavior.<br><br>Изображение должно выглядеть как кадр из жизни, а не как рекламный баннер.<br><br><strong style="color:#2563eb">## Modern Clothing Rendering</strong><br><br>Одежда должна выглядеть современной, естественной и уместной для сцены.<br><br>Важно:<br>- актуальные пропорции;<br>- естественная посадка;<br>- реалистичные ткани;<br>- отсутствие ощущения костюма;<br>- одежда не должна выглядеть старомодно, если только это не часть выбранного стиля;<br>- образ должен выглядеть так, будто человек действительно так живёт.<br><br>Избегай:<br>- устаревшего Pinterest-образа;<br>- чрезмерной этники;<br>- случайной богемности;<br>- офисной шаблонности;<br>- чрезмерной глянцевости;<br>- одежды, которая выглядит как наряд для фотосессии, а не для жизни.<br><br><strong style="color:#2563eb">## Emotional Visual Amplification</strong><br><br>Изображение должно не только выглядеть реалистично,<br>но и эмоционально притягивать пользователя.<br><br>Цвет, свет, cinematic rendering и atmosphere должны усиливать эмоциональное состояние сцены.<br><br>Избегай:<br>- flat cinematic grading;<br>- grey realism;<br>- emotionally empty realism;<br>- overly muted palette;<br>- visual sterility;<br>- raw unprocessed look.<br><br>Используй:<br>- emotionally readable light;<br>- cinematic depth;<br>- atmospheric richness;<br>- sensory realism;<br>- emotionally expressive color;<br>- depth through light and color;<br>- emotionally enhanced realism.<br><br>Свет и цвет должны помогать человеку чувствовать:<br>- желание жизни;<br>- свободу;<br>- вдохновение;<br>- пространство;<br>- warmth;<br>- vitality;<br>- emotional openness;<br>- calm energy.<br><br>Не уходить:<br>- в fake gloss;<br>- influencer aesthetics;<br>- luxury advertisement;<br>- artificial perfection.<br><br>Но и не делать изображение emotionally flat.<br><br><strong style="color:#2563eb">## Identity Refinement Layer</strong><br><br>Сохраняй:<br>- лицо пользователя;<br>- ключевые черты;<br>- возраст;<br>- энергетику;<br>- узнаваемость;<br>- естественность.<br><br>Но при этом мягко улучшай:<br>- grooming;<br>- visual coherence;<br>- vitality;<br>- posture;<br>- hair neatness;<br>- skin freshness;<br>- clothing coherence;<br>- overall presence quality.<br><br>Пользователь должен ощущаться:<br>- более собранным;<br>- более живым;<br>- более ресурсным;<br>- более aligned with self.<br><br>Важно:<br>не уходить:<br>- в fake beauty;<br>- в influencer aesthetics;<br>- в plastic perfection;<br>- в luxury glamour;<br>- в AI prettification.<br><br>Это не beautification.<br>Это:<br>emotionally elevated realism.<br><br>Опрятность и visual coherence<br>должны ощущаться:<br>- естественно;<br>- жизненно;<br>- правдоподобно;<br>- соответствующе желаемой жизни пользователя.<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## Emotional Elevation Layer</strong><br><br>Изображение должно не только быть believable — оно должно эмоционально возвышать пользователя.<br><br>Это НЕ означает:<br>- fake luxury;<br>- influencer fantasy;<br>- unrealistic aspiration;<br>- perfect life staging.<br><br>Это означает:<br>- emotional beauty (красота, которая ощущается, а не демонстрируется);<br>- cinematic warmth (тепло, которое чувствуется через экран);<br>- inspiring atmosphere (атмосфера, в которую хочется войти);<br>- visual vitality (жизнь, которая пульсирует в кадре);<br>- emotionally amplified realism (реализм, усиленный правильным светом и цветом).<br><br>Изображение должно вызывать у пользователя:<br>- желание поделиться этим кадром;<br>- желание сохранить и возвращаться;<br>- ощущение «это моя жизнь, в которую я хочу войти».<br><br>НЕ делать:<br>- emotionally flat realism (технически правильно, но мертво);<br>- grey neutrality (мрачный, безжизненный реализм);<br>- over-muted atmosphere (всё приглушено до потери эмоции);<br>- dead realism (реализм без пульса).<br><br>Свет, цвет и атмосфера должны быть настроены так, чтобы сцена ощущалась живой и притягательной — не идеальной.<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## F4 &amp;#43; F5 CINEMATIC UPGRADE — 2026-05-18</strong><br><br><strong style="color:#2563eb">## Cultural Assumption Filter for Image Generation</strong><br><br>НЕ включай автоматически в изображение:<br>- бокалы с вином, алкогольные напитки,<br>- сигареты,<br>- luxury signifiers (яхты, виллы, брендовые аксессуары),<br>если это не следует явно из промта сцены.<br><br>Высокий уровень жизни &amp;#61; качество среды, свобода, глубина атмосферы.<br>НЕ &amp;#61; алкоголь или luxury shorthand.<br><br><strong style="color:#2563eb">## Camera Grammar for Image Generation</strong><br><br>Если в detailed_description указан camera type — строго соблюдать его:<br><br>- OTS: герой занимает ~⅓ кадра, мир открывается перед ним<br>- POV walking: камера «идёт» вместе с человеком, динамика<br>- Environmental wide: герой небольшой в масштабе среды, пространство доминирует<br>- Fragment close-up: герой не виден полностью, только деталь/часть<br>- Silhouette contre-jour: герой — тёмный силуэт, яркий фон<br>- Low angle movement: взгляд снизу вверх, динамическая энергия<br>- Side-follow: камера параллельна движению героя<br><br>Не центрировать героя автоматически в каждом кадре.<br>Не делать eye-level medium portrait по умолчанию.<br><br>Стиль одежды: Visual Code: спортивная лёгкость с городской женственностью и актуальной формой.<br>Identity Feeling: женщина выглядит свободной, энергичной, уверенной в теле, современной.<br>Silhouette Logic: мягкий объём, чистая спортивная линия, сочетание облегающего и свободного, движение в одежде.<br>Styling Behavior: спортивные элементы сочетаются с городскими: очки, сумка, пальто, аккуратные кроссовки.<br>Base Wardrobe: свитшот, майка, леггинсы в уместном контексте, широкие спортивные брюки, техническая куртка, кроссовки, сумка, очки.<br>Materials: хлопок, трикотаж, нейлон, техническая ткань, флис.<br>Color Logic: серый, чёрный, белый, графит, молочный, мягкий хаки.<br>Social Signal: движение, свобода, тело, актуальность.<br>Scene Adaptation: в городе — более собранно; дома — мягче; в свободе — движение и воздух; в состоянии — телесная уверенность.<br>Best Scene Fit: Состояние · Свобода · Дом · Окружение.<br>Avoid: спортзал, бесформенный спортивный костюм, слишком откровенный фитнес-образ, случайные леггинсы без стиля.<br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> Метапромпт (отправлен в OpenRouter)<br> <br><br> <br><br> <br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br> <br><br> <br><br> <br> <br>*:first-child]:mt-0 [&amp;&gt;*:last-child]:mb-0 pt-2 prose-sm text-sm leading-6 text-gray-950 dark:text-white &quot;<br> style=&quot;&quot;<br> &gt;<br> ---<br><br><strong style="color:#2563eb">## FIRST SCENE PRODUCTION LAYERS</strong><br><br>Это первая сцена жизни пользователя.<br><br>Она должна быть не просто красивой картинкой, а emotionally believable life moment — эмоционально правдоподобным моментом жизни.<br><br>Главная цель:<br>создать сцену, в которой пользователь узнаёт себя и чувствует: «я хочу войти в эту жизнь».<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## 1. Emotional Direction Layer</strong><br><br>Определи, как пользователь хочет жить и что он хочет чувствовать в своей будущей жизни.<br><br>Сцена должна строиться вокруг:<br>- состояния;<br>- ритма жизни;<br>- атмосферы;<br>- способа присутствия человека в своей жизни;<br>- эмоционального смысла выбранных ответов.<br><br>Не строить сцену вокруг:<br>- дорогих предметов;<br>- случайной роскоши;<br>- внешнего статуса;<br>- декоративного интерьера;<br>- generic success image.<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## 2. Life Moment Selection</strong><br><br>Сцена должна быть моментом жизни.<br><br>Запрещено создавать:<br>- позирование в камеру;<br>- fashion shoot;<br>- рекламную постановку;<br>- человека, который просто стоит и выглядит красиво;<br>- пустой интерьер с человеком как аксессуаром.<br><br>Нужно создавать:<br>- человека внутри живого момента;<br>- действие;<br>- присутствие;<br>- связь со средой;<br>- ощущение жизни до и после кадра.<br><br>Предпочитай:<br>- естественные ситуации;<br>- lived-in moments;<br>- quiet confidence;<br>- человеческие детали;<br>- атмосферу настоящей жизни.<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## 3. Life Probability Layer</strong><br><br>Сцена должна быть причинно связана с профилем пользователя.<br><br>Все элементы сцены должны вытекать из:<br>- Character Profile;<br>- прямых ответов пользователя;<br>- Key Answer Locks;<br>- environment type;<br>- life level;<br>- expression model;<br>- social signal;<br>- visual identity.<br><br>Нельзя вставлять случайную красивую жизнь.<br><br>Если пользователь выбирает спокойствие, глубину и приватность — не помещай его в шумные демонстративные сцены.<br><br>Если пользователь выбирает свободу — показывай свободу через ритм, движение, пространство и возможность выбора, а не только через путешествие.<br><br>Если пользователь выбирает влияние — показывай влияние через деятельность, людей, проекты, ответственность или среду, а не только через дорогой интерьер.<br><br>Если пользователь выбирает высокий уровень жизни — показывай уровень через качество среды, свободу выбора, вкус и устойчивость, а не через вульгарную демонстрацию богатства.<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## 4. Anti-Fantasy Layer</strong><br><br>Не создавай:<br>- fake luxury fantasy;<br>- influencer aesthetics;<br>- пустую красивую жизнь;<br>- unrealistic perfection;<br>- emotionally empty status scene;<br>- glossy magazine fantasy.<br><br>Будущее должно ощущаться:<br>- достижимым;<br>- человеческим;<br>- эмоционально узнаваемым;<br>- проживаемым;<br>- rooted in reality.<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## 5. Emotional Authenticity Layer</strong><br><br>Избегай:<br>- stock confidence;<br>- fake happiness;<br>- exaggerated success energy;<br>- hyper-perfect lifestyle;<br>- emotionally sterile atmosphere.<br><br>Человек должен ощущаться:<br>- живым;<br>- настоящим;<br>- эмоционально присутствующим;<br>- психологически правдоподобным.<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## 6. Continuity Layer</strong><br><br>Даже если сцена aspirational, пользователь должен оставаться собой.<br><br>Не превращай человека:<br>- в другую личность;<br>- в celebrity fantasy;<br>- в generic successful person;<br>- в случайный luxury archetype.<br><br>Среда адаптируется под человека.<br>Не человек под среду.<br><br><strong style="color:#2563eb">## First Scene Style Interpretation</strong><br><br>Для первой сцены выбранный стиль одежды нужно интерпретировать как визуальное направление личности, а не как прямой список предметов.<br><br>Первая сцена должна показать человека в уместной, современной и узнаваемой версии его стиля.<br><br>Перед описанием одежды определи:<br>- насколько сцена приватная или публичная;<br>- насколько человек должен быть расслабленным или собранным;<br>- насколько стиль должен быть мягким, строгим, выразительным или сексуальным;<br>- какие 1–3 признака выбранного стиля лучше всего подходят этому моменту.<br><br>Не используй одежду только потому, что она перечислена в Base Wardrobe.<br><br>Если стиль выглядит слишком буквальным, устаревшим или костюмным, сделай его более современным и жизненным.<br><br>Первая сцена не должна превращать человека в Pinterest-шаблон.<br><br><strong style="color:#2563eb">## First Scene Emotional Entry Logic</strong><br><br>Первая сцена Elyne — это вход пользователя в желаемую жизнь через состояние, желание, пространство, ощущение себя и эмоциональное узнавание.<br><br>Первая сцена не должна по умолчанию показывать карьеру, профессию, работу, проект, мастерскую, офис, ноутбук, чертежи, продуктивность или профессиональную роль.<br><br>Реализация, карьера, проекты и деятельность допустимы только если они прямо поддержаны ответами пользователя:<br>- пользователь выбрал реализацию, карьеру, дело, влияние или творчество как сильный приоритет;<br>- пользователь явно указал проявление через проекты, создание, дело, работу, публичность или профессиональный результат;<br>- sphere context требует такой сцены.<br><br>Если прямого сигнала реализации нет, выбирай emotional entry moment:<br>- ощущение воздуха и простора;<br>- прогулку без спешки;<br>- утренний или вечерний переходный момент;<br>- движение через город, природу или открытую среду;<br>- момент выдоха;<br>- ощущение свободы;<br>- телесное возвращение к себе;<br>- спокойное присутствие в живой среде;<br>- ощущение, что жизнь стала шире;<br>- момент, в который пользователь чувствует: «мне можно быть собой».<br><br>Первая сцена должна мотивировать через желание жить, а не через обязанность действовать.<br><br>Под действием не подразумевается работа или продуктивность. Для первой сцены достаточно микродвижения: идти, открыть окно, выйти на улицу, остановиться у света, коснуться перил, поправить одежду, сесть за стол без рабочей задачи, повернуться к воздуху, пройти через пространство, почувствовать тело в движении.<br><br><strong style="color:#2563eb">## User Answers Priority for First Scene</strong><br><br>Первая сцена должна строиться не от стиля одежды, а от совокупности ответов пользователя.<br><br>Сначала определи смысловой вектор сцены из:<br>- главного приоритета пользователя;<br>- желаемой среды жизни;<br>- желаемого уровня жизни;<br>- способа проявления;<br>- social signal;</div>
+    </div>
+  </div>
+</div>
+
+<div class="gen-card" id="gen-663">
+  <div class="gen-header">
+    <span class="gen-id">gen #663</span>
+    <span class="gen-sphere">9 — Свобода и масштаб жизни</span>
+    <span class="badge" style="background:#2563eb">Первая генерация</span>
+    <span class="badge" style="background:#16a34a">completed</span>
+    <span class="gen-ts">May 18, 2026 12:58:07</span>
+    <span style="color:#9ca3af;font-size:11px">iter 1 · src: profile_photo</span>
+  </div>
+
+  <div class="gen-title">Тишина перед взлётом</div>
+
+  
+
+  <div class="gen-body">
+    <!-- Images column -->
+    <div class="images-col">
+      <div class="col-label">Source photo</div>
+      <div class="img-row"><div class="img-wrap">
+      <a href="https://dreammap.storage.yandexcloud.net/card-photos/NuUalYhp0WU0CIaiGXx4BNiZ04U8dMcrCrqS3Zyl.jpg" target="_blank">
+        <img src="https://dreammap.storage.yandexcloud.net/card-photos/NuUalYhp0WU0CIaiGXx4BNiZ04U8dMcrCrqS3Zyl.jpg" width="180" style="border-radius:8px;object-fit:cover;height:180px;"
+             onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div style="display:none;padding:8px;color:#999;font-size:11px">Image unavailable</div>
+      </a>
+      <div class="img-label">Source #1</div>
+    </div></div>
+      <div class="col-label" style="margin-top:12px">Generated result</div>
+      <div class="img-row"><div class="img-wrap">
+      <a href="https://dreammap.storage.yandexcloud.net/generations/663/e2a1df7a-6fc8-4f28-b21b-90d083ea0c0e.jpg" target="_blank">
+        <img src="https://dreammap.storage.yandexcloud.net/generations/663/e2a1df7a-6fc8-4f28-b21b-90d083ea0c0e.jpg" width="220" style="border-radius:8px;object-fit:cover;height:220px;"
+             onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div style="display:none;padding:8px;color:#999;font-size:11px">Image unavailable</div>
+      </a>
+      <div class="img-label">Result #1</div>
+    </div></div>
+    </div>
+
+    <!-- Audits column -->
+    <div class="audits-col">
+      <div class="audit-section">
+        <div class="audit-title">Camera Grammar</div>
+        <table class='mini-table'><tr><td class='td-label'>Shot type</td><td>close-up</td></tr><tr><td class='td-label'>Camera angle</td><td>eye-level</td></tr><tr><td class='td-label'>Framing</td><td>observational</td></tr><tr><td class='td-label'>Movement present</td><td>yes</td></tr><tr><td class='td-label'>Lookbook risk</td><td><span style="color:#d97706;font-weight:600">medium</span></td></tr></table>
+      </div>
+      <div class="audit-section">
+        <div class="audit-title">Identity Continuity</div>
+        <table class='mini-table'><tr><td class='td-label'>Facial identity</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Age preserved</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Style preserved</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Body language</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Emotional energy</td><td><span class="dot" style="background:#16a34a" title="high"></span> high</td></tr><tr><td class="td-label">Drifted</td><td style="color:#dc2626">—</td></tr><tr><td class="td-label">Cause</td><td style="color:#6b7280;font-style:italic">standard generation</td></tr></table>
+      </div>
+      <div class="audit-section">
+        <div class="audit-title">Sphere / Cliché Audit</div>
+        <div style="font-size:12px">
+        <div>Sphere match: <strong>-</strong></div>
+        <div style="color:#16a34a;margin-top:4px">✓ No luxury clichés detected in prompt</div>
+    </div>
+      </div>
+    </div>
+
+    <!-- Prompt column -->
+    <div class="prompt-col">
+      <div class="audit-title">FAL Prompt (sent)</div>
+      <div class="fal-prompt">*:first-child]:mt-0 [&amp;&gt;*:last-child]:mb-0 pt-2 prose-sm text-sm leading-6 text-gray-950 dark:text-white &quot;<br> style=&quot;&quot;<br> &gt;<br> Крупный план, профиль. Локация: современная транзитная зона международного аэропорта, глубина пространства подчёркнута размытым фоном с силуэтами взлетающих лайнеров. Свет: холодный, рассеянный утренний свет из огромных окон, создающий ощущение стерильности и чистоты, но лицо модели освещено мягким отражением. Действие: она не спешит, она выдерживает паузу. Сидит на минималистичном лаунж-кресле, ноги удобно расположены, в руках стакан с водой или планшет, но взгляд устремлен вдаль, сквозь стекло. Это момент &#x27;emotional_entry&#x27; — спокойствие внутри хаоса перемещений. Одежда: мягкий трикотажный джемпер оверсайз цвета мягкого хаки, белые брюки из хлопкового микса, аккуратные кроссовки сняты и стоят рядом (или надеты, но поза расслаблена). Никакой суеты, только уверенность в том, что мир подождет, пока она соберется с мыслями. Ощущение: внутренняя сила и тишина amidst глобального движения.<br><br>Стиль одежды: Visual Code: спортивная лёгкость с городской женственностью и актуальной формой.<br>Identity Feeling: женщина выглядит свободной, энергичной, уверенной в теле, современной.<br>Silhouette Logic: мягкий объём, чистая спортивная линия, сочетание облегающего и свободного, движение в одежде.<br>Styling Behavior: спортивные элементы сочетаются с городскими: очки, сумка, пальто, аккуратные кроссовки.<br>Base Wardrobe: свитшот, майка, леггинсы в уместном контексте, широкие спортивные брюки, техническая куртка, кроссовки, сумка, очки.<br>Materials: хлопок, трикотаж, нейлон, техническая ткань, флис.<br>Color Logic: серый, чёрный, белый, графит, молочный, мягкий хаки.<br>Social Signal: движение, свобода, тело, актуальность.<br>Scene Adaptation: в городе — более собранно; дома — мягче; в свободе — движение и воздух; в состоянии — телесная уверенность.<br>Best Scene Fit: Состояние · Свобода · Дом · Окружение.<br>Avoid: спортзал, бесформенный спортивный костюм, слишком откровенный фитнес-образ, случайные леггинсы без стиля.<br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> Метапромпт (отправлен в OpenRouter)<br> <br><br> <br><br> <br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br> <br><br> <br><br> <br> <br>*:first-child]:mt-0 [&amp;&gt;*:last-child]:mb-0 pt-2 prose-sm text-sm leading-6 text-gray-950 dark:text-white &quot;<br> style=&quot;&quot;<br> &gt;<br> &amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;<br>РОЛЬ<br>&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;<br><br>Ты — режиссёр, который для одной сферы жизни пользователя строит ТРИ принципиально разных кадра. Это не три похожих варианта одной идеи — это три разных СМЫСЛОВЫХ ОКНА в одну и ту же сферу. Ты не пишешь generic-сцену. Сцена — функция от профиля ИМЕННО ЭТОГО пользователя.<br><br>&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;<br>ВХОДНЫЕ ДАННЫЕ<br>&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;<br><br>Сфера &amp;#61; Свобода и масштаб жизни (freedom).</div>
+    </div>
+  </div>
+</div>
+
+<div class="gen-card" id="gen-664">
+  <div class="gen-header">
+    <span class="gen-id">gen #664</span>
+    <span class="gen-sphere">9 — Свобода и масштаб жизни</span>
+    <span class="badge" style="background:#2563eb">Первая генерация</span>
+    <span class="badge" style="background:#16a34a">completed</span>
+    <span class="gen-ts">May 18, 2026 12:58:07</span>
+    <span style="color:#9ca3af;font-size:11px">iter 1 · src: profile_photo</span>
+  </div>
+
+  <div class="gen-title">Ритм незнакомого города</div>
+
+  
+
+  <div class="gen-body">
+    <!-- Images column -->
+    <div class="images-col">
+      <div class="col-label">Source photo</div>
+      <div class="img-row"><div class="img-wrap">
+      <a href="https://dreammap.storage.yandexcloud.net/card-photos/NuUalYhp0WU0CIaiGXx4BNiZ04U8dMcrCrqS3Zyl.jpg" target="_blank">
+        <img src="https://dreammap.storage.yandexcloud.net/card-photos/NuUalYhp0WU0CIaiGXx4BNiZ04U8dMcrCrqS3Zyl.jpg" width="180" style="border-radius:8px;object-fit:cover;height:180px;"
+             onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div style="display:none;padding:8px;color:#999;font-size:11px">Image unavailable</div>
+      </a>
+      <div class="img-label">Source #1</div>
+    </div></div>
+      <div class="col-label" style="margin-top:12px">Generated result</div>
+      <div class="img-row"><div class="img-wrap">
+      <a href="https://dreammap.storage.yandexcloud.net/generations/664/02272cc7-110e-4d11-bdce-79662765c522.jpg" target="_blank">
+        <img src="https://dreammap.storage.yandexcloud.net/generations/664/02272cc7-110e-4d11-bdce-79662765c522.jpg" width="220" style="border-radius:8px;object-fit:cover;height:220px;"
+             onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div style="display:none;padding:8px;color:#999;font-size:11px">Image unavailable</div>
+      </a>
+      <div class="img-label">Result #1</div>
+    </div></div>
+    </div>
+
+    <!-- Audits column -->
+    <div class="audits-col">
+      <div class="audit-section">
+        <div class="audit-title">Camera Grammar</div>
+        <table class='mini-table'><tr><td class='td-label'>Shot type</td><td>medium</td></tr><tr><td class='td-label'>Camera angle</td><td>eye-level</td></tr><tr><td class='td-label'>Framing</td><td>observational</td></tr><tr><td class='td-label'>Movement present</td><td>yes</td></tr><tr><td class='td-label'>Lookbook risk</td><td><span style="color:#d97706;font-weight:600">medium</span></td></tr></table>
+      </div>
+      <div class="audit-section">
+        <div class="audit-title">Identity Continuity</div>
+        <table class='mini-table'><tr><td class='td-label'>Facial identity</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Age preserved</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Style preserved</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Body language</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Emotional energy</td><td><span class="dot" style="background:#16a34a" title="high"></span> high</td></tr><tr><td class="td-label">Drifted</td><td style="color:#dc2626">—</td></tr><tr><td class="td-label">Cause</td><td style="color:#6b7280;font-style:italic">standard generation</td></tr></table>
+      </div>
+      <div class="audit-section">
+        <div class="audit-title">Sphere / Cliché Audit</div>
+        <div style="font-size:12px">
+        <div>Sphere match: <strong>-</strong></div>
+        <div style="color:#16a34a;margin-top:4px">✓ No luxury clichés detected in prompt</div>
+    </div>
+      </div>
+    </div>
+
+    <!-- Prompt column -->
+    <div class="prompt-col">
+      <div class="audit-title">FAL Prompt (sent)</div>
+      <div class="fal-prompt">*:first-child]:mt-0 [&amp;&gt;*:last-child]:mb-0 pt-2 prose-sm text-sm leading-6 text-gray-950 dark:text-white &quot;<br> style=&quot;&quot;<br> &gt;<br> Средний план, съемка с уровня глаз или чуть ниже, динамика движения. Локация: оживленный перекресток современного города, архитектура из стекла и бетона, неоновые вывески или серые тона мегаполиса. Свет: вечерний, смешанный (сумерки &amp;#43; городской искусственный свет), создающий контрастные блики на тканях. Действие: &#x27;world_interaction&#x27;. Она идет уверенным шагом, не сливаясь с толпой, а выделяясь своей осанкой и ритмом. Вокруг неё размытые фигуры прохожих, подчёркивающие её фокус и направление. Она не турист, она часть этого потока. Одежда: техническая ветровка-анорак черного или темно-серого цвета (матовая ткань, минимум логотипов), под ней — лаконичный топ, удобные брюки-карго из мягкой ткани или прямые джинсы, на ногах — современные кроссовки в тон. На лице — стильные очки. Образ функционален, но эстетичен. Ощущение: адаптивность, энергия, принадлежность к глобальному контексту, жизнь в движении.<br><br>Стиль одежды: Visual Code: спортивная лёгкость с городской женственностью и актуальной формой.<br>Identity Feeling: женщина выглядит свободной, энергичной, уверенной в теле, современной.<br>Silhouette Logic: мягкий объём, чистая спортивная линия, сочетание облегающего и свободного, движение в одежде.<br>Styling Behavior: спортивные элементы сочетаются с городскими: очки, сумка, пальто, аккуратные кроссовки.<br>Base Wardrobe: свитшот, майка, леггинсы в уместном контексте, широкие спортивные брюки, техническая куртка, кроссовки, сумка, очки.<br>Materials: хлопок, трикотаж, нейлон, техническая ткань, флис.<br>Color Logic: серый, чёрный, белый, графит, молочный, мягкий хаки.<br>Social Signal: движение, свобода, тело, актуальность.<br>Scene Adaptation: в городе — более собранно; дома — мягче; в свободе — движение и воздух; в состоянии — телесная уверенность.<br>Best Scene Fit: Состояние · Свобода · Дом · Окружение.<br>Avoid: спортзал, бесформенный спортивный костюм, слишком откровенный фитнес-образ, случайные леггинсы без стиля.<br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> Метапромпт (отправлен в OpenRouter)<br> <br><br> <br><br> <br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br> <br><br> <br><br> <br> <br>*:first-child]:mt-0 [&amp;&gt;*:last-child]:mb-0 pt-2 prose-sm text-sm leading-6 text-gray-950 dark:text-white &quot;<br> style=&quot;&quot;<br> &gt;<br> &amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;<br>РОЛЬ<br>&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;<br><br>Ты — режиссёр, который для одной сферы жизни пользователя строит ТРИ принципиально разных кадра. Это не три похожих варианта одной идеи — это три разных СМЫСЛОВЫХ ОКНА в одну и ту же сферу. Ты не пишешь generic-сцену. Сцена — функция от профиля ИМЕННО ЭТОГО пользователя.<br><br>&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;<br>ВХОДНЫЕ ДАННЫЕ<br>&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;<br><br>Сфера &amp;#61; Свобода и масштаб жизни (freedom).</div>
+    </div>
+  </div>
+</div>
+
+<div class="gen-card" id="gen-665">
+  <div class="gen-header">
+    <span class="gen-id">gen #665</span>
+    <span class="gen-sphere">9 — Свобода и масштаб жизни</span>
+    <span class="badge" style="background:#2563eb">Первая генерация</span>
+    <span class="badge" style="background:#16a34a">completed</span>
+    <span class="gen-ts">May 18, 2026 12:58:07</span>
+    <span style="color:#9ca3af;font-size:11px">iter 1 · src: profile_photo</span>
+  </div>
+
+  <div class="gen-title">Выбор направления</div>
+
+  
+
+  <div class="gen-body">
+    <!-- Images column -->
+    <div class="images-col">
+      <div class="col-label">Source photo</div>
+      <div class="img-row"><div class="img-wrap">
+      <a href="https://dreammap.storage.yandexcloud.net/card-photos/NuUalYhp0WU0CIaiGXx4BNiZ04U8dMcrCrqS3Zyl.jpg" target="_blank">
+        <img src="https://dreammap.storage.yandexcloud.net/card-photos/NuUalYhp0WU0CIaiGXx4BNiZ04U8dMcrCrqS3Zyl.jpg" width="180" style="border-radius:8px;object-fit:cover;height:180px;"
+             onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div style="display:none;padding:8px;color:#999;font-size:11px">Image unavailable</div>
+      </a>
+      <div class="img-label">Source #1</div>
+    </div></div>
+      <div class="col-label" style="margin-top:12px">Generated result</div>
+      <div class="img-row"><div class="img-wrap">
+      <a href="https://dreammap.storage.yandexcloud.net/generations/665/53b1bfee-3da0-4e88-a60d-e5eb8668e3e5.jpg" target="_blank">
+        <img src="https://dreammap.storage.yandexcloud.net/generations/665/53b1bfee-3da0-4e88-a60d-e5eb8668e3e5.jpg" width="220" style="border-radius:8px;object-fit:cover;height:220px;"
+             onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div style="display:none;padding:8px;color:#999;font-size:11px">Image unavailable</div>
+      </a>
+      <div class="img-label">Result #1</div>
+    </div></div>
+    </div>
+
+    <!-- Audits column -->
+    <div class="audits-col">
+      <div class="audit-section">
+        <div class="audit-title">Camera Grammar</div>
+        <table class='mini-table'><tr><td class='td-label'>Shot type</td><td>wide</td></tr><tr><td class='td-label'>Camera angle</td><td>eye-level</td></tr><tr><td class='td-label'>Framing</td><td>observational</td></tr><tr><td class='td-label'>Movement present</td><td>yes</td></tr><tr><td class='td-label'>Lookbook risk</td><td><span style="color:#16a34a;font-weight:600">low</span></td></tr></table>
+      </div>
+      <div class="audit-section">
+        <div class="audit-title">Identity Continuity</div>
+        <table class='mini-table'><tr><td class='td-label'>Facial identity</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Age preserved</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Style preserved</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Body language</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Emotional energy</td><td><span class="dot" style="background:#16a34a" title="high"></span> high</td></tr><tr><td class="td-label">Drifted</td><td style="color:#dc2626">—</td></tr><tr><td class="td-label">Cause</td><td style="color:#6b7280;font-style:italic">standard generation</td></tr></table>
+      </div>
+      <div class="audit-section">
+        <div class="audit-title">Sphere / Cliché Audit</div>
+        <div style="font-size:12px">
+        <div>Sphere match: <strong>-</strong></div>
+        <div style="color:#16a34a;margin-top:4px">✓ No luxury clichés detected in prompt</div>
+    </div>
+      </div>
+    </div>
+
+    <!-- Prompt column -->
+    <div class="prompt-col">
+      <div class="audit-title">FAL Prompt (sent)</div>
+      <div class="fal-prompt">*:first-child]:mt-0 [&amp;&gt;*:last-child]:mb-0 pt-2 prose-sm text-sm leading-6 text-gray-950 dark:text-white &quot;<br> style=&quot;&quot;<br> &gt;<br> Общий план, вид со спины или в три четверти, подчеркивающий масштаб среды. Локация: просторный холл аэропорта, вокзала или открытая площадь у транспортного узла. Много воздуха, высокие потолки, линии перспективы, уводящие взгляд вперед. Свет: яркий, дневной, наполняющий пространство, создающий длинные тени и ощущение открытости. Действие: &#x27;movement_choice&#x27;. Она стоит неподвижно всего секунду, прежде чем продолжить путь. В руке — только самое необходимое (телефон или билет), вторая рука свободно опущена. Поза выражает готовность к рывку, но без напряжения. Это не ожидание, это выбор. Одежда: многослойный лук для путешествия — белая футболка, рубашка из хлопка, накинутая на плечи или завязанная, поверх — легкая куртка-бомбер серого цвета. Брюки свободного кроя, позволяющие двигаться. Обувь — удобная, но стильная. Силуэт чистый, геометричный. Ощущение: масштаб жизни, свобода выбора, горизонт возможностей, вдохновляющая перспектива.<br><br>Стиль одежды: Visual Code: спортивная лёгкость с городской женственностью и актуальной формой.<br>Identity Feeling: женщина выглядит свободной, энергичной, уверенной в теле, современной.<br>Silhouette Logic: мягкий объём, чистая спортивная линия, сочетание облегающего и свободного, движение в одежде.<br>Styling Behavior: спортивные элементы сочетаются с городскими: очки, сумка, пальто, аккуратные кроссовки.<br>Base Wardrobe: свитшот, майка, леггинсы в уместном контексте, широкие спортивные брюки, техническая куртка, кроссовки, сумка, очки.<br>Materials: хлопок, трикотаж, нейлон, техническая ткань, флис.<br>Color Logic: серый, чёрный, белый, графит, молочный, мягкий хаки.<br>Social Signal: движение, свобода, тело, актуальность.<br>Scene Adaptation: в городе — более собранно; дома — мягче; в свободе — движение и воздух; в состоянии — телесная уверенность.<br>Best Scene Fit: Состояние · Свобода · Дом · Окружение.<br>Avoid: спортзал, бесформенный спортивный костюм, слишком откровенный фитнес-образ, случайные леггинсы без стиля.<br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> Метапромпт (отправлен в OpenRouter)<br> <br><br> <br><br> <br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br> <br><br> <br><br> <br> <br>*:first-child]:mt-0 [&amp;&gt;*:last-child]:mb-0 pt-2 prose-sm text-sm leading-6 text-gray-950 dark:text-white &quot;<br> style=&quot;&quot;<br> &gt;<br> &amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;<br>РОЛЬ<br>&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;<br><br>Ты — режиссёр, который для одной сферы жизни пользователя строит ТРИ принципиально разных кадра. Это не три похожих варианта одной идеи — это три разных СМЫСЛОВЫХ ОКНА в одну и ту же сферу. Ты не пишешь generic-сцену. Сцена — функция от профиля ИМЕННО ЭТОГО пользователя.<br><br>&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;<br>ВХОДНЫЕ ДАННЫЕ<br>&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;<br><br>Сфера &amp;#61; Свобода и масштаб жизни (freedom).</div>
+    </div>
+  </div>
+</div>
+
+<div class="gen-card" id="gen-666">
+  <div class="gen-header">
+    <span class="gen-id">gen #666</span>
+    <span class="gen-sphere">7 — Творчество и новые начинания</span>
+    <span class="badge" style="background:#2563eb">Первая генерация</span>
+    <span class="badge" style="background:#16a34a">completed</span>
+    <span class="gen-ts">May 18, 2026 13:12:10</span>
+    <span style="color:#9ca3af;font-size:11px">iter 1 · src: profile_photo</span>
+  </div>
+
+  <div class="gen-title">Момент перед первым мазком</div>
+
+  
+
+  <div class="gen-body">
+    <!-- Images column -->
+    <div class="images-col">
+      <div class="col-label">Source photo</div>
+      <div class="img-row"><div class="img-wrap">
+      <a href="https://dreammap.storage.yandexcloud.net/card-photos/NuUalYhp0WU0CIaiGXx4BNiZ04U8dMcrCrqS3Zyl.jpg" target="_blank">
+        <img src="https://dreammap.storage.yandexcloud.net/card-photos/NuUalYhp0WU0CIaiGXx4BNiZ04U8dMcrCrqS3Zyl.jpg" width="180" style="border-radius:8px;object-fit:cover;height:180px;"
+             onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div style="display:none;padding:8px;color:#999;font-size:11px">Image unavailable</div>
+      </a>
+      <div class="img-label">Source #1</div>
+    </div></div>
+      <div class="col-label" style="margin-top:12px">Generated result</div>
+      <div class="img-row"><div class="img-wrap">
+      <a href="https://dreammap.storage.yandexcloud.net/generations/666/aee4b704-329d-4157-ab0a-9fcfaa06d31d.jpg" target="_blank">
+        <img src="https://dreammap.storage.yandexcloud.net/generations/666/aee4b704-329d-4157-ab0a-9fcfaa06d31d.jpg" width="220" style="border-radius:8px;object-fit:cover;height:220px;"
+             onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div style="display:none;padding:8px;color:#999;font-size:11px">Image unavailable</div>
+      </a>
+      <div class="img-label">Result #1</div>
+    </div></div>
+    </div>
+
+    <!-- Audits column -->
+    <div class="audits-col">
+      <div class="audit-section">
+        <div class="audit-title">Camera Grammar</div>
+        <table class='mini-table'><tr><td class='td-label'>Shot type</td><td>medium (side-follow)</td></tr><tr><td class='td-label'>Camera angle</td><td>low-angle</td></tr><tr><td class='td-label'>Framing</td><td>observational</td></tr><tr><td class='td-label'>Movement present</td><td>yes</td></tr><tr><td class='td-label'>Lookbook risk</td><td><span style="color:#dc2626;font-weight:600">high</span></td></tr></table>
+      </div>
+      <div class="audit-section">
+        <div class="audit-title">Identity Continuity</div>
+        <table class='mini-table'><tr><td class='td-label'>Facial identity</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Age preserved</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Style preserved</td><td><span class="dot" style="background:#16a34a" title="high"></span> high</td></tr><tr><td class='td-label'>Body language</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Emotional energy</td><td><span class="dot" style="background:#16a34a" title="high"></span> high</td></tr><tr><td class="td-label">Drifted</td><td style="color:#dc2626">—</td></tr><tr><td class="td-label">Cause</td><td style="color:#6b7280;font-style:italic">standard generation</td></tr></table>
+      </div>
+      <div class="audit-section">
+        <div class="audit-title">Sphere / Cliché Audit</div>
+        <div style="font-size:12px">
+        <div>Sphere match: <strong>-</strong></div>
+        <div style="margin-top:4px">Luxury clichés: <span class="badge" style="background:#dc2626">вино</span> </div>
+    </div>
+      </div>
+    </div>
+
+    <!-- Prompt column -->
+    <div class="prompt-col">
+      <div class="audit-title">FAL Prompt (sent)</div>
+      <div class="fal-prompt"><strong style="color:#2563eb">Camera Type: Environmental Wide with Side-Follow Movement. Сцена разворачивается в просторном, наполненном воздухом пространстве лофта или современной студии с высокими окнами, через которые льется мягкий, рассеянный дневной свет, создавая ощущение глобального контекста и свободы. В центре композиции — процесс начала: на полу или низком столе лежит большой, еще не натянутый холст (от 1 метра), который женщина только что достала из упаковки. Она находится в движении, слегка наклонившись, её руки уверенно касляются плотной ткани, расправляя её. Это не статичная поза художника, а живой момент перехода от идеи к материи. Она одета в свой_signature_стиль Sport Casual: свободные широкие брюки из мягкого хлопка цвета графита или хаки, облегающая белая майка и расстегнутая сверху техническая куртка-ветровка из нейлона, наброшенная на плечи как плащ, что подчеркивает её готовность к действию и городскую мобильность даже в творчестве. На ногах — аккуратные, стильные кроссовки. Её волосы собраны небрежно, но опрятно, лицо выражает сосредоточенный интерес и предвкушение, взгляд направлен на фактуру холста. Вокруг видны следы подготовки: открытые тюбики красок, палитра, но нет завершенных работ — только потенциал. За пределами кадра угадывается жизнь большого города или вид из окна аэропорта/отеля, напоминая о её жизни между странами. Атмосфера насыщена ощущением &#x27;сейчас что-то родится&#x27;: это не про результат, а про смелость первого шага. Свет играет на текстурах тканей и бумаги, создавая объем и глубину. Сцена передает её внутреннюю силу и легкость: она не &#x27;мучается над шедевром&#x27;, а с радостью и профессионализмом входит в поток создания нового.</strong><br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## FIRST SCENE VISUAL REALISM ADDITIONS</strong><br><br>Изображение должно выглядеть как настоящий кадр из жизни человека, а не как luxury campaign.<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## Visual Realism Rules</strong><br><br>Избегай:<br>- overly polished skin;<br>- plastic beauty;<br>- excessive glamour;<br>- fashion-commercial look;<br>- influencer aesthetics;<br>- stock photography lighting;<br>- hyper-clean unrealistic interiors;<br>- artificial posing.<br><br>Предпочитай:<br>- natural skin texture;<br>- lived-in spaces;<br>- soft natural lighting;<br>- realistic environments;<br>- imperfect human presence;<br>- atmospheric realism;<br>- emotional subtlety.<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## Human Presence Rules</strong><br><br>Человек должен ощущаться:<br>- живым;<br>- присутствующим;<br>- эмоционально включённым;<br>- находящимся внутри момента.<br><br>Добавляй:<br>- микродвижения;<br>- естественную posture;<br>- real-life gestures;<br>- authentic interaction with environment.<br><br>Не делай человека статичной фигурой, вставленной в красивый фон.<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## Cinematic Atmosphere Rules</strong><br><br>Создавай:<br>- cinematic realism;<br>- emotional atmosphere;<br>- depth;<br>- texture;<br>- air;<br>- natural framing;<br>- realistic lighting behavior.<br><br>Изображение должно выглядеть как кадр из жизни, а не как рекламный баннер.<br><br><strong style="color:#2563eb">## Modern Clothing Rendering</strong><br><br>Одежда должна выглядеть современной, естественной и уместной для сцены.<br><br>Важно:<br>- актуальные пропорции;<br>- естественная посадка;<br>- реалистичные ткани;<br>- отсутствие ощущения костюма;<br>- одежда не должна выглядеть старомодно, если только это не часть выбранного стиля;<br>- образ должен выглядеть так, будто человек действительно так живёт.<br><br>Избегай:<br>- устаревшего Pinterest-образа;<br>- чрезмерной этники;<br>- случайной богемности;<br>- офисной шаблонности;<br>- чрезмерной глянцевости;<br>- одежды, которая выглядит как наряд для фотосессии, а не для жизни.<br><br><strong style="color:#2563eb">## Emotional Visual Amplification</strong><br><br>Изображение должно не только выглядеть реалистично,<br>но и эмоционально притягивать пользователя.<br><br>Цвет, свет, cinematic rendering и atmosphere должны усиливать эмоциональное состояние сцены.<br><br>Избегай:<br>- flat cinematic grading;<br>- grey realism;<br>- emotionally empty realism;<br>- overly muted palette;<br>- visual sterility;<br>- raw unprocessed look.<br><br>Используй:<br>- emotionally readable light;<br>- cinematic depth;<br>- atmospheric richness;<br>- sensory realism;<br>- emotionally expressive color;<br>- depth through light and color;<br>- emotionally enhanced realism.<br><br>Свет и цвет должны помогать человеку чувствовать:<br>- желание жизни;<br>- свободу;<br>- вдохновение;<br>- пространство;<br>- warmth;<br>- vitality;<br>- emotional openness;<br>- calm energy.<br><br>Не уходить:<br>- в fake gloss;<br>- influencer aesthetics;<br>- luxury advertisement;<br>- artificial perfection.<br><br>Но и не делать изображение emotionally flat.<br><br><strong style="color:#2563eb">## Identity Refinement Layer</strong><br><br>Сохраняй:<br>- лицо пользователя;<br>- ключевые черты;<br>- возраст;<br>- энергетику;<br>- узнаваемость;<br>- естественность.<br><br>Но при этом мягко улучшай:<br>- grooming;<br>- visual coherence;<br>- vitality;<br>- posture;<br>- hair neatness;<br>- skin freshness;<br>- clothing coherence;<br>- overall presence quality.<br><br>Пользователь должен ощущаться:<br>- более собранным;<br>- более живым;<br>- более ресурсным;<br>- более aligned with self.<br><br>Важно:<br>не уходить:<br>- в fake beauty;<br>- в influencer aesthetics;<br>- в plastic perfection;<br>- в luxury glamour;<br>- в AI prettification.<br><br>Это не beautification.<br>Это:<br>emotionally elevated realism.<br><br>Опрятность и visual coherence<br>должны ощущаться:<br>- естественно;<br>- жизненно;<br>- правдоподобно;<br>- соответствующе желаемой жизни пользователя.<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## Emotional Elevation Layer</strong><br><br>Изображение должно не только быть believable — оно должно эмоционально возвышать пользователя.<br><br>Это НЕ означает:<br>- fake luxury;<br>- influencer fantasy;<br>- unrealistic aspiration;<br>- perfect life staging.<br><br>Это означает:<br>- emotional beauty (красота, которая ощущается, а не демонстрируется);<br>- cinematic warmth (тепло, которое чувствуется через экран);<br>- inspiring atmosphere (атмосфера, в которую хочется войти);<br>- visual vitality (жизнь, которая пульсирует в кадре);<br>- emotionally amplified realism (реализм, усиленный правильным светом и цветом).<br><br>Изображение должно вызывать у пользователя:<br>- желание поделиться этим кадром;<br>- желание сохранить и возвращаться;<br>- ощущение «это моя жизнь, в которую я хочу войти».<br><br>НЕ делать:<br>- emotionally flat realism (технически правильно, но мертво);<br>- grey neutrality (мрачный, безжизненный реализм);<br>- over-muted atmosphere (всё приглушено до потери эмоции);<br>- dead realism (реализм без пульса).<br><br>Свет, цвет и атмосфера должны быть настроены так, чтобы сцена ощущалась живой и притягательной — не идеальной.<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## F4 &amp;#43; F5 CINEMATIC UPGRADE — 2026-05-18</strong><br><br><strong style="color:#2563eb">## Cultural Assumption Filter for Image Generation</strong><br><br>НЕ включай автоматически в изображение:<br>- бокалы с вином, алкогольные напитки,<br>- сигареты,<br>- luxury signifiers (яхты, виллы, брендовые аксессуары),<br>если это не следует явно из промта сцены.<br><br>Высокий уровень жизни &amp;#61; качество среды, свобода, глубина атмосферы.<br>НЕ &amp;#61; алкоголь или luxury shorthand.<br><br><strong style="color:#2563eb">## Camera Grammar for Image Generation</strong><br><br>Если в detailed_description указан camera type — строго соблюдать его:<br><br>- OTS: герой занимает ~⅓ кадра, мир открывается перед ним<br>- POV walking: камера «идёт» вместе с человеком, динамика<br>- Environmental wide: герой небольшой в масштабе среды, пространство доминирует<br>- Fragment close-up: герой не виден полностью, только деталь/часть<br>- Silhouette contre-jour: герой — тёмный силуэт, яркий фон<br>- Low angle movement: взгляд снизу вверх, динамическая энергия<br>- Side-follow: камера параллельна движению героя<br><br>Не центрировать героя автоматически в каждом кадре.<br>Не делать eye-level medium portrait по умолчанию.<br><br>Стиль одежды: Visual Code: спортивная лёгкость с городской женственностью и актуальной формой.<br>Identity Feeling: женщина выглядит свободной, энергичной, уверенной в теле, современной.<br>Silhouette Logic: мягкий объём, чистая спортивная линия, сочетание облегающего и свободного, движение в одежде.<br>Styling Behavior: спортивные элементы сочетаются с городскими: очки, сумка, пальто, аккуратные кроссовки.<br>Base Wardrobe: свитшот, майка, леггинсы в уместном контексте, широкие спортивные брюки, техническая куртка, кроссовки, сумка, очки.<br>Materials: хлопок, трикотаж, нейлон, техническая ткань, флис.<br>Color Logic: серый, чёрный, белый, графит, молочный, мягкий хаки.<br>Social Signal: движение, свобода, тело, актуальность.<br>Scene Adaptation: в городе — более собранно; дома — мягче; в свободе — движение и воздух; в состоянии — телесная уверенность.<br>Best Scene Fit: Состояние · Свобода · Дом · Окружение.<br>Avoid: спортзал, бесформенный спортивный костюм, слишком откровенный фитнес-образ, случайные леггинсы без стиля.<br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> Метапромпт (отправлен в OpenRouter)<br> <br><br> <br><br> <br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br> <br><br> <br><br> <br> <br>*:first-child]:mt-0 [&amp;&gt;*:last-child]:mb-0 pt-2 prose-sm text-sm leading-6 text-gray-950 dark:text-white &quot;<br> style=&quot;&quot;<br> &gt;<br> Ты — AI визуальный режиссёр мирового уровня и архитектор жизненных сценариев.<br><br>Твоя задача — создать ОДИН финальный промпт для генерации изображения, который покажет человеку не просто красивую сцену, а реальный, узнаваемый и притягательный фрагмент его жизни в сфере «знания / развитие / мудрость».<br><br>Сцена должна вызывать ощущение:<br>«это не картинка — это моя живая глубина, мой рост, мой доступ к знанию, пониманию и более сложному уровню себя».<br><br><span style="color:#d1d5db">----------------------------------</span><br>ВХОДНЫЕ ДАННЫЕ<br><span style="color:#d1d5db">----------------------------------</span><br><br>Используй только ответы пользователя:<br><br>Название сферы: Творчество и новые начинания<br><br>Анализ профиля пользователя:<br>Character Profile: Устойчивое ядро личности — современная женщина (25 лет), чья идентичность строится на синтезе внутренней свободы и осознанного масштаба. Её главный мотив — расширение горизонтов жизни через перемещение между странами, сохраняя при этом ощущение спокойствия и внутренней силы. Она проявляет себя через эстетику образа и стиля жизни, стремясь к красивому и вдохновляющему существованию. Эмоциональный вектор направлен от поиска легкости к обретению уверенности в больших возможностях. Социальный сигнал: энергичная, современная, уверенная в своем теле, но не демонстративная; она излучает готовность к движению и адаптивность. Уровень жизни характеризуется глобальным контекстом и высоким качеством среды. Visual Identity: Доминирующее направление — &#x27;Sport Casual&#x27; как философия городской мобильности: спортивная легкость, соединенная с женственностью и актуальными пропорциями. Это не фитнес-образ, а стиль жизни в движении. Силуэт строится на игре объемов (мягкий оверсайз &amp;#43; чистые линии), материалы — технологичные и натуральные (трикотаж, нейлон, хлопок) в палитре серого, черного, белого и мягкого хаки. Вторичные влияния отсутствуют как отдельные стили, так как выбранный вектор полностью покрывает запрос на свободу и масштаб. Контекстное поведение: в путешествиях и городе образ максимально функционален и собран (техническая куртка, аккуратные кроссовки, очки), дома становится мягче и тактильнее. Избегать: бесформенных спортивных костюмов, откровенного фитнес-стиля, случайных леггинсов без контекста, излишней формальности или &#x27;люксового&#x27; блеска. Key Answer Locks для первой сцены: 1) Среда: жизнь между разными странами (фон аэропорта, современного города или трансфера); 2) Ощущение: свобода, легкость и внутренняя сила; 3) Проявление: через стиль и образ жизни (спортивный шик, уверенность в теле); 4) Визуальный код: чистые линии, сочетание свободного и облегающего, отсутствие перегруженности деталями; 5) Атмосфера: масштабная, наполненная, вдохновляющая.<br><br>Общие ответы пользователя:<br>Character Profile: Устойчивое ядро личности — современная женщина (25 лет), чья идентичность строится на синтезе внутренней свободы и осознанного масштаба. Её главный мотив — расширение горизонтов жизни через перемещение между странами, сохраняя при этом ощущение спокойствия и внутренней силы. Она проявляет себя через эстетику образа и стиля жизни, стремясь к красивому и вдохновляющему существованию. Эмоциональный вектор направлен от поиска легкости к обретению уверенности в больших возможностях. Социальный сигнал: энергичная, современная, уверенная в своем теле, но не демонстративная; она излучает готовность к движению и адаптивность. Уровень жизни характеризуется глобальным контекстом и высоким качеством среды. Visual Identity: Доминирующее направление — &#x27;Sport Casual&#x27; как философия городской мобильности: спортивная легкость, соединенная с женственностью и актуальными пропорциями. Это не фитнес-образ, а стиль жизни в движении. Силуэт строится на игре объемов (мягкий оверсайз &amp;#43; чистые линии), материалы — технологичные и натуральные (трикотаж, нейлон, хлопок) в палитре серого, черного, белого и мягкого хаки. Вторичные влияния отсутствуют как отдельные стили, так как выбранный вектор полностью покрывает запрос на свободу и масштаб. Контекстное поведение: в путешествиях и городе образ максимально функционален и собран (техническая куртка, аккуратные кроссовки, очки), дома становится мягче и тактильнее. Избегать: бесформенных спортивных костюмов, откровенного фитнес-стиля, случайных леггинсов без контекста, излишней формальности или &#x27;люксового&#x27; блеска. Key Answer Locks для первой сцены: 1) Среда: жизнь между разными странами (фон аэропорта, современного города или трансфера); 2) Ощущение: свобода, легкость и внутренняя сила; 3) Проявление: через стиль и образ жизни (спортивный шик, уверенность в теле); 4) Визуальный код: чистые линии, сочетание свободного и облегающего, отсутствие перегруженности деталями; 5) Атмосфера: масштабная, наполненная, вдохновляющая.<br><br>Ответы опросника этой сферы:<br>В: Что для тебя значит создавать новое?<br>О: выразить себя через творчество<br><br>В: Как ты хочешь это проживать?<br>О: вдохновлённо и с интересом<br><br>В: Через что ты бы хотел видеть это в своей жизни?<br>О: творчество и самовыражение<br><br>В: Какая деталь окружения или маленькое действие сразу даёт тебе чувство, что ты находишься в потоке создания чего-то нового?<br>О: Позыв писать картину, выдавливание красок на палитру, распаковка большого холста (от 1 метра),<br><br>Выбранный стиль одеждый:<br>Visual Code: спортивная лёгкость с городской женственностью и актуальной формой.<br>Identity Feeling: женщина выглядит свободной, энергичной, уверенной в теле, современной.<br>Silhouette Logic: мягкий объём, чистая спортивная линия, сочетание облегающего и свободного, движение в одежде.<br>Styling Behavior: спортивные элементы сочетаются с городскими: очки, сумка, пальто, аккуратные кроссовки.<br>Base Wardrobe: свитшот, майка, леггинсы в уместном контексте, широкие спортивные брюки, техническая куртка, кроссовки, сумка, очки.<br>Materials: хлопок, трикотаж, нейлон, техническая ткань, флис.<br>Color Logic: серый, чёрный, белый, графит, молочный, мягкий хаки.<br>Social Signal: движение, свобода, тело, актуальность.<br>Scene Adaptation: в городе — более собранно; дома — мягче; в свободе — движение и воздух; в состоянии — телесная уверенность.<br>Best Scene Fit: Состояние · Свобода · Дом · Окружение.<br>Avoid: спортзал, бесформенный спортивный костюм, слишком откровенный фитнес-образ, случайные леггинсы без стиля.<br><br>Фото пользователя передаётся отдельно для сохранения лица.<br><br><span style="color:#d1d5db">----------------------------------</span><br>ШАГ 1 — ИНТЕРПРЕТАЦИЯ<br><span style="color:#d1d5db">----------------------------------</span><br><br>На основе ответов определи не набор сухих параметров, а целостный профиль того, как человек развивается, учится и входит в понимание.<br><br>Пойми:<br><br>- какой это тип человека по отношению к знанию<br>- он больше исследователь, мыслитель, практик, стратег, ученик, наставник, интеграто</div>
+    </div>
+  </div>
+</div>
+
+<div class="gen-card" id="gen-667">
+  <div class="gen-header">
+    <span class="gen-id">gen #667</span>
+    <span class="gen-sphere">7 — Творчество и новые начинания</span>
+    <span class="badge" style="background:#7c3aed">Уточнение (с комментарием)</span>
+    <span class="badge" style="background:#16a34a">completed</span>
+    <span class="gen-ts">May 18, 2026 13:13:58</span>
+    <span style="color:#9ca3af;font-size:11px">iter 2 · src: previous_generation</span>
+  </div>
+
+  <div class="gen-title">Момент перед первым мазком</div>
+
+  <div class="wish-block"><strong>User wish:</strong> Переодень меня в стиль более оверсайзный, типа как баленсиага, монохром, что-то типа того</div>
+
+  <div class="gen-body">
+    <!-- Images column -->
+    <div class="images-col">
+      <div class="col-label">Source photo</div>
+      <div class="img-row"><div class="img-wrap">
+      <a href="https://dreammap.storage.yandexcloud.net/generations/666/aee4b704-329d-4157-ab0a-9fcfaa06d31d.jpg" target="_blank">
+        <img src="https://dreammap.storage.yandexcloud.net/generations/666/aee4b704-329d-4157-ab0a-9fcfaa06d31d.jpg" width="180" style="border-radius:8px;object-fit:cover;height:180px;"
+             onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div style="display:none;padding:8px;color:#999;font-size:11px">Image unavailable</div>
+      </a>
+      <div class="img-label">Source #1</div>
+    </div></div>
+      <div class="col-label" style="margin-top:12px">Generated result</div>
+      <div class="img-row"><div class="img-wrap">
+      <a href="https://dreammap.storage.yandexcloud.net/generations/667/478d533f-830a-4997-a397-89aba4d4e7a9.jpg" target="_blank">
+        <img src="https://dreammap.storage.yandexcloud.net/generations/667/478d533f-830a-4997-a397-89aba4d4e7a9.jpg" width="220" style="border-radius:8px;object-fit:cover;height:220px;"
+             onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div style="display:none;padding:8px;color:#999;font-size:11px">Image unavailable</div>
+      </a>
+      <div class="img-label">Result #1</div>
+    </div></div>
+    </div>
+
+    <!-- Audits column -->
+    <div class="audits-col">
+      <div class="audit-section">
+        <div class="audit-title">Camera Grammar</div>
+        <table class='mini-table'><tr><td class='td-label'>Shot type</td><td>medium (side-follow)</td></tr><tr><td class='td-label'>Camera angle</td><td>high-angle</td></tr><tr><td class='td-label'>Framing</td><td>observational</td></tr><tr><td class='td-label'>Movement present</td><td>yes</td></tr><tr><td class='td-label'>Lookbook risk</td><td><span style="color:#16a34a;font-weight:600">low</span></td></tr></table>
+      </div>
+      <div class="audit-section">
+        <div class="audit-title">Identity Continuity</div>
+        <table class='mini-table'><tr><td class='td-label'>Facial identity</td><td><span class="dot" style="background:#dc2626" title="low"></span> low</td></tr><tr><td class='td-label'>Age preserved</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Style preserved</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Body language</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Emotional energy</td><td><span class="dot" style="background:#16a34a" title="high"></span> high</td></tr><tr><td class="td-label">Drifted</td><td style="color:#dc2626">facial proportions, hair detail, skin texture</td></tr><tr><td class="td-label">Cause</td><td style="color:#6b7280;font-style:italic">no face-lock in explore/wish prompt chain</td></tr></table>
+      </div>
+      <div class="audit-section">
+        <div class="audit-title">Sphere / Cliché Audit</div>
+        <div style="font-size:12px">
+        <div>Sphere match: <strong>-</strong></div>
+        <div style="color:#16a34a;margin-top:4px">✓ No luxury clichés detected in prompt</div>
+    </div>
+      </div>
+    </div>
+
+    <!-- Prompt column -->
+    <div class="prompt-col">
+      <div class="audit-title">FAL Prompt (sent)</div>
+      <div class="fal-prompt"><strong style="color:#2563eb">Camera Type: Environmental Wide with Side-Follow Movement. Сцена разворачивается в просторном, наполненном воздухом пространстве лофта или современной студии с высокими окнами, через которые льется мягкий, рассеянный дневной свет, создавая ощущение глобального контекста и свободы. В центре композиции — процесс начала: на полу или низком столе лежит большой, еще не натянутый холст (от 1 метра), который женщина только что достала из упаковки. Она находится в движении, слегка наклонившись, её руки уверенно касляются плотной ткани, расправляя её. Это не статичная поза художника, а живой момент перехода от идеи к материи. Она одета в свой_signature_стиль Sport Casual: свободные широкие брюки из мягкого хлопка цвета графита или хаки, облегающая белая майка и расстегнутая сверху техническая куртка-ветровка из нейлона, наброшенная на плечи как плащ, что подчеркивает её готовность к действию и городскую мобильность даже в творчестве. На ногах — аккуратные, стильные кроссовки. Её волосы собраны небрежно, но опрятно, лицо выражает сосредоточенный интерес и предвкушение, взгляд направлен на фактуру холста. Вокруг видны следы подготовки: открытые тюбики красок, палитра, но нет завершенных работ — только потенциал. За пределами кадра угадывается жизнь большого города или вид из окна аэропорта/отеля, напоминая о её жизни между странами. Атмосфера насыщена ощущением &#x27;сейчас что-то родится&#x27;: это не про результат, а про смелость первого шага. Свет играет на текстурах тканей и бумаги, создавая объем и глубину. Сцена передает её внутреннюю силу и легкость: она не &#x27;мучается над шедевром&#x27;, а с радостью и профессионализмом входит в поток создания нового.</strong><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> Комментарий пользователя<br> <br><br> <br><br> <br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br> <br><br> <br><br> <br> <br>*:first-child]:mt-0 [&amp;&gt;*:last-child]:mb-0 pt-2 prose-sm text-sm leading-6 text-gray-950 dark:text-white &quot;<br> style=&quot;&quot;<br> &gt;<br> Переодень меня в стиль более оверсайзный, типа как баленсиага, монохром, что-то типа того<br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> Изображения отправленные в FAL<br><br> <br> <br><br> <br> <br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> baseGenerationUrl — Основа (предыдущая генерация)<br> <br><br> <br><br> <br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> Результат<br><br> <br> <br><br> <br> <br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> Сгенерированное изображение<br> <br><br> <br><br> <br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br> <br> <br> <br><br> <br> <br><br> <br><br> <br><br> <br> <br> <br> <br><br> Закрыть<br> <br><br> <br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br> <br> {<br> this.isOpen = true<br><br> <br> this.$refs.modalContainer.dispatchEvent(<br> new CustomEvent(&#x27;modal-opened&#x27;, { detail: { id: &#x27;a1TE59NddR3ShD9xiLR4-table-bulk-action&#x27; } }),<br> )<br> })<br> },<br> }&quot;<br> x-on:close-modal.window=&quot;if ($event.detail.id === &#x27;a1TE59NddR3ShD9xiLR4-table-bulk-action&#x27;) close()&quot;<br> x-on:open-modal.window=&quot;if ($event.detail.id === &#x27;a1TE59NddR3ShD9xiLR4-table-bulk-action&#x27;) open()&quot;<br> data-fi-modal-id=&quot;a1TE59NddR3ShD9xiLR4-table-bulk-action&quot;<br> x-trap.noscroll=&quot;isOpen&quot;<br> x-bind:class=&quot;{<br> &#x27;fi-modal-open&#x27;: isOpen,<br> }&quot;<br> class=&quot;fi-modal block&quot;<br>&gt;<br> <br> <br><br> <br><br> <br><br> <br><br> <br> {<br> isShown = isOpen<br> $watch(&#x27;isOpen&#x27;, () =&gt; (isShown = isOpen))<br> })<br> &quot;<br> x-on:keydown.window.escape=&quot;$dispatch(&#x27;close-modal&#x27;, { id: &#x27;a1TE59NddR3ShD9xiLR4-table-bulk-action&#x27; })&quot;<br> x-show=&quot;isShown&quot;<br> x-transition:enter=&quot;duration-300&quot;<br> x-transition:leave=&quot;duration-300&quot;<br> x-transition:enter-start=&quot;scale-95 opacity-0&quot;<br> x-transition:enter-end=&quot;scale-100 opacity-100&quot;<br> x-transition:leave-start=&quot;scale-100 opacity-100&quot;<br> x-transition:leave-end=&quot;scale-95 opacity-0&quot;<br> wire:key=&quot;a1TE59NddR3ShD9xiLR4.modal.a1TE59NddR3ShD9xiLR4-table-bulk-action.window&quot;<br> class=&quot;</div>
+    </div>
+  </div>
+</div>
+
+<div class="gen-card" id="gen-668">
+  <div class="gen-header">
+    <span class="gen-id">gen #668</span>
+    <span class="gen-sphere">7 — Творчество и новые начинания</span>
+    <span class="badge" style="background:#d97706">Перегенерация</span>
+    <span class="badge" style="background:#16a34a">completed</span>
+    <span class="gen-ts">May 18, 2026 13:15:52</span>
+    <span style="color:#9ca3af;font-size:11px">iter 3 · src: previous_generation</span>
+  </div>
+
+  <div class="gen-title">Момент перед первым мазком</div>
+
+  
+
+  <div class="gen-body">
+    <!-- Images column -->
+    <div class="images-col">
+      <div class="col-label">Source photo</div>
+      <div class="img-row"><div class="img-wrap">
+      <a href="https://dreammap.storage.yandexcloud.net/card-photos/NuUalYhp0WU0CIaiGXx4BNiZ04U8dMcrCrqS3Zyl.jpg" target="_blank">
+        <img src="https://dreammap.storage.yandexcloud.net/card-photos/NuUalYhp0WU0CIaiGXx4BNiZ04U8dMcrCrqS3Zyl.jpg" width="180" style="border-radius:8px;object-fit:cover;height:180px;"
+             onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div style="display:none;padding:8px;color:#999;font-size:11px">Image unavailable</div>
+      </a>
+      <div class="img-label">Source #1</div>
+    </div></div>
+      <div class="col-label" style="margin-top:12px">Generated result</div>
+      <div class="img-row"><div class="img-wrap">
+      <a href="https://dreammap.storage.yandexcloud.net/generations/668/36e4bfc0-3998-4511-afad-8f94ea730df6.jpg" target="_blank">
+        <img src="https://dreammap.storage.yandexcloud.net/generations/668/36e4bfc0-3998-4511-afad-8f94ea730df6.jpg" width="220" style="border-radius:8px;object-fit:cover;height:220px;"
+             onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div style="display:none;padding:8px;color:#999;font-size:11px">Image unavailable</div>
+      </a>
+      <div class="img-label">Result #1</div>
+    </div></div>
+    </div>
+
+    <!-- Audits column -->
+    <div class="audits-col">
+      <div class="audit-section">
+        <div class="audit-title">Camera Grammar</div>
+        <table class='mini-table'><tr><td class='td-label'>Shot type</td><td>medium (side-follow)</td></tr><tr><td class='td-label'>Camera angle</td><td>high-angle</td></tr><tr><td class='td-label'>Framing</td><td>observational</td></tr><tr><td class='td-label'>Movement present</td><td>yes</td></tr><tr><td class='td-label'>Lookbook risk</td><td><span style="color:#16a34a;font-weight:600">low</span></td></tr></table>
+      </div>
+      <div class="audit-section">
+        <div class="audit-title">Identity Continuity</div>
+        <table class='mini-table'><tr><td class='td-label'>Facial identity</td><td><span class="dot" style="background:#dc2626" title="low"></span> low</td></tr><tr><td class='td-label'>Age preserved</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Style preserved</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Body language</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Emotional energy</td><td><span class="dot" style="background:#16a34a" title="high"></span> high</td></tr><tr><td class="td-label">Drifted</td><td style="color:#dc2626">facial proportions, hair detail, skin texture</td></tr><tr><td class="td-label">Cause</td><td style="color:#6b7280;font-style:italic">no face-lock in explore/wish prompt chain</td></tr></table>
+      </div>
+      <div class="audit-section">
+        <div class="audit-title">Sphere / Cliché Audit</div>
+        <div style="font-size:12px">
+        <div>Sphere match: <strong>-</strong></div>
+        <div style="color:#16a34a;margin-top:4px">✓ No luxury clichés detected in prompt</div>
+    </div>
+      </div>
+    </div>
+
+    <!-- Prompt column -->
+    <div class="prompt-col">
+      <div class="audit-title">FAL Prompt (sent)</div>
+      <div class="fal-prompt"><strong style="color:#2563eb">Camera Type: Medium Close-Up with Over-the-Shoulder Perspective. Сцена развивается в том же просторном лофте с высокими окнами, где дневной свет теперь падает более направленным потоком, подсвечивая рабочую зону. Прошло несколько минут с момента расправки холста: теперь он натянут на подрамник и стоит на полу, прислоненный к стене или мольберту, занимая значительную часть кадра своей чистой, белой фактурой. Женщина стоит спиной к камере, её силуэт частично перекрывает обзор, создавая эффект присутствия зрителя рядом с ней. Она держит в правой руке широкую малярную кисть, которую только что окунула в банку с растворителем или водой — капли жидкости стекают по щетине, замирая в воздухе в момент перед касанием поверхности. Её левая рука придерживает край холста, проверяя устойчивость. Одежда сохраняет continuity: та же техническая куртка-ветровка небрежно наброшена на плечи, спадая с одного плеча, обнажая белую майку; широкие брюки цвета графита мягко драпируются при движении. Видны детали её рук — естественная кожа, отсутствие идеального маникюра, следы легкой работы. На полу вокруг холста разложены тюбики красок, некоторые уже открыты, крышки лежат рядом, создавая ощущение начавшегося хаоса творчества. Выражение лица, видимое в профиль или отраженное в стекле окна на заднем плане, сосредоточено и спокойно: это момент тишины перед первым мазком, когда идея окончательно становится действием. Атмосфера наполнена ожиданием и концентрацией, свет играет на текстуре холста и мокрой кисти, подчеркивая тактильность момента. Никаких завершенных элементов, только чистый потенциал и решимость начать.</strong><br><br>Стиль одежды: Visual Code: спортивная лёгкость с городской женственностью и актуальной формой.<br>Identity Feeling: женщина выглядит свободной, энергичной, уверенной в теле, современной.<br>Silhouette Logic: мягкий объём, чистая спортивная линия, сочетание облегающего и свободного, движение в одежде.<br>Styling Behavior: спортивные элементы сочетаются с городскими: очки, сумка, пальто, аккуратные кроссовки.<br>Base Wardrobe: свитшот, майка, леггинсы в уместном контексте, широкие спортивные брюки, техническая куртка, кроссовки, сумка, очки.<br>Materials: хлопок, трикотаж, нейлон, техническая ткань, флис.<br>Color Logic: серый, чёрный, белый, графит, молочный, мягкий хаки.<br>Social Signal: движение, свобода, тело, актуальность.<br>Scene Adaptation: в городе — более собранно; дома — мягче; в свободе — движение и воздух; в состоянии — телесная уверенность.<br>Best Scene Fit: Состояние · Свобода · Дом · Окружение.<br>Avoid: спортзал, бесформенный спортивный костюм, слишком откровенный фитнес-образ, случайные леггинсы без стиля.<br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> Метапромпт (отправлен в OpenRouter)<br> <br><br> <br><br> <br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br> <br><br> <br><br> <br> <br>*:first-child]:mt-0 [&amp;&gt;*:last-child]:mb-0 pt-2 prose-sm text-sm leading-6 text-gray-950 dark:text-white &quot;<br> style=&quot;&quot;<br> &gt;<br> Ты — AI визуальный режиссёр мирового уровня и режиссёр последовательных жизненных сцен.<br><br>Твоя задача — создать ОДИН новый финальный промпт для генерации следующего кадра той же самой сцены.<br><br>Это не новая сцена.<br>Это развитие уже существующей сцены.<br><br>Ты продолжаешь историю жизни пользователя —<br>кадр за кадром,<br>момент за моментом,<br>сохраняя целостность среды, персонажа, состояния и смысла.<br><br>Главное ощущение:<br><br>«Это не другая картинка.<br>Это продолжение моей жизни.»<br><br>Новый кадр должен усиливать желание пользователя идти дальше:<br>смотреть глубже,<br>раскрывать историю,<br>генерировать продолжение.<br><br>Это не фотосессия.<br>Это визуальное развитие реальной жизни.<br><br>ВХОДНЫЕ ДАННЫЕ<br><br>Используй:<br><br>текущая сцена:<br>Момент перед первым мазком<br>описание текущей сцены:<br>{scene_description}<br>сфера:<br>Творчество и новые начинания<br>описание сферы:<br>Новое начинается не с плана.<br>А с ощущения,<br>что внутри тебя<br>появляется что-то живое,<br>что хочется проявить в мир.<br>профиль пользователя:<br>Character Profile: Устойчивое ядро личности — современная женщина (25 лет), чья идентичность строится на синтезе внутренней свободы и осознанного масштаба. Её главный мотив — расширение горизонтов жизни через перемещение между странами, сохраняя при этом ощущение спокойствия и внутренней силы. Она проявляет себя через эстетику образа и стиля жизни, стремясь к красивому и вдохновляющему существованию. Эмоциональный вектор направлен от поиска легкости к обретению уверенности в больших возможностях. Социальный сигнал: энергичная, современная, уверенная в своем теле, но не демонстративная; она излучает готовность к движению и адаптивность. Уровень жизни характеризуется глобальным контекстом и высоким качеством среды. Visual Identity: Доминирующее направление — &#x27;Sport Casual&#x27; как философия городской мобильности: спортивная легкость, соединенная с женственностью и актуальными пропорциями. Это не фитнес-образ, а стиль жизни в движении. Силуэт строится на игре объемов (мягкий оверсайз &amp;#43; чистые линии), материалы — технологичные и натуральные (трикотаж, нейлон, хлопок) в палитре серого, черного, белого и мягкого хаки. Вторичные влияния отсутствуют как отдельные стили, так как выбранный вектор полностью покрывает запрос на свободу и масштаб. Контекстное поведение: в путешествиях и городе образ максимально функционален и собран (техническая куртка, аккуратные кроссовки, очки), дома становится мягче и тактильнее. Избегать: бесформенных спортивных костюмов, откровенного фитнес-стиля, случайных леггинсов без контекста, излишней формальности или &#x27;люксового&#x27; блеска. Key Answer Locks для первой сцены: 1) Среда: жизнь между разными странами (фон аэропорта, современного города или трансфера); 2) Ощущение: свобода, легкость и внутренняя сила; 3) Проявление: через стиль и образ жизни (спортивный шик, уверенность в теле); 4) Визуальный код: чистые линии, сочетание свободного и облегающего, отсутствие перегруженности деталями; 5) Атмосфера: масштабная, наполненная, вдохновляющая.<br>ответы онбординга:<br>- Способ проявления: В чём тебе нравится проявлять себя? — в образе и стиле жизни<br>- Приоритеты: Что тебе сейчас хочется почувствовать в своей жизни? — больше масштаба и возможностей, свободу и лёгкость<br>- Режим генерации: Какими тебе хочется видеть сцены дальше? — масштабными и наполненными<br>- Первое впечатление: Какое ощущение тебе хочется оставлять после себя?<br> — спокойствия и внутренней силы<br>- Среда жизни: В какой атмосфере тебе хочется жить? — жизнь между разными странами<br>- Уровень проявления: Как тебе хочется ощущать свою жизнь? — красивой и вдохновляющей<br>уже сгенерированные углубления этой сцены:<br><strong style="color:#2563eb">Camera Type: Environmental Wide with Side-Follow Movement. Сцена разворачивается в просторном, наполненном воздухом пространстве лофта или современной студии с высокими окнами, через которые льется мягкий, рассеянный дневной свет, создавая ощущение глобального контекста и свободы. В центре композиции — процесс начала: на полу или низком столе лежит большой, еще не натянутый холст (от 1 метра), который женщина только что достала из упаковки. Она находится в движении, слегка наклонившись, её руки уверенно касляются плотной ткани, расправляя её. Это не статичная поза художника, а живой момент перехода от идеи к материи. Она одета в свой_signature_стиль Sport Casual: свободные широкие брюки из мягкого хлопка цвета графита или хаки, облегающая белая майка и расстегнутая сверху техническая куртка-ветровка из нейлона, наброшенная на плечи как плащ, что подчеркивает её готовность к действию и городскую мобильность даже в творчестве. На ногах — аккуратные, стильные кроссовки. Её волосы собраны небрежно, но опрятно, лицо выражает сосредоточенный интерес и предвкушение, взгляд направлен на фактуру холста. Вокруг видны следы подготовки: открытые тюбики красок, палитра, но нет завершенных работ — только потенциал. За пределами кадра угадывается жизнь большого города или вид из окна аэропорта/отеля, напоминая о её жизни между странами. Атмосфера насыщена ощущением &#x27;сейчас что-то родится&#x27;: это не про результат, а про смелость первого шага. Свет играет на текстурах тканей и бумаги, создавая объем и глубину. Сцена передает её внутреннюю силу и легкость: она не &#x27;мучается над шедевром&#x27;, а с радостью и профессионализмом входит в поток создания нового.</strong><br><span style="color:#d1d5db">---</span><br><strong style="color:#2563eb">Camera Type: Environmental Wide with Side-Follow Movement. Сцена разворачивается в просторном, наполненном воздухом пространстве лофта или современной студии с высокими окнами, через которые льется мягкий, рассеянный дневной свет, создавая ощущение глобального контекста и свободы. В центре композиции — процесс начала: на полу или низком столе лежит большой, еще не натянутый холст (от 1 метра), который женщина только что достала из упаковки. Она находится в движении, слегка наклонившись, её руки уверенно касляются плотной ткани, расправляя её. Это не статичная поза художника, а живой момент перехода от идеи к материи. Она одета в свой_signature_стиль Sport Casual: свободные широкие брюки из мягкого хлопка цвета графита или хаки, облегающая белая майка и расстегнутая сверху техническая куртка-ветровка из нейлона, наброшенная на плечи как плащ, что подчеркивает её готовность к действию и городскую мобильность даже в творчестве. На ногах — аккуратные, стильные кроссовки. Её волосы собраны небрежно, но опрятно, лицо выражает сосредоточенный интерес и предвкушение, взгляд направлен на фактуру холста. Вокруг видны следы подготовки: открытые тюбики красок, палитра, но нет завершенных работ — только потенциал. За пределами кадра угадывается жизнь большого города или вид из окна аэропорта/отеля, напоминая о её жизни между странами. Атмосфера насыщена ощущением &#x27;сейчас что-то родится&#x27;: это не про результат, а про смелость первого шага. Свет играет на текстурах тканей и бумаги, создавая объем и глубину. Сцена передает её внутреннюю силу и легкость: она не &#x27;мучается над шедевром&#x27;, а с радостью и профессионализмом входит в поток создания нового.</strong><br><br>Фото пользователя передаётся отдельно для сохранения лица.<br><br>КРИТИЧЕСКИЙ ПРИНЦИП<br><br>Это та же история.<br><br>Сохраняются:<br><br>тот же человек<br>та же жизненная линия<br>та же логика среды<br>тот же уровень жизни<br>та же энергия<br>тот же характер сцены<br>естественная преемственность<br><br>Меняются:<br><br>следующий момент<br>новый ракурс<br>развитие действия<br>развитие состояния<br>новый фрагмент происходящего<br>новое естественное продолжение сцены<br><br>Это не прыжок в другую жизнь.<br><br>Это следующий настоящий момент.<br><br>ШАГ 1 — ПОНИМАНИЕ ИСХОДНОЙ СЦЕНЫ<br><br>Сначала определи:<br><br>что происходило в исходной сцене<br>какое состояние было главным<br>что было до этого момента<br>что может происходить через несколько минут / часов<br>какой следующий естественный шаг истории<br><br>Не ломай сцену.<br>Продолжай её.<br><br>ШАГ 2 — ЛОГИКА РАЗВИТИЯ<br><br>Новый кадр может быть:<br><br>продолжением вперёд<br>моментом немного раньше<br>параллельным ракурсом того же события<br>раскрытием того, что происходит рядом<br>следующим шагом внутри той же ситуации<br><br>Важно:<br><br>развитие должно быть естественным,<br>не резким,<br>не искусственным,<br>без сценарного скачка.<br><br>Не делать:<br><br>внезапную новую жизнь<br>новую несвязанную локацию<br>резкую смену социальной роли<br>нелогичный сюжетный прыжок<br>ШАГ 3 — СЮЖЕТНЫЙ ШАГ<br><br>Новый кадр должен содержать<br>не просто другой ракурс,<br>а развитие.<br><br>Например:<br><br>человек подошёл ближе<br>прибыл в место назначения<br>начался разговор<br>появился важный контакт<br>возник момент решения<br>усилилось ощущение принадлежности<br>открылся новый эмоциональный слой<br>проявился новый социальный контекст<br>стало видно то, что раньше было за кадром<br><br>Это микро-развитие,<br>а не новая глава жизни.<br><br>ШАГ 4 — УЧЁТ ПРОФИЛЯ<br><br>Новый кадр обязан соответствовать:<br><br>archetype<br>core motives<br>expression mode<br>visual identity<br>social signal<br>life level<br>environment type<br>energy type<br>generation mode<br>enhancement focus<br><br>Нельзя генерировать универсальные красивые сцены.<br><br>Это должна быть его история.<br><br>ШАГ 5 — УЧЁТ ПРЕДЫДУЩИХ КАДРОВ<br><br>Используй:<br><br><strong style="color:#2563eb">Camera Type: Environmental Wide with Side-Follow Movement. Сцена разворачивается в просторном, наполненном воздухом пространстве лофта или современной студии с высокими окнами, через которые льется мягкий, рассеянный дневной свет, создавая ощущение глобального контекста и свободы. В центре композиции — процесс начала: на полу или низком столе лежит большой, еще не натянутый холст (от 1 метра), который женщина только что достала из упаковки. Она находится в движении, слегка наклонившись, её руки уверенно касляются плотной ткани, расправляя её. Это не статичная поза художника, а живой момент перехода от идеи к материи. Она одета в свой_signature_стиль Sport Casual: свободные широкие брюки из мягкого хлопка цвета графита или хаки, облегающая белая майка и расстегнутая сверху техническая куртка-ветровка из нейлона, наброшенная на плечи как плащ, что подчеркивает её готовность к действию и городскую мобильность даже в творчестве. На ногах — аккуратные, стильные кроссовки. Её волосы собраны небрежно, но опрятно, лицо выражает сосредоточенный интерес и предвкушение, взгляд направлен на фактуру холста. Вокруг видны следы подготовки: открытые тюбики красок, палитра, но нет завершенных работ — только потенциал. За пределами кадра угадывается жизнь большого города или вид из окна аэропорта/отеля, напоминая о её жизни между странами. Атмосфера насыщена ощущением &#x27;сейчас что-то родится&#x27;: это не про результат, а про смелость первого шага. Свет играет на текстурах тканей и бумаги, создавая объем и глубину. Сцена передает её внутреннюю силу и легкость: она не &#x27;мучается над шедевром&#x27;, а с радостью и профессионализмом входит в поток создания нового.</strong><br><span style="color:#d1d5db">---</span><br><strong style="color:#2563eb">Camera Type: Environmental Wide with Side-Follow Movement. Сцена разворачивается в просторном, наполненном воздухом пространстве лофта или современной студии с высокими окнами, через которые льется мягкий, рассеянный дневной свет, создавая ощущение глобального контекста и свободы. В центре композиции — процесс начала: на полу или низком столе лежит большой, еще не натянутый холст (от 1 метра), который женщина только что достала из упаковки. Она находится в движении, слегка наклонившись, её руки уверенно касляются плотной ткани, расправляя её. Это не статичная поза художника, а живой момент перехода от идеи к материи. Она одета в свой_signature_стиль Sport Casual: свободные широкие брюки из мягкого хлопка цвета графита или хаки, облегающая белая майка и расстегнутая сверху техническая куртка-ветровка из нейлона, наброшенная на плечи как плащ, что подчеркивает её готовность к действию и городскую мобильность даже в творчестве. На ногах — аккуратные, стильные кроссовки. Её волосы собраны небрежно, но опрятно, лицо выражает сосредоточенный интерес и предвкушение, взгляд направлен на фактуру холста. Вокруг видны следы подготовки: открытые тюбики красок, палитра, но нет завершенных работ — только потенциал. За пределами кадра угадывается жизнь большого города или вид из окна аэропорта/отеля, напоминая о её жизни между странами. Атмосфера насыщена ощущением &#x27;сейчас что-то родится&#x27;: это не про результат, а про смелость первого шага. Свет играет на текстурах тканей и бумаги, создавая объем и глубину. Сцена передает её внутреннюю силу и легкость: она не &#x27;мучается над шедевром&#x27;, а с радостью и профессионализмом входит в поток создания нового.</strong><br><br>Запрещено пов</div>
+    </div>
+  </div>
+</div>
+
+<div class="gen-card" id="gen-669">
+  <div class="gen-header">
+    <span class="gen-id">gen #669</span>
+    <span class="gen-sphere">7 — Творчество и новые начинания</span>
+    <span class="badge" style="background:#d97706">Перегенерация</span>
+    <span class="badge" style="background:#16a34a">completed</span>
+    <span class="gen-ts">May 18, 2026 13:17:19</span>
+    <span style="color:#9ca3af;font-size:11px">iter 4 · src: previous_generation</span>
+  </div>
+
+  <div class="gen-title">Момент перед первым мазком</div>
+
+  
+
+  <div class="gen-body">
+    <!-- Images column -->
+    <div class="images-col">
+      <div class="col-label">Source photo</div>
+      <div class="img-row"><div class="img-wrap">
+      <a href="https://dreammap.storage.yandexcloud.net/card-photos/NuUalYhp0WU0CIaiGXx4BNiZ04U8dMcrCrqS3Zyl.jpg" target="_blank">
+        <img src="https://dreammap.storage.yandexcloud.net/card-photos/NuUalYhp0WU0CIaiGXx4BNiZ04U8dMcrCrqS3Zyl.jpg" width="180" style="border-radius:8px;object-fit:cover;height:180px;"
+             onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div style="display:none;padding:8px;color:#999;font-size:11px">Image unavailable</div>
+      </a>
+      <div class="img-label">Source #1</div>
+    </div></div>
+      <div class="col-label" style="margin-top:12px">Generated result</div>
+      <div class="img-row"><div class="img-wrap">
+      <a href="https://dreammap.storage.yandexcloud.net/generations/669/60a641d7-88f7-4ae6-8633-fae65f6900e5.jpg" target="_blank">
+        <img src="https://dreammap.storage.yandexcloud.net/generations/669/60a641d7-88f7-4ae6-8633-fae65f6900e5.jpg" width="220" style="border-radius:8px;object-fit:cover;height:220px;"
+             onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div style="display:none;padding:8px;color:#999;font-size:11px">Image unavailable</div>
+      </a>
+      <div class="img-label">Result #1</div>
+    </div></div>
+    </div>
+
+    <!-- Audits column -->
+    <div class="audits-col">
+      <div class="audit-section">
+        <div class="audit-title">Camera Grammar</div>
+        <table class='mini-table'><tr><td class='td-label'>Shot type</td><td>medium (side-follow)</td></tr><tr><td class='td-label'>Camera angle</td><td>low-angle</td></tr><tr><td class='td-label'>Framing</td><td>observational</td></tr><tr><td class='td-label'>Movement present</td><td>yes</td></tr><tr><td class='td-label'>Lookbook risk</td><td><span style="color:#16a34a;font-weight:600">low</span></td></tr></table>
+      </div>
+      <div class="audit-section">
+        <div class="audit-title">Identity Continuity</div>
+        <table class='mini-table'><tr><td class='td-label'>Facial identity</td><td><span class="dot" style="background:#dc2626" title="low"></span> low</td></tr><tr><td class='td-label'>Age preserved</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Style preserved</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Body language</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Emotional energy</td><td><span class="dot" style="background:#16a34a" title="high"></span> high</td></tr><tr><td class="td-label">Drifted</td><td style="color:#dc2626">facial proportions, hair detail, skin texture</td></tr><tr><td class="td-label">Cause</td><td style="color:#6b7280;font-style:italic">no face-lock in explore/wish prompt chain</td></tr></table>
+      </div>
+      <div class="audit-section">
+        <div class="audit-title">Sphere / Cliché Audit</div>
+        <div style="font-size:12px">
+        <div>Sphere match: <strong>-</strong></div>
+        <div style="color:#16a34a;margin-top:4px">✓ No luxury clichés detected in prompt</div>
+    </div>
+      </div>
+    </div>
+
+    <!-- Prompt column -->
+    <div class="prompt-col">
+      <div class="audit-title">FAL Prompt (sent)</div>
+      <div class="fal-prompt"><strong style="color:#2563eb">Camera Type: Low Angle Close-Up with Dynamic Tilt. Сцена фиксирует момент активного погружения: холст теперь установлен на низком деревянном мольберте в центре светлого лофта, и первый широкий мазок глубокого индиго или охры уже нанесен на белую поверхность, нарушая её девственность. Камера расположена низко, почти на уровне пола, смотря вверх на фигуру женщины, что подчеркивает масштаб её жеста и уверенность движений. Она стоит в активной рабочей позе: корпус развернут, правая рука с крупной кистью вытянута вперед, завершая энергичное движение по холсту, левая рука удерживает палитру с уже смешанными цветами. Её одежда — тот же узнаваемый силуэт Sport Casual: широкие брюки цвета графита мягко собираются у щиколоток над стильными кроссовками, белая майка облегает торс, а техническая нейлоновая куртка, сползшая с плеч, добавляет динамики образу, словно она только что сбросила её для свободы движений. Дневной свет из высоких окон падает сбоку, создавая контрастные блики на мокрой краске и подсвечивая текстуру ткани брюк и кожи рук. На полу вокруг видны следы творческого процесса: открытые тюбики, тряпка с разводами краски, стакан с водой. Выражение лица сосредоточенное, но живое — взгляд прикован к холсту, брови слегка сведены в моменте принятия визуального решения. В глубине кадра, за размытым фоном, угадывается панорама современного города, напоминающая о глобальном контексте её жизни. Атмосфера наполнена звуком тишины, прерываемым только шуршанием кисти, и ощущением необратимости начала: идея стала материей. Изображение передает не статичную красоту, а энергию действия, профессионализм и радость созидания.</strong><br><br>Стиль одежды: Visual Code: спортивная лёгкость с городской женственностью и актуальной формой.<br>Identity Feeling: женщина выглядит свободной, энергичной, уверенной в теле, современной.<br>Silhouette Logic: мягкий объём, чистая спортивная линия, сочетание облегающего и свободного, движение в одежде.<br>Styling Behavior: спортивные элементы сочетаются с городскими: очки, сумка, пальто, аккуратные кроссовки.<br>Base Wardrobe: свитшот, майка, леггинсы в уместном контексте, широкие спортивные брюки, техническая куртка, кроссовки, сумка, очки.<br>Materials: хлопок, трикотаж, нейлон, техническая ткань, флис.<br>Color Logic: серый, чёрный, белый, графит, молочный, мягкий хаки.<br>Social Signal: движение, свобода, тело, актуальность.<br>Scene Adaptation: в городе — более собранно; дома — мягче; в свободе — движение и воздух; в состоянии — телесная уверенность.<br>Best Scene Fit: Состояние · Свобода · Дом · Окружение.<br>Avoid: спортзал, бесформенный спортивный костюм, слишком откровенный фитнес-образ, случайные леггинсы без стиля.<br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> Метапромпт (отправлен в OpenRouter)<br> <br><br> <br><br> <br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br> <br><br> <br><br> <br> <br>*:first-child]:mt-0 [&amp;&gt;*:last-child]:mb-0 pt-2 prose-sm text-sm leading-6 text-gray-950 dark:text-white &quot;<br> style=&quot;&quot;<br> &gt;<br> Ты — AI визуальный режиссёр мирового уровня и режиссёр последовательных жизненных сцен.<br><br>Твоя задача — создать ОДИН новый финальный промпт для генерации следующего кадра той же самой сцены.<br><br>Это не новая сцена.<br>Это развитие уже существующей сцены.<br><br>Ты продолжаешь историю жизни пользователя —<br>кадр за кадром,<br>момент за моментом,<br>сохраняя целостность среды, персонажа, состояния и смысла.<br><br>Главное ощущение:<br><br>«Это не другая картинка.<br>Это продолжение моей жизни.»<br><br>Новый кадр должен усиливать желание пользователя идти дальше:<br>смотреть глубже,<br>раскрывать историю,<br>генерировать продолжение.<br><br>Это не фотосессия.<br>Это визуальное развитие реальной жизни.<br><br>ВХОДНЫЕ ДАННЫЕ<br><br>Используй:<br><br>текущая сцена:<br>Момент перед первым мазком<br>описание текущей сцены:<br>{scene_description}<br>сфера:<br>Творчество и новые начинания<br>описание сферы:<br>Новое начинается не с плана.<br>А с ощущения,<br>что внутри тебя<br>появляется что-то живое,<br>что хочется проявить в мир.<br>профиль пользователя:<br>Character Profile: Устойчивое ядро личности — современная женщина (25 лет), чья идентичность строится на синтезе внутренней свободы и осознанного масштаба. Её главный мотив — расширение горизонтов жизни через перемещение между странами, сохраняя при этом ощущение спокойствия и внутренней силы. Она проявляет себя через эстетику образа и стиля жизни, стремясь к красивому и вдохновляющему существованию. Эмоциональный вектор направлен от поиска легкости к обретению уверенности в больших возможностях. Социальный сигнал: энергичная, современная, уверенная в своем теле, но не демонстративная; она излучает готовность к движению и адаптивность. Уровень жизни характеризуется глобальным контекстом и высоким качеством среды. Visual Identity: Доминирующее направление — &#x27;Sport Casual&#x27; как философия городской мобильности: спортивная легкость, соединенная с женственностью и актуальными пропорциями. Это не фитнес-образ, а стиль жизни в движении. Силуэт строится на игре объемов (мягкий оверсайз &amp;#43; чистые линии), материалы — технологичные и натуральные (трикотаж, нейлон, хлопок) в палитре серого, черного, белого и мягкого хаки. Вторичные влияния отсутствуют как отдельные стили, так как выбранный вектор полностью покрывает запрос на свободу и масштаб. Контекстное поведение: в путешествиях и городе образ максимально функционален и собран (техническая куртка, аккуратные кроссовки, очки), дома становится мягче и тактильнее. Избегать: бесформенных спортивных костюмов, откровенного фитнес-стиля, случайных леггинсов без контекста, излишней формальности или &#x27;люксового&#x27; блеска. Key Answer Locks для первой сцены: 1) Среда: жизнь между разными странами (фон аэропорта, современного города или трансфера); 2) Ощущение: свобода, легкость и внутренняя сила; 3) Проявление: через стиль и образ жизни (спортивный шик, уверенность в теле); 4) Визуальный код: чистые линии, сочетание свободного и облегающего, отсутствие перегруженности деталями; 5) Атмосфера: масштабная, наполненная, вдохновляющая.<br>ответы онбординга:<br>- Способ проявления: В чём тебе нравится проявлять себя? — в образе и стиле жизни<br>- Приоритеты: Что тебе сейчас хочется почувствовать в своей жизни? — больше масштаба и возможностей, свободу и лёгкость<br>- Режим генерации: Какими тебе хочется видеть сцены дальше? — масштабными и наполненными<br>- Первое впечатление: Какое ощущение тебе хочется оставлять после себя?<br> — спокойствия и внутренней силы<br>- Среда жизни: В какой атмосфере тебе хочется жить? — жизнь между разными странами<br>- Уровень проявления: Как тебе хочется ощущать свою жизнь? — красивой и вдохновляющей<br>уже сгенерированные углубления этой сцены:<br><strong style="color:#2563eb">Camera Type: Environmental Wide with Side-Follow Movement. Сцена разворачивается в просторном, наполненном воздухом пространстве лофта или современной студии с высокими окнами, через которые льется мягкий, рассеянный дневной свет, создавая ощущение глобального контекста и свободы. В центре композиции — процесс начала: на полу или низком столе лежит большой, еще не натянутый холст (от 1 метра), который женщина только что достала из упаковки. Она находится в движении, слегка наклонившись, её руки уверенно касляются плотной ткани, расправляя её. Это не статичная поза художника, а живой момент перехода от идеи к материи. Она одета в свой_signature_стиль Sport Casual: свободные широкие брюки из мягкого хлопка цвета графита или хаки, облегающая белая майка и расстегнутая сверху техническая куртка-ветровка из нейлона, наброшенная на плечи как плащ, что подчеркивает её готовность к действию и городскую мобильность даже в творчестве. На ногах — аккуратные, стильные кроссовки. Её волосы собраны небрежно, но опрятно, лицо выражает сосредоточенный интерес и предвкушение, взгляд направлен на фактуру холста. Вокруг видны следы подготовки: открытые тюбики красок, палитра, но нет завершенных работ — только потенциал. За пределами кадра угадывается жизнь большого города или вид из окна аэропорта/отеля, напоминая о её жизни между странами. Атмосфера насыщена ощущением &#x27;сейчас что-то родится&#x27;: это не про результат, а про смелость первого шага. Свет играет на текстурах тканей и бумаги, создавая объем и глубину. Сцена передает её внутреннюю силу и легкость: она не &#x27;мучается над шедевром&#x27;, а с радостью и профессионализмом входит в поток создания нового.</strong><br><span style="color:#d1d5db">---</span><br><strong style="color:#2563eb">Camera Type: Environmental Wide with Side-Follow Movement. Сцена разворачивается в просторном, наполненном воздухом пространстве лофта или современной студии с высокими окнами, через которые льется мягкий, рассеянный дневной свет, создавая ощущение глобального контекста и свободы. В центре композиции — процесс начала: на полу или низком столе лежит большой, еще не натянутый холст (от 1 метра), который женщина только что достала из упаковки. Она находится в движении, слегка наклонившись, её руки уверенно касляются плотной ткани, расправляя её. Это не статичная поза художника, а живой момент перехода от идеи к материи. Она одета в свой_signature_стиль Sport Casual: свободные широкие брюки из мягкого хлопка цвета графита или хаки, облегающая белая майка и расстегнутая сверху техническая куртка-ветровка из нейлона, наброшенная на плечи как плащ, что подчеркивает её готовность к действию и городскую мобильность даже в творчестве. На ногах — аккуратные, стильные кроссовки. Её волосы собраны небрежно, но опрятно, лицо выражает сосредоточенный интерес и предвкушение, взгляд направлен на фактуру холста. Вокруг видны следы подготовки: открытые тюбики красок, палитра, но нет завершенных работ — только потенциал. За пределами кадра угадывается жизнь большого города или вид из окна аэропорта/отеля, напоминая о её жизни между странами. Атмосфера насыщена ощущением &#x27;сейчас что-то родится&#x27;: это не про результат, а про смелость первого шага. Свет играет на текстурах тканей и бумаги, создавая объем и глубину. Сцена передает её внутреннюю силу и легкость: она не &#x27;мучается над шедевром&#x27;, а с радостью и профессионализмом входит в поток создания нового.</strong><br><span style="color:#d1d5db">---</span><br><strong style="color:#2563eb">Camera Type: Medium Close-Up with Over-the-Shoulder Perspective. Сцена развивается в том же просторном лофте с высокими окнами, где дневной свет теперь падает более направленным потоком, подсвечивая рабочую зону. Прошло несколько минут с момента расправки холста: теперь он натянут на подрамник и стоит на полу, прислоненный к стене или мольберту, занимая значительную часть кадра своей чистой, белой фактурой. Женщина стоит спиной к камере, её силуэт частично перекрывает обзор, создавая эффект присутствия зрителя рядом с ней. Она держит в правой руке широкую малярную кисть, которую только что окунула в банку с растворителем или водой — капли жидкости стекают по щетине, замирая в воздухе в момент перед касанием поверхности. Её левая рука придерживает край холста, проверяя устойчивость. Одежда сохраняет continuity: та же техническая куртка-ветровка небрежно наброшена на плечи, спадая с одного плеча, обнажая белую майку; широкие брюки цвета графита мягко драпируются при движении. Видны детали её рук — естественная кожа, отсутствие идеального маникюра, следы легкой работы. На полу вокруг холста разложены тюбики красок, некоторые уже открыты, крышки лежат рядом, создавая ощущение начавшегося хаоса творчества. Выражение лица, видимое в профиль или отраженное в стекле окна на заднем плане, сосредоточено и спокойно: это момент тишины перед первым мазком, когда идея окончательно становится действием. Атмосфера наполнена ожиданием и концентрацией, свет играет на текстуре холста и мокрой кисти, подчеркивая тактильность момента. Никаких завершенных элементов, только чистый потенциал и решимость начать.</strong><br><br>Фото пользователя передаётся отдельно для сохранения лица.<br><br>КРИТИЧЕСКИЙ ПРИНЦИП<br><br>Это та же история.<br><br>Сохраняются:<br><br>тот же человек<br>та же жизненная линия<br>та же логика среды<br>тот же уровень жизни<br>та же энергия<br>тот же характер сцены<br>естественная преемственность<br><br>Меняются:<br><br>следующий момент<br>новый ракурс<br>развитие действия<br>развитие состояния<br>новый фрагмент происходящего<br>новое естественное продолжение сцены<br><br>Это не прыжок в другую жизнь.<br><br>Это следующий настоящий момент.<br><br>ШАГ 1 — ПОНИМАНИЕ ИСХОДНОЙ СЦЕНЫ<br><br>Сначала определи:<br><br>что происходило в исходной сцене<br>какое состояние было главным<br>что было до этого момента<br>что может происходить через несколько минут / часов<br>какой следующий естественный шаг истории<br><br>Не ломай сцену.<br>Продолжай её.<br><br>ШАГ 2 — ЛОГИКА РАЗВИТИЯ<br><br>Новый кадр может быть:<br><br>продолжением вперёд<br>моментом немного раньше<br>параллельным ракурсом того же события<br>раскрытием того, что происходит рядом<br>следующим шагом внутри той же ситуации<br><br>Важно:<br><br>развитие должно быть естественным,<br>не резким,<br>не искусственным,<br>без сценарного скачка.<br><br>Не делать:<br><br>внезапную новую жизнь<br>новую несвязанную локацию<br>резкую смену социальной роли<br>нелогичный сюжетный прыжок<br>ШАГ 3 — СЮЖЕТНЫЙ ШАГ<br><br>Новый кадр должен содержать<br>не просто другой ракурс,<br>а развитие.<br><br>Например:<br><br>человек подошёл ближе<br>прибыл в место назначения<br>начался разговор<br>появился важный контакт<br>возник момент решения<br>усилилось ощущение принадлежности<br>открылся новый эмоциональный слой<br>проявился новый социальный контекст<br>стало видно то, что раньше было за кадром<br><br>Это микро-развитие,<br>а не новая глава жизни.<br><br>ШАГ 4 — УЧЁТ ПРОФИЛЯ<br><br>Новый кадр обязан соответствовать:<br><br>archetype<br>core motives<br>expression mode<br>visual identity<br>social signal<br>life level<br>environment type<br>energy type<br>generation mode<br>enhancement focus<br><br>Нельзя генерировать универсальные красивые сцены.<br><br>Это должна быть его история.<br><br>ШАГ 5 — УЧЁТ ПРЕДЫДУЩИХ КАДРОВ<br><br>Используй:<br><br><strong style="color:#2563eb">Camera Type: Environmental Wide with Side-Follow Movement. Сцена разворачивается в просторном, наполненном воздухом пространстве лофта или современной студии с высокими окнами, через которые льется мягкий, рассеянный дневной свет, создавая ощущение глобального контекста и свободы. В центре композиции — процесс начала: на полу или низком столе лежит большой, еще не натянутый холст (от 1 метра), который женщина только что достала из упаковки. Она находится в движении, слегка наклонившись, её руки уверенно касляются плотной ткани, расправляя её. Это не статичная поза художника, а живой момент перехода от идеи к материи. Она одета в свой_signature_стиль Sport Casual: свободные широкие брюки из мягкого хлопка цвета графита или хаки, облегающая белая майка и расстегнутая сверху техническая куртка-ветровка из нейлона, наброшенная на плечи как плащ, что подчеркивает её готовность к действию и городскую мобильность даже в творчестве. На ногах — аккуратные, стильные кроссовки. Её волосы собраны небрежно, но опрятно, лицо выражает сосредоточенный интерес и предвкушение, взгляд направлен на фактуру холста. Вокруг видны следы подготовки: открытые тюбики красок, палитра, но нет завершенных работ — только потенциал. За пределами кадра угадывается жизнь большого города или вид из окна аэропорта/отеля, напоминая о её жизни между странами. Атмосфера насыщена ощущением &#x27;сейчас что-то родится&#x27;: это не про результат, а про смелость первого шага. Свет играет на текстурах тканей и бумаги, создавая объем и глубину. Сцена передает её внутреннюю силу и легкость: она не &#x27;мучается над шедевром&#x27;, а с радостью и профессионализмом входит в поток создания нового.</strong><br><span style="color:#d1d5db">---</span><br><strong style="color:#2563eb">Camera Type: Environmental Wide wit</strong></div>
+    </div>
+  </div>
+</div>
+
+  </div>
+</section>
+</div><div id="user-7616">
+<section class="user-section">
+  <div class="user-header">
+    <div class="user-avatar">
+      <div class="img-wrap">
+      <a href="https://dreammap.storage.yandexcloud.net/card-photos/AoU4SpSaMHZ7xGUXflDW8egmUB7KzkgM1rUSwpVK.jpg" target="_blank">
+        <img src="https://dreammap.storage.yandexcloud.net/card-photos/AoU4SpSaMHZ7xGUXflDW8egmUB7KzkgM1rUSwpVK.jpg" width="120" style="border-radius:8px;object-fit:cover;height:120px;"
+             onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div style="display:none;padding:8px;color:#999;font-size:11px">Image unavailable</div>
+      </a>
+      <div class="img-label">Selfie</div>
+    </div>
+    </div>
+    <div class="user-meta">
+      <h2>User #7616 — hdhrjdj@hdjd.ru</h2>
+      <div class="user-meta-row">
+        <span class="meta-item"><strong>Gender:</strong> male</span>
+        <span class="meta-item"><strong>Age:</strong> 25</span>
+        <span class="meta-item"><strong>Styles:</strong> <span class="badge" style="background:#374151">Business</span> <span class="badge" style="background:#374151">Boho</span> <span class="badge" style="background:#374151">Sport Casual</span> </span>
+      </div>
+      <div class="user-stats">
+        <div class="stat"><span class="stat-n">4</span><br>total gens</div>
+        <div class="stat"><span class="stat-n">4</span><br>completed</div>
+        <div class="stat"><span class="stat-n">2</span><br>spheres</div>
+        <div class="stat"><span class="stat-n">0</span><br>wishes</div>
+        <div class="stat"><span class="stat-n">0</span><br>regenerations</div>
+        <div class="stat"><span class="stat-n">0</span><br>clarifications</div>
+      </div>
+    </div>
+  </div>
+
+  <details class="profile-details">
+    <summary class="profile-summary-toggle">Profile Summary (Character + Visual Identity)</summary>
+    <div class="profile-summary-body"><p>Character Profile: 25-year-old male creator navigating a transnational lifestyle. Core Identity is defined by &#x27;Dynamic Stability&#x27;—a paradoxical blend of high-energy movement and deep inner calm. He seeks to leave an impression of awe and vitality while personally grounding himself in a new life chapter.</p><p>Visual Identity: Chosen styles (Business, Boho, Sport Casual) resolve into &#x27;Global Creative Nomad&#x27;. Dominant Direction: Relaxed Modern Sophistication. Avoid: Corporate uniforms, gym-only wear, excessive logos, costume-like ethnic prints.</p><p>Key Answer Locks (first scene): 1. Desired Feeling: Calmness and stability amidst motion. 2. Environment: Life between different countries. 3. Self-Expression: The act of creating/building. 4. Visual Signal: Modern decisiveness without corporate rigidity. 5. Social Signal: Competence, freedom, adult-level influence.</p></div>
+  </details>
+
+  <div class="gens-list">
+    
+<div class="gen-card" id="gen-657">
+  <div class="gen-header">
+    <span class="gen-id">gen #657</span>
+    <span class="gen-sphere">1 — Я и состояние</span>
+    <span class="badge" style="background:#2563eb">Первая генерация</span>
+    <span class="badge" style="background:#16a34a">completed</span>
+    <span class="gen-ts">May 18, 2026 12:27:45</span>
+    <span style="color:#9ca3af;font-size:11px">iter 1 · src: profile_photo</span>
+  </div>
+
+  <div class="gen-title">Первые минуты в новом городе</div>
+
+  
+
+  <div class="gen-body">
+    <!-- Images column -->
+    <div class="images-col">
+      <div class="col-label">Source photo</div>
+      <div class="img-row"><div class="img-wrap">
+      <a href="https://dreammap.storage.yandexcloud.net/card-photos/AoU4SpSaMHZ7xGUXflDW8egmUB7KzkgM1rUSwpVK.jpg" target="_blank">
+        <img src="https://dreammap.storage.yandexcloud.net/card-photos/AoU4SpSaMHZ7xGUXflDW8egmUB7KzkgM1rUSwpVK.jpg" width="180" style="border-radius:8px;object-fit:cover;height:180px;"
+             onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div style="display:none;padding:8px;color:#999;font-size:11px">Image unavailable</div>
+      </a>
+      <div class="img-label">Source #1</div>
+    </div></div>
+      <div class="col-label" style="margin-top:12px">Generated result</div>
+      <div class="img-row"><div class="img-wrap">
+      <a href="https://dreammap.storage.yandexcloud.net/generations/657/c78f7254-4caf-4797-9064-831660f0eede.jpg" target="_blank">
+        <img src="https://dreammap.storage.yandexcloud.net/generations/657/c78f7254-4caf-4797-9064-831660f0eede.jpg" width="220" style="border-radius:8px;object-fit:cover;height:220px;"
+             onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div style="display:none;padding:8px;color:#999;font-size:11px">Image unavailable</div>
+      </a>
+      <div class="img-label">Result #1</div>
+    </div></div>
+    </div>
+
+    <!-- Audits column -->
+    <div class="audits-col">
+      <div class="audit-section">
+        <div class="audit-title">Camera Grammar</div>
+        <table class='mini-table'><tr><td class='td-label'>Shot type</td><td>medium (side-follow)</td></tr><tr><td class='td-label'>Camera angle</td><td>low-angle</td></tr><tr><td class='td-label'>Framing</td><td>observational</td></tr><tr><td class='td-label'>Movement present</td><td>yes</td></tr><tr><td class='td-label'>Lookbook risk</td><td><span style="color:#dc2626;font-weight:600">high</span></td></tr></table>
+      </div>
+      <div class="audit-section">
+        <div class="audit-title">Identity Continuity</div>
+        <table class='mini-table'><tr><td class='td-label'>Facial identity</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Age preserved</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Style preserved</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Body language</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Emotional energy</td><td><span class="dot" style="background:#16a34a" title="high"></span> high</td></tr><tr><td class="td-label">Drifted</td><td style="color:#dc2626">—</td></tr><tr><td class="td-label">Cause</td><td style="color:#6b7280;font-style:italic">standard generation</td></tr></table>
+      </div>
+      <div class="audit-section">
+        <div class="audit-title">Sphere / Cliché Audit</div>
+        <div style="font-size:12px">
+        <div>Sphere match: <strong>-</strong></div>
+        <div style="margin-top:4px">Luxury clichés: <span class="badge" style="background:#dc2626">вино</span> </div>
+    </div>
+      </div>
+    </div>
+
+    <!-- Prompt column -->
+    <div class="prompt-col">
+      <div class="audit-title">FAL Prompt (sent)</div>
+      <div class="fal-prompt"><strong style="color:#2563eb">Camera Type: Side-follow movement.</strong><br><br>Сцена фиксирует момент перехода от закрытого пространства транспорта к открытой улице европейского города поздним утром. Герой не стоит статично, он находится в движении — шаг уверенный, но не спешащий, только что завершившийся выход из здания вокзала или терминала. Вокруг него жизнь уже кипит: размытые силуэты прохожих, отражения в витринах, игра света на мощеной улице, но фокус остается на его личном пространстве и ощущении контроля над ситуацией.<br><br>Одежда интерпретирована как современный инструмент навигации в мире: темно-синий жакет из мягкой шерсти с актуальной, чуть свободной посадкой, надетый поверх простой белой рубашки с расстегнутым воротом (никаких галстуков или жесткой формальности). Брюки прямого кроя из плотной ткани свободно ложатся на обувь, создавая правильный объем и позволяя двигаться естественно. Образ не выглядит как «офисный костюм», он считывается как личная униформа человека, который привык принимать решения и чувствовать себя уверенно в любой точке мира. Ткани выглядят дорогими за счет фактуры и того, как они ведут себя в движении, а не за счет логотипов.<br><br>Свет дневной, рассеянный, создающий глубокие, но мягкие тени, подчеркивающие рельеф ткани и объем фигуры. Лицо выражает не «счастье туриста», а спокойную собранность и интерес — взгляд направлен не в камеру, а сканирует пространство, оценивая маршрут. В руке может быть только самое необходимое (телефон или ключи), но никаких чемоданов или карт, которые превращали бы сцену в клише путешествия. Ощущение кадра — это не «прибыл», а «начал действовать». За пределами кадра угадывается шум города, запах кофе из ближайшей пекарни, движение воздуха. Это момент, когда человек чувствует, что среда подстраивается под его ритм, а не он подстраивается под неё. Сцена транслирует влияние через внутреннюю устойчивость и свободу перемещения, а не через демонстрацию статуса.<br><br><span style="color:#d1d5db">---</span><br><br>FIRST SCENE TECHNICAL STABILIZATION ADDITIONS<br><br>Maintain facial identity as close as possible to the source photo. Preserve realistic human proportions, natural skin texture, believable body posture, natural camera perspective, and realistic lighting. Avoid AI beauty artifacts, hyper-symmetry, artificial perfection, mannequin feeling, plastic skin, luxury advertising look, and stock photography aesthetics. The person must feel naturally present inside a real-life moment, not inserted into a decorative background.<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## FIRST SCENE VISUAL REALISM ADDITIONS</strong><br><br>Изображение должно выглядеть как настоящий кадр из жизни человека, а не как luxury campaign.<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## Visual Realism Rules</strong><br><br>Избегай:<br>- overly polished skin;<br>- plastic beauty;<br>- excessive glamour;<br>- fashion-commercial look;<br>- influencer aesthetics;<br>- stock photography lighting;<br>- hyper-clean unrealistic interiors;<br>- artificial posing.<br><br>Предпочитай:<br>- natural skin texture;<br>- lived-in spaces;<br>- soft natural lighting;<br>- realistic environments;<br>- imperfect human presence;<br>- atmospheric realism;<br>- emotional subtlety.<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## Human Presence Rules</strong><br><br>Человек должен ощущаться:<br>- живым;<br>- присутствующим;<br>- эмоционально включённым;<br>- находящимся внутри момента.<br><br>Добавляй:<br>- микродвижения;<br>- естественную posture;<br>- real-life gestures;<br>- authentic interaction with environment.<br><br>Не делай человека статичной фигурой, вставленной в красивый фон.<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## Cinematic Atmosphere Rules</strong><br><br>Создавай:<br>- cinematic realism;<br>- emotional atmosphere;<br>- depth;<br>- texture;<br>- air;<br>- natural framing;<br>- realistic lighting behavior.<br><br>Изображение должно выглядеть как кадр из жизни, а не как рекламный баннер.<br><br><strong style="color:#2563eb">## Modern Clothing Rendering</strong><br><br>Одежда должна выглядеть современной, естественной и уместной для сцены.<br><br>Важно:<br>- актуальные пропорции;<br>- естественная посадка;<br>- реалистичные ткани;<br>- отсутствие ощущения костюма;<br>- одежда не должна выглядеть старомодно, если только это не часть выбранного стиля;<br>- образ должен выглядеть так, будто человек действительно так живёт.<br><br>Избегай:<br>- устаревшего Pinterest-образа;<br>- чрезмерной этники;<br>- случайной богемности;<br>- офисной шаблонности;<br>- чрезмерной глянцевости;<br>- одежды, которая выглядит как наряд для фотосессии, а не для жизни.<br><br><strong style="color:#2563eb">## Emotional Visual Amplification</strong><br><br>Изображение должно не только выглядеть реалистично,<br>но и эмоционально притягивать пользователя.<br><br>Цвет, свет, cinematic rendering и atmosphere должны усиливать эмоциональное состояние сцены.<br><br>Избегай:<br>- flat cinematic grading;<br>- grey realism;<br>- emotionally empty realism;<br>- overly muted palette;<br>- visual sterility;<br>- raw unprocessed look.<br><br>Используй:<br>- emotionally readable light;<br>- cinematic depth;<br>- atmospheric richness;<br>- sensory realism;<br>- emotionally expressive color;<br>- depth through light and color;<br>- emotionally enhanced realism.<br><br>Свет и цвет должны помогать человеку чувствовать:<br>- желание жизни;<br>- свободу;<br>- вдохновение;<br>- пространство;<br>- warmth;<br>- vitality;<br>- emotional openness;<br>- calm energy.<br><br>Не уходить:<br>- в fake gloss;<br>- influencer aesthetics;<br>- luxury advertisement;<br>- artificial perfection.<br><br>Но и не делать изображение emotionally flat.<br><br><strong style="color:#2563eb">## Identity Refinement Layer</strong><br><br>Сохраняй:<br>- лицо пользователя;<br>- ключевые черты;<br>- возраст;<br>- энергетику;<br>- узнаваемость;<br>- естественность.<br><br>Но при этом мягко улучшай:<br>- grooming;<br>- visual coherence;<br>- vitality;<br>- posture;<br>- hair neatness;<br>- skin freshness;<br>- clothing coherence;<br>- overall presence quality.<br><br>Пользователь должен ощущаться:<br>- более собранным;<br>- более живым;<br>- более ресурсным;<br>- более aligned with self.<br><br>Важно:<br>не уходить:<br>- в fake beauty;<br>- в influencer aesthetics;<br>- в plastic perfection;<br>- в luxury glamour;<br>- в AI prettification.<br><br>Это не beautification.<br>Это:<br>emotionally elevated realism.<br><br>Опрятность и visual coherence<br>должны ощущаться:<br>- естественно;<br>- жизненно;<br>- правдоподобно;<br>- соответствующе желаемой жизни пользователя.<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## Emotional Elevation Layer</strong><br><br>Изображение должно не только быть believable — оно должно эмоционально возвышать пользователя.<br><br>Это НЕ означает:<br>- fake luxury;<br>- influencer fantasy;<br>- unrealistic aspiration;<br>- perfect life staging.<br><br>Это означает:<br>- emotional beauty (красота, которая ощущается, а не демонстрируется);<br>- cinematic warmth (тепло, которое чувствуется через экран);<br>- inspiring atmosphere (атмосфера, в которую хочется войти);<br>- visual vitality (жизнь, которая пульсирует в кадре);<br>- emotionally amplified realism (реализм, усиленный правильным светом и цветом).<br><br>Изображение должно вызывать у пользователя:<br>- желание поделиться этим кадром;<br>- желание сохранить и возвращаться;<br>- ощущение «это моя жизнь, в которую я хочу войти».<br><br>НЕ делать:<br>- emotionally flat realism (технически правильно, но мертво);<br>- grey neutrality (мрачный, безжизненный реализм);<br>- over-muted atmosphere (всё приглушено до потери эмоции);<br>- dead realism (реализм без пульса).<br><br>Свет, цвет и атмосфера должны быть настроены так, чтобы сцена ощущалась живой и притягательной — не идеальной.<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## F4 &amp;#43; F5 CINEMATIC UPGRADE — 2026-05-18</strong><br><br><strong style="color:#2563eb">## Cultural Assumption Filter for Image Generation</strong><br><br>НЕ включай автоматически в изображение:<br>- бокалы с вином, алкогольные напитки,<br>- сигареты,<br>- luxury signifiers (яхты, виллы, брендовые аксессуары),<br>если это не следует явно из промта сцены.<br><br>Высокий уровень жизни &amp;#61; качество среды, свобода, глубина атмосферы.<br>НЕ &amp;#61; алкоголь или luxury shorthand.<br><br><strong style="color:#2563eb">## Camera Grammar for Image Generation</strong><br><br>Если в detailed_description указан camera type — строго соблюдать его:<br><br>- OTS: герой занимает ~⅓ кадра, мир открывается перед ним<br>- POV walking: камера «идёт» вместе с человеком, динамика<br>- Environmental wide: герой небольшой в масштабе среды, пространство доминирует<br>- Fragment close-up: герой не виден полностью, только деталь/часть<br>- Silhouette contre-jour: герой — тёмный силуэт, яркий фон<br>- Low angle movement: взгляд снизу вверх, динамическая энергия<br>- Side-follow: камера параллельна движению героя<br><br>Не центрировать героя автоматически в каждом кадре.<br>Не делать eye-level medium portrait по умолчанию.<br><br>Стиль одежды: Visual Code: современная деловая собранность без корпоративного шаблона.<br>Identity Feeling: человек выглядит как тот, кто умеет принимать решения, но не играет роль начальника.<br>Silhouette Logic: костюм или жакет с актуальной посадкой, чистые линии, рубашка без лишней строгости, брюки с правильным объёмом.<br>Styling Behavior: деловой образ должен быть живым: расстёгнутый ворот, мягкая ткань, современная обувь, уверенная поза.<br>Base Wardrobe: костюм, жакет, рубашка, водолазка, прямые брюки, качественная обувь, часы, тонкий ремень.<br>Materials: шерсть, хлопок, гладкий трикотаж, кожа, плотная костюмная ткань.<br>Color Logic: чёрный, графит, тёмно-синий, белый, молочный, серо-бежевый.<br>Social Signal: влияние, собранность, компетентность, взрослый уровень.<br>Scene Adaptation: в деловой сцене — костюм или жакет; в городе — жакет с более расслабленным низом; дома — водолазка или чистый трикотаж без офисного ощущения.<br>Best Scene Fit: Реализация · Ресурсы · Окружение · Состояние.<br>Avoid: скучный офисный костюм, галстук без причины, пластиковая деловая улыбка, образ менеджера из банка, чрезмерная глянцевость.<br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> Метапромпт (отправлен в OpenRouter)<br> <br><br> <br><br> <br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br> <br><br> <br><br> <br> <br>*:first-child]:mt-0 [&amp;&gt;*:last-child]:mb-0 pt-2 prose-sm text-sm leading-6 text-gray-950 dark:text-white &quot;<br> style=&quot;&quot;<br> &gt;<br> ---<br><br><strong style="color:#2563eb">## FIRST SCENE PRODUCTION LAYERS</strong><br><br>Это первая сцена жизни пользователя.<br><br>Она должна быть не просто красивой картинкой, а emotionally believable life moment — эмоционально правдоподобным моментом жизни.<br><br>Главная цель:<br>создать сцену, в которой пользователь узнаёт себя и чувствует: «я хочу войти в эту жизнь».<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## 1. Emotional Direction Layer</strong><br><br>Определи, как пользователь хочет жить и что он хочет чувствовать в своей будущей жизни.<br><br>Сцена должна строиться вокруг:<br>- состояния;<br>- ритма жизни;<br>- атмосферы;<br>- способа присутствия человека в своей жизни;<br>- эмоционального смысла выбранных ответов.<br><br>Не строить сцену вокруг:<br>- дорогих предметов;<br>- случайной роскоши;<br>- внешнего статуса;<br>- декоративного интерьера;<br>- generic success image.<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## 2. Life Moment Selection</strong><br><br>Сцена должна быть моментом жизни.<br><br>Запрещено создавать:<br>- позирование в камеру;<br>- fashion shoot;<br>- рекламную постановку;<br>- человека, который просто стоит и выглядит красиво;<br>- пустой интерьер с человеком как аксессуаром.<br><br>Нужно создавать:<br>- человека внутри живого момента;<br>- действие;<br>- присутствие;<br>- связь со средой;<br>- ощущение жизни до и после кадра.<br><br>Предпочитай:<br>- естественные ситуации;<br>- lived-in moments;<br>- quiet confidence;<br>- человеческие детали;<br>- атмосферу настоящей жизни.<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## 3. Life Probability Layer</strong><br><br>Сцена должна быть причинно связана с профилем пользователя.<br><br>Все элементы сцены должны вытекать из:<br>- Character Profile;<br>- прямых ответов пользователя;<br>- Key Answer Locks;<br>- environment type;<br>- life level;<br>- expression model;<br>- social signal;<br>- visual identity.<br><br>Нельзя вставлять случайную красивую жизнь.<br><br>Если пользователь выбирает спокойствие, глубину и приватность — не помещай его в шумные демонстративные сцены.<br><br>Если пользователь выбирает свободу — показывай свободу через ритм, движение, пространство и возможность выбора, а не только через путешествие.<br><br>Если пользователь выбирает влияние — показывай влияние через деятельность, людей, проекты, ответственность или среду, а не только через дорогой интерьер.<br><br>Если пользователь выбирает высокий уровень жизни — показывай уровень через качество среды, свободу выбора, вкус и устойчивость, а не через вульгарную демонстрацию богатства.<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## 4. Anti-Fantasy Layer</strong><br><br>Не создавай:<br>- fake luxury fantasy;<br>- influencer aesthetics;<br>- пустую красивую жизнь;<br>- unrealistic perfection;<br>- emotionally empty status scene;<br>- glossy magazine fantasy.<br><br>Будущее должно ощущаться:<br>- достижимым;<br>- человеческим;<br>- эмоционально узнаваемым;<br>- проживаемым;<br>- rooted in reality.<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## 5. Emotional Authenticity Layer</strong><br><br>Избегай:<br>- stock confidence;<br>- fake happiness;<br>- exaggerated success energy;<br>- hyper-perfect lifestyle;<br>- emotionally sterile atmosphere.<br><br>Человек должен ощущаться:<br>- живым;<br>- настоящим;<br>- эмоционально присутствующим;<br>- психологически правдоподобным.<br><br><span style="color:#d1d5db">---</span><br><br><strong style="color:#2563eb">## 6. Continuity Layer</strong><br><br>Даже если сцена aspirational, пользователь должен оставаться собой.<br><br>Не превращай человека:<br>- в другую личность;<br>- в celebrity fantasy;<br>- в generic successful person;<br>- в случайный luxury archetype.<br><br>Среда адаптируется под человека.<br>Не человек под среду.<br><br><strong style="color:#2563eb">## First Scene Style Interpretation</strong><br><br>Для первой сцены выбранный стиль одежды нужно интерпретировать как визуальное направление личности, а не как прямой список предметов.<br><br>Первая сцена должна показать человека в уместной, современной и узнаваемой версии его стиля.<br><br>Перед описанием одежды определи:<br>- насколько сцена приватная или публичная;<br>- насколько человек должен быть расслабленным или собранным;<br>- насколько стиль должен быть мягким, строгим, выразительным или сексуальным;<br>- какие 1–3 признака выбранного стиля лучше всего подходят этому моменту.<br><br>Не используй одежду только потому, что она перечислена в Base Wardrobe.<br><br>Если стиль выглядит слишком буквальным, устаревшим или костюмным, сделай его более современным и жизненным.<br><br>Первая сцена не должна превращать человека в Pinterest-шаблон.<br><br><strong style="color:#2563eb">## First Scene Emotional Entry Logic</strong><br><br>Первая сцена Elyne — это вход пользователя в желаемую жизнь через состояние, желание, пространство, ощущение себя и эмоциональное узнавание.<br><br>Первая сцена не должна по умолчанию показывать карьеру, профессию, работу, проект, мастерскую, офис, ноутбук, чертежи, продуктивность или профессиональную роль.<br><br>Реализация, карьера, проекты и деятельность допустимы только если они прямо поддержаны ответами пользователя:<br>- пользователь выбрал реализацию, карьеру, дело, влияние или творчество как сильный приоритет;<br>- пользователь явно указал проявление через проекты, создание, дело, работу, публичность или профессиональный результат;<br>- sphere context требует такой сцены.<br><br>Если прямого сигнала реализации нет, выбирай emotional entry moment:<br>- ощущение воздуха и простора;<br>- прогулку без спешки;<br>- утренний или вечерний переходный момент;<br>- движение через город, природу или открытую среду;<br>- момент выдоха;<br>- ощущение свободы;<br>- телесное возвращение к себе;<br>- спокойное присутствие в живой среде;<br>- ощущение, что жизнь стала шире;<br>- момент, в который пользователь чувствует: «мне можно быть собой».<br><br>Первая сцена должна мотивировать через желание жить, а не через обязанность действовать.<br><br>Под действием не подразумевается работа или продуктивность. Для первой сцены достаточно микродвижения: идти, открыть окно, выйти на улицу, остановиться у света, коснуться перил, поправить одежду, сесть за стол без рабочей задачи, повернуться к воздуху, пройти через пространство, почувствовать тело в движении.<br><br><strong style="color:#2563eb">## User Answers Priority for First Scene</strong><br><br>Первая сцена должна строиться не от стиля одежды, а от совокупности ответов пользователя.<br><br>Сначала определи смысловой вектор сцены из:<br>- главного приоритета пользователя;<br>- желаемой среды жизни;<br>- желаемого уровня жизни;<br>- способа проявления;<br>-</div>
+    </div>
+  </div>
+</div>
+
+<div class="gen-card" id="gen-659">
+  <div class="gen-header">
+    <span class="gen-id">gen #659</span>
+    <span class="gen-sphere">7 — Творчество и новые начинания</span>
+    <span class="badge" style="background:#2563eb">Первая генерация</span>
+    <span class="badge" style="background:#16a34a">completed</span>
+    <span class="gen-ts">May 18, 2026 12:37:18</span>
+    <span style="color:#9ca3af;font-size:11px">iter 1 · src: profile_photo</span>
+  </div>
+
+  <div class="gen-title">Архитектура Тишины в Потоке</div>
+
+  
+
+  <div class="gen-body">
+    <!-- Images column -->
+    <div class="images-col">
+      <div class="col-label">Source photo</div>
+      <div class="img-row"><div class="img-wrap">
+      <a href="https://dreammap.storage.yandexcloud.net/card-photos/AoU4SpSaMHZ7xGUXflDW8egmUB7KzkgM1rUSwpVK.jpg" target="_blank">
+        <img src="https://dreammap.storage.yandexcloud.net/card-photos/AoU4SpSaMHZ7xGUXflDW8egmUB7KzkgM1rUSwpVK.jpg" width="180" style="border-radius:8px;object-fit:cover;height:180px;"
+             onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div style="display:none;padding:8px;color:#999;font-size:11px">Image unavailable</div>
+      </a>
+      <div class="img-label">Source #1</div>
+    </div></div>
+      <div class="col-label" style="margin-top:12px">Generated result</div>
+      <div class="img-row"><div class="img-wrap">
+      <a href="https://dreammap.storage.yandexcloud.net/generations/659/c4847573-7bbb-4fe6-b7c0-a61b762ba574.jpg" target="_blank">
+        <img src="https://dreammap.storage.yandexcloud.net/generations/659/c4847573-7bbb-4fe6-b7c0-a61b762ba574.jpg" width="220" style="border-radius:8px;object-fit:cover;height:220px;"
+             onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div style="display:none;padding:8px;color:#999;font-size:11px">Image unavailable</div>
+      </a>
+      <div class="img-label">Result #1</div>
+    </div></div>
+    </div>
+
+    <!-- Audits column -->
+    <div class="audits-col">
+      <div class="audit-section">
+        <div class="audit-title">Camera Grammar</div>
+        <table class='mini-table'><tr><td class='td-label'>Shot type</td><td>close-up</td></tr><tr><td class='td-label'>Camera angle</td><td>eye-level</td></tr><tr><td class='td-label'>Framing</td><td>observational</td></tr><tr><td class='td-label'>Movement present</td><td>yes</td></tr><tr><td class='td-label'>Lookbook risk</td><td><span style="color:#d97706;font-weight:600">medium</span></td></tr></table>
+      </div>
+      <div class="audit-section">
+        <div class="audit-title">Identity Continuity</div>
+        <table class='mini-table'><tr><td class='td-label'>Facial identity</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Age preserved</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Style preserved</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Body language</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Emotional energy</td><td><span class="dot" style="background:#16a34a" title="high"></span> high</td></tr><tr><td class="td-label">Drifted</td><td style="color:#dc2626">—</td></tr><tr><td class="td-label">Cause</td><td style="color:#6b7280;font-style:italic">standard generation</td></tr></table>
+      </div>
+      <div class="audit-section">
+        <div class="audit-title">Sphere / Cliché Audit</div>
+        <div style="font-size:12px">
+        <div>Sphere match: <strong>-</strong></div>
+        <div style="color:#16a34a;margin-top:4px">✓ No luxury clichés detected in prompt</div>
+    </div>
+      </div>
+    </div>
+
+    <!-- Prompt column -->
+    <div class="prompt-col">
+      <div class="audit-title">FAL Prompt (sent)</div>
+      <div class="fal-prompt">Эмоциональный вход (Emotional Entry). Локация: стерильный, но живой зал вылета международного аэропорта или крупный транспортный хаб, где люди размыты в движении на заднем плане. Свет: холодный рассеянный дневной свет, смешанный с теплым акцентом от экрана устройства или лампы в лаунж-зоне. План: Крупный (Close-up) или Средне-крупный. Действие: Пользователь сидит, полностью погруженный в процесс. Перед ним не просто ноутбук, а разложенные материалы для проекта (скетчбук, образцы тканей или цифровые планшеты). Он делает пометку или соединяет идеи. Его поза выражает &#x27;Dynamic Stability&#x27; — спина прямая, но плечи расслаблены. Одежда: Структурированный пиджак из мягкой шерсти графитового цвета поверх качественного трикотажа цвета песка. Широкие брюки, позволяющие сидеть в любой позе. Лицо спокойно, взгляд сфокусирован вниз на работу, игнорируя суету вокруг. Это визуализация внутреннего якоря: мир движется, он создает.<br><br>Стиль одежды: Visual Code: свободная природная эстетика в современной, чистой форме. Не хиппи и не этника ради этники.<br>Identity Feeling: человек выглядит свободным, тёплым, творческим, связанным с телом и пространством.<br>Silhouette Logic: мягкие свободные линии, лён, свободные рубашки, широкие брюки, лёгкие слои, движение ткани.<br>Styling Behavior: природность должна быть сдержанной. Один фактурный элемент, а не полный костюм странника.<br>Base Wardrobe: льняная рубашка, свободные брюки, лёгкий верхний слой, сандалии, мягкая кожаная обувь, минимальные украшения.<br>Materials: лён, хлопок, замша, мягкая кожа, шерсть, плетение.<br>Color Logic: sand, cream, olive, terracotta, brown, warm grey.<br>Social Signal: свобода, глубина, природность, творческая зрелость.<br>Scene Adaptation: в природе — свободнее; в городе — чище и современнее; дома — мягко и телесно; в реализации — минимальная природная фактура без костюмности.<br>Best Scene Fit: Свобода · Дом · Творчество · Состояние · Развитие.<br>Avoid: цыганщина, фестивальный хиппи-образ, чрезмерная этника, пончо без причины, чайная церемония по умолчанию.<br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> Метапромпт (отправлен в OpenRouter)<br> <br><br> <br><br> <br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br> <br><br> <br><br> <br> <br>*:first-child]:mt-0 [&amp;&gt;*:last-child]:mb-0 pt-2 prose-sm text-sm leading-6 text-gray-950 dark:text-white &quot;<br> style=&quot;&quot;<br> &gt;<br> &amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;<br>РОЛЬ<br>&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;<br><br>Ты — режиссёр, который для одной сферы жизни пользователя строит ТРИ принципиально разных кадра. Это не три похожих варианта одной идеи — это три разных СМЫСЛОВЫХ ОКНА в одну и ту же сферу. Ты не пишешь generic-сцену. Сцена — функция от профиля ИМЕННО ЭТОГО пользователя.<br><br>&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;<br>ВХОДНЫЕ ДАННЫЕ<br>&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;<br><br>Сфера &amp;#61; Творчество и новые начинания (creativity).</div>
+    </div>
+  </div>
+</div>
+
+<div class="gen-card" id="gen-660">
+  <div class="gen-header">
+    <span class="gen-id">gen #660</span>
+    <span class="gen-sphere">7 — Творчество и новые начинания</span>
+    <span class="badge" style="background:#2563eb">Первая генерация</span>
+    <span class="badge" style="background:#16a34a">completed</span>
+    <span class="gen-ts">May 18, 2026 12:37:18</span>
+    <span style="color:#9ca3af;font-size:11px">iter 1 · src: profile_photo</span>
+  </div>
+
+  <div class="gen-title">Импульс на Перекрестке Миров</div>
+
+  
+
+  <div class="gen-body">
+    <!-- Images column -->
+    <div class="images-col">
+      <div class="col-label">Source photo</div>
+      <div class="img-row"><div class="img-wrap">
+      <a href="https://dreammap.storage.yandexcloud.net/card-photos/AoU4SpSaMHZ7xGUXflDW8egmUB7KzkgM1rUSwpVK.jpg" target="_blank">
+        <img src="https://dreammap.storage.yandexcloud.net/card-photos/AoU4SpSaMHZ7xGUXflDW8egmUB7KzkgM1rUSwpVK.jpg" width="180" style="border-radius:8px;object-fit:cover;height:180px;"
+             onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div style="display:none;padding:8px;color:#999;font-size:11px">Image unavailable</div>
+      </a>
+      <div class="img-label">Source #1</div>
+    </div></div>
+      <div class="col-label" style="margin-top:12px">Generated result</div>
+      <div class="img-row"><div class="img-wrap">
+      <a href="https://dreammap.storage.yandexcloud.net/generations/660/cead47e5-62d2-4fd8-bc2e-eb4c9774a9a7.jpg" target="_blank">
+        <img src="https://dreammap.storage.yandexcloud.net/generations/660/cead47e5-62d2-4fd8-bc2e-eb4c9774a9a7.jpg" width="220" style="border-radius:8px;object-fit:cover;height:220px;"
+             onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div style="display:none;padding:8px;color:#999;font-size:11px">Image unavailable</div>
+      </a>
+      <div class="img-label">Result #1</div>
+    </div></div>
+    </div>
+
+    <!-- Audits column -->
+    <div class="audits-col">
+      <div class="audit-section">
+        <div class="audit-title">Camera Grammar</div>
+        <table class='mini-table'><tr><td class='td-label'>Shot type</td><td>wide</td></tr><tr><td class='td-label'>Camera angle</td><td>eye-level</td></tr><tr><td class='td-label'>Framing</td><td>observational</td></tr><tr><td class='td-label'>Movement present</td><td>yes</td></tr><tr><td class='td-label'>Lookbook risk</td><td><span style="color:#16a34a;font-weight:600">low</span></td></tr></table>
+      </div>
+      <div class="audit-section">
+        <div class="audit-title">Identity Continuity</div>
+        <table class='mini-table'><tr><td class='td-label'>Facial identity</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Age preserved</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Style preserved</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Body language</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Emotional energy</td><td><span class="dot" style="background:#16a34a" title="high"></span> high</td></tr><tr><td class="td-label">Drifted</td><td style="color:#dc2626">—</td></tr><tr><td class="td-label">Cause</td><td style="color:#6b7280;font-style:italic">standard generation</td></tr></table>
+      </div>
+      <div class="audit-section">
+        <div class="audit-title">Sphere / Cliché Audit</div>
+        <div style="font-size:12px">
+        <div>Sphere match: <strong>-</strong></div>
+        <div style="color:#16a34a;margin-top:4px">✓ No luxury clichés detected in prompt</div>
+    </div>
+      </div>
+    </div>
+
+    <!-- Prompt column -->
+    <div class="prompt-col">
+      <div class="audit-title">FAL Prompt (sent)</div>
+      <div class="fal-prompt">Взаимодействие с миром (World Interaction). Локация: Динамичный перекресток мегаполиса (Токио, Берлин или Нью-Йорк) в час пик, но не в давке, а в потоке. Время: &#x27;Синий час&#x27; (сумерки), когда городской свет уже горит, но небо еще глубокое. Свет: Контрастный, неоновые огни витрин и фар создают боке на фоне, лицо освещено мягким городским светом. План: Общий (Full shot) или Средний длинный. Действие: Пользователь идет уверенным, широким шагом через улицу или стоит на углу, ожидая сигнала, но его тело уже направлено вперед. Он не ждет, он готов к движению. В руке может быть предмет, символизирующий создание (свернутый чертеж, планшет, камера), но не как аксессуар, а как инструмент. Одежда: Темно-синяя техническая куртка-бомбер с элементами кроя, открытая, под ней льняная рубашка. Брюки свободного кроя из плотного хлопка. Обувь — минималистичные кроссовки или ботинки, готовые к долгой ходьбе. Выражение лица: Открытое, взгляд направлен вдаль, сквозь толпу, с легким предвкушением. Он не часть толпы, он архитектор этого движения.<br><br>Стиль одежды: Visual Code: свободная природная эстетика в современной, чистой форме. Не хиппи и не этника ради этники.<br>Identity Feeling: человек выглядит свободным, тёплым, творческим, связанным с телом и пространством.<br>Silhouette Logic: мягкие свободные линии, лён, свободные рубашки, широкие брюки, лёгкие слои, движение ткани.<br>Styling Behavior: природность должна быть сдержанной. Один фактурный элемент, а не полный костюм странника.<br>Base Wardrobe: льняная рубашка, свободные брюки, лёгкий верхний слой, сандалии, мягкая кожаная обувь, минимальные украшения.<br>Materials: лён, хлопок, замша, мягкая кожа, шерсть, плетение.<br>Color Logic: sand, cream, olive, terracotta, brown, warm grey.<br>Social Signal: свобода, глубина, природность, творческая зрелость.<br>Scene Adaptation: в природе — свободнее; в городе — чище и современнее; дома — мягко и телесно; в реализации — минимальная природная фактура без костюмности.<br>Best Scene Fit: Свобода · Дом · Творчество · Состояние · Развитие.<br>Avoid: цыганщина, фестивальный хиппи-образ, чрезмерная этника, пончо без причины, чайная церемония по умолчанию.<br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> Метапромпт (отправлен в OpenRouter)<br> <br><br> <br><br> <br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br> <br><br> <br><br> <br> <br>*:first-child]:mt-0 [&amp;&gt;*:last-child]:mb-0 pt-2 prose-sm text-sm leading-6 text-gray-950 dark:text-white &quot;<br> style=&quot;&quot;<br> &gt;<br> &amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;<br>РОЛЬ<br>&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;<br><br>Ты — режиссёр, который для одной сферы жизни пользователя строит ТРИ принципиально разных кадра. Это не три похожих варианта одной идеи — это три разных СМЫСЛОВЫХ ОКНА в одну и ту же сферу. Ты не пишешь generic-сцену. Сцена — функция от профиля ИМЕННО ЭТОГО пользователя.<br><br>&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;<br>ВХОДНЫЕ ДАННЫЕ<br>&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;<br><br>Сфера &amp;#61; Творчество и новые начинания (creativity).</div>
+    </div>
+  </div>
+</div>
+
+<div class="gen-card" id="gen-661">
+  <div class="gen-header">
+    <span class="gen-id">gen #661</span>
+    <span class="gen-sphere">7 — Творчество и новые начинания</span>
+    <span class="badge" style="background:#2563eb">Первая генерация</span>
+    <span class="badge" style="background:#16a34a">completed</span>
+    <span class="gen-ts">May 18, 2026 12:37:18</span>
+    <span style="color:#9ca3af;font-size:11px">iter 1 · src: profile_photo</span>
+  </div>
+
+  <div class="gen-title">Горизонт Выбора</div>
+
+  
+
+  <div class="gen-body">
+    <!-- Images column -->
+    <div class="images-col">
+      <div class="col-label">Source photo</div>
+      <div class="img-row"><div class="img-wrap">
+      <a href="https://dreammap.storage.yandexcloud.net/card-photos/AoU4SpSaMHZ7xGUXflDW8egmUB7KzkgM1rUSwpVK.jpg" target="_blank">
+        <img src="https://dreammap.storage.yandexcloud.net/card-photos/AoU4SpSaMHZ7xGUXflDW8egmUB7KzkgM1rUSwpVK.jpg" width="180" style="border-radius:8px;object-fit:cover;height:180px;"
+             onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div style="display:none;padding:8px;color:#999;font-size:11px">Image unavailable</div>
+      </a>
+      <div class="img-label">Source #1</div>
+    </div></div>
+      <div class="col-label" style="margin-top:12px">Generated result</div>
+      <div class="img-row"><div class="img-wrap">
+      <a href="https://dreammap.storage.yandexcloud.net/generations/661/c0f720c5-4442-47d4-a50c-73c28f8f8617.jpg" target="_blank">
+        <img src="https://dreammap.storage.yandexcloud.net/generations/661/c0f720c5-4442-47d4-a50c-73c28f8f8617.jpg" width="220" style="border-radius:8px;object-fit:cover;height:220px;"
+             onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div style="display:none;padding:8px;color:#999;font-size:11px">Image unavailable</div>
+      </a>
+      <div class="img-label">Result #1</div>
+    </div></div>
+    </div>
+
+    <!-- Audits column -->
+    <div class="audits-col">
+      <div class="audit-section">
+        <div class="audit-title">Camera Grammar</div>
+        <table class='mini-table'><tr><td class='td-label'>Shot type</td><td>unknown</td></tr><tr><td class='td-label'>Camera angle</td><td>eye-level</td></tr><tr><td class='td-label'>Framing</td><td>observational</td></tr><tr><td class='td-label'>Movement present</td><td>yes</td></tr><tr><td class='td-label'>Lookbook risk</td><td><span style="color:#d97706;font-weight:600">medium</span></td></tr></table>
+      </div>
+      <div class="audit-section">
+        <div class="audit-title">Identity Continuity</div>
+        <table class='mini-table'><tr><td class='td-label'>Facial identity</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Age preserved</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Style preserved</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Body language</td><td><span class="dot" style="background:#d97706" title="medium"></span> medium</td></tr><tr><td class='td-label'>Emotional energy</td><td><span class="dot" style="background:#16a34a" title="high"></span> high</td></tr><tr><td class="td-label">Drifted</td><td style="color:#dc2626">—</td></tr><tr><td class="td-label">Cause</td><td style="color:#6b7280;font-style:italic">standard generation</td></tr></table>
+      </div>
+      <div class="audit-section">
+        <div class="audit-title">Sphere / Cliché Audit</div>
+        <div style="font-size:12px">
+        <div>Sphere match: <strong>-</strong></div>
+        <div style="color:#16a34a;margin-top:4px">✓ No luxury clichés detected in prompt</div>
+    </div>
+      </div>
+    </div>
+
+    <!-- Prompt column -->
+    <div class="prompt-col">
+      <div class="audit-title">FAL Prompt (sent)</div>
+      <div class="fal-prompt">Выбор движения (Movement Choice). Локация: Открытое пространство на границе сред — терраса коворкинга с видом на взлетную полосу, платформа вокзала или крыша здания с видом на горизонт нового города. Время: Раннее утро, чистый, яркий свет, обещающий начало. Свет: Естественный, направленный, создающий четкие тени и подчеркивающий текстуры одежды. План: Средний (Medium shot), профиль или три четверти со спины, чтобы видеть и лицо, и направление взгляда. Действие: Пользователь стоит у края, опираясь на перила или держа чашку кофе, но его поза не статична — вес тела перенесен на одну ногу, готовая к шагу. Он смотрит на открывающееся пространство (взлетающий самолет, уходящий поезд, панораму города). Это момент &#x27;перед прыжком&#x27;, когда решение уже принято внутри. Одежда: Многослойность, отражающая переменчивость климата и стиля. Светлый тренч или пальто свободного кроя поверх темной водолазки. Шарф из натуральной шерсти, небрежно накинутый. Цвета: Земляные, терракотовые или оливковые акценты на фоне нейтральной базы. Лицо в профиль, выражение сосредоточенности и тихой радости от предстоящего пути. Нет туристического восторга, есть взрослое понимание масштаба своего пути.<br><br>Стиль одежды: Visual Code: свободная природная эстетика в современной, чистой форме. Не хиппи и не этника ради этники.<br>Identity Feeling: человек выглядит свободным, тёплым, творческим, связанным с телом и пространством.<br>Silhouette Logic: мягкие свободные линии, лён, свободные рубашки, широкие брюки, лёгкие слои, движение ткани.<br>Styling Behavior: природность должна быть сдержанной. Один фактурный элемент, а не полный костюм странника.<br>Base Wardrobe: льняная рубашка, свободные брюки, лёгкий верхний слой, сандалии, мягкая кожаная обувь, минимальные украшения.<br>Materials: лён, хлопок, замша, мягкая кожа, шерсть, плетение.<br>Color Logic: sand, cream, olive, terracotta, brown, warm grey.<br>Social Signal: свобода, глубина, природность, творческая зрелость.<br>Scene Adaptation: в природе — свободнее; в городе — чище и современнее; дома — мягко и телесно; в реализации — минимальная природная фактура без костюмности.<br>Best Scene Fit: Свобода · Дом · Творчество · Состояние · Развитие.<br>Avoid: цыганщина, фестивальный хиппи-образ, чрезмерная этника, пончо без причины, чайная церемония по умолчанию.<br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br><br> Метапромпт (отправлен в OpenRouter)<br> <br><br> <br><br> <br> <br><br> <br> <br><br> <br><br> <br><br> <br><br> <br> <br><br> <br><br> <br> <br><br> <br><br> <br> <br>*:first-child]:mt-0 [&amp;&gt;*:last-child]:mb-0 pt-2 prose-sm text-sm leading-6 text-gray-950 dark:text-white &quot;<br> style=&quot;&quot;<br> &gt;<br> &amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;<br>РОЛЬ<br>&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;<br><br>Ты — режиссёр, который для одной сферы жизни пользователя строит ТРИ принципиально разных кадра. Это не три похожих варианта одной идеи — это три разных СМЫСЛОВЫХ ОКНА в одну и ту же сферу. Ты не пишешь generic-сцену. Сцена — функция от профиля ИМЕННО ЭТОГО пользователя.<br><br>&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;<br>ВХОДНЫЕ ДАННЫЕ<br>&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;&amp;#61;<br><br>Сфера &amp;#61; Творчество и новые начинания (creativity).</div>
+    </div>
+  </div>
+</div>
+
+  </div>
+</section>
+</div>
+  </main>
+</div>
+
+</body>
+</html>
