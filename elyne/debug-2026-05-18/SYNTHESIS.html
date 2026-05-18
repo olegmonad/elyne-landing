@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Elyne · Synthesis Diagnostic — 2026-05-18</title>
+<style>
+* { box-sizing:border-box;margin:0;padding:0; }
+body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.6;color:#111;background:#f8f9fa;padding:32px;max-width:960px;margin:0 auto; }
+h1 { font-size:24px;font-weight:700;margin-bottom:4px; }
+.meta { color:#6b7280;font-size:12px;margin-bottom:32px; }
+h2 { font-size:18px;font-weight:700;margin:32px 0 16px;padding-bottom:6px;border-bottom:2px solid #e5e7eb; }
+h3 { font-size:14px;font-weight:700;margin:20px 0 8px;color:#374151; }
+.card { background:white;border:1px solid #e5e7eb;border-radius:10px;padding:20px;margin-bottom:16px; }
+.severity { display:inline-block;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:700;color:white;margin-right:6px; }
+.sev-critical { background:#dc2626; }
+.sev-high { background:#d97706; }
+.sev-medium { background:#2563eb; }
+.sev-ok { background:#16a34a; }
+.finding { margin-bottom:12px;padding:12px 16px;border-left:3px solid;border-radius:0 6px 6px 0; }
+.finding.critical { border-color:#dc2626;background:#fef2f2; }
+.finding.high { border-color:#d97706;background:#fffbeb; }
+.finding.medium { border-color:#2563eb;background:#eff6ff; }
+.finding.info { border-color:#16a34a;background:#f0fdf4; }
+.finding-title { font-weight:700;font-size:13px;margin-bottom:6px; }
+.finding-body { font-size:12px;color:#374151; }
+.fix { margin-top:8px;font-size:12px;color:#1d4ed8;font-style:italic; }
+table { width:100%;border-collapse:collapse;font-size:12px; }
+th { text-align:left;padding:6px 10px;background:#f1f5f9;font-weight:600;color:#374151; }
+td { padding:6px 10px;border-bottom:1px solid #f3f4f6;vertical-align:top; }
+.dot { display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:3px;vertical-align:middle; }
+.stat-row { display:flex;gap:16px;flex-wrap:wrap;margin-bottom:24px; }
+.stat { background:white;border:1px solid #e5e7eb;border-radius:8px;padding:12px 20px;text-align:center;min-width:100px; }
+.stat-n { font-size:28px;font-weight:700;color:#0f172a; }
+.stat-l { font-size:11px;color:#6b7280; }
+code { background:#f3f4f6;padding:1px 5px;border-radius:3px;font-family:monospace;font-size:11px; }
+ul { padding-left:20px;margin:4px 0; }
+li { margin-bottom:3px; }
+em { font-style:italic;color:#4b5563; }
+</style>
+</head>
+<body>
+
+<h1>Elyne · Production Debug Synthesis</h1>
+<div class="meta">Users 7806 + 7616 · 12 generations analysed · 2026-05-18 · <a href="report.html">Full report →</a></div>
+
+<div class="stat-row">
+  <div class="stat"><div class="stat-n">12</div><div class="stat-l">Total gens</div></div>
+  <div class="stat"><div class="stat-n">9</div><div class="stat-l">First gens</div></div>
+  <div class="stat"><div class="stat-n">3</div><div class="stat-l">Lookbook risk HIGH</div></div>
+  <div class="stat"><div class="stat-n">3</div><div class="stat-l">Face identity LOW</div></div>
+  <div class="stat"><div class="stat-n">1</div><div class="stat-l">User wishes</div></div>
+  <div class="stat"><div class="stat-n">2</div><div class="stat-l">Regenerations</div></div>
+</div>
+
+<h2>Критические диагнозы</h2>
+
+<div class="finding critical">
+  <div class="finding-title"><span class="severity sev-critical">CRITICAL</span> Лицо теряется при стилевом wish — gen #667, 668, 669</div>
+  <div class="finding-body">
+    User 7806 написала: <em>«Переодень меня в стиль более оверсайзный, типа как баленсиага, монохром»</em>.<br>
+    Результат: <code>facial_identity = LOW</code> на всех 3 последующих генерациях. Дрейф: facial proportions, hair detail, skin texture.<br>
+    <strong>Вероятная причина:</strong> Wish перезаписывает весь промт, новый стилевой вектор «давит» identity layer. Система не закрепляет лицо при style-shift.
+    <div class="fix">→ Нужен «face anchor» при wish/regeneration: source photo остаётся primary seed, стиль меняется поверх. Проверить — передаётся ли ip_adapter seed при повторной генерации или промт собирается заново без face reference?</div>
+  </div>
+</div>
+
+<div class="finding critical">
+  <div class="finding-title"><span class="severity sev-critical">CRITICAL</span> Все первые генерации = identity MEDIUM (HIGH не достигнут ни разу)</div>
+  <div class="finding-body">
+    Все 9 первых генераций по обоим пользователям: <code>facial_identity = MEDIUM</code>.<br>
+    Это значит: пользователь с первого же кадра видит себя недостаточно убедительно — критично для retention и wow-moment.
+    <div class="fix">→ Нужна калибровка ip_adapter_scale. Попробовать поднять с текущего значения до 0.80–0.85. Метрика успеха: ≥50% первых генераций должны получать HIGH по facial identity.</div>
+  </div>
+</div>
+
+<div class="finding high">
+  <div class="finding-title"><span class="severity sev-high">HIGH</span> Lookbook risk HIGH на 3 генерациях из 12</div>
+  <div class="finding-body">
+    <code style="background:#1e293b;color:#f1f5f9;padding:1px 5px;border-radius:3px;font-size:10px">#662</code> <code style="background:#1e293b;color:#f1f5f9;padding:1px 5px;border-radius:3px;font-size:10px">#666</code> <code style="background:#1e293b;color:#f1f5f9;padding:1px 5px;border-radius:3px;font-size:10px">#657</code><br><br>
+    Sphere 1 (Состояние) и часть sphere 7 (Творчество) выдают постановочный fashion-shot вместо life moment.
+    Camera grammar правильный (side-follow, low-angle), но visual result всё равно lookbook.<br>
+    <div class="fix">→ F4+F5 фильтр работает на уровне инструкции, но не на уровне результата. Рассмотреть: post-generation aesthetic classifier или усиленный «this is a life moment, not a photo shoot» constraint для sphere 1.</div>
+  </div>
+</div>
+
+<div class="finding info">
+  <div class="finding-title"><span class="severity sev-ok">✓ OK</span> Luxury-cliché в телах сцен не обнаружены</div>
+  <div class="finding-body">Слова вино/алкоголь/яхты встречаются только в блоке Cultural Assumption Filter (запрещающий перечень). В реальных описаниях сцен — чисто.<br>
+  <strong>Но:</strong> упоминание этих слов даже в запрете может повышать вероятность их появления в результатах диффузионных моделей. Рекомендуется переформулировать на позитивные альтернативы.</div>
+</div>
+
+<div class="finding medium">
+  <div class="finding-title"><span class="severity sev-medium">MEDIUM</span> Cultural Assumption Filter упоминает запрещённые предметы — риск активации</div>
+  <div class="finding-body">
+    Промт содержит: <em>«НЕ включай бокалы с вином, алкогольные напитки, яхты, виллы…»</em><br>
+    Для диффузионных моделей упоминание объекта в тексте (даже с «НЕ») статистически повышает его вероятность в результате — особенно если не используется отдельный negative_prompt field.<br>
+    <div class="fix">→ Переформулировать с позитивных альтернатив: «Напитки = кофе/вода/чай. Среда = городская публичная/домашняя. Уровень жизни = качество среды и выбора, не luxury-маркеры.» Убрать явные перечисления запрещённых предметов из основного текста промта.</div>
+  </div>
+</div>
+
+<h2>Детали по пользователям</h2>
+
+<h3>User 7806 — dashakibl@gmail.com · female, 25, Sport Casual · 8 генераций</h3>
+<div class="card">
+<table>
+<tr><th>Gen</th><th>Сфера</th><th>Тип</th><th>Лицо</th><th>Стиль</th><th>Lookbook</th><th>Заметка</th></tr>
+<tr>
+      <td><a href="report.html#gen-662"><code>#662</code></a></td>
+      <td style="font-size:11px">1 — Я и состояние</td>
+      <td style="font-size:11px">Первая генерация</td>
+      <td><span class="dot" style="background:#d97706"></span> medium</td>
+      <td><span class="dot" style="background:#d97706"></span> medium</td>
+      <td style="color:#dc2626;font-weight:600">high</td>
+      <td style="font-size:11px;color:#6b7280"></td>
+    </tr>
+<tr>
+      <td><a href="report.html#gen-663"><code>#663</code></a></td>
+      <td style="font-size:11px">9 — Свобода и масштаб жизни</td>
+      <td style="font-size:11px">Первая генерация</td>
+      <td><span class="dot" style="background:#d97706"></span> medium</td>
+      <td><span class="dot" style="background:#d97706"></span> medium</td>
+      <td style="color:#d97706;font-weight:600">medium</td>
+      <td style="font-size:11px;color:#6b7280"></td>
+    </tr>
+<tr>
+      <td><a href="report.html#gen-664"><code>#664</code></a></td>
+      <td style="font-size:11px">9 — Свобода и масштаб жизни</td>
+      <td style="font-size:11px">Первая генерация</td>
+      <td><span class="dot" style="background:#d97706"></span> medium</td>
+      <td><span class="dot" style="background:#d97706"></span> medium</td>
+      <td style="color:#d97706;font-weight:600">medium</td>
+      <td style="font-size:11px;color:#6b7280"></td>
+    </tr>
+<tr>
+      <td><a href="report.html#gen-665"><code>#665</code></a></td>
+      <td style="font-size:11px">9 — Свобода и масштаб жизни</td>
+      <td style="font-size:11px">Первая генерация</td>
+      <td><span class="dot" style="background:#d97706"></span> medium</td>
+      <td><span class="dot" style="background:#d97706"></span> medium</td>
+      <td style="color:#16a34a;font-weight:600">low</td>
+      <td style="font-size:11px;color:#6b7280"></td>
+    </tr>
+<tr>
+      <td><a href="report.html#gen-666"><code>#666</code></a></td>
+      <td style="font-size:11px">7 — Творчество и новые начин</td>
+      <td style="font-size:11px">Первая генерация</td>
+      <td><span class="dot" style="background:#d97706"></span> medium</td>
+      <td><span class="dot" style="background:#16a34a"></span> high</td>
+      <td style="color:#dc2626;font-weight:600">high</td>
+      <td style="font-size:11px;color:#6b7280"></td>
+    </tr>
+<tr>
+      <td><a href="report.html#gen-667"><code>#667</code></a></td>
+      <td style="font-size:11px">7 — Творчество и новые начин</td>
+      <td style="font-size:11px">Уточнение (с комментарием)</td>
+      <td><span class="dot" style="background:#dc2626"></span> low</td>
+      <td><span class="dot" style="background:#d97706"></span> medium</td>
+      <td style="color:#16a34a;font-weight:600">low</td>
+      <td style="font-size:11px;color:#6b7280">facial proportions, hair detail, skin texture</td>
+    </tr>
+<tr>
+      <td><a href="report.html#gen-668"><code>#668</code></a></td>
+      <td style="font-size:11px">7 — Творчество и новые начин</td>
+      <td style="font-size:11px">Перегенерация</td>
+      <td><span class="dot" style="background:#dc2626"></span> low</td>
+      <td><span class="dot" style="background:#d97706"></span> medium</td>
+      <td style="color:#16a34a;font-weight:600">low</td>
+      <td style="font-size:11px;color:#6b7280">facial proportions, hair detail, skin texture</td>
+    </tr>
+<tr>
+      <td><a href="report.html#gen-669"><code>#669</code></a></td>
+      <td style="font-size:11px">7 — Творчество и новые начин</td>
+      <td style="font-size:11px">Перегенерация</td>
+      <td><span class="dot" style="background:#dc2626"></span> low</td>
+      <td><span class="dot" style="background:#d97706"></span> medium</td>
+      <td style="color:#16a34a;font-weight:600">low</td>
+      <td style="font-size:11px;color:#6b7280">facial proportions, hair detail, skin texture</td>
+    </tr>
+</table>
+<p style="font-size:11px;color:#9ca3af;margin-top:8px">1 лайк пользователя: gen #666</p>
+</div>
+
+<h3>User 7616 — hdhrjdj@hdjd.ru · male, 25, Business+Boho+Sport Casual · 4 генерации</h3>
+<div class="card">
+<table>
+<tr><th>Gen</th><th>Сфера</th><th>Тип</th><th>Лицо</th><th>Стиль</th><th>Lookbook</th><th>Заметка</th></tr>
+<tr>
+      <td><a href="report.html#gen-657"><code>#657</code></a></td>
+      <td style="font-size:11px">1 — Я и состояние</td>
+      <td style="font-size:11px">Первая генерация</td>
+      <td><span class="dot" style="background:#d97706"></span> medium</td>
+      <td><span class="dot" style="background:#d97706"></span> medium</td>
+      <td style="color:#dc2626;font-weight:600">high</td>
+      <td style="font-size:11px;color:#6b7280"></td>
+    </tr>
+<tr>
+      <td><a href="report.html#gen-659"><code>#659</code></a></td>
+      <td style="font-size:11px">7 — Творчество и новые начин</td>
+      <td style="font-size:11px">Первая генерация</td>
+      <td><span class="dot" style="background:#d97706"></span> medium</td>
+      <td><span class="dot" style="background:#d97706"></span> medium</td>
+      <td style="color:#d97706;font-weight:600">medium</td>
+      <td style="font-size:11px;color:#6b7280"></td>
+    </tr>
+<tr>
+      <td><a href="report.html#gen-660"><code>#660</code></a></td>
+      <td style="font-size:11px">7 — Творчество и новые начин</td>
+      <td style="font-size:11px">Первая генерация</td>
+      <td><span class="dot" style="background:#d97706"></span> medium</td>
+      <td><span class="dot" style="background:#d97706"></span> medium</td>
+      <td style="color:#16a34a;font-weight:600">low</td>
+      <td style="font-size:11px;color:#6b7280"></td>
+    </tr>
+<tr>
+      <td><a href="report.html#gen-661"><code>#661</code></a></td>
+      <td style="font-size:11px">7 — Творчество и новые начин</td>
+      <td style="font-size:11px">Первая генерация</td>
+      <td><span class="dot" style="background:#d97706"></span> medium</td>
+      <td><span class="dot" style="background:#d97706"></span> medium</td>
+      <td style="color:#d97706;font-weight:600">medium</td>
+      <td style="font-size:11px;color:#6b7280"></td>
+    </tr>
+</table>
+<p style="font-size:11px;color:#9ca3af;margin-top:8px">Feedback сигналов не зафиксировано</p>
+</div>
+
+<h2>Приоритизированные действия</h2>
+
+<div class="finding critical">
+  <div class="finding-title">1. СЕЙЧАС — Face anchor при wish/regeneration</div>
+  <div class="finding-body">
+    Проверить: передаётся ли ip_adapter image при wish-генерации или только текстовый промт пересобирается.
+    Если нет — добавить source_photo как принудительный seed для ip_adapter на всех типах генерации, не только на первой.
+  </div>
+</div>
+
+<div class="finding critical">
+  <div class="finding-title">2. СЕЙЧАС — Поднять ip_adapter_scale для первых генераций</div>
+  <div class="finding-body">
+    Текущий уровень не даёт HIGH identity ни разу. A/B: текущее значение vs 0.80, 0.85. Оценка — side-by-side с selfie.
+  </div>
+</div>
+
+<div class="finding high">
+  <div class="finding-title">3. На этой неделе — Переписать Cultural Assumption Filter</div>
+  <div class="finding-body">
+    Заменить «НЕ включай вино/яхты» на позитивные альтернативы окружения.
+    Убрать упоминания конкретных запрещённых предметов из тела промта.
+  </div>
+</div>
+
+<div class="finding high">
+  <div class="finding-title">4. На этой неделе — Sphere 1: усилить life-moment constraint</div>
+  <div class="finding-body">
+    3 из 4 генераций sphere 1 = lookbook risk HIGH. Нужен дополнительный camera/staging instructions для sphere «Состояние» специфически.
+  </div>
+</div>
+
+<h2>Что не удалось извлечь автоматически</h2>
+<div class="card">
+  <ul style="font-size:12px;color:#374151">
+    <li><strong>Visual audit</strong> — identity оценена по метаданным, не по реальным изображениям. Нужен ручной side-by-side: selfie vs результат.</li>
+    <li><strong>User feedback signals</strong> — лайки/дизлайки/скачивания не полностью: только 1 лайк на gen #666 из таблицы. Нужна отдельная выборка из feedback_events.</li>
+    <li><strong>Style resolution layer</strong> — полный JSON style_resolver (как выбирались конкретные предметы одежды) не доступен из viewPrompt модалки.</li>
+    <li><strong>Raw onboarding answers</strong> — только компилированные profile_summary и key_answer_locks. Исходные тексты ответов не извлечены.</li>
+    <li><strong>Emotional realism audit</strong> — требует просмотра фактических изображений, не может быть сделан по промту.</li>
+    <li><strong>Explore/photo_session chains</strong> — у обоих пользователей только базовые генерации, нет deep explore chains для анализа continuity.</li>
+  </ul>
+</div>
+
+<p style="margin-top:32px;font-size:11px;color:#9ca3af">
+  Full detail: <a href="report.html">report.html</a> ·
+  Raw JSON: <a href="diagnostic_full.json">diagnostic_full.json</a> ·
+  Monad · 2026-05-18
+</p>
+
+</body>
+</html>
