@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Elyne Style Audit — 2026-05-18</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:13px;line-height:1.6;color:#111;background:#f8f9fa;padding:24px}
+h1{font-size:22px;font-weight:700;margin-bottom:4px}
+h2{font-size:16px;font-weight:700;margin:32px 0 10px;padding-bottom:6px;border-bottom:2px solid #e5e7eb}
+h3{font-size:14px;font-weight:600;margin:18px 0 6px;color:#374151}
+.meta{color:#6b7280;font-size:12px;margin-bottom:24px}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin:12px 0}
+.card-red{background:#fff5f5;border-color:#fecaca}
+.card-amber{background:#fffbeb;border-color:#fde68a}
+.card-green{background:#f0fdf4;border-color:#bbf7d0}
+.card-blue{background:#eff6ff;border-color:#bfdbfe}
+.tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;margin:2px}
+.tag-red{background:#fee2e2;color:#991b1b}
+.tag-amber{background:#fef3c7;color:#92400e}
+.tag-green{background:#dcfce7;color:#166534}
+.tag-blue{background:#dbeafe;color:#1e40af}
+.tag-grey{background:#f3f4f6;color:#374151}
+pre{font-family:monospace;font-size:11px;background:#1e293b;color:#e2e8f0;padding:12px;border-radius:6px;overflow-x:auto;white-space:pre-wrap;word-break:break-word;margin:6px 0}
+.pipeline{display:flex;gap:0;margin:12px 0;overflow-x:auto}
+.step{flex:1;min-width:120px;background:#f8fafc;border:1px solid #e5e7eb;padding:10px 8px;text-align:center;font-size:11px;position:relative}
+.step:not(:last-child)::after{content:"→";position:absolute;right:-10px;top:50%;transform:translateY(-50%);font-size:16px;color:#9ca3af;z-index:1}
+.step-red{background:#fff5f5;border-color:#fca5a5}
+.step-amber{background:#fffbeb;border-color:#fcd34d}
+.step-title{font-weight:700;font-size:10px;text-transform:uppercase;color:#6b7280;margin-bottom:4px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.finding-num{display:inline-block;width:24px;height:24px;border-radius:50%;text-align:center;line-height:24px;font-size:11px;font-weight:700;margin-right:8px}
+.fn-red{background:#dc2626;color:white}
+.fn-amber{background:#d97706;color:white}
+.fn-blue{background:#2563eb;color:white}
+.fn-green{background:#16a34a;color:white}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:#1e293b;color:white;padding:6px 8px;text-align:left}
+td{padding:6px 8px;border-bottom:1px solid #f0f0f0;vertical-align:top}
+tr:nth-child(even){background:#fafafa}
+.badge{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px}
+.badge-yes{background:#dcfce7;color:#166534}
+.badge-no{background:#fee2e2;color:#991b1b}
+.section-divider{height:2px;background:linear-gradient(to right,#2563eb,transparent);margin:32px 0 20px}
+</style>
+</head>
+<body>
+<h1>Elyne — Technical Style Audit</h1>
+<div class="meta">18 мая 2026 · Пользователи: 7806 (dashakibl) + 7616 (hdhrjdj) · Аудит промпт-цепочки, style resolution, wish-regeneration</div>
+
+<h2>0. TL;DR — Главный диагноз</h2>
+<div class="card card-red">
+<strong>Три причины, почему Sport Casual побеждает и почему wish-перегенерация сламывает сцену:</strong>
+<ol style="margin:10px 0 0 20px;line-height:2">
+<li><strong>Data issue</strong>: User 7806 выбрала ТОЛЬКО Sport Casual → нет конкурентов → он доминирует по дизайну системы. Не баг.</li>
+<li><strong>Prompt issue</strong>: Поле <code>Base Wardrobe</code> в определении стиля содержит буквальный список вещей (свитшот, кроссовки, техническая куртка). LLM читает это как инструкцию → материализует буквально. Запрет на буквальную интерпретацию теряется в горе других инструкций.</li>
+<li><strong>Code issue (critical)</strong>: Тип <em>«Уточнение с комментарием»</em> строит FAL-промпт как <code>wish_text + image_suffix</code> — без scene description, без profile_summary, без style_resolution, без KALs. Фактически — новая генерация из воздуха.</li>
+</ol>
+</div>
+
+<h2>1. Архитектура pipeline</h2>
+<h3>1A. Первая генерация (working)</h3>
+<div class="pipeline">
+  <div class="step"><div class="step-title">Onboarding</div>Q1–Q6 ответы<br>+ clothing_styles</div>
+  <div class="step"><div class="step-title">Profile Gen</div>profile_summary_<br>system → OpenRouter<br>→ Character Profile JSON</div>
+  <div class="step"><div class="step-title">Scene Gen</div>meta_prompt<br>(+{profile_summary}<br>+{style}+{answers})<br>→ OpenRouter</div>
+  <div class="step"><div class="step-title">FAL prompt</div>scene_description<br>+ image_suffix</div>
+  <div class="step"><div class="step-title">FAL API</div>+ selfie ip_adapter<br>→ output image</div>
+</div>
+
+<h3>1B. Перегенерация (working)</h3>
+<div class="pipeline">
+  <div class="step"><div class="step-title">Trigger</div>User нажимает<br>«Перегенерировать»</div>
+  <div class="step"><div class="step-title">Scene Gen</div>variation meta_prompt<br>+ parent context<br>→ OpenRouter</div>
+  <div class="step"><div class="step-title">FAL prompt</div>new scene_description<br>+ image_suffix</div>
+  <div class="step"><div class="step-title">FAL API</div>+ selfie ip_adapter<br>→ output image</div>
+</div>
+
+<h3>1C. Уточнение с комментарием / wish (BROKEN)</h3>
+<div class="pipeline">
+  <div class="step"><div class="step-title">User wish</div>«Переодень меня<br>в Баленсиага<br>монохром»</div>
+  <div class="step step-red"><div class="step-title">OpenRouter</div>? (вызывается<br>но результат<br>не используется?)</div>
+  <div class="step step-red"><div class="step-title">FAL prompt</div>ONLY wish_text<br>+ image_suffix<br>❌ no scene<br>❌ no profile<br>❌ no KALs</div>
+  <div class="step step-red"><div class="step-title">FAL API</div>source = prev gen<br>❌ ip_adapter<br>не привязан к selfie<br>→ identity loss</div>
+</div>
+
+<div class="card card-red" style="margin-top:8px">
+<strong>Доказательство:</strong> Gen 667 FAL prompt (дамп из admin):
+<pre>Пожелание: Переодень меня в стиль более оверсайзный, типа как баленсиага, монохром, что-то типа того
+---
+## FIRST SCENE VISUAL REALISM ADDITIONS
+Изображение должно выглядеть как настоящий кадр из жизни человека, а не как luxury campaign.
+---
+[... только image_suffix rules, ~3500 chars ...]</pre>
+Всё что есть в FAL prompt — 1 строка пожелания + качественные суффиксы. Нет сцены, нет лица.
+</div>
+
+<h2>2. Входные данные пользователей</h2>
+<div class="grid2">
+<div class="card">
+<h3>User #7806 — dashakibl@gmail.com</h3>
+<table>
+<tr><th>Q</th><th>Ответ</th></tr>
+<tr><td>В чём проявляю себя</td><td>в образе и стиле жизни</td></tr>
+<tr><td>Хочу почувствовать</td><td>больше масштаба и возможностей, свободу и лёгкость</td></tr>
+<tr><td>Сцены дальше</td><td>масштабными и наполненными</td></tr>
+<tr><td>Ощущение после</td><td>спокойствия и внутренней силы</td></tr>
+<tr><td>Атмосфера жизни</td><td><strong>жизнь между разными странами</strong></td></tr>
+<tr><td>Ощущение жизни</td><td>красивой и вдохновляющей</td></tr>
+<tr><td>Стиль одежды</td><td><span class="tag tag-amber">Sport Casual (единственный)</span></td></tr>
+</table>
+</div>
+<div class="card">
+<h3>User #7616 — hdhrjdj@hdjd.ru</h3>
+<table>
+<tr><th>Q</th><th>Ответ</th></tr>
+<tr><td>Ощущение после</td><td>восхищения и восторга, движения и энергии</td></tr>
+<tr><td>Сцены дальше</td><td>более смелыми и вдохновляющими</td></tr>
+<tr><td>Хочу почувствовать</td><td>спокойствие и устойчивость, ощущение нового этапа</td></tr>
+<tr><td>В чём проявляю себя</td><td>в том, что я создаю</td></tr>
+<tr><td>Ощущение жизни</td><td>свободной и наполненной движением</td></tr>
+<tr><td>Атмосфера жизни</td><td><strong>жизнь между разными странами</strong></td></tr>
+<tr><td>Стили одежды</td><td><span class="tag tag-blue">Business</span><span class="tag tag-blue">Boho</span><span class="tag tag-blue">Sport Casual</span></td></tr>
+</table>
+</div>
+</div>
+
+<h2>3. Profile Summary — generated output</h2>
+<div class="card">
+<h3>User #7806 — Character Profile (from admin)</h3>
+<p style="margin-bottom:8px">Устойчивое ядро личности — современная женщина (25 лет), чья идентичность строится на синтезе внутренней свободы и осознанного масштаба. Главный мотив — расширение горизонтов жизни через перемещение между странами, сохраняя ощущение спокойствия и внутренней силы.</p>
+<p><strong>Visual Identity:</strong> Доминирующее направление — «Sport Casual» как философия городской мобильности. <em style="color:#dc2626">«Вторичные влияния отсутствуют как отдельные стили, так как выбранный вектор полностью покрывает запрос на свободу и масштаб.»</em></p>
+<p style="margin-top:8px"><strong>Key Answer Locks:</strong></p>
+<ol style="margin:4px 0 0 20px">
+<li>Среда: жизнь между разными странами (аэропорт, современный город, трансфер)</li>
+<li>Ощущение: свобода, легкость и внутренняя сила</li>
+<li>Проявление: через стиль и образ жизни (спортивный шик, уверенность в теле)</li>
+<li>Визуальный код: чистые линии, сочетание свободного и облегающего</li>
+<li>Атмосфера: масштабная, наполненная, вдохновляющая</li>
+</ol>
+</div>
+<div class="card">
+<h3>User #7616 — Character Profile (from admin)</h3>
+<p style="margin-bottom:8px">25-year-old male creator navigating a transnational lifestyle. Core Identity: «Dynamic Stability» — paradoxical blend of high-energy movement and deep inner calm.</p>
+<p><span class="tag tag-red">ISSUE: profile generated in ENGLISH</span> — будет инжектироваться в русскоязычные meta_prompt-ы, создавая language mixing.</p>
+<p style="margin-top:8px"><strong>Style Resolution:</strong> Business + Boho + Sport Casual → «Global Creative Nomad» → Relaxed Modern Sophistication. Dominant: structured but mobile; Secondary: natural textures, technical fabrics.</p>
+</div>
+
+<h2>4. Style Resolution Layer — проверка</h2>
+<div class="card card-blue">
+<strong>Ответ на вопрос «Существует ли отдельный style_resolution layer?»</strong>
+<p style="margin:8px 0 0"><code>style_resolution layer is NOT implemented as a separate technical layer.</code></p>
+<p>Style resolution существует только как текстовые инструкции внутри <code>profile_summary_system</code> prompt. Алгоритмической логики нет. Система работает так:</p>
+<ol style="margin:8px 0 0 20px;line-height:1.8">
+<li>User выбирает clothing_styles при онбординге</li>
+<li>Все выбранные стили → <code>{chosen_clothing_style}</code> placeholder в meta_prompt (full text включая Base Wardrobe)</li>
+<li>Инструкции profile_summary_system говорят LLM «интерпретируй как визуальное направление»</li>
+<li>LLM возвращает character_profile JSON со строкой Visual Identity</li>
+<li>Эта строка инжектируется обратно как <code>{profile_summary}</code> в meta_prompt</li>
+</ol>
+<p style="margin-top:8px">Поля <code>style_resolution_text</code>, <code>character_profile</code> в наших debug JSON — это распарсенный вывод из <code>profile_summary</code>, не отдельный слой.</p>
+</div>
+
+<h2>5. Детальный анализ: почему Sport Casual победил</h2>
+<h3>Где именно Sport Casual появляется впервые</h3>
+<table>
+<tr><th>Этап</th><th>Содержимое</th><th>Sport Casual appearance</th></tr>
+<tr><td>User onboarding</td><td>Выбор стилей одежды</td><td><span class="badge badge-yes">User explicitly selected</span></td></tr>
+<tr><td>profile_summary input</td><td>{chosen_clothing_style} = полный текст Sport Casual определения</td><td><span class="badge badge-yes">Injected verbatim incl. Base Wardrobe</span></td></tr>
+<tr><td>Character Profile output</td><td>«Доминирующее направление — Sport Casual»</td><td><span class="badge badge-yes">LLM confirmed as dominant</span></td></tr>
+<tr><td>meta_prompt (sphere gen)</td><td>style_resolution_text block</td><td><span class="badge badge-yes">Base Wardrobe injected again</span></td></tr>
+<tr><td>OpenRouter scene output</td><td>«широкие брюки из технической ткани... свитшот... кроссовки»</td><td><span class="badge badge-yes">Materialized literally from Base Wardrobe</span></td></tr>
+<tr><td>FAL prompt</td><td>scene_description</td><td><span class="badge badge-yes">Full wardrobe description in prompt</span></td></tr>
+</table>
+
+<div class="card card-amber" style="margin-top:12px">
+<strong>Implicit mapping analysis — есть ли hardcoded связь свобода → спорт?</strong>
+<p style="margin:8px 0 0">В БД/коде нет явного маппинга. Но Sport Casual определение содержит:</p>
+<pre>Social Signal: движение, свобода, тело, актуальность.
+Scene Adaptation: в свободе — движение и воздух</pre>
+<p>Слова «движение» и «свобода» присутствуют в ОБОИХ местах: в ответах пользователя (хочу свободу/масштаб/жизнь между странами) И в Social Signal Sport Casual. LLM находит семантическое совпадение → подтверждает Sport Casual как релевантный выбор.</p>
+<p style="margin-top:8px"><strong>Вывод:</strong> Нет hardcoded mapping, но есть implicit semantic reinforcement через Sport Casual Social Signal. При единственном выбранном стиле — нет ничего чтобы перевесить.</p>
+</div>
+
+<h2>6. Анализ по генерациям — users 7806 + 7616</h2>
+<table>
+<tr>
+<th>Gen</th><th>User</th><th>Type</th><th>Sport Casual first appears</th><th>Was user selected</th><th>Pipeline broken?</th>
+</tr>
+<tr>
+<td><strong>#662</strong></td><td>7806</td><td>Первая генерация</td>
+<td>style_resolution_text → meta_prompt → scene (Base Wardrobe items)</td>
+<td><span class="badge badge-yes">да, единственный стиль</span></td>
+<td><span class="badge badge-no">нет</span></td>
+</tr>
+<tr>
+<td><strong>#663–665</strong></td><td>7806</td><td>Первая генерация</td>
+<td>Тот же путь через style_resolution_text</td>
+<td><span class="badge badge-yes">да</span></td>
+<td><span class="badge badge-no">нет</span></td>
+</tr>
+<tr>
+<td><strong>#666</strong></td><td>7806</td><td>Первая генерация (sphere 7)</td>
+<td>style_resolution_text → scene</td>
+<td><span class="badge badge-yes">да</span></td>
+<td><span class="badge badge-no">нет</span></td>
+</tr>
+<tr style="background:#fff5f5">
+<td><strong>#667</strong></td><td>7806</td><td>⚠️ Уточнение (с комментарием)</td>
+<td>Нет вообще в FAL prompt</td>
+<td>N/A</td>
+<td><span class="badge badge-yes">ДА — critical</span></td>
+</tr>
+<tr>
+<td><strong>#668–669</strong></td><td>7806</td><td>Перегенерация</td>
+<td>scene_description (new scene в том же лофте)</td>
+<td><span class="badge badge-yes">да</span></td>
+<td><span class="badge badge-no">нет</span></td>
+</tr>
+<tr>
+<td><strong>#658–661</strong></td><td>7616</td><td>Первая генерация</td>
+<td>Business dominant → style resolved</td>
+<td><span class="badge badge-yes">да, как secondary</span></td>
+<td><span class="badge badge-no">нет</span></td>
+</tr>
+</table>
+
+<h3>JSON дамп — style audit для gen 667</h3>
+<pre>{
+  "user_id": "7806",
+  "generation_id": "667",
+  "generation_type": "Уточнение (с комментарием)",
+  "style_inputs": {
+    "chosen_clothing_styles": ["Sport Casual"],
+    "style_resolution_text": "Visual Code: спортивная лёгкость...",
+    "profile_summary": "Устойчивое ядро: современная женщина... Sport Casual как философия...",
+    "key_answer_locks": ["жизнь между разными странами", "свобода", "спортивный шик", "чистые линии", "масштаб"]
+  },
+  "first_sport_casual_appearance": "user_onboarding → chosen_clothing_styles",
+  "source_prompt_or_code": "clothing_styles.description_female (DB) injected into profile_summary_system prompt",
+  "why_it_was_selected": "User explicitly selected Sport Casual as the ONLY clothing style. No competing styles. Profile LLM confirmed it as dominant with no secondary influences.",
+  "was_it_user_selected": true,
+  "wish_pipeline_bug": {
+    "final_fal_prompt_content": "wish_text + image_suffix ONLY",
+    "missing_from_fal": ["scene_description", "profile_summary", "style_resolution_text", "key_answer_locks", "face_anchor_photo"],
+    "source_photos_used": ["prev_generation_output (not selfie)"],
+    "ip_adapter_anchored_to_selfie": false,
+    "result": "Identity lost, scene destroyed, clothing replaced with arbitrary interpretation of wish text"
+  }
+}</pre>
+
+<h2>7. Проверка image_instructions</h2>
+<div class="card">
+<p>В admin есть только 2 поля на generation_prompt: <code>meta_prompt</code> и <code>image_suffix</code>. Поля <code>image_instructions</code>, <code>title_meta_prompt</code>, <code>variation_instructions</code> — в коде, не в БД.</p>
+<p style="margin-top:8px">Фактическая структура FAL prompt (из дампа):</p>
+<pre>// Для первой генерации / Перегенерации:
+detailed_description (= OpenRouter scene output)
++ image_suffix (= FIRST SCENE VISUAL REALISM ADDITIONS + all cinematic rules + F4+F5)
+
+// Для Уточнения с комментарием (BUG):
+wish_text
++ image_suffix</pre>
+<p style="margin-top:8px">Поля <strong>image_suffix</strong> содержат (current, GP2):</p>
+<ul style="margin:6px 0 0 20px;line-height:1.8">
+<li>ЕСТЕСТВЕННАЯ СВЕЖЕСТЬ И ЖИВОСТЬ</li>
+<li>FIRST SCENE VISUAL REALISM ADDITIONS (после F2-F7 апгрейда 18.05)</li>
+<li>Visual Realism Rules</li>
+<li>Human Presence Rules</li>
+<li>Cinematic Atmosphere Rules</li>
+<li>Modern Clothing Rendering</li>
+<li>Emotional Visual Amplification</li>
+<li>Identity Refinement Layer</li>
+<li>F4+F5 CINEMATIC UPGRADE (Cultural Assumption Filter + Camera Grammar)</li>
+</ul>
+<p style="margin-top:8px"><span class="tag tag-green">НЕТ</span> прямых инструкций усиливающих sneakers/cargo/technical jacket/sport chic/urban mobility в image_suffix.</p>
+<p>Буквализация Sport Casual wardrobe происходит на уровне <strong>OpenRouter scene generation</strong>, не FAL suffix.</p>
+</div>
+
+<h2>8. Структура первой сцены</h2>
+<div class="card">
+<p>Отдельных правил «first scene is more aspirational» в коде нет. First scene логика встроена в:</p>
+<ul style="margin:6px 0 0 20px;line-height:1.8">
+<li>meta_prompt: секция «## FIRST SCENE PRODUCTION LAYERS» (6 слоёв)</li>
+<li>meta_prompt: «## First Scene Emotional Entry Logic» — инструкция выбирать emotional entry moment</li>
+<li>meta_prompt: «## User Answers Priority for First Scene» — стиль адаптируется к сцене, не наоборот</li>
+<li>image_suffix: «## FIRST SCENE VISUAL REALISM ADDITIONS»</li>
+</ul>
+<p style="margin-top:8px"><strong>Ответ:</strong> Правило "more aspirational" явно не зафиксировано как отдельное. Аспирациональность достигается через Emotional Authenticity Layer + Identity Refinement Layer.</p>
+</div>
+
+<h2>9. Проверка relatives / explore / photo_session</h2>
+<div class="card card-amber">
+<p>Поля <code>relatives_instructions</code>, <code>photo_session</code> prompt, <code>explore</code> variation_instructions — не найдены в admin panel (только 10 generation_prompts, все типа «Сцена поля»). Эти элементы либо:</p>
+<ol style="margin:8px 0 0 20px;line-height:1.8">
+<li>Хранятся в коде PHP/Laravel (не в БД)</li>
+<li>Являются частью variation_instructions в коде</li>
+<li>Могут быть в других admin resources (не обнаружены в навигации)</li>
+</ol>
+<p style="margin-top:8px"><strong>Рекомендация:</strong> Денис должен предоставить код prompt builder для wish/explore/relatives чтобы провести полный аудит этих путей.</p>
+</div>
+
+<h2>10. Главный диагноз и приоритеты фиксов</h2>
+<div class="card card-red">
+<h3><span class="finding-num fn-red">1</span>CRITICAL CODE — Wish pipeline полностью сломан</h3>
+<p><strong>Проблема:</strong> Тип «Уточнение с комментарием» строит FAL prompt = <code>wish_text + image_suffix</code>. Без scene context, без лица, без стиля.</p>
+<p><strong>Где:</strong> Код prompt builder для generation_type = "comment/wish"</p>
+<p><strong>Фикс:</strong> Включить в FAL prompt для wish: (1) parent_generation scene_description или parent FAL prompt body, (2) profile_summary, (3) style_resolution_text, (4) Key Answer Locks, (5) original selfie как ip_adapter source (не parent gen output), (6) explicit instruction "change ONLY [wish target], preserve everything else"</p>
+</div>
+<div class="card card-amber">
+<h3><span class="finding-num fn-amber">2</span>PROMPT — Base Wardrobe материализуется буквально</h3>
+<p><strong>Проблема:</strong> Поле <code>Base Wardrobe</code> в clothing_styles содержит конкретные предметы → LLM читает как инструкцию надеть их, несмотря на правила «интерпретируй как visual direction».</p>
+<p><strong>Где:</strong> clothing_styles.description_male/female → {chosen_clothing_style} placeholder</p>
+<p><strong>Фикс (option A):</strong> Переименовать «Base Wardrobe» → «Example items (do not list literally)» и добавить в начало блока стиля: «Это визуальное направление, не список вещей для надевания.»</p>
+<p><strong>Фикс (option B):</strong> Убрать Base Wardrobe из {chosen_clothing_style} injection, оставить только Visual Code + Identity Feeling + Social Signal + Scene Adaptation.</p>
+</div>
+<div class="card card-blue">
+<h3><span class="finding-num fn-blue">3</span>DATA — User 7806 выбрал один стиль → невозможность баланса</h3>
+<p><strong>Проблема:</strong> При одном выбранном стиле profile_summary правильно определяет его как dominant, но нет secondary influences → стиль доминирует во всех сценах одинаково.</p>
+<p><strong>Где:</strong> Onboarding style selection UX</p>
+<p><strong>Фикс:</strong> Если пользователь выбрал только один стиль → system автоматически добавляет 1-2 compatible secondary influences из preset списка (для Sport Casual: "minimal urban" или "clean natural"). Или показывать подсказку «добавь ещё стиль для разнообразия сцен».</p>
+</div>
+<div class="card" style="border-color:#e5e7eb">
+<h3><span class="finding-num fn-green">4</span>PROMPT — Профиль 7616 генерируется на английском</h3>
+<p><strong>Проблема:</strong> Character Profile для user 7616 сгенерирован на английском, но инжектируется в русскоязычные meta_prompt-ы.</p>
+<p><strong>Где:</strong> profile_summary_system prompt — нет явного указания языка вывода</p>
+<p><strong>Фикс:</strong> Добавить в конец profile_summary_system prompt: «Ответ должен быть строго на русском языке.»</p>
+</div>
+
+<h2>11. Промпты для правки — приоритет</h2>
+<table>
+<tr><th>Порядок</th><th>Что</th><th>Где</th><th>Тип</th></tr>
+<tr><td>1</td><td>Wish prompt builder — добавить parent context + selfie anchor</td><td>Код (Denis)</td><td><span class="tag tag-red">CODE</span></td></tr>
+<tr><td>2</td><td>Base Wardrobe → переформулировать или исключить из injection</td><td>clothing_styles.description_* в admin</td><td><span class="tag tag-amber">PROMPT+DATA</span></td></tr>
+<tr><td>3</td><td>profile_summary_system — добавить «ответ на русском»</td><td>Код (Denis)</td><td><span class="tag tag-amber">PROMPT</span></td></tr>
+<tr><td>4</td><td>Single-style onboarding — добавить secondary style suggestion</td><td>Onboarding UX (Denis)</td><td><span class="tag tag-blue">PRODUCT</span></td></tr>
+</table>
+
+<div class="section-divider"></div>
+<p style="color:#9ca3af;font-size:11px">Audit by Monад · 2026-05-18 · Данные из admin panel elyne.online + debug package users/7806+7616+7798</p>
+</body>
+</html>
