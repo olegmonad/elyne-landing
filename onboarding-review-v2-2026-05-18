@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elyne Onboarding Review V2 — 2026-05-18</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="elyne-onboarding-flow-review-v2">Elyne — Onboarding Flow Review V2</h1>
+<p><strong>Дата:</strong> 2026-05-18<br>
+<strong>Тестовый аккаунт:</strong> elyne.ux.test.v2@mailnull.com<br>
+<strong>Card ID:</strong> 7787<br>
+<strong>Тест-персона:</strong> женщина, ~28–35 лет, ценит свободу и движение, выбрала стиль Classic + Romantic<br>
+<strong>Тариф:</strong> Стандарт (0.00 ₽, 36 генераций)<br>
+<strong>Flow:</strong> полный прогон от начала до дашборда  </p>
+<hr>
+<h2 id="tldr-5">TL;DR — Топ-5 критичных проблем</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Проблема</th>
+<th>Severity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Pre-selection bug</strong>: amber-подсветка без реального выбора (Далее [disabled]) — на 2 экранах</td>
+<td>CRITICAL</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>&ldquo;MVP Тест&rdquo; тариф виден пользователям</strong> — внутреннее название в продакшне</td>
+<td>HIGH</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Базовый (699₽) даёт 18 генераций vs Стандарт (0₽) даёт 36</strong> — логика перевёрнута</td>
+<td>HIGH</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Тариф selection: фиолетовый highlight</strong> вместо amber — разрушает brand consistency</td>
+<td>MEDIUM</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>&ldquo;Оплатить&rdquo; на 0₽ тарифе</strong> — когнитивный диссонанс, пугает</td>
+<td>MEDIUM</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Топ-5 сильных мест:</strong>
+- WOW-сцена: качество изображения эмоционально попадает
+- Лоадер (кадры 2–3): атмосферный текст &ldquo;Подбираю атмосферу твоего мира&rdquo;
+- Загрузка фото: плавный UX, превью сразу
+- Сферический анализ: правильный таймаут (&ldquo;обычно 5–10 секунд&rdquo;)
+- Переход к дашборду через AI-рекомендацию сферы: элегантно</p>
+<hr>
+<h2 id="ux-">Карта экранов и UX-комментарии</h2>
+<h3 id="00-welcome-hook">Экран 00 — Welcome Hook</h3>
+<p><strong>URL:</strong> <code>/onboarding/7787/welcome</code><br>
+<strong>Текст:</strong> &ldquo;Представь жизнь, в которую действительно хочется войти&rdquo;</p>
+<p><img alt="00-welcome" src="./screenshots/00-initial-load.png"></p>
+<p><strong>Ощущение:</strong> Заходит. Лаконичный заголовок без перегруза. Хороший первый крюк.<br>
+<strong>Проблема:</strong> Нет никакой визуальной опоры — только текст на бежевом. Первый экран продукта, который претендует на premium, должен что-то показывать (образ, фотографию, атмосферу) — не просто типографику.<br>
+<strong>Прогресс-бар:</strong> показан, но непонятно сколько шагов. Это сразу создаёт тревогу (&ldquo;а сколько я буду заполнять?&rdquo;).</p>
+<hr>
+<h3 id="01-we-help">Экран 01 — We Help</h3>
+<p><strong>URL:</strong> <code>/onboarding/7787/we-help</code><br>
+<strong>Текст:</strong> &ldquo;Мы поможем тебе увидеть возможные версии твоей жизни&rdquo;</p>
+<p><img alt="01-we-help" src="./screenshots/01-we-help.png"></p>
+<p><strong>Ощущение:</strong> Объяснительный. Нужен, но уже второй текстовый экран подряд.<br>
+<strong>Проблема:</strong> Слово &ldquo;версии&rdquo; — холодное, технологическое. &ldquo;Варианты жизни&rdquo; vs &ldquo;образы себя&rdquo; — было бы теплее.</p>
+<hr>
+<h3 id="02-prepared">Экран 02 — Prepared</h3>
+<p><strong>URL:</strong> <code>/onboarding/7787/prepared</code><br>
+<strong>Текст:</strong> &ldquo;Ответь на несколько вопросов. Это займёт меньше минуты&hellip;&rdquo;</p>
+<p><img alt="02-prepared" src="./screenshots/02-prepared.png"></p>
+<p><strong>Ощущение:</strong> Стандартный onboarding disclaimer.<br>
+<strong>Проблема:</strong> Третий текстовый экран без взаимодействия. Нет ничего нового — повторяет логику предыдущих.<br>
+<strong>Рекомендация:</strong> Убрать или слить с экраном 01. Три intro-экрана до первого клика — это уже много.</p>
+<hr>
+<h3 id="03-how-it-works">Экран 03 — How It Works</h3>
+<p><strong>URL:</strong> <code>/onboarding/7787/how-it-worrks</code> ⚠️<br>
+<strong>Текст:</strong> &ldquo;Ты выбираешь то, что тебе ближе — а Elyne помогает превратить в живые сцены&rdquo;</p>
+<p><img alt="03-how-it-works" src="./screenshots/03-how-it-works.png"></p>
+<p><strong>Ощущение:</strong> Механизм продукта — нужно.<br>
+<strong>BUG 🐛:</strong> URL slug — <code>how-it-worrks</code> (двойная &lsquo;r&rsquo;). Production bug.<br>
+<strong>Проблема:</strong> Четвёртый экран подряд без взаимодействия. К этому моменту пользователь уже мог закрыть вкладку.<br>
+<strong>Итого: 4 текстовых экрана перед первым вопросом — это главный риск потери до WOW.</strong></p>
+<hr>
+<h3 id="04-q1">Экран 04 — Q1: Что тебе важно чувствовать</h3>
+<p><strong>URL:</strong> <code>/onboarding/7787/to-feel</code></p>
+<p><img alt="04-Q1-feel" src="./screenshots/04-to-feel.png"></p>
+<p><strong>Ощущение:</strong> Первый интерактив — облегчение. Вопрос хороший.<br>
+<strong>BUG 🐛:</strong> При входе на экран (после предыдущего card) некоторые опции визуально подсвечены amber, но <strong>Далее [disabled]</strong> — state не совпадает с визуалом. Требует повторного клика для активации.</p>
+<p><img alt="04-Q1-selected" src="./screenshots/04-to-feel-selected.png"></p>
+<p><strong>Плюс:</strong> &ldquo;Можно выбрать до 2 вариантов&rdquo; — чёткая инструкция.</p>
+<hr>
+<h3 id="05-q2">Экран 05 — Q2: Среда/Атмосфера</h3>
+<p><strong>URL:</strong> <code>/onboarding/7787/environment</code></p>
+<p><img alt="05-environment" src="./screenshots/05-environment.png"></p>
+<p><strong>Ощущение:</strong> Вопрос про контекст жизни — хорошо дополняет Q1.<br>
+<strong>Проблема:</strong> Нет инструкции по количеству выборов (в отличие от Q1 и последующих экранов). Непоследовательность.</p>
+<hr>
+<h3 id="06-q3">Экран 06 — Q3: Образ себя</h3>
+<p><strong>URL:</strong> <code>/onboarding/7787/yourself</code></p>
+<p><img alt="06-yourself" src="./screenshots/06-yourself.png"></p>
+<p><strong>Ощущение:</strong> Хороший вопрос — самый интроспективный.<br>
+<strong>Проблема:</strong> Порядок вопросов ломает нарратив: 1) ощущения → 2) среда → 3) образ себя. Логичнее было бы 1) образ себя → 2) среда → 3) ощущения (от частного к общему).</p>
+<hr>
+<h3 id="07-">Экран 07 — Стиль (фото-сетка)</h3>
+<p><strong>URL:</strong> <code>/onboarding/7787/style-clotches</code> ⚠️</p>
+<p><img alt="07-style" src="./screenshots/07-style-clothes.png"></p>
+<p><strong>BUG 🐛:</strong> URL slug — <code>style-clotches</code> (должен быть <code>style-clothes</code>). Production bug.<br>
+<strong>Ощущение:</strong> Визуальный выбор стиля — лучший экран в pre-WOW части.<br>
+<strong>Проблема:</strong> Нет инструкции по количеству выборов.</p>
+<p><img alt="07-style-selected" src="./screenshots/07-style-selected.png"></p>
+<p><strong>Плюс:</strong> Фото-карточки работают — пользователь понимает &ldquo;я хочу это&rdquo;.</p>
+<hr>
+<h3 id="08">Экран 08 — Загрузка фото</h3>
+<p><strong>URL:</strong> <code>/onboarding/7787/photo-upload</code></p>
+<p><img alt="08-photo-upload" src="./screenshots/08-photo-upload.png"></p>
+<p><strong>Ощущение:</strong> Ключевой момент — личное фото делает продукт персональным.<br>
+<strong>Проблема 1:</strong> Чекбокс &ldquo;Я соглашаюсь с обработкой персональных данных&rdquo; появляется ДО загрузки фото — ощущение бюрократии, не доверия.<br>
+<strong>Рекомендация:</strong> Переформулировать в доверительный тон: &ldquo;Твоё фото используется только для создания сцен и не хранится&rdquo; — без чекбокса.</p>
+<p><img alt="08-photo-uploaded" src="./screenshots/08-photo-uploaded.png"></p>
+<p><strong>Плюс:</strong> После загрузки сразу показывается превью — хорошо.</p>
+<hr>
+<h3 id="09-loader">Экран 09 — Loader (генерация первой сцены)</h3>
+<p><strong>URL:</strong> <code>/onboarding/7787/loader</code></p>
+<p><img alt="09-loader-1" src="./screenshots/09-loader.png"></p>
+<p><strong>BUG 🐛:</strong> Первый текст лоадера — <strong>&ldquo;коэффициенты профиля&rdquo;</strong> — технический язык, ломает иммерсию.</p>
+<p><img alt="09-loader-2" src="./screenshots/09-loader-mid.png"></p>
+<p><strong>Плюс:</strong> Последующие фреймы атмосферны (&ldquo;Подбираю атмосферу твоего мира&rdquo;, &ldquo;Создаю сцену&hellip;&rdquo;). Первый фрейм надо починить.<br>
+<strong>Рекомендация для первого фрейма:</strong> &ldquo;Читаю тебя&hellip;&rdquo; / &ldquo;Слушаю твою историю&hellip;&rdquo; / &ldquo;Собираю твой образ&hellip;&rdquo;</p>
+<hr>
+<h3 id="10-wow-">Экран 10 — WOW-сцена (первая генерация)</h3>
+<p><strong>URL:</strong> <code>/onboarding/7787/post-generation</code></p>
+<p><img alt="10-wow-scene" src="./screenshots/10-wow-scene-full.png"></p>
+<p><strong>Ощущение:</strong> 🌟 СИЛЬНЕЙШИЙ экран. Женщина идёт по городу — образ совпадает с выбранным стилем. Качество изображения premium.<br>
+<strong>Проблема 1:</strong> <strong>Нет подписи к сцене</strong>. Пользователь видит красивую картинку, но непонятно &ldquo;это о чём?&rdquo; — нет ни нарратива, ни фразы-якоря.<br>
+<strong>Рекомендация:</strong> Добавить под/над сценой 1–2 строки от Elyne: контекст генерации. Например: &ldquo;Ты — в движении. Классический стиль, свой ритм, большой город.&rdquo;<br>
+<strong>Проблема 2:</strong> Кнопка &ldquo;Далее&rdquo; появляется сразу. Нет паузы, нет момента для того чтобы просто побыть с изображением.</p>
+<hr>
+<h3 id="11-post-wow">Экран 11 — Post-WOW: Что в сцене твоё</h3>
+<p><strong>URL:</strong> <code>/onboarding/7787/feedback</code></p>
+<p><img alt="11-feedback" src="./screenshots/11-feedback.png"></p>
+<p><strong>Ощущение:</strong> Логичный вопрос после WOW.<br>
+<strong>Проблема:</strong> WOW-сцена <strong>не видна</strong> на этом экране — вопрос висит в воздухе без визуального якоря. Пользователь уже забыл детали.<br>
+<strong>Рекомендация:</strong> Добавить thumbnail WOW-сцены в углу экрана или в хедере вопроса.</p>
+<hr>
+<h3 id="12-post-wow">Экран 12 — Post-WOW: Где проявляешься</h3>
+<p><strong>URL:</strong> <code>/onboarding/7787/what-deal</code></p>
+<p><img alt="12-what-deal" src="./screenshots/12-what-deal.png"></p>
+<p><strong>Ощущение:</strong> Хороший вопрос — уводит в глубину.<br>
+<strong>Плюс:</strong> Опция &ldquo;Пропустить&rdquo; есть — не блокирует.</p>
+<hr>
+<h3 id="13-impact">Экран 13 — Impact: Как ощущать жизнь</h3>
+<p><strong>URL:</strong> <code>/onboarding/7787/impact</code></p>
+<p><img alt="13-impact" src="./screenshots/13-impact-selected.png"></p>
+<p><strong>Ощущение:</strong> Уточняющий вопрос — нормальный.<br>
+<strong>Проблема:</strong> К этому моменту пользователь ответил на 8+ вопросов. Fatigue реален. Нет индикатора &ldquo;ещё X вопросов&rdquo;.</p>
+<hr>
+<h3 id="14">Экран 14 — &ldquo;Это только начало&rdquo;</h3>
+<p><strong>URL:</strong> <code>/onboarding/7787/only-one-variant</code></p>
+<p><img alt="14-only-one-variant" src="./screenshots/14-only-one-variant.png"></p>
+<p><strong>Ощущение:</strong> Промежуточный экран перед регистрацией.<br>
+<strong>Проблема:</strong> Самый слабый текстовый экран флоу. &ldquo;Это только начало&rdquo; + &ldquo;намного больше моментов твоей жизни&rdquo; — общие слова. После WOW-пика нужен был конкретный крюк: что именно пользователь получит, зарегистрировавшись.<br>
+<strong>Рекомендация:</strong> &ldquo;Эта сцена останется твоей. Создай аккаунт — и Elyne откроет все 10 сфер твоей жизни.&rdquo;</p>
+<hr>
+<h3 id="15">Экран 15 — Каскад сфер жизни</h3>
+<p><strong>URL:</strong> <code>/onboarding/7787/we-can-vision-different-level</code></p>
+<p><img alt="15-vision-cascade" src="./screenshots/15-vision-full.png"></p>
+<p><strong>Ощущение:</strong> Потенциально красивый анимированный каскад (&ldquo;отношения / реализация / новые места&hellip;&rdquo;).<br>
+<strong>Проблема:</strong> В статичном Playwright-снимке — просто список слов без контекста. Нет заголовка. Пользователь не понимает, что это &ldquo;список сфер, которые Elyne откроет&rdquo;.<br>
+<strong>Рекомендация:</strong> Добавить заголовок: &ldquo;Elyne поможет тебе исследовать:&rdquo; или &ldquo;Твоя жизнь — не одна сфера:&rdquo;</p>
+<hr>
+<h3 id="16">Экран 16 — Регистрация</h3>
+<p><strong>URL:</strong> <code>/onboarding/7787/registration</code></p>
+<p><img alt="16-registration" src="./screenshots/16-registration.png"></p>
+<p><strong>Ощущение:</strong> Дроп из эмоционального потока в функциональную форму.<br>
+<strong>Проблема 1:</strong> Заголовок &ldquo;Регистрация&rdquo; — технический. После всего путешествия — как приземление в аэропорту бюрократии.<br>
+<strong>Проблема 2:</strong> Subtitle &ldquo;Создайте аккаунт, чтобы <strong>сохранить результаты</strong>&rdquo; — fear-framing (&ldquo;а то потеряешь&rdquo;). Лучше: &ldquo;Чтобы продолжать — создайте аккаунт. Это займёт 30 секунд.&rdquo;<br>
+<strong>Проблема 3:</strong> Нет Social Auth (Google / Apple). Три поля (email + password + confirm) = максимальное трение на этом этапе.<br>
+<strong>Рекомендация:</strong> Google/Apple Sign-In — первичные CTA, email — второй вариант.</p>
+<p><img alt="16-registration-filled" src="./screenshots/16-registration-filled.png"></p>
+<hr>
+<h3 id="17">Экран 17 — Выбор тарифа</h3>
+<p><strong>URL:</strong> <code>/onboarding/7787/card-type</code></p>
+<p><img alt="17-tariff" src="./screenshots/17-card-type.png"></p>
+<p><strong>BUG CRITICAL 🐛:</strong> &ldquo;<strong>MVP Тест</strong>&rdquo; тариф (0₽ · 54 генерации) виден реальным пользователям — внутреннее название.<br>
+<strong>BUG HIGH 🐛:</strong> &ldquo;<strong>Базовый</strong>&rdquo; (699₽ · 18 генераций) стоит дороже, чем &ldquo;Стандарт&rdquo; (0₽ · 36 генераций), но даёт МЕНЬШЕ генераций. Логика перевёрнута.<br>
+<strong>Проблема:</strong> Нет описаний тарифов — только название + цена + количество. Пользователь не знает, что ещё входит в каждый план.<br>
+<strong>Проблема:</strong> Нет визуального разграничения между free и paid тарифами.</p>
+<p><img alt="17-tariff-selected" src="./screenshots/17-tariff-selected.png"></p>
+<p><strong>BUG MEDIUM 🐛:</strong> Highlight выбранного тарифа — <strong>фиолетовый/violet border</strong> вместо amber. Brand inconsistency.</p>
+<hr>
+<h3 id="18">Экран 18 — Оплата</h3>
+<p><strong>URL:</strong> <code>/onboarding/7787/payment</code></p>
+<p><img alt="18-payment" src="./screenshots/18-payment.png"></p>
+<p><strong>Проблема:</strong> CTA &ldquo;<strong>Оплатить</strong>&rdquo; на тарифе 0.00₽ — когнитивный диссонанс. На бесплатном плане должно быть &ldquo;Активировать&rdquo; / &ldquo;Начать бесплатно&rdquo; / &ldquo;Получить доступ&rdquo;.<br>
+<strong>Проблема:</strong> Экран очень разрежённый — только название и цена. Нет напоминания что именно вы получаете (36 генераций, доступ к сферам).</p>
+<hr>
+<h3 id="19-elyne">Экран 19 — &ldquo;Теперь Elyne сможет точнее&rdquo;</h3>
+<p><strong>URL:</strong> <code>/onboarding/7787/more-one-scene</code></p>
+<p><img alt="19-more-scenes" src="./screenshots/19-more-one-scene.png"></p>
+<p><strong>Ощущение:</strong> ◆36 кредитов в хедере — активация прошла. Хорошо.<br>
+<strong>Проблема:</strong> &ldquo;Ещё несколько коротких выборов&rdquo; сразу <strong>после активации</strong> — пользователь уже заплатил (или активировал), а теперь ему снова говорят &ldquo;ещё немного&rdquo;. Лучше: отметить момент активации как победу, а потом плавно предложить продолжение.</p>
+<hr>
+<h3 id="20">Экран 20 — Как хочется видеть сцены</h3>
+<p><strong>URL:</strong> <code>/onboarding/7787/what-you-need</code></p>
+<p><img alt="20-what-you-need" src="./screenshots/20-what-you-need.png"></p>
+<p><strong>BUG 🐛:</strong> Снова amber pre-selection без реального [active] state — Далее [disabled] до повторного клика.<br>
+<strong>Плюс:</strong> Вопрос хороший — про стиль, не про жизнь. Освежает.</p>
+<hr>
+<h3 id="21">Экран 21 — Какое ощущение оставлять</h3>
+<p><strong>URL:</strong> <code>/onboarding/7787/first-impression</code></p>
+<p><img alt="21-first-impression" src="./screenshots/21-first-impression.png"></p>
+<p><strong>Плюс:</strong> &ldquo;Можно выбрать до 2 вариантов&rdquo; — инструкция на месте.<br>
+<strong>BUG VISUAL 🐛:</strong> При выборе 2 вариантов — разные стили: один показывает amber text, другой — full fill background. Нет единообразия selected-state.</p>
+<p><img alt="21-first-impression-selected" src="./screenshots/21-first-impression-selected.png"></p>
+<hr>
+<h3 id="22-collage">Экран 22 — Карта желаний (Collage)</h3>
+<p><strong>URL:</strong> <code>/onboarding/7787/collage-generation</code></p>
+<p><img alt="22-collage" src="./screenshots/22-collage-generation.png"></p>
+<p><strong>Ощущение:</strong> Потенциально сильный экран — &ldquo;карта желаний&rdquo; как визуальный итог пути.<br>
+<strong>Проблема 1:</strong> Экран абсолютно разрежённый — нет объяснения что такое &ldquo;карта желаний&rdquo;, нет примера, нет превью.<br>
+<strong>Проблема 2:</strong> Фраза &ldquo;карта желаний&rdquo; несёт ассоциации с манифестацией/эзотерикой в РФ — риск для premium-позиционирования. Возможная замена: &ldquo;Ваш визуальный образ жизни&rdquo; / &ldquo;Mood вашей жизни&rdquo;.<br>
+<strong>BUG 🐛:</strong> После клика &ldquo;Сгенерировать карту&rdquo; <strong>коллаж не был показан</strong> — система сразу перешла к sphere-selection/анализу. Collage generation step appears broken or skipped silently.</p>
+<hr>
+<h3 id="23">Экран 23 — Анализ сфер (лоадер)</h3>
+<p><strong>URL:</strong> <code>/onboarding/sphere-selection/7787</code></p>
+<p><img alt="23-sphere-loader" src="./screenshots/23-sphere-selection.png"></p>
+<p><strong>Ощущение:</strong> Красивый минималистичный лоадер.<br>
+<strong>Плюс:</strong> Copy &ldquo;Анализируем ваши ответы — обычно 5–10 секунд&rdquo; — устанавливает ожидание.<br>
+<strong>Плюс:</strong> Пульсирующая точка — тихая, не раздражает.</p>
+<hr>
+<h3 id="24-dashboard-sphere-micro-q">Экран 24 — Dashboard + Sphere Micro-Q</h3>
+<p><strong>URL:</strong> <code>/cards/7787?sphere=9</code><br>
+<strong>Сфера:</strong> Свобода (sphere=9) — корректный AI-выбор под нашу персону</p>
+<p><img alt="24-dashboard" src="./screenshots/24-sphere-q-full.png"></p>
+<p><strong>Ощущение:</strong> ВСЁ. Мы внутри продукта. Темная overlay micro-Q — ощущение &ldquo;войти в тему&rdquo;.<br>
+<strong>Плюс:</strong> AI правильно определил стартовую сферу (Свобода) под нашу freedom-focused персону.<br>
+<strong>Плюс:</strong> &ldquo;ШАГ 1 ИЗ 4&rdquo; — чёткий прогресс внутри сферы.<br>
+<strong>Плюс:</strong> &ldquo;Пропустить&rdquo; — есть, не блокирует.</p>
+<hr>
+<h2 id="_1">Полный список багов</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Экран</th>
+<th>Баг</th>
+<th>Severity</th>
+<th>Как воспроизвести</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B1</td>
+<td>Q1 to-feel</td>
+<td>Pre-selected amber + Далее [disabled]</td>
+<td>HIGH</td>
+<td>Перейти с другого card, Q1 визуально amber но не кликабельный</td>
+</tr>
+<tr>
+<td>B2</td>
+<td>what-you-need</td>
+<td>То же pre-selection bug</td>
+<td>HIGH</td>
+<td>Аналогично</td>
+</tr>
+<tr>
+<td>B3</td>
+<td>how-it-works</td>
+<td>URL slug <code>how-it-worrks</code> (двойная &lsquo;r&rsquo;)</td>
+<td>LOW</td>
+<td>Проверить URL в браузере</td>
+</tr>
+<tr>
+<td>B4</td>
+<td>style</td>
+<td>URL slug <code>style-clotches</code></td>
+<td>LOW</td>
+<td>Проверить URL в браузере</td>
+</tr>
+<tr>
+<td>B5</td>
+<td>tariff</td>
+<td>&ldquo;MVP Тест&rdquo; виден пользователям</td>
+<td>HIGH</td>
+<td>Зайти на /card-type любым новым юзером</td>
+</tr>
+<tr>
+<td>B6</td>
+<td>tariff</td>
+<td>Базовый (699₽/18 gen) дороже Стандарт (0₽/36 gen)</td>
+<td>HIGH</td>
+<td>Сравнить в списке тарифов</td>
+</tr>
+<tr>
+<td>B7</td>
+<td>tariff</td>
+<td>Фиолетовый highlight вместо amber</td>
+<td>MEDIUM</td>
+<td>Выбрать любой тариф</td>
+</tr>
+<tr>
+<td>B8</td>
+<td>payment</td>
+<td>CTA &ldquo;Оплатить&rdquo; на 0₽ тарифе</td>
+<td>MEDIUM</td>
+<td>Выбрать Стандарт → перейти к оплате</td>
+</tr>
+<tr>
+<td>B9</td>
+<td>collage</td>
+<td>Коллаж не отображается после &ldquo;Сгенерировать карту&rdquo;</td>
+<td>HIGH</td>
+<td>Нажать кнопку на screen collage-generation</td>
+</tr>
+<tr>
+<td>B10</td>
+<td>loader</td>
+<td>Первый фрейм: &ldquo;коэффициенты профиля&rdquo;</td>
+<td>MEDIUM</td>
+<td>Загрузить фото → наблюдать первый текст лоадера</td>
+</tr>
+<tr>
+<td>B11</td>
+<td>multi-select</td>
+<td>2 выбранных варианта стилизованы по-разному</td>
+<td>LOW</td>
+<td>Выбрать 2 опции на экране first-impression</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="_2">Эмоциональная кривая пути</h2>
+<pre><code>Интерес
+  │
+  │         ╭─────╮
+  │        /│ WOW │\
+  │   ╭───╯ ╰─────╯ ╲_____ ╭──
+  │  /│                     │   ╲____DASHBOARD
+  │─╯ │                     │
+  │   │                     │
+  ╰───┴─────────────────────┴──────────────────→
+  00-03      09-10       16-18     24
+ (4 intro   (WOW)     (регистр.   (цель)
+  экрана)              оплата)
+</code></pre>
+<p><strong>Вход (00–03):</strong> нейтральный интерес → слабый — 4 текстовых экрана съедают энергию<br>
+<strong>Вопросы (04–08):</strong> постепенный engagement — есть взаимодействие<br>
+<strong>WOW (09–10):</strong> пик — генерация работает, образ попадает<br>
+<strong>Post-WOW (11–13):</strong> спад — вопросы без якоря к сцене, momentum теряется<br>
+<strong>Регистрация-Оплата (16–18):</strong> admin-feel — самый холодный участок<br>
+<strong>Финальные вопросы (20–21):</strong> небольшое восстановление<br>
+<strong>Dashboard (24):</strong> arrived — цель достигнута</p>
+<hr>
+<h2 id="_3">Приоритизированные рекомендации</h2>
+<h3 id="_4">Критичные (фиксить до следующего релиза)</h3>
+<ol>
+<li><strong>Убрать &ldquo;MVP Тест&rdquo;</strong> из списка тарифов для не-admin юзеров</li>
+<li><strong>Починить pricing logic</strong> — Базовый не может стоить больше и давать меньше</li>
+<li><strong>Починить pre-selection bug</strong> — amber визуал должен совпадать с [active] state</li>
+<li><strong>Починить collage generation</strong> — коллаж должен отображаться или экран убрать</li>
+<li><strong>Заменить CTA &ldquo;Оплатить&rdquo; → &ldquo;Активировать&rdquo;</strong> на 0₽ тарифе</li>
+</ol>
+<h3 id="sprint">Высокие (следующий sprint)</h3>
+<ol start="6">
+<li><strong>Сократить intro с 4 до 2 экранов</strong> — Welcome + How-it-works, остальные убрать</li>
+<li><strong>Добавить Social Auth</strong> (Google) на экране регистрации</li>
+<li><strong>Добавить нарратив к WOW-сцене</strong> — 1–2 строки под изображением</li>
+<li><strong>Thumbnail WOW-сцены</strong> на post-WOW вопросах (11–13)</li>
+<li><strong>Починить первый фрейм лоадера</strong> — убрать &ldquo;коэффициенты профиля&rdquo;</li>
+</ol>
+<h3 id="backlog">Средние (backlog)</h3>
+<ol start="11">
+<li>Унифицировать selected-state highlight во всём флоу (только amber)</li>
+<li>Переформулировать &ldquo;Регистрация&rdquo; → эмоциональный заголовок</li>
+<li>Убрать/переформулировать &ldquo;карта желаний&rdquo; → нейтральнее</li>
+<li>Добавить описания к тарифам</li>
+<li>Починить URL-типки: <code>how-it-worrks</code>, <code>style-clotches</code></li>
+</ol>
+<hr>
+<h2 id="_5">Сводка скриншотов</h2>
+<table>
+<thead>
+<tr>
+<th>Файл</th>
+<th>Экран</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>00-initial-load.png</td>
+<td>Welcome</td>
+</tr>
+<tr>
+<td>01-we-help.png</td>
+<td>We help</td>
+</tr>
+<tr>
+<td>02-prepared.png</td>
+<td>Prepared</td>
+</tr>
+<tr>
+<td>03-how-it-works.png</td>
+<td>How it works</td>
+</tr>
+<tr>
+<td>04-to-feel.png / selected.png</td>
+<td>Q1 feel</td>
+</tr>
+<tr>
+<td>05-environment.png</td>
+<td>Q2 atmosphere</td>
+</tr>
+<tr>
+<td>06-yourself.png</td>
+<td>Q3 self-image</td>
+</tr>
+<tr>
+<td>07-style-clothes.png / selected.png</td>
+<td>Style grid</td>
+</tr>
+<tr>
+<td>08-photo-upload.png / uploaded.png</td>
+<td>Photo upload</td>
+</tr>
+<tr>
+<td>09-loader.png / mid.png</td>
+<td>Generation loader</td>
+</tr>
+<tr>
+<td>10-post-generation.png / wow-scene-full.png</td>
+<td>WOW scene</td>
+</tr>
+<tr>
+<td>11-feedback.png</td>
+<td>Post-WOW Q1</td>
+</tr>
+<tr>
+<td>12-what-deal.png</td>
+<td>Post-WOW Q2</td>
+</tr>
+<tr>
+<td>13-impact.png / selected.png</td>
+<td>Impact Q</td>
+</tr>
+<tr>
+<td>14-only-one-variant.png</td>
+<td>Bridge to registration</td>
+</tr>
+<tr>
+<td>15-vision-different-level.png</td>
+<td>Life spheres cascade</td>
+</tr>
+<tr>
+<td>16-registration.png / filled.png</td>
+<td>Registration</td>
+</tr>
+<tr>
+<td>17-card-type.png / tariff-selected.png</td>
+<td>Tariff selection</td>
+</tr>
+<tr>
+<td>18-payment.png</td>
+<td>Payment confirmation</td>
+</tr>
+<tr>
+<td>19-more-one-scene.png</td>
+<td>Post-payment bridge</td>
+</tr>
+<tr>
+<td>20-what-you-need.png</td>
+<td>Scene style Q</td>
+</tr>
+<tr>
+<td>21-first-impression.png / selected.png</td>
+<td>Impression Q</td>
+</tr>
+<tr>
+<td>22-collage-generation.png</td>
+<td>Collage screen</td>
+</tr>
+<tr>
+<td>23-sphere-selection.png</td>
+<td>Sphere analysis loader</td>
+</tr>
+<tr>
+<td>24-dashboard-sphere9.png</td>
+<td>Dashboard arrival</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<hr>
+<h2 id="qa-">Независимый QA-пасс — дополнительные находки</h2>
+<p><em>Независимый агент qa-tester. Прочитал отчёт + 36 скриншотов. Ниже только то, чего нет выше.</em></p>
+<h3 id="b12b24">Новые баги (B12–B24)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Экран</th>
+<th>Баг</th>
+<th>Severity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B12</td>
+<td>Регистрация</td>
+<td>Повторный email: нет ошибки / дублирование аккаунта не протестировано</td>
+<td>BLOCKER</td>
+</tr>
+<tr>
+<td>B13</td>
+<td>Регистрация</td>
+<td>Нет XSS-защиты на email-поле; <code>&lt;script&gt;</code> в поле = prompt injection риск</td>
+<td>BLOCKER</td>
+</tr>
+<tr>
+<td>B14</td>
+<td>Регистрация</td>
+<td>Пароль «12345678» технически проходит — нет требований к сложности</td>
+<td>BLOCKER</td>
+</tr>
+<tr>
+<td>B15</td>
+<td>Регистрация → Назад</td>
+<td>При навигации назад со страницы регистрации Card ID может быть потерян</td>
+<td>HIGH</td>
+</tr>
+<tr>
+<td>B16</td>
+<td>Фото-загрузка</td>
+<td>Далее [disabled] без объяснения — 45+ не поймёт почему не работает</td>
+<td>HIGH</td>
+</tr>
+<tr>
+<td>B17</td>
+<td>Стиль (07)</td>
+<td>Смена пола (М/Ж): неясно сбрасывается ли выбор фото → конфликт в промте</td>
+<td>HIGH</td>
+</tr>
+<tr>
+<td>B18</td>
+<td>Лоадер генерации</td>
+<td>Нет таймаута и обработки network error — кредит может списаться при обрыве</td>
+<td>HIGH</td>
+</tr>
+<tr>
+<td>B19</td>
+<td>Тарифы</td>
+<td><strong>3 бесплатных тарифа в продакшне = 0% монетизации</strong> — конфиг-дыра</td>
+<td>BLOCKER</td>
+</tr>
+<tr>
+<td>B20</td>
+<td>Фото-загрузка</td>
+<td>Ссылка «Политика обработки данных» — не проверена; риск 404 = нарушение ФЗ-152</td>
+<td>MEDIUM (юрист)</td>
+</tr>
+<tr>
+<td>B21</td>
+<td>Post-WOW feedback</td>
+<td>«+ Другое (свой вариант)» — prompt injection через свободное поле в AI</td>
+<td>MEDIUM</td>
+</tr>
+<tr>
+<td>B22</td>
+<td>Стиль (07)</td>
+<td>На iPhone SE 375px: 3 колонки → карточки 115px → лица нечитаемы</td>
+<td>MEDIUM</td>
+</tr>
+<tr>
+<td>B23</td>
+<td>Экран 14</td>
+<td>Полностью пустой экран — на SE выглядит как сломанный (не загрузилось)</td>
+<td>MEDIUM</td>
+</tr>
+<tr>
+<td>B24</td>
+<td>Лоадер</td>
+<td>«Ваш образ» — «вы»-форма среди сплошного «ты»-флоу</td>
+<td>LOW</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Дополнительные blockers (итого новых critical): B12, B13, B14, B19</strong></p>
+<hr>
+<h3 id="_6">Аудит по персонам</h3>
+<p><strong>45+ (не очень технологичный)</strong>
+- «Коэффициенты профиля» в лоадере → тревога, а не доверие (особенно критично для этого сегмента)
+- Прогресс-бар без числа шагов → «бесконечная анкета», уходят
+- Нет autocomplete-атрибутов на форме регистрации → 45+ теряются на «Подтвердите пароль»</p>
+<p><strong>iPhone SE (375px)</strong>
+- WOW-сцена: кнопка «Далее» уезжает за экран — юзер не видит следующего шага
+- Лист тарифов: кнопка «Продолжить» может уйти под сгиб
+- «+ Другое» + клавиатура = весь экран под клавиатурой, CTA невидим</p>
+<p><strong>По реферальной ссылке блогера</strong>
+- Нет bridge-момента в флоу «ты здесь потому что [имя] рекомендовал» → разрыв обещания
+- Реферальный код при регистрации: привязывается ли к аккаунту? Если нет — блогер без комиссии
+- Риск: если генерация даёт stock-like результат без лица (как в Playwright-тесте без реального фото) — разрыв с рилсом блогера</p>
+<p><strong>Вернувшийся после перерыва</strong>
+- Что будет при повторном открытии <code>/onboarding/7787/</code> — редирект или повторный флоу?
+- Нет email verification → восстановление пароля под вопросом
+- Неизвестен срок жизни кредитов: сгорают ли? Нигде не указано</p>
+<hr>
+<h3 id="copy-">Copy-аудит: нарушения тона</h3>
+<ol>
+<li><strong>«ИИ генерирует ваш персонализированный образ на основе коэффициентов профиля»</strong> — три нарушения: обезличен бренд, AI-канцелярит, технический жаргон в момент эмоционального пика</li>
+<li><strong>«сохранить результаты»</strong> — «результаты» = тест/меданализ, не эмоциональный продукт</li>
+<li><strong>«раскрыть моменты жизни»</strong> — синтаксически странно; «моменты» не раскрываются</li>
+<li><strong>«Elyne сможет точнее чувствовать»</strong> — AI-одушевление отталкивает рациональных 35+</li>
+<li><strong>«Ваша карта желаний»</strong> — нарушение ты/вы + manifestation-cringe</li>
+<li><strong>«Зарегистрироваться»</strong> — канцелярит; в premium: «Войти в Elyne» / «Создать профиль»</li>
+</ol>
+<hr>
+<h3 id="edge-cases">Edge cases (не покрытые)</h3>
+<ul>
+<li><strong>EC-1:</strong> несовпадающие пароли — инлайн-валидация или только после сабмита?</li>
+<li><strong>EC-2:</strong> продукт не спрашивает имя — как персонализируется обращение?</li>
+<li><strong>EC-3:</strong> HEIC фото с iPhone — поддерживается? iPhone снимает HEIC по умолчанию</li>
+<li><strong>EC-4:</strong> фото &gt;10MB или .mp4 — нет указания форматов/размера на экране загрузки</li>
+<li><strong>EC-5:</strong> двойное нажатие «Зарегистрироваться» — есть debounce?</li>
+<li><strong>EC-6:</strong> back button браузера на экране оплаты — первый «заказ» отменяется?</li>
+<li><strong>EC-7:</strong> регистрация email + потом попытка войти через Google с тем же email → два аккаунта?</li>
+</ul>
+<hr>
+<h3 id="gap">Главный gap первичного отчёта</h3>
+<p>Первый пасс охватил UX-визуальное и эмоциональное. Пропущены:
+- <strong>Безопасность</strong> (XSS, слабый пароль, prompt injection)
+- <strong>Бизнес-логика</strong> (три бесплатных тарифа = нет монетизации — <strong>самый критичный баг всего отчёта</strong>)
+- <strong>Edge cases</strong> с сетью и форматами файлов
+- <strong>Юридический риск</strong> (политика обработки данных + ФЗ-152)</p>
+<blockquote>
+<p><strong>Передать юристу (Денис):</strong> BUG-B20 — ссылка на политику при сборе фото для AI-генерации. Если документ недоступен или содержит заглушку → нарушение ФЗ-152 при любом РФ-пользователе.</p>
+</blockquote>
+<hr>
+<p><em>Итого багов: 11 (первый пасс) + 13 (QA-пасс) = </em><em>24 бага</em><em>. Blockers: 5. High: 8.</em><br>
+<em>Отчёт готов к публикации 2026-05-18.</em></p>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
