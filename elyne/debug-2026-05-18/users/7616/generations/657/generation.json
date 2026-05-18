@@ -1,0 +1,20 @@
+{
+  "generation_id": "657",
+  "user_id": "7616",
+  "sphere": "1 — Я и состояние",
+  "scene_title": "Первые минуты в новом городе",
+  "timestamp": "May 18, 2026 12:27:45",
+  "iteration": "1",
+  "source": "profile_photo",
+  "status": "completed",
+  "generation_type": "Первая генерация",
+  "parent_generation_id": null,
+  "source_photos": [
+    "https://dreammap.storage.yandexcloud.net/card-photos/AoU4SpSaMHZ7xGUXflDW8egmUB7KzkgM1rUSwpVK.jpg"
+  ],
+  "result_photos": [
+    "https://dreammap.storage.yandexcloud.net/generations/657/c78f7254-4caf-4797-9064-831660f0eede.jpg"
+  ],
+  "wish_text": "",
+  "feedback_signals": "no explicit feedback signal"
+}
