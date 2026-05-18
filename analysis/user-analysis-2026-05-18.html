@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elyne — Deep User Analysis · 2026-05-18</title>
+<style>
+  :root {
+    --bg: #0f0f10;
+    --surface: #1a1a1e;
+    --surface2: #242428;
+    --border: #2e2e34;
+    --text: #e8e8ec;
+    --text2: #9090a0;
+    --accent: #b08eff;
+    --accent2: #7dd4f0;
+    --warn: #ffbb55;
+    --danger: #ff6b6b;
+    --ok: #55cc88;
+    --font: -apple-system, BlinkMacSystemFont, 'Inter', 'Helvetica Neue', sans-serif;
+    --mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; font-size: 14px; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
+
+  h1 { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
+  h2 { font-size: 20px; font-weight: 600; margin: 32px 0 16px; color: var(--text); }
+  h3 { font-size: 16px; font-weight: 600; margin: 20px 0 10px; color: var(--accent); }
+  h4 { font-size: 13px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.08em; margin: 16px 0 8px; }
+
+  .meta { color: var(--text2); font-size: 13px; margin-bottom: 40px; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  @media (max-width: 768px) { .card-grid { grid-template-columns: 1fr; } }
+
+  .user-header { display: flex; align-items: flex-start; gap: 20px; }
+  .user-avatar { width: 64px; height: 64px; border-radius: 50%; background: var(--surface2); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+  .user-info h2 { margin: 0 0 4px; font-size: 22px; }
+  .user-info .email { color: var(--text2); font-size: 13px; }
+
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+  .badge-ok { background: #1a3a28; color: var(--ok); border: 1px solid #2a5a38; }
+  .badge-warn { background: #3a3010; color: var(--warn); border: 1px solid #5a4a10; }
+  .badge-danger { background: #3a1818; color: var(--danger); border: 1px solid #5a2828; }
+  .badge-info { background: #1a2a3a; color: var(--accent2); border: 1px solid #2a4a5a; }
+  .badge-accent { background: #2a1a4a; color: var(--accent); border: 1px solid #4a2a7a; }
+
+  .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin: 16px 0; }
+  .stat { background: var(--surface2); border-radius: 8px; padding: 12px 16px; }
+  .stat-label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; }
+  .stat-value { font-size: 22px; font-weight: 700; margin-top: 2px; }
+  .stat-value.ok { color: var(--ok); }
+  .stat-value.warn { color: var(--warn); }
+  .stat-value.danger { color: var(--danger); }
+  .stat-value.accent { color: var(--accent); }
+  .stat-value.accent2 { color: var(--accent2); }
+
+  .kv-table { width: 100%; border-collapse: collapse; }
+  .kv-table td { padding: 8px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .kv-table td:first-child { width: 42%; color: var(--text2); font-size: 12px; padding-right: 16px; }
+  .kv-table td:last-child { font-size: 13px; }
+  .kv-table tr:last-child td { border-bottom: none; }
+
+  .answer-list { list-style: none; }
+  .answer-list li { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .answer-list li:last-child { border-bottom: none; }
+  .answer-list .q { color: var(--text2); font-size: 12px; flex: 0 0 220px; }
+  .answer-list .a { font-size: 13px; }
+
+  .profile-box { background: var(--surface2); border-radius: 8px; padding: 16px; font-size: 13px; line-height: 1.7; margin: 16px 0; }
+  .profile-box .section-title { color: var(--accent); font-weight: 600; margin-top: 12px; margin-bottom: 4px; }
+
+  .prompt-box { background: #0d0d14; border: 1px solid var(--border); border-radius: 8px; padding: 16px; font-family: var(--mono); font-size: 12px; line-height: 1.6; color: #c8c8e8; white-space: pre-wrap; word-break: break-word; max-height: 300px; overflow-y: auto; margin: 12px 0; }
+
+  .gen-row { display: grid; grid-template-columns: 60px 1fr 140px 100px; gap: 16px; align-items: start; padding: 14px 0; border-bottom: 1px solid var(--border); }
+  .gen-row:last-child { border-bottom: none; }
+  .gen-id { font-size: 12px; color: var(--text2); font-family: var(--mono); }
+  .gen-scene { font-weight: 500; font-size: 14px; }
+  .gen-sphere { font-size: 11px; color: var(--accent); margin-top: 2px; }
+  .gen-source { font-size: 11px; color: var(--text2); margin-top: 2px; }
+  .gen-status { text-align: right; }
+  .gen-action { font-size: 11px; color: var(--warn); margin-top: 2px; }
+
+  .image-section { display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; margin: 16px 0; }
+  .image-box { background: var(--surface2); border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
+  .image-box img { display: block; width: 280px; height: 280px; object-fit: cover; }
+  .image-caption { padding: 10px 12px; font-size: 12px; color: var(--text2); }
+  .image-caption strong { color: var(--text); display: block; font-size: 13px; }
+
+  .insight { border-left: 3px solid var(--warn); padding: 12px 16px; background: rgba(255, 187, 85, 0.06); border-radius: 0 8px 8px 0; margin: 12px 0; }
+  .insight.critical { border-color: var(--danger); background: rgba(255, 107, 107, 0.06); }
+  .insight.good { border-color: var(--ok); background: rgba(85, 204, 136, 0.06); }
+  .insight.info { border-color: var(--accent2); background: rgba(125, 212, 240, 0.06); }
+  .insight-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; color: var(--warn); }
+  .insight.critical .insight-label { color: var(--danger); }
+  .insight.good .insight-label { color: var(--ok); }
+  .insight.info .insight-label { color: var(--accent2); }
+
+  .compare-table { width: 100%; border-collapse: collapse; }
+  .compare-table th { padding: 10px 12px; text-align: left; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text2); background: var(--surface2); border-bottom: 2px solid var(--border); }
+  .compare-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 13px; vertical-align: top; }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table td:first-child { color: var(--text2); font-size: 12px; }
+
+  .section-divider { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+  .toc { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; margin-bottom: 40px; }
+  .toc h4 { color: var(--text2); margin-bottom: 12px; }
+  .toc ol { padding-left: 20px; }
+  .toc li { margin-bottom: 6px; }
+  .toc a { color: var(--accent2); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+
+  .pipeline-arrow { color: var(--text2); margin: 0 8px; }
+  .pipeline { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; font-size: 12px; margin: 12px 0; }
+  .pipeline-step { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; }
+  .pipeline-step.active { border-color: var(--accent); color: var(--accent); }
+  .pipeline-step.ok { border-color: var(--ok); color: var(--ok); }
+  .pipeline-step.warn { border-color: var(--warn); color: var(--warn); }
+  .pipeline-step.danger { border-color: var(--danger); color: var(--danger); }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Elyne — Deep User Analysis</h1>
+<div class="meta">Дата: 2026-05-18 · Источник: elyne.online/admin · Составил: Моня · Для: Олег</div>
+
+<div class="toc">
+  <h4>Содержание</h4>
+  <ol>
+    <li><a href="#users-overview">Обзор пользователей</a></li>
+    <li><a href="#user-7806">User A: dashakibl@gmail.com (7806) — полный анализ</a></li>
+    <li><a href="#user-7616">User B: hdhrjdj@hdjd.ru (7616) — нулевой юзер</a></li>
+    <li><a href="#prompt-chain">Полная цепочка промтов: gen 664</a></li>
+    <li><a href="#comparison">Сравнительный анализ</a></li>
+    <li><a href="#findings">Ключевые находки и рекомендации</a></li>
+  </ol>
+</div>
+
+<!-- ===================== OVERVIEW ===================== -->
+<div id="users-overview">
+<h2>1. Обзор пользователей</h2>
+<div class="card-grid">
+  <div class="card">
+    <div class="user-header">
+      <div class="user-avatar">♀</div>
+      <div class="user-info">
+        <h2>dashakibl@gmail.com</h2>
+        <div class="email">User ID: 7806 · Card: #7812</div>
+        <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;">
+          <span class="badge badge-accent">Active user</span>
+          <span class="badge badge-warn">Нет селфи</span>
+          <span class="badge badge-ok">8 генераций</span>
+        </div>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><div class="stat-label">Кредиты</div><div class="stat-value accent2">54</div></div>
+      <div class="stat"><div class="stat-label">Генерации</div><div class="stat-value ok">8</div></div>
+      <div class="stat"><div class="stat-label">Сферы</div><div class="stat-value accent">3</div></div>
+      <div class="stat"><div class="stat-label">Лайков</div><div class="stat-value warn">1</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="user-header">
+      <div class="user-avatar">♂</div>
+      <div class="user-info">
+        <h2>hdhrjdj@hdjd.ru</h2>
+        <div class="email">User ID: 7616 · Card: #7620</div>
+        <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;">
+          <span class="badge badge-danger">0 генераций</span>
+          <span class="badge badge-warn">Нет селфи</span>
+          <span class="badge badge-info">36 кредитов цело</span>
+        </div>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><div class="stat-label">Кредиты</div><div class="stat-value warn">36</div></div>
+      <div class="stat"><div class="stat-label">Генерации</div><div class="stat-value danger">0</div></div>
+      <div class="stat"><div class="stat-label">Сферы</div><div class="stat-value">—</div></div>
+      <div class="stat"><div class="stat-label">Лайков</div><div class="stat-value">0</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<hr class="section-divider">
+
+<!-- ===================== USER 7806 ===================== -->
+<div id="user-7806">
+<h2>2. User A: dashakibl@gmail.com · Полный анализ</h2>
+
+<h3>2.1 Онбординг-данные</h3>
+<div class="card">
+<table class="kv-table">
+  <tr><td>Email</td><td>dashakibl@gmail.com</td></tr>
+  <tr><td>Пол</td><td>female (25 лет)</td></tr>
+  <tr><td>Статус</td><td><span class="badge badge-ok">active</span></td></tr>
+  <tr><td>Дата регистрации</td><td>May 18, 2026 12:39:45</td></tr>
+  <tr><td>Пакет</td><td>MVP Тест</td></tr>
+  <tr><td>Стили одежды</td><td>Sport Casual <em>(только один)</em></td></tr>
+  <tr><td>Фото профиля</td><td><span class="badge badge-danger">Не загружено</span></td></tr>
+  <tr><td>Кредиты</td><td>54 (потратила ~10+ на 8 генераций)</td></tr>
+</table>
+
+<h4 style="margin-top:20px;">Ответы на вопросы онбординга</h4>
+<ul class="answer-list">
+  <li><span class="q">В чём нравится проявлять себя?</span><span class="a">в образе и стиле жизни</span></li>
+  <li><span class="q">Что хочется почувствовать?</span><span class="a">больше масштаба и возможностей, свободу и лёгкость</span></li>
+  <li><span class="q">Какими видеть сцены?</span><span class="a">масштабными и наполненными</span></li>
+  <li><span class="q">Ощущение после себя?</span><span class="a">спокойствия и внутренней силы</span></li>
+  <li><span class="q">Атмосфера жизни?</span><span class="a">жизнь между разными странами</span></li>
+  <li><span class="q">Ощущать жизнь?</span><span class="a">красивой и вдохновляющей</span></li>
+  <li><span class="q">Что значит создавать?</span><span class="a">выразить себя через творчество</span></li>
+  <li><span class="q">Что такое свобода?</span><span class="a">чувствовать внутреннюю свободу, свободно выбирать, где и как жить</span></li>
+  <li><span class="q">Каким увидеть себя?</span><span class="a">почувствовать жизнь, в которую хочется войти</span></li>
+  <li><span class="q">Проживать как?</span><span class="a">вдохновлённо и с интересом</span></li>
+  <li><span class="q">Свободу как?</span><span class="a">в движении и новых впечатлениях, как жизнь без ограничений</span></li>
+  <li><span class="q">Доход/дело?</span><span class="a">своё дело или независимый доход</span></li>
+  <li><span class="q">Через творчество?</span><span class="a">творчество и самовыражение</span></li>
+  <li><span class="q">Q27 (свободный текст)</span><span class="a">«На ретрите с аяваской, где-то на природе в уютном доме»</span></li>
+  <li><span class="q">Q28 (свободный текст)</span><span class="a">«Позыв писать картину, выдавливание красок на палитру, распаковка большого холста (от 1 метра)»</span></li>
+</ul>
+</div>
+
+<div class="insight info">
+  <div class="insight-label">Наблюдение — Q27/Q28</div>
+  Свободный текст выдаёт контраст: Свобода = ретрит+аяваска (природа, уединение), Творчество = большой холст, физическое действие. Но система сгенерировала Свободу как urban-сцены (аэропорт, город), опираясь на «жизнь между разными странами». Q27 проигнорирован — ни одна сцена не касается природы/уединения.
+</div>
+
+<h3>2.2 Profile Summary (AI-output GP15)</h3>
+<div class="profile-box">
+<div class="section-title">Character Profile</div>
+Устойчивое ядро личности — современная женщина (25 лет), чья идентичность строится на синтезе внутренней свободы и осознанного масштаба. Её главный мотив — расширение горизонтов жизни через перемещение между странами, сохраняя при этом ощущение спокойствия и внутренней силы. Она проявляет себя через эстетику образа и стиля жизни, стремясь к красивому и вдохновляющему существованию. Эмоциональный вектор направлен от поиска легкости к обретению уверенности в больших возможностях. Социальный сигнал: энергичная, современная, уверенная в своём теле, но не демонстративная; она излучает готовность к движению и адаптивность. Уровень жизни характеризуется глобальным контекстом и высоким качеством среды.
+
+<div class="section-title">Visual Identity</div>
+Доминирующее направление — «Sport Casual» как философия городской мобильности: спортивная легкость, соединённая с женственностью и актуальными пропорциями. Это не фитнес-образ, а стиль жизни в движении. Силуэт строится на игре объёмов (мягкий оверсайз + чистые линии), материалы — технологичные и натуральные в палитре серого, чёрного, белого и мягкого хаки. Контекстное поведение: в путешествиях и городе — функционален и собран (техническая куртка, аккуратные кроссовки, очки), дома — мягче и тактильнее. Избегать: бесформенных спортивных костюмов, откровенного фитнес-стиля, излишней формальности или «люксового» блеска.
+
+<div class="section-title">Key Answer Locks (5 штук)</div>
+1) Среда: жизнь между разными странами (аэропорт / современный город / трансфер)<br>
+2) Ощущение: свобода, легкость и внутренняя сила<br>
+3) Проявление: через стиль и образ жизни (спортивный шик, уверенность в теле)<br>
+4) Визуальный код: чистые линии, сочетание свободного и облегающего<br>
+5) Атмосфера: масштабная, наполненная, вдохновляющая
+</div>
+
+<div class="insight good">
+  <div class="insight-label">Оценка: Хороший профайл</div>
+  Profile summary чистый: нет ERROR, нет synthetic personality, 5 Key Answer Locks зафиксированы. Стиль Sports Casual → Urban Mobility — корректная интерпретация. Слабое место: Q27 (ретрит, природа) не отразился в профайле вообще — остался скрытым слоем.
+</div>
+
+<h3>2.3 История генераций (8 сцен)</h3>
+<div class="card">
+<div class="gen-row" style="opacity:0.5; font-size:11px; padding:6px 0;">
+  <div>ID</div><div>Сцена / Сфера</div><div>Тип / Итерация</div><div>Статус</div>
+</div>
+
+<div class="gen-row">
+  <div class="gen-id">#662</div>
+  <div>
+    <div class="gen-scene">Утренний переход в городе</div>
+    <div class="gen-sphere">Сфера 1 — Я и состояние</div>
+    <div class="gen-source">Camera: Side-follow movement · emotional_entry</div>
+  </div>
+  <div>Итерация 1<br><span style="font-size:11px;color:var(--text2)">profile_photo</span></div>
+  <div class="gen-status"><span class="badge badge-ok">completed</span></div>
+</div>
+
+<div class="gen-row" style="background:rgba(176,142,255,0.05); border-radius:6px;">
+  <div class="gen-id">#663</div>
+  <div>
+    <div class="gen-scene">Тишина перед взлётом</div>
+    <div class="gen-sphere">Сфера 9 — Свобода и масштаб жизни</div>
+    <div class="gen-source">Крупный план, профиль · аэропорт · emotional_entry</div>
+  </div>
+  <div>Итерация 1<br><span style="font-size:11px;color:var(--text2)">profile_photo</span></div>
+  <div class="gen-status"><span class="badge badge-ok">completed</span></div>
+</div>
+
+<div class="gen-row" style="background:rgba(176,142,255,0.08); border-radius:6px; border: 1px solid var(--accent);">
+  <div class="gen-id">#664 ⭐</div>
+  <div>
+    <div class="gen-scene">Ритм незнакомого города</div>
+    <div class="gen-sphere">Сфера 9 — Свобода и масштаб жизни</div>
+    <div class="gen-source">Средний план · перекрёсток · world_interaction · <strong style="color:var(--warn)">ЛАЙК ✓</strong></div>
+  </div>
+  <div>Итерация 1<br><span style="font-size:11px;color:var(--text2)">profile_photo</span></div>
+  <div class="gen-status"><span class="badge badge-ok">completed</span></div>
+</div>
+
+<div class="gen-row" style="background:rgba(176,142,255,0.05); border-radius:6px;">
+  <div class="gen-id">#665</div>
+  <div>
+    <div class="gen-scene">Выбор направления</div>
+    <div class="gen-sphere">Сфера 9 — Свобода и масштаб жизни</div>
+    <div class="gen-source">Общий план, вид со спины · масштаб среды · movement_choice</div>
+  </div>
+  <div>Итерация 1<br><span style="font-size:11px;color:var(--text2)">profile_photo</span></div>
+  <div class="gen-status"><span class="badge badge-ok">completed</span></div>
+</div>
+
+<div class="gen-row">
+  <div class="gen-id">#666</div>
+  <div>
+    <div class="gen-scene">Момент перед первым мазком</div>
+    <div class="gen-sphere">Сфера 7 — Творчество и новые начинания</div>
+    <div class="gen-source">Camera: Environmental Wide · Side-Follow</div>
+  </div>
+  <div>Итерация 1<br><span style="font-size:11px;color:var(--text2)">profile_photo</span></div>
+  <div class="gen-status"><span class="badge badge-ok">completed</span></div>
+</div>
+
+<div class="gen-row">
+  <div class="gen-id">#667</div>
+  <div>
+    <div class="gen-scene">Момент перед первым мазком</div>
+    <div class="gen-sphere">Сфера 7 — Творчество и новые начинания</div>
+    <div class="gen-source gen-action">⚡ Пользователь: «Переодень меня в стиль более оверсайзный, типа как баленсиага, монохромный»</div>
+  </div>
+  <div>Итерация 2<br><span style="font-size:11px;color:var(--text2)">previous_generation</span></div>
+  <div class="gen-status"><span class="badge badge-ok">completed</span></div>
+</div>
+
+<div class="gen-row">
+  <div class="gen-id">#668</div>
+  <div>
+    <div class="gen-scene">Момент перед первым мазком</div>
+    <div class="gen-sphere">Сфера 7 — Творчество и новые начинания</div>
+    <div class="gen-source">Camera: Medium Close-Up with Over-the-Shoulder · continuation</div>
+  </div>
+  <div>Итерация 3<br><span style="font-size:11px;color:var(--text2)">previous_generation</span></div>
+  <div class="gen-status"><span class="badge badge-ok">completed</span></div>
+</div>
+
+<div class="gen-row">
+  <div class="gen-id">#669</div>
+  <div>
+    <div class="gen-scene">Момент перед первым мазком</div>
+    <div class="gen-sphere">Сфера 7 — Творчество и новые начинания</div>
+    <div class="gen-source">Camera: Low Angle Close-Up with Dynamic Tilt · continuation</div>
+  </div>
+  <div>Итерация 4<br><span style="font-size:11px;color:var(--text2)">previous_generation</span></div>
+  <div class="gen-status"><span class="badge badge-ok">completed</span></div>
+</div>
+</div>
+
+<div class="insight good">
+  <div class="insight-label">Паттерн поведения</div>
+  Пользователь зашла в Сферу 1 (состояние), сразу перешла в Сферу 9 (свобода) → 3 сцены сразу. Потом открыла Сферу 7 (творчество) и сделала 4 итерации одной сцены — явный interest. Запрос «баленсиага/монохромный» говорит о высоком стилевом сознании и готовности к ко-творчеству.
+</div>
+
+<h3>2.4 Сгенерированное изображение — Gen #664</h3>
+<div class="image-section">
+  <div class="image-box">
+    <img src="images/gen_664_rhythm_of_unknown_city.jpg" alt="Ритм незнакомого города">
+    <div class="image-caption">
+      <strong>Ритм незнакомого города</strong>
+      Gen #664 · Сфера 9 · Iteration 1 · Лайкнуто ⭐
+    </div>
+  </div>
+  <div style="flex:1; min-width:200px;">
+    <h4>Что должно быть по промту</h4>
+    <p style="font-size:13px; color:var(--text2); line-height:1.7;">
+      Средний план, съёмка с уровня глаз или чуть ниже. Оживлённый перекрёсток современного города, архитектура из стекла и бетона, неоновые вывески или серые тона. Вечерний свет, сумерки + городской искусственный. Она идёт уверенным шагом, не сливаясь с толпой. Вокруг — размытые фигуры прохожих. Техническая ветровка-анорак чёрного/тёмно-серого цвета, брюки-карго, кроссовки, очки.
+    </p>
+    <h4 style="margin-top:14px;">Критическое замечание</h4>
+    <div class="insight critical" style="margin:0;">
+      <div class="insight-label">Нет селфи = нет лица</div>
+      Пользователь не загрузила фото. Источник — «profile_photo», но фото = null. FAL генерирует анонимную женщину. Identity-anchor нет. Это нарушает core value Elyne — «это я, не просто красивая женщина».
+    </div>
+  </div>
+</div>
+</div>
+
+<hr class="section-divider">
+
+<!-- ===================== USER 7616 ===================== -->
+<div id="user-7616">
+<h2>3. User B: hdhrjdj@hdjd.ru · Нулевой юзер</h2>
+
+<div class="card">
+<table class="kv-table">
+  <tr><td>Email</td><td>hdhrjdj@hdjd.ru</td></tr>
+  <tr><td>Пол</td><td>male (25 лет)</td></tr>
+  <tr><td>Статус</td><td><span class="badge badge-ok">active</span></td></tr>
+  <tr><td>Дата регистрации</td><td>May 17, 2026 12:00:58</td></tr>
+  <tr><td>Пакет</td><td>Стандарт</td></tr>
+  <tr><td>Стили одежды</td><td>Business style + Boho + Sport Casual <em>(3 стиля)</em></td></tr>
+  <tr><td>Кредиты</td><td><strong style="color:var(--danger)">36 — все нетронуты</strong></td></tr>
+  <tr><td>Генерации</td><td><strong style="color:var(--danger)">0</strong></td></tr>
+</table>
+</div>
+
+<div class="insight critical">
+  <div class="insight-label">Критическая находка</div>
+  Пользователь прошёл полный онбординг (3 стиля, все вопросы), получил Profile Summary, но ни разу не нажал «Генерировать». Кредиты нетронуты. Регистрация: 17 мая — к 18 мая (день анализа) прошли сутки.
+</div>
+
+<h3>3.1 Онбординг-данные</h3>
+<div class="card">
+<ul class="answer-list">
+  <li><span class="q">В чём нравится проявлять себя?</span><span class="a">в том, что я создаю</span></li>
+  <li><span class="q">Что хочется почувствовать?</span><span class="a">спокойствие и устойчивость, ощущение нового этапа</span></li>
+  <li><span class="q">Какими видеть сцены?</span><span class="a">более смелыми и вдохновляющими</span></li>
+  <li><span class="q">Ощущение после себя?</span><span class="a">восхищения и восторга, движения и энергии</span></li>
+  <li><span class="q">Атмосфера жизни?</span><span class="a">жизнь между разными странами</span></li>
+  <li><span class="q">Ощущать жизнь?</span><span class="a">свободной и наполненной движением</span></li>
+  <li><span class="q">Стили одежды</span><span class="a">Business style + Boho + Sport Casual</span></li>
+</ul>
+</div>
+
+<h3>3.2 Profile Summary (AI-output GP15)</h3>
+<div class="profile-box">
+<div class="section-title">Character Profile</div>
+25-year-old male creator navigating a transnational lifestyle. Core Identity is defined by «Dynamic Stability» — a paradoxical blend of high-energy movement and deep inner calm. He seeks to leave an impression of awe and vitality while personally grounding himself in a new life chapter. His primary mode of self-expression is creation, situated within a fluid environment spanning multiple countries.
+
+<div class="section-title">Key Answer Locks (6 штук)</div>
+1. Desired Feeling: Calmness and stability amidst motion<br>
+2. Environment: Life between different countries (transitional spaces — airports, co-working hubs, city intersections)<br>
+3. Self-Expression: The act of creating/building something tangible or conceptual<br>
+4. Visual Signal: Modern decisiveness without corporate rigidity<br>
+5. Social Signal: Competence, freedom, and adult-level influence<br>
+6. Priority: Entering a new life stage with confidence
+
+<div class="section-title">Visual Identity</div>
+Global Creative Nomad. Dominant: Relaxed Modern Sophistication — tailored jacket over quality knit + wide-leg trousers, structured enough to command respect but soft and mobile for travel and creation. Colors: neutral, earthy (graphite, sand, navy, cream) to reflect stability. Avoid: corporate uniforms, gym-only wear, excessive logos, costume-like ethnic prints.
+
+<div class="section-title">Behavioral Vector</div>
+«Architect of Motion» — someone who builds structures (projects, life phases) while remaining physically and mentally fluid. Scene must capture him in moment of focused creation or decisive action within transient, international setting. Radiating quiet, assured energy.
+</div>
+
+<div class="insight warn">
+  <div class="insight-label">Качество профайла</div>
+  Профайл очень хорош — «Dynamic Stability», «Architect of Motion» — точные метафоры. Интересно, что профайл написан по-английски, хотя входные данные на русском. Это косметическая непоследовательность в системе (GP15 не задаёт язык вывода). Не мешает работе, но выглядит как незаконченный detail.
+</div>
+
+<h3>3.3 Гипотезы: почему 0 генераций</h3>
+<div class="card">
+  <h4>Вероятные причины (в порядке убывания вероятности)</h4>
+  <ul style="padding-left:18px; font-size:13px; line-height:2;">
+    <li><strong>UX-барьер:</strong> Пользователь не понял, что нужно сделать дальше после онбординга. Нет CTA или он неочевиден.</li>
+    <li><strong>Ожидание результата без действия:</strong> Мог подумать, что «система сама сгенерирует» и ждёт email-уведомления.</li>
+    <li><strong>Отсутствие фото:</strong> Не стал генерировать без своего фото — ждёт момента загрузить селфи.</li>
+    <li><strong>Onboarding fatigue:</strong> 3 стиля + много вопросов — устал к концу и бросил перед первой генерацией.</li>
+    <li><strong>Тест-аккаунт:</strong> Технический пользователь, не реальный (фейковый email «hdhrjdj@hdjd.ru» намекает).</li>
+  </ul>
+</div>
+</div>
+
+<hr class="section-divider">
+
+<!-- ===================== PROMPT CHAIN ===================== -->
+<div id="prompt-chain">
+<h2>4. Полная цепочка промтов: Gen #664 «Ритм незнакомого города»</h2>
+
+<div class="pipeline">
+  <span class="pipeline-step ok">Onboarding (16 вопросов)</span>
+  <span class="pipeline-arrow">→</span>
+  <span class="pipeline-step ok">GP15: Profile Summary</span>
+  <span class="pipeline-arrow">→</span>
+  <span class="pipeline-step ok">OpenRouter (GP11/GP12)</span>
+  <span class="pipeline-arrow">→</span>
+  <span class="pipeline-step ok">FAL Final Prompt</span>
+  <span class="pipeline-arrow">→</span>
+  <span class="pipeline-step warn">FAL Image Gen (без селфи)</span>
+</div>
+
+<h3>Слой 1: Финальный промт в FAL</h3>
+<div class="prompt-box">Средний план, съемка с уровня глаз или чуть ниже, динамика движения. Локация: оживленный перекресток современного города, архитектура из стекла и бетона, неоновые вывески или серые тона мегаполиса. Свет: вечерний, смешанный (сумерки + городской искусственный свет), создающий контрастные блики на тканях. Действие: 'world_interaction'. Она идет уверенным шагом, не сливаясь с толпой, а выделяясь своей осанкой и ритмом. Вокруг неё размытые фигуры прохожих, подчёркивающие её фокус и направление. Она не турист, она часть этого потока.
+
+Одежда: техническая ветровка-анорак черного или темно-серого цвета (матовая ткань, минимум логотипов), под ней — лаконичный топ, удобные брюки-карго из мягкой ткани или прямые джинсы, на ногах — современные кроссовки в тон. На лице — стильные очки. Образ функционален, но эстетичен.
+
+Ощущение: адаптивность, энергия, принадлежность к глобальному контексту, жизнь в движении.
+
+[+ full style spec: Sport Casual visual code, silhouette logic, etc]</div>
+
+<h3>Слой 2: Метапромт OpenRouter (GP11 — Scene System)</h3>
+<div class="prompt-box">Тип генерации: Первая генерация — Sphere 9 (Свобода и масштаб жизни)
+Принцип: ТРИ принципиально разных кадра (emotional_entry / world_interaction / movement_choice)
+Профиль: [полный Character Profile с 5 Key Answer Locks]
+Онбординг: [5 key answers]
+Сфера = «Свобода и масштаб жизни — это ощущение, что твоя жизнь может быть больше, шире и свободнее»
+
+Активированные F-блоки:
+✓ F2 IDENTITY GATE — извлечение 3 Key Answer Locks из профайла
+✓ F3 STYLE FIRST LOGIC — стиль определён до сцены
+✓ F4 CULTURAL ASSUMPTION FILTER — запрет алкоголь/сигареты без сигнала
+✓ F5 CAMERA GRAMMAR ENGINE — 8 типов камеры (Low Angle Close-Up, Side-Follow...)
+✓ F6 DESIRE VECTOR / NARRATIVE PROMISE — «что-то есть дальше»
+✓ F7 RECOGNITION ROUTING — freedom/movement → movement+discovery, НЕ ресторан
+
+Anti-patterns: запрет стоковых постановок, глянцевой эстетики, прямого взгляда с улыбкой, yoga-поз, мандал, успешного-человека клише.</div>
+
+<h3>Промт сцены (AI-description → вход в FAL)</h3>
+<div class="prompt-box">Средний план, съемка с уровня глаз или чуть ниже, динамика движения. Локация: оживленный перекресток современного города, архитектура из стекла и бетона, неоновые вывески или серые тона мегаполиса. Свет: вечерний, смешанный (сумерки + городской искусственный свет), создающий контрастные блики на тканях. Действие: 'world_interaction'. Она идет уверенным шагом, не сливаясь с толпой, а выделяясь своей осанкой и ритмом. Вокруг неё размытые фигуры прохожих, подчёркивающие её фокус и направление. Она не турист, она часть этого потока.
+Ощущение: адаптивность, энергия, принадлежность к глобальному контексту, жизнь в движении.</div>
+
+<h3>Соответствие Key Answer Locks → Сцена</h3>
+<table class="compare-table">
+  <tr><th>Key Answer Lock</th><th>Реализован?</th><th>Как</th></tr>
+  <tr><td>Среда: жизнь между странами</td><td><span class="badge badge-ok">✓ да</span></td><td>Оживлённый перекрёсток современного города</td></tr>
+  <tr><td>Ощущение: свобода, легкость, сила</td><td><span class="badge badge-ok">✓ да</span></td><td>«Она не турист, она часть этого потока»</td></tr>
+  <tr><td>Проявление: стиль + образ жизни</td><td><span class="badge badge-ok">✓ да</span></td><td>Sport Casual, ветровка, очки, функциональность</td></tr>
+  <tr><td>Визуальный код: чистые линии</td><td><span class="badge badge-ok">✓ да</span></td><td>Анорак, карго, минимум логотипов</td></tr>
+  <tr><td>Атмосфера: масштабная, вдохновляющая</td><td><span class="badge badge-ok">✓ да</span></td><td>Вечерний город, контрастные блики</td></tr>
+</table>
+
+<div class="insight good">
+  <div class="insight-label">Вывод промт-анализа</div>
+  5/5 Key Answer Locks реализованы. Промт точно отражает профайл пользователя. Архитектура цепочки работает корректно: onboarding → profile → scene description → FAL prompt. Единственная потеря: Q27 (ретрит/природа) не попал в эту сцену — что логично, т.к. Сфера 9 = Свобода в глобальном контексте, а не в природном. Q27 мог бы войти в другую сферу (Состояние/Развитие).
+</div>
+</div>
+
+<hr class="section-divider">
+
+<!-- ===================== COMPARISON ===================== -->
+<div id="comparison">
+<h2>5. Сравнительный анализ</h2>
+
+<table class="compare-table">
+  <tr>
+    <th>Параметр</th>
+    <th>dashakibl (7806) ♀</th>
+    <th>hdhrjdj (7616) ♂</th>
+  </tr>
+  <tr>
+    <td>Возраст</td>
+    <td>25</td>
+    <td>25</td>
+  </tr>
+  <tr>
+    <td>Атмосфера (Q общий)</td>
+    <td>жизнь между разными странами</td>
+    <td>жизнь между разными странами</td>
+  </tr>
+  <tr>
+    <td>Стили одежды</td>
+    <td>Sport Casual (1 стиль)</td>
+    <td>Business + Boho + Sport Casual (3 стиля)</td>
+  </tr>
+  <tr>
+    <td>Profile quality</td>
+    <td><span class="badge badge-ok">Хороший</span> · чистый, 5 Locks · на русском</td>
+    <td><span class="badge badge-ok">Хороший</span> · «Dynamic Stability» · на английском</td>
+  </tr>
+  <tr>
+    <td>Фото профиля</td>
+    <td><span class="badge badge-danger">Нет</span></td>
+    <td><span class="badge badge-danger">Нет</span></td>
+  </tr>
+  <tr>
+    <td>Генерации</td>
+    <td><span class="badge badge-ok">8 сцен / 3 сферы</span></td>
+    <td><span class="badge badge-danger">0 генераций</span></td>
+  </tr>
+  <tr>
+    <td>Поведение</td>
+    <td>Активный исследователь сфер, итерирует (4× Сфера 7), стилевые запросы («баленсиага»)</td>
+    <td>Завершил онбординг, не перешёл к генерации — dead end</td>
+  </tr>
+  <tr>
+    <td>Промт-архитектура</td>
+    <td>Проверена · 5/5 Locks · Chain OK</td>
+    <td>Profile создан, до сцен не дошло</td>
+  </tr>
+  <tr>
+    <td>Identity anchoring</td>
+    <td><span class="badge badge-danger">Нет (нет селфи)</span></td>
+    <td><span class="badge badge-danger">Нет (нет селфи)</span></td>
+  </tr>
+  <tr>
+    <td>Самый сильный сигнал</td>
+    <td>Лайкнула gen 664. Итерировала Сферу 7 × 4. Запрос «баленсиага» = высокое стилевое сознание</td>
+    <td>0 генераций при полном профайле — UX-барьер или фейк</td>
+  </tr>
+</table>
+</div>
+
+<hr class="section-divider">
+
+<!-- ===================== FINDINGS ===================== -->
+<div id="findings">
+<h2>6. Ключевые находки и рекомендации</h2>
+
+<h3>6.1 Системные находки</h3>
+
+<div class="insight critical">
+  <div class="insight-label">F1 — Profile без Identity Anchor</div>
+  Обе пользователи не загрузили фото. Обе прошли онбординг и сформировали Profile Summary. Но при первой генерации FAL получил <strong>null userPhotoUrl</strong> → анонимная женщина/мужчина вместо «это я». Это главный gap: Elyne позиционируется как «увидеть себя», а выдаёт чужое лицо. Необходимо: либо блокировать первую генерацию без фото (с мягким промтом загрузить), либо явно предупреждать.
+</div>
+
+<div class="insight warn">
+  <div class="insight-label">F2 — Языковая непоследовательность в профайле</div>
+  User 7616 получил Profile Summary на английском при русских входных данных. GP15 не задаёт язык вывода принудительно. Для русскоязычного продукта — нужна явная инструкция «Верни на русском языке» в промт-системе.
+</div>
+
+<div class="insight warn">
+  <div class="insight-label">F3 — Q27 (свободный текст) не влияет на сцены</div>
+  User 7806: Q27 = «ретрит с аяваской, природа, уютный дом». Это мощный сигнал о желаемой среде уединения. Ни одна из 8 генераций этот сигнал не использовала — все сцены urban/movement. Q27 передаётся в профайл? Проверить. Если нет — добавить в контекст GP15 как дополнительный ответ.
+</div>
+
+<div class="insight critical">
+  <div class="insight-label">F4 — UX Dead-End после онбординга (User 7616)</div>
+  Пользователь завершил полный онбординг, получил Profile Summary, но не совершил ни одной генерации за 24 часа. Это либо плохой UX (нет чёткого CTA «Создать первую сцену»), либо фейковый тест-аккаунт. Рекомендация: отдельная метрика «onboarding_complete → first_generation_time», триггер re-engagement если >2ч без генерации.
+</div>
+
+<div class="insight good">
+  <div class="insight-label">Работающее: Промт-цепочка F2-F7</div>
+  Для user 7806 все 5 Key Answer Locks реализованы в gen 664. F7 (Recognition Routing) сработал корректно: freedom → движение+город, НЕ ресторан/wellness. F3 (Style First) — Sport Casual правильно переведён в urban mobility. Промт-архитектура работает как задумано.
+</div>
+
+<div class="insight good">
+  <div class="insight-label">Работающее: Итерации и Explore (Сфера 7)</div>
+  4 итерации «Момент перед первым мазком» показывают что Explore-механика работает — пользователь видит continuity, хочет улучшить. Запрос «баленсиага/монохромный» был принят и интерпретирован. Это живая петля обратной связи.
+</div>
+
+<h3>6.2 Рекомендации Денису</h3>
+<div class="card">
+  <ul style="padding-left:18px; font-size:13px; line-height:2.2;">
+    <li><strong>Priority 1:</strong> Добавить guard перед генерацией: если userPhotoUrl = null → промпт загрузить фото или предупреждение «Сцена создастся без твоего лица»</li>
+    <li><strong>Priority 2:</strong> Добавить в GP15 явную инструкцию «Верни строго на русском языке»</li>
+    <li><strong>Priority 3:</strong> Проверить что Q27 (свободный текст по ретриту/природе) передаётся в поле profile_extra или onboarding_answers — user 7806 его дала, но в сценах не видно</li>
+    <li><strong>Priority 4:</strong> Метрика «onboarding_complete → first_gen_time». Если >2ч → push-уведомление или email «Твой профиль готов, создай первую сцену»</li>
+    <li><strong>Priority 5 (F8):</strong> Scene State в БД — user 7806 прошла 3 сцены Сферы 9 подряд, но они не связаны между собой нарративно. Structured scene_state (location/time/action) позволит продолжать историю, а не начинать заново</li>
+  </ul>
+</div>
+
+<h3>6.3 Рекомендации по промтам (для Олега/Мони)</h3>
+<div class="card">
+  <ul style="padding-left:18px; font-size:13px; line-height:2.2;">
+    <li>Q27 (свободный текст «ретрит») — добавить в контекст профайла как «Nature Signal» или «Solitude Signal» — сейчас он передаётся но не используется в сценах</li>
+    <li>Сфера 7 (Творчество) для user 7806 — идеально резонирует с Q28 («большой холст, выдавливание красок»). Промт Сферы 7 корректно подхватил художественный контекст</li>
+    <li>Для Сферы 9 у user 7806 — три сцены все urban/movement, ни одна не про внутренний покой (хотя «спокойствие» = один из Key Answer Locks). Нужен balance: хотя бы одна сцена emotional_entry с тишиной, не городом</li>
+  </ul>
+</div>
+
+</div>
+
+<div style="margin-top:60px; padding: 20px; text-align:center; color:var(--text2); font-size:12px; border-top: 1px solid var(--border);">
+  Elyne Deep User Analysis · 2026-05-18 · Составил Моня для Олега · elyne.online/admin
+</div>
+
+</div>
+</body>
+</html>
