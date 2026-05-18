@@ -1,0 +1,25 @@
+{
+  "generation_id": "670",
+  "camera_grammar": {
+    "shot_type": "unknown",
+    "camera_angle": "unknown",
+    "lookbook_risk": "NEEDS_REVIEW"
+  },
+  "identity_continuity": {
+    "facial_identity_preserved": "NEEDS_REVIEW",
+    "age_preserved": "NEEDS_REVIEW",
+    "style_preserved": "NEEDS_REVIEW",
+    "what_drifted": [],
+    "probable_cause": ""
+  },
+  "emotional_realism": {
+    "generation_id": "670",
+    "human_presence_score": "NEEDS_MANUAL_REVIEW",
+    "lived_in_feeling": "NEEDS_MANUAL_REVIEW",
+    "cinematic_believability": "NEEDS_MANUAL_REVIEW",
+    "emotional_truth": "NEEDS_MANUAL_REVIEW",
+    "feels_like_my_life": "NEEDS_MANUAL_REVIEW",
+    "feels_like_advertising": "NEEDS_MANUAL_REVIEW",
+    "main_reason": ""
+  }
+}
