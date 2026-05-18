@@ -1,0 +1,34 @@
+{
+  "generation_id": "666",
+  "camera_grammar": {
+    "generation_id": "666",
+    "shot_type": "medium (side-follow)",
+    "camera_angle": "low-angle",
+    "framing": "observational",
+    "movement_present": true,
+    "lookbook_risk": "high"
+  },
+  "identity_continuity": {
+    "generation_id": "666",
+    "facial_identity_preserved": "medium",
+    "age_preserved": "medium",
+    "style_preserved": "high",
+    "body_language_preserved": "medium",
+    "emotional_energy_preserved": "high",
+    "what_drifted": [],
+    "probable_cause": "standard generation",
+    "luxury_cliche_signals_in_prompt": [
+      "вино"
+    ]
+  },
+  "emotional_realism": {
+    "generation_id": "666",
+    "human_presence_score": "NEEDS_MANUAL_REVIEW",
+    "lived_in_feeling": "NEEDS_MANUAL_REVIEW",
+    "cinematic_believability": "NEEDS_MANUAL_REVIEW",
+    "emotional_truth": "NEEDS_MANUAL_REVIEW",
+    "feels_like_my_life": "NEEDS_MANUAL_REVIEW",
+    "feels_like_advertising": "NEEDS_MANUAL_REVIEW",
+    "main_reason": ""
+  }
+}
