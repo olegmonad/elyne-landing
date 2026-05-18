@@ -1,0 +1,36 @@
+{
+  "generation_id": "668",
+  "camera_grammar": {
+    "generation_id": "668",
+    "shot_type": "medium (side-follow)",
+    "camera_angle": "high-angle",
+    "framing": "observational",
+    "movement_present": true,
+    "lookbook_risk": "low"
+  },
+  "identity_continuity": {
+    "generation_id": "668",
+    "facial_identity_preserved": "low",
+    "age_preserved": "medium",
+    "style_preserved": "medium",
+    "body_language_preserved": "medium",
+    "emotional_energy_preserved": "high",
+    "what_drifted": [
+      "facial proportions",
+      "hair detail",
+      "skin texture"
+    ],
+    "probable_cause": "no face-lock in explore/wish prompt chain",
+    "luxury_cliche_signals_in_prompt": []
+  },
+  "emotional_realism": {
+    "generation_id": "668",
+    "human_presence_score": "NEEDS_MANUAL_REVIEW",
+    "lived_in_feeling": "NEEDS_MANUAL_REVIEW",
+    "cinematic_believability": "NEEDS_MANUAL_REVIEW",
+    "emotional_truth": "NEEDS_MANUAL_REVIEW",
+    "feels_like_my_life": "NEEDS_MANUAL_REVIEW",
+    "feels_like_advertising": "NEEDS_MANUAL_REVIEW",
+    "main_reason": ""
+  }
+}
