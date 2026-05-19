@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ALIGN Loading Experience System v2</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0d0d0d;color:#ddd;padding:1.5rem 1rem;line-height:1.55}
+.wrap{max-width:860px;margin:0 auto}
+h1{font-size:1.3rem;font-weight:300;letter-spacing:.12em;text-transform:uppercase;color:#666;margin-bottom:.3rem}
+.sub{font-size:.75rem;color:#333;margin-bottom:2.5rem}
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.6rem;margin-bottom:2.5rem}
+.stat{background:#141414;border:1px solid #222;border-radius:6px;padding:.7rem .9rem}
+.stat-n{font-size:1.5rem;font-weight:300;color:#9a9;}
+.stat-l{font-size:.65rem;color:#555;letter-spacing:.06em;text-transform:uppercase;margin-top:.2rem}
+.toc{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:2rem}
+.toc a{font-size:.7rem;padding:.25rem .6rem;border-radius:3px;text-decoration:none;letter-spacing:.04em}
+.section{margin-bottom:2.5rem}
+h2{font-size:.75rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1rem;padding:.35rem .7rem;border-radius:3px;display:inline-block}
+.system_microcopy h2,.toc .sm{background:#1a1a2a;color:#5a5aaa}
+.brand h2,.toc .br{background:#1a2a2a;color:#4a9a9a}
+.future_recognition h2,.toc .fr{background:#1a2a1a;color:#5a9a5a}
+.emotional_transition h2,.toc .et{background:#2a2a1a;color:#9a8a4a}
+.contemplative h2,.toc .co{background:#2a1a2a;color:#8a5a9a}
+.neuroscience h2,.toc .ns{background:#1a1a2a;color:#6a6aaa}
+.psychology h2,.toc .ps{background:#2a1a1a;color:#aa6a6a}
+.quote h2,.toc .qt{background:#2a2a1a;color:#9a9a4a}
+.logic-section{background:#111;border:1px solid #1e1e1e;border-radius:8px;padding:1.2rem;margin-bottom:2rem;font-size:.85rem;color:#888;white-space:pre-wrap;overflow-x:auto}
+.card{background:#111;border-left:2px solid #333;border-radius:0 5px 5px 0;padding:.8rem 1rem;margin-bottom:.6rem}
+.system_microcopy .card{border-color:#3a3a7a}
+.brand .card{border-color:#2a6a6a}
+.future_recognition .card{border-color:#3a6a3a}
+.emotional_transition .card{border-color:#6a5a1a}
+.contemplative .card{border-color:#5a2a6a}
+.neuroscience .card{border-color:#3a3a7a}
+.psychology .card{border-color:#7a2a2a}
+.quote .card{border-color:#5a5a1a}
+.meta{display:flex;gap:.5rem;margin-bottom:.4rem;align-items:center;flex-wrap:wrap}
+.id{font-size:.65rem;color:#444;letter-spacing:.05em}
+.badge{font-size:.6rem;padding:.1rem .35rem;border-radius:2px;background:#1e1e1e;color:#666}
+.badge.xs{background:#111;color:#444}
+.badge.l{background:#221a22;color:#8a5a9a}
+.mood{font-size:.6rem;color:#383838}
+.text{font-size:.9rem;color:#ccc;line-height:1.5}
+.src{font-size:.7rem;color:#444;font-style:italic;margin-top:.4rem}
+.more{font-size:.75rem;color:#333;padding:.5rem;font-style:italic}
+h3{font-size:.85rem;color:#555;margin:1rem 0 .5rem;border-bottom:1px solid #1a1a1a;padding-bottom:.3rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>ALIGN — Loading Experience System</h1>
+<div class="sub">v2.0 · 2026-05-20 · 254 единиц · для команды Elyne</div>
+
+<div class="stats">
+  <div class="stat"><div class="stat-n">254</div><div class="stat-l">всего единиц</div></div>
+  <div class="stat"><div class="stat-n">30</div><div class="stat-l">microcopy</div></div>
+  <div class="stat"><div class="stat-n">60</div><div class="stat-l">brand lines</div></div>
+  <div class="stat"><div class="stat-n">30</div><div class="stat-l">emotional</div></div>
+  <div class="stat"><div class="stat-n">20</div><div class="stat-l">contemplative</div></div>
+  <div class="stat"><div class="stat-n">69</div><div class="stat-l">нейро/психо</div></div>
+  <div class="stat"><div class="stat-n">45</div><div class="stat-l">цитаты</div></div>
+  <div class="stat"><div class="stat-n">246</div><div class="stat-l">верифицировано</div></div>
+</div>
+
+<div class="toc">
+  <a class="sm" href="#sys">Microcopy</a>
+  <a class="br" href="#brand">Brand</a>
+  <a class="fr" href="#rec">Recognition</a>
+  <a class="et" href="#trn">Transition</a>
+  <a class="co" href="#con">Contemplative</a>
+  <a class="ns" href="#neuro">Нейро</a>
+  <a class="ps" href="#psy">Психо</a>
+  <a class="qt" href="#quote">Цитаты</a>
+  <a style="background:#1e1e1e;color:#555" href="#logic">Логика подачи</a>
+</div>
+
+<div class="section system_microcopy" id="sys"><h2>Microcopy · XS · 0–5с</h2>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_001</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Анализируем эмоциональные паттерны…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_002</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Настраиваем среду…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_003</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Формируем ощущение пространства…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_004</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Ищем визуальные соответствия…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_005</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Простраиваем сцену…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_006</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Синхронизируем атмосферу…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_007</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Формируем ритм жизни сцены…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_008</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Читаем пространство…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_009</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Собираем визуальный язык…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_010</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Настраиваем освещение…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_011</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Уточняем плотность кадра…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_012</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Прорисовываем фактуры…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_013</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Подбираем тональность…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_014</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Сводим композицию…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_015</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Настраиваем оттенки кожи и материала…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_016</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Прописываем время суток…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_017</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Прокладываем линию взгляда…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_018</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Уточняем дистанцию до сцены…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_019</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Сверяем детали с твоими ответами…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_020</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Подбираем плотность тишины…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_021</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Расставляем акценты…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_022</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Согласовываем температуру света…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_023</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Простраиваем глубину кадра…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_024</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Прорабатываем ощущение присутствия…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_025</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Уточняем настроение момента…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_026</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Сводим детали в одну сцену…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_027</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Подбираем материал воздуха…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_028</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Настраиваем темп сцены…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_029</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Прокладываем тени…</div>
+</div>
+<div class="card system_microcopy">
+<div class="meta"><span class="id">sys_030</span><span class="badge xs">XS</span><span class="mood">neutral</span></div>
+<div class="text">Завершаем сцену…</div>
+</div>
+</div>
+
+<div class="section brand" id="brand"><h2>Brand Lines · S/M · 0–40с</h2>
+<div class="card brand">
+<div class="meta"><span class="id">brand_021</span><span class="badge s">S</span><span class="mood">recognition</span></div>
+<div class="text">Пространство становится твоим в тот момент, когда ты в нём дышишь иначе.</div>
+</div>
+<div class="card brand">
+<div class="meta"><span class="id">brand_022</span><span class="badge m">M</span><span class="mood">embodiment</span></div>
+<div class="text">Иногда первый признак «своей» жизни — это то, что тело в ней не напряжено.</div>
+</div>
+<div class="card brand">
+<div class="meta"><span class="id">brand_023</span><span class="badge s">S</span><span class="mood">arrival</span></div>
+<div class="text">Дом — не адрес. Это место, в которое внутренне возвращаются.</div>
+</div>
+<div class="card brand">
+<div class="meta"><span class="id">brand_024</span><span class="badge m">M</span><span class="mood">recognition</span></div>
+<div class="text">Среда не нейтральна. Она либо собирает тебя, либо собирает что-то другое за тебя.</div>
+</div>
+<div class="card brand">
+<div class="meta"><span class="id">brand_025</span><span class="badge s">S</span><span class="mood">embodiment</span></div>
+<div class="text">Свой темп — это тот, в котором не нужно объяснять, почему именно так.</div>
+</div>
+<div class="card brand">
+<div class="meta"><span class="id">brand_026</span><span class="badge m">M</span><span class="mood">curiosity</span></div>
+<div class="text">У времени бывает другая плотность, чем привыкли. Иногда сцена показывает именно её.</div>
+</div>
+<div class="card brand">
+<div class="meta"><span class="id">brand_027</span><span class="badge s">S</span><span class="mood">arrival</span></div>
+<div class="text">Самые точные дни не громкие. Они правильные по температуре.</div>
+</div>
+<div class="card brand">
+<div class="meta"><span class="id">brand_028</span><span class="badge m">M</span><span class="mood">recognition</span></div>
+<div class="text">Близкие в сцене стоят не там, где ты их разместил. А там, где им естественно стоять.</div>
+</div>
+<div class="card brand">
+<div class="meta"><span class="id">brand_029</span><span class="badge s">S</span><span class="mood">embodiment</span></div>
+<div class="text">Жизнь становится своей по деталям, а не по контурам.</div>
+</div>
+<div class="card brand">
+<div class="meta"><span class="id">brand_030</span><span class="badge m">M</span><span class="mood">curiosity</span></div>
+<div class="text">Один предмет в кадре может сказать о направлении больше, чем длинный список целей.</div>
+</div>
+<div class="card brand">
+<div class="meta"><span class="id">brand_031</span><span class="badge s">S</span><span class="mood">arrival</span></div>
+<div class="text">Свет в сцене — это температура внутреннего согласия.</div>
+</div>
+<div class="card brand">
+<div class="meta"><span class="id">brand_032</span><span class="badge m">M</span><span class="mood">embodiment</span></div>
+<div class="text">Атмосфера — не фон. Это первое, к чему привыкает тело, когда жизнь меняется.</div>
+</div>
+<div class="card brand">
+<div class="meta"><span class="id">brand_033</span><span class="badge s">S</span><span class="mood">recognition</span></div>
+<div class="text">Переход редко выглядит как дверь. Чаще — как утро, в котором что-то стало проще.</div>
+</div>
+<div class="card brand">
+<div class="meta"><span class="id">brand_034</span><span class="badge m">M</span><span class="mood">arrival</span></div>
+<div class="text">Порог не всегда нужно переступать. Иногда достаточно увидеть, что он есть.</div>
+</div>
+<div class="card brand">
+<div class="meta"><span class="id">brand_035</span><span class="badge s">S</span><span class="mood">curiosity</span></div>
+<div class="text">Выбор — это не одна сцена. Это несколько, между которыми ты узнаёшь, какая ближе.</div>
+</div>
+<div class="card brand">
+<div class="meta"><span class="id">brand_036</span><span class="badge m">M</span><span class="mood">embodiment</span></div>
+<div class="text">Тишина в сцене — не отсутствие звука. Это присутствие, которому не нужно объяснять себя.</div>
+</div>
+<div class="card brand">
+<div class="meta"><span class="id">brand_037</span><span class="badge s">S</span><span class="mood">arrival</span></div>
+<div class="text">Присутствие в кадре чувствуется до того, как ты находишь в нём человека.</div>
+</div>
+<div class="card brand">
+<div class="meta"><span class="id">brand_038</span><span class="badge m">M</span><span class="mood">recognition</span></div>
+<div class="text">Дело становится своим в тот момент, когда внутри него можно молчать.</div>
+</div>
+<div class="card brand">
+<div class="meta"><span class="id">brand_039</span><span class="badge s">S</span><span class="mood">embodiment</span></div>
+<div class="text">Работа, которая подходит, оставляет внутри ровный свет, а не яркую вспышку.</div>
+</div>
+<div class="card brand">
+<div class="meta"><span class="id">brand_040</span><span class="badge m">M</span><span class="mood">curiosity</span></div>
+<div class="text">Смысл редко приходит как ответ. Чаще — как сцена, в которой вопросы становятся тише.</div>
+</div>
+<div class="more">… ещё 40 в JSON-файле</div>
+</div>
+
+<div class="section future_recognition" id="rec"><h2>Future Recognition · S · 5–40с</h2>
+<div class="card future_recognition">
+<div class="meta"><span class="id">rec_001</span><span class="badge s">S</span><span class="mood">recognition</span></div>
+<div class="text">Иногда человек узнаёт себя раньше, чем меняет жизнь.</div>
+</div>
+<div class="card future_recognition">
+<div class="meta"><span class="id">rec_002</span><span class="badge s">S</span><span class="mood">recognition</span></div>
+<div class="text">Некоторые сцены ощущаются знакомыми ещё до того, как становятся реальностью.</div>
+</div>
+<div class="card future_recognition">
+<div class="meta"><span class="id">rec_003</span><span class="badge s">S</span><span class="mood">anticipation</span></div>
+<div class="text">Возможно, ты сейчас смотришь не на фантазию, а на узнаваемое направление.</div>
+</div>
+<div class="card future_recognition">
+<div class="meta"><span class="id">rec_004</span><span class="badge s">S</span><span class="mood">recognition</span></div>
+<div class="text">Бывает, что новая жизнь сначала появляется как ощущение знакомого.</div>
+</div>
+<div class="card future_recognition">
+<div class="meta"><span class="id">rec_005</span><span class="badge s">S</span><span class="mood">recognition</span></div>
+<div class="text">То, что ты узнаёшь в сцене, уже было в тебе. Просто не имело формы.</div>
+</div>
+<div class="card future_recognition">
+<div class="meta"><span class="id">rec_006</span><span class="badge s">S</span><span class="mood">anticipation</span></div>
+<div class="text">Узнавание — это первый шаг. Раньше слова, раньше решения.</div>
+</div>
+<div class="card future_recognition">
+<div class="meta"><span class="id">rec_007</span><span class="badge s">S</span><span class="mood">recognition</span></div>
+<div class="text">Иногда «это я» приходит как тихое согласие, а не как открытие.</div>
+</div>
+<div class="card future_recognition">
+<div class="meta"><span class="id">rec_008</span><span class="badge s">S</span><span class="mood">recognition</span></div>
+<div class="text">Образ кажется знакомым не потому, что он был. А потому что ты ему подходишь.</div>
+</div>
+<div class="card future_recognition">
+<div class="meta"><span class="id">rec_009</span><span class="badge s">S</span><span class="mood">anticipation</span></div>
+<div class="text">Будущее редко удивляет целиком. Чаще — частями, которые ты уже носил с собой.</div>
+</div>
+<div class="card future_recognition">
+<div class="meta"><span class="id">rec_010</span><span class="badge s">S</span><span class="mood">recognition</span></div>
+<div class="text">Самые точные сцены — те, на которые хочется тихо кивнуть.</div>
+</div>
+<div class="card future_recognition">
+<div class="meta"><span class="id">rec_011</span><span class="badge s">S</span><span class="mood">recognition</span></div>
+<div class="text">В сцене ты не выбираешь себя. Ты узнаёшь, какой себя уже знал.</div>
+</div>
+<div class="card future_recognition">
+<div class="meta"><span class="id">rec_012</span><span class="badge s">S</span><span class="mood">anticipation</span></div>
+<div class="text">Не каждая сцена совпадёт. Но иногда совпадает деталь — и этого достаточно.</div>
+</div>
+<div class="card future_recognition">
+<div class="meta"><span class="id">rec_013</span><span class="badge s">S</span><span class="mood">recognition</span></div>
+<div class="text">Узнавание тише восторга. И, как правило, точнее.</div>
+</div>
+<div class="card future_recognition">
+<div class="meta"><span class="id">rec_014</span><span class="badge s">S</span><span class="mood">recognition</span></div>
+<div class="text">Если сцена не нравится — это тоже ответ. О том, какая жизнь не твоя.</div>
+</div>
+<div class="card future_recognition">
+<div class="meta"><span class="id">rec_015</span><span class="badge s">S</span><span class="mood">anticipation</span></div>
+<div class="text">Иногда сцена показывает не цель, а сторону, в которую стоит повернуться.</div>
+</div>
+</div>
+
+<div class="section emotional_transition" id="trn"><h2>Emotional Transition · S/M · 15–90с</h2>
+<div class="card emotional_transition">
+<div class="meta"><span class="id">trn_001</span><span class="badge s">S</span><span class="mood">embodiment</span></div>
+<div class="text">Когда образ становится знакомым, мозг начинает воспринимать его менее чужим.</div>
+</div>
+<div class="card emotional_transition">
+<div class="meta"><span class="id">trn_002</span><span class="badge s">S</span><span class="mood">arrival</span></div>
+<div class="text">Некоторые будущие сначала приходят как ощущение.</div>
+</div>
+<div class="card emotional_transition">
+<div class="meta"><span class="id">trn_003</span><span class="badge m">M</span><span class="mood">embodiment</span></div>
+<div class="text">Чем яснее человек представляет возможную жизнь, тем проще мозгу начать видеть к ней путь.</div>
+</div>
+<div class="card emotional_transition">
+<div class="meta"><span class="id">trn_004</span><span class="badge m">M</span><span class="mood">embodiment</span></div>
+<div class="text">Возможно, прямо сейчас твой мозг начинает адаптироваться к этой версии будущего.</div>
+</div>
+<div class="card emotional_transition">
+<div class="meta"><span class="id">trn_005</span><span class="badge s">S</span><span class="mood">arrival</span></div>
+<div class="text">Сначала непривычно. Потом узнаваемо. Потом — своё.</div>
+</div>
+<div class="card emotional_transition">
+<div class="meta"><span class="id">trn_006</span><span class="badge m">M</span><span class="mood">embodiment</span></div>
+<div class="text">Образ, увиденный достаточно ясно, перестаёт ощущаться сценарием и становится возможностью.</div>
+</div>
+<div class="card emotional_transition">
+<div class="meta"><span class="id">trn_007</span><span class="badge s">S</span><span class="mood">arrival</span></div>
+<div class="text">Близость будущего часто измеряется не временем, а количеством раз, когда ты его представлял.</div>
+</div>
+<div class="card emotional_transition">
+<div class="meta"><span class="id">trn_008</span><span class="badge m">M</span><span class="mood">embodiment</span></div>
+<div class="text">Когда что-то перестаёт удивлять, оно начинает входить в жизнь. Это работает и с собой.</div>
+</div>
+<div class="card emotional_transition">
+<div class="meta"><span class="id">trn_009</span><span class="badge s">S</span><span class="mood">arrival</span></div>
+<div class="text">Иногда переход — это просто разрешение себе быть таким.</div>
+</div>
+<div class="card emotional_transition">
+<div class="meta"><span class="id">trn_010</span><span class="badge m">M</span><span class="mood">embodiment</span></div>
+<div class="text">Мозг доверяет тому, что видит часто. И постепенно начинает к этому подстраивать поведение.</div>
+</div>
+<div class="card emotional_transition">
+<div class="meta"><span class="id">trn_011</span><span class="badge s">S</span><span class="mood">embodiment</span></div>
+<div class="text">Между «хочу» и «могу» часто стоит просто привычка видеть себя там.</div>
+</div>
+<div class="card emotional_transition">
+<div class="meta"><span class="id">trn_012</span><span class="badge m">M</span><span class="mood">arrival</span></div>
+<div class="text">Будущее не наступает целиком. Оно приходит как состояние, в которое ты однажды соглашаешься войти.</div>
+</div>
+<div class="card emotional_transition">
+<div class="meta"><span class="id">trn_013</span><span class="badge s">S</span><span class="mood">embodiment</span></div>
+<div class="text">Возможная жизнь сначала становится своей внутри. Потом — снаружи.</div>
+</div>
+<div class="card emotional_transition">
+<div class="meta"><span class="id">trn_014</span><span class="badge m">M</span><span class="mood">arrival</span></div>
+<div class="text">Когда образ перестаёт пугать, он начинает звать. Это нормальная физика внимания.</div>
+</div>
+<div class="card emotional_transition">
+<div class="meta"><span class="id">trn_015</span><span class="badge s">S</span><span class="mood">embodiment</span></div>
+<div class="text">Сцена не делает тебя другим. Она показывает, что другим быть можно.</div>
+</div>
+</div>
+
+<div class="section contemplative" id="con"><h2>Contemplative · L · 15–90с+</h2>
+<div class="card contemplative">
+<div class="meta"><span class="id">con_001</span><span class="badge l">L</span><span class="mood">recognition</span></div>
+<div class="text">Есть разница между тем, чего человек хочет, и тем, каким он себя видит. Первое — желание. Второе — образ. Образ сильнее желания, потому что мозг адаптирует поведение под то, что считает реальным о себе, а не под то, о чём мечтает.</div>
+</div>
+<div class="card contemplative">
+<div class="meta"><span class="id">con_002</span><span class="badge l">L</span><span class="mood">embodiment</span></div>
+<div class="text">Когда человек впервые видит свою возможную жизнь со стороны, часто срабатывает не восторг, а узнавание. Будто часть тебя давно знала, что это направление существует, и просто ждала, пока ему дадут форму.</div>
+</div>
+<div class="card contemplative">
+<div class="meta"><span class="id">con_003</span><span class="badge l">L</span><span class="mood">arrival</span></div>
+<div class="text">Большие перемены редко начинаются с решения. Чаще — с момента, когда человек перестаёт удивляться, увидев себя другим. Привыкание к образу — тихая, но самая прочная часть перехода.</div>
+</div>
+<div class="card contemplative">
+<div class="meta"><span class="id">con_004</span><span class="badge l">L</span><span class="mood">curiosity</span></div>
+<div class="text">Воображение работает не как побег. Оно работает как примерка. Человек на секунду живёт другой жизнью — и проверяет, остаётся ли он собой. Если да, эта жизнь становится одним из возможных направлений. Если нет, отпадает сама.</div>
+</div>
+<div class="card contemplative">
+<div class="meta"><span class="id">con_005</span><span class="badge l">L</span><span class="mood">recognition</span></div>
+<div class="text">Самые точные представления о будущем редко выглядят как победа. Чаще — как обычный день, в котором всё устроено правильно. Свет, темп, люди рядом, дело под рукой. Узнавание складывается из мелочей.</div>
+</div>
+<div class="card contemplative">
+<div class="meta"><span class="id">con_006</span><span class="badge l">L</span><span class="mood">embodiment</span></div>
+<div class="text">Будущее не требует, чтобы ты стал кем-то другим. Оно требует, чтобы ты увидел, кем уже можешь быть, и согласился, что это не самозванство. Большая часть взрослого изменения — это про разрешение, а не про усилие.</div>
+</div>
+<div class="card contemplative">
+<div class="meta"><span class="id">con_007</span><span class="badge l">L</span><span class="mood">arrival</span></div>
+<div class="text">Сцена, увиденная достаточно ясно, перестаёт быть фантазией. Она занимает место в памяти, как опыт, которого ещё не было. Память при этом не различает: для неё важна чёткость, а не источник. Так у человека появляется ориентир, который раньше негде было держать.</div>
+</div>
+<div class="card contemplative">
+<div class="meta"><span class="id">con_008</span><span class="badge l">L</span><span class="mood">curiosity</span></div>
+<div class="text">Внимание — редкий ресурс. То, на что человек смотрит часто, постепенно входит в его жизнь. Не магически — через выбор, через привычки, через мелкие повороты. Образ, который держат в поле внимания, начинает менять траекторию шага.</div>
+</div>
+<div class="card contemplative">
+<div class="meta"><span class="id">con_009</span><span class="badge l">L</span><span class="mood">recognition</span></div>
+<div class="text">Иногда самый честный вопрос звучит не как «чего я хочу», а как «где я узнаю себя». Желание движется, узнавание остаётся. Сцены, которые получают тихий внутренний кивок, обычно показывают вторую категорию.</div>
+</div>
+<div class="card contemplative">
+<div class="meta"><span class="id">con_010</span><span class="badge l">L</span><span class="mood">embodiment</span></div>
+<div class="text">Любая возможная жизнь сначала кажется чужой. Это не сигнал отказаться. Это сигнал того, что мозг пока не имеет о ней достаточно данных. Чем чаще образ возвращается, тем меньше в нём чужого. В какой-то момент он становится одним из вариантов «себя».</div>
+</div>
+<div class="more">… ещё 10 в JSON-файле</div>
+</div>
+
+<div class="section neuroscience" id="neuro"><h2>Нейрофакты · M · 5–40с</h2>
+<div class="card neuroscience">
+<div class="meta"><span class="id">fact_008</span><span class="badge m">M</span><span class="mood">curiosity</span></div>
+<div class="text">Мозг устроен не как сенсор, который пассивно получает информацию. Он постоянно строит прогнозы о том, что случится в следующий момент, и сравнивает их с тем, что приходит по ощущениям. То, что ты «видишь», — это во многом то, что мозг ожидал увидеть.</div><div class="src">Friston, Nature Reviews Neuroscience, 2010 (&quot;The free-energy principle: a unified brain theory&quot;)</div>
+</div>
+<div class="card neuroscience">
+<div class="meta"><span class="id">fact_009</span><span class="badge s">S</span><span class="mood">curiosity</span></div>
+<div class="text">Теория предиктивного кодирования (Friston, Clark) говорит: мозг минимизирует «ошибку предсказания» — разницу между ожидаемым и реальным. Это значит, что он постоянно живёт чуть впереди настоящего момента.</div><div class="src">Friston, PMC 2009; Clark &quot;Surfing Uncertainty,&quot; OUP, 2015</div>
+</div>
+<div class="card neuroscience">
+<div class="meta"><span class="id">fact_010</span><span class="badge m">M</span><span class="mood">curiosity</span></div>
+<div class="text">Когда ожидание расходится с реальностью — мозг обновляет свою модель. Это называется prediction error. Чем точнее внутренняя модель мира, тем меньше «ошибок» — и тем меньше энергии тратится на обработку окружающего.</div><div class="src">Hollerman &amp; Schultz, Nature Neuroscience, 1998; Friston, 2010</div>
+</div>
+<div class="card neuroscience">
+<div class="meta"><span class="id">fact_011</span><span class="badge m">M</span><span class="mood">curiosity</span></div>
+<div class="text">Восприятие реальности сильно окрашено ожиданиями. В экспериментах люди буквально видели то, что их мозг «предсказывал» — даже если стимул был другим. Ожидания — это не просто мысли, это часть того, как строится сам опыт.</div><div class="src">Clark, Surfing Uncertainty, Oxford University Press, 2015</div>
+</div>
+<div class="card neuroscience">
+<div class="meta"><span class="id">fact_012</span><span class="badge s">S</span><span class="mood">curiosity</span></div>
+<div class="text">Мозг тратит больше ресурсов на обработку неожиданного, чем предсказанного. Это объясняет, почему чёткий внутренний образ будущего снижает тревогу — становится меньше «непредвиденного».</div><div class="src">Friston, Free Energy Principle, 2010</div>
+</div>
+<div class="card neuroscience">
+<div class="meta"><span class="id">fact_013</span><span class="badge m">M</span><span class="mood">curiosity</span></div>
+<div class="text">Мозг не ждёт реальности — он моделирует её заранее. Andy Clark называет его «prediction machine»: иерархическая система, где каждый уровень строит предсказания для уровня ниже. Восприятие — это всегда совместная работа ожиданий и данных.</div><div class="src">Clark, Surfing Uncertainty, OUP, 2015</div>
+</div>
+<div class="card neuroscience">
+<div class="meta"><span class="id">fact_014</span><span class="badge s">S</span><span class="mood">curiosity</span></div>
+<div class="text">Нейроны в областях коры, связанных с предсказанием, активируются ещё до того, как событие происходит. Мозг буквально «проигрывает» будущее заранее.</div><div class="src">Friston et al., Philosophical Transactions of the Royal Society, 2010</div>
+</div>
+<div class="card neuroscience">
+<div class="meta"><span class="id">fact_015</span><span class="badge m">M</span><span class="mood">curiosity</span></div>
+<div class="text">Ретикулярная активирующая система (РАС) — это сеть нейронов в стволе мозга, которая решает, что «достойно» попасть в сознание. Мозг получает миллионы сигналов в секунду, и РАС — его фильтр. То, что стало для тебя важным, она начинает пропускать вперёд.</div><div class="src">The Ascending Reticular Activating System: The Common Root of Consciousness and Attention, ResearchGate, 2014</div>
+</div>
+<div class="card neuroscience">
+<div class="meta"><span class="id">fact_016</span><span class="badge s">S</span><span class="mood">curiosity</span></div>
+<div class="text">Когда ты замечаешь, что «везде» начал встречать что-то, о чём недавно думал — это не магия. Это твоя salience network начала помечать эти сигналы как важные. Они были там всегда, просто не фильтровались как значимые.</div><div class="src">Salience network, anterior insula + dACC, Menon &amp; Uddin, 2010</div>
+</div>
+<div class="card neuroscience">
+<div class="meta"><span class="id">fact_017</span><span class="badge m">M</span><span class="mood">curiosity</span></div>
+<div class="text">Salience network — это сеть мозга вокруг передней инсулы и передней поясной коры. Она решает, какие стимулы «срочные» или «важные» — и передаёт им управление вниманием. То, что стало значимым внутри, начинает выделяться снаружи.</div><div class="src">Menon &amp; Uddin, Journal of Cognitive Neuroscience, 2010; Seeley et al., Journal of Neuroscience, 2007</div>
+</div>
+<div class="card neuroscience">
+<div class="meta"><span class="id">fact_018</span><span class="badge s">S</span><span class="mood">curiosity</span></div>
+<div class="text">Порог того, что мозг «замечает», зависит от твоих целей и опыта. Стимулы, связанные с внутренними задачами, буквально лучше «пробиваются» сквозь фильтр внимания.</div><div class="src">RAS research, Contemporary Psychology, 2020</div>
+</div>
+<div class="card neuroscience">
+<div class="meta"><span class="id">fact_019</span><span class="badge m">M</span><span class="mood">curiosity</span></div>
+<div class="text">Внимание — это не просто «смотреть». Это активный процесс, в котором мозг усиливает одни сигналы и подавляет другие. Когда у тебя есть чёткий внутренний образ — ты буквально начинаешь жить в другой информационной среде, хотя физически находишься в той же.</div><div class="src">Qualia Institute, Reticular Activating System; Menon &amp; Uddin, 2010</div>
+</div>
+<div class="card neuroscience">
+<div class="meta"><span class="id">fact_020</span><span class="badge s">S</span><span class="mood">curiosity</span></div>
+<div class="text">Insula — «сторожевая башня» salience network. Она интегрирует телесные ощущения, эмоции и контекст — и решает, на что переключить внимание. Тело участвует в том, что ты замечаешь.</div><div class="src">Dissociable large-scale networks anchored in the right anterior insula, PMC, 2012</div>
+</div>
+<div class="card neuroscience">
+<div class="meta"><span class="id">fact_021</span><span class="badge m">M</span><span class="mood">curiosity</span></div>
+<div class="text">Когда нейроны активируются вместе — их связь усиливается. Это Hebbian learning, сформулированное Дональдом Хеббом в 1949 году. В народе звучит как «neurons that fire together, wire together». Повторяемые образы и мысли буквально прокладывают новые дорожки в мозге.</div><div class="src">Hebb, The Organization of Behavior, 1949; подтверждено экспериментально через STDP (spike-timing-dependent plasticity)</div>
+</div>
+<div class="card neuroscience">
+<div class="meta"><span class="id">fact_022</span><span class="badge s">S</span><span class="mood">curiosity</span></div>
+<div class="text">Мозг не статичен. Он постоянно переписывает себя в зависимости от того, что повторяется. Это нейропластичность — способность меняться в ответ на опыт, включая воображаемый.</div><div class="src">IBE-UNESCO Science of Learning Portal; Eric Kandel, Nobel Lecture, 2000</div>
+</div>
+<div class="more">… ещё 33 в JSON-файле</div>
+</div>
+
+<div class="section psychology" id="psy"><h2>Психофакты · M · 5–40с</h2>
+<div class="card psychology">
+<div class="meta"><span class="id">fact_001</span><span class="badge m">M</span><span class="mood">curiosity</span></div>
+<div class="text">Когда мозг думает о тебе через 10 лет, в нём активируются примерно те же зоны, что и при мыслях о незнакомом человеке — не о себе. Это буквально нейронная дистанция. Hal Hershfield с коллегами показал это через fMRI: будущий «ты» может ощущаться как чужой.</div><div class="src">Ersner-Hershfield et al., Social Cognitive and Affective Neuroscience, 2009; Hershfield, Annals of the New York Academy of Sciences, 2011</div>
+</div>
+<div class="card psychology">
+<div class="meta"><span class="id">fact_002</span><span class="badge m">M</span><span class="mood">curiosity</span></div>
+<div class="text">Степень «нейронного перекрытия» между образом себя сейчас и себя в будущем предсказывает, сколько человек откладывает на пенсию. Чем ближе психологически ощущается будущий «я», тем больше человек о нём заботится — как о себе, а не о постороннем.</div><div class="src">Hershfield et al., Psychological Science, 2011</div>
+</div>
+<div class="card psychology">
+<div class="meta"><span class="id">fact_003</span><span class="badge s">S</span><span class="mood">curiosity</span></div>
+<div class="text">Когда людям показывали состаренные фото их лиц — они начинали больше экономить деньги. Визуальный образ будущего себя буквально сокращал психологическую дистанцию к нему.</div><div class="src">Hershfield et al., Journal of Marketing Research, 2011</div>
+</div>
+<div class="card psychology">
+<div class="meta"><span class="id">fact_004</span><span class="badge m">M</span><span class="mood">curiosity</span></div>
+<div class="text">Temporal Self-Appraisal Theory (Wilson &amp; Ross, 2001) описывает, как люди воспринимают свои прошлые «я» с разной дистанции: далёкое прошлое критикуем строже, недавнее — мягче. То же работает и с будущим: чем конкретнее образ, тем реальнее ощущается этот человек — и тем больше мы склонны для него стараться.</div><div class="src">Wilson &amp; Ross, Journal of Personality and Social Psychology, 2001; Peetz et al., Social and Personality Psychology Compass, 2008</div>
+</div>
+<div class="card psychology">
+<div class="meta"><span class="id">fact_005</span><span class="badge s">S</span><span class="mood">curiosity</span></div>
+<div class="text">Мозг «сжимает» время — и прошлое, и будущее. События, далёкие во времени, воспринимаются менее детализированными, более схематичными. Чем конкретнее ты прорисовываешь образ себя в будущем, тем менее сжатым он становится.</div><div class="src">Temporal Self-Compression study, bioRxiv, 2021</div>
+</div>
+<div class="card psychology">
+<div class="meta"><span class="id">fact_006</span><span class="badge m">M</span><span class="mood">curiosity</span></div>
+<div class="text">Люди, которые чувствуют сильную связь со своим будущим «я», в среднем здоровее, чаще занимаются спортом и меньше злоупотребляют вредным. Это не просто мотивация — это другое восприятие того, кто именно будет расплачиваться за сегодняшние выборы.</div><div class="src">Rutchick, Slepian, Reyes, Pleskus, Hershfield, Journal of Experimental Psychology Applied, 2018</div>
+</div>
+<div class="card psychology">
+<div class="meta"><span class="id">fact_007</span><span class="badge s">S</span><span class="mood">curiosity</span></div>
+<div class="text">Психологическая «дистанция» к будущему себе — не метафора. Это измеримый нейронный феномен, связанный с тем, как мозг кодирует «self» и «other».</div><div class="src">Hershfield et al., 2009, fMRI study</div>
+</div>
+<div class="card psychology">
+<div class="meta"><span class="id">fact_034</span><span class="badge m">M</span><span class="mood">curiosity</span></div>
+<div class="text">Моторная кора мозга активируется не только при реальном движении, но и при его воображении. fMRI-исследования показывают: мысленное повторение действия задействует те же зоны, что и его физическое выполнение — просто с меньшей интенсивностью.</div><div class="src">Brain activity during visual vs kinesthetic imagery, PMC, 2019; Guillot &amp; Collet, Int. Review of Sport and Exercise Psychology, 2008</div>
+</div>
+<div class="card psychology">
+<div class="meta"><span class="id">fact_035</span><span class="badge m">M</span><span class="mood">curiosity</span></div>
+<div class="text">Паскаль-Леоне и коллеги провели эксперимент с пианистами: одна группа физически разучивала пьесу, другая только мысленно. После пяти дней — у обеих групп кора мозга изменилась схожим образом. Мысленная практика — это не «вместо настоящей». Это другой вид настоящей.</div><div class="src">Pascual-Leone et al., Journal of Neurophysiology, 1995</div>
+</div>
+<div class="card psychology">
+<div class="meta"><span class="id">fact_036</span><span class="badge s">S</span><span class="mood">curiosity</span></div>
+<div class="text">Мета-анализ 35 исследований по visualization training в спорте показал достоверный прирост результатов — от точности броска в баскетболе до силовых показателей в гимнастике.</div><div class="src">Driskell, Copper &amp; Moran, Journal of Applied Psychology, 1994</div>
+</div>
+<div class="more">… ещё 11 в JSON-файле</div>
+</div>
+
+<div class="section quote" id="quote"><h2>Цитаты · S/M · 15–90с</h2>
+<div class="card quote">
+<div class="meta"><span class="id">quote_r001</span><span class="badge m">M</span><span class="mood">recognition</span></div>
+<div class="text">«Когда у меня появляется идея, я сразу начинаю строить её в воображении. Я меняю конструкцию, вношу улучшения, мысленно запускаю устройство. Мне совершенно всё равно — крутить ли турбину в мыслях или испытывать её в мастерской. Нет никакой разницы. Результаты одинаковы.»</div><div class="src">Никола Тесла — Tesla, &quot;My Inventions&quot;, Electrical Experimenter, 1919</div>
+</div>
+<div class="card quote">
+<div class="meta"><span class="id">quote_r002</span><span class="badge m">M</span><span class="mood">recognition</span></div>
+<div class="text">«Двигатели, которые я построил, были точно такими, какими я их представлял. Я не пытался улучшить их проект — я просто воспроизвёл картины, которые видел в своём воображении, и работа всегда соответствовала моим ожиданиям.»</div><div class="src">Никола Тесла — Tesla, &quot;My Inventions&quot;, Electrical Experimenter, 1919</div>
+</div>
+<div class="card quote">
+<div class="meta"><span class="id">quote_r003</span><span class="badge m">M</span><span class="mood">recognition</span></div>
+<div class="text">«Научное воображение должно оставаться в рамках того, что мы знаем о природе. Оно не свободно в смысле художественной фантазии — оно свободно в смысле: ты можешь представить то, чего ещё никто не видел, пока это не противоречит законам физики.»</div><div class="src">Ричард Фейнман — Feynman, The Feynman Lectures on Physics, Vol. 2, Lecture 20, 1964</div>
+</div>
+<div class="card quote">
+<div class="meta"><span class="id">quote_r004</span><span class="badge m">M</span><span class="mood">recognition</span></div>
+<div class="text">«Научное воображение — это воображение в смирительной рубашке. Ты должен представлять вещи, которых никто ещё не видел, — при этом зная всё, что мы знаем о том, как работает природа.»</div><div class="src">Ричард Фейнман — Feynman, The Character of Physical Law, 1965</div>
+</div>
+<div class="card quote">
+<div class="meta"><span class="id">quote_r005</span><span class="badge s">S</span><span class="mood">recognition</span></div>
+<div class="text">«Учёный в своей лаборатории — не только техник. Это ребёнок перед явлениями природы, которые поражают его как сказка.»</div><div class="src">Мари Кюри — Curie, речь, цит. по Eve Curie, &quot;Madame Curie&quot;, 1937</div>
+</div>
+<div class="card quote">
+<div class="meta"><span class="id">quote_r006</span><span class="badge s">S</span><span class="mood">recognition</span></div>
+<div class="text">«Каждый акт восприятия — в какой-то мере акт творения. Каждый акт памяти — в какой-то мере акт воображения.»</div><div class="src">Оливер Сакс — Sacks, &quot;An Anthropologist on Mars&quot;, 1995; цит. в многочисленных источниках</div>
+</div>
+<div class="card quote">
+<div class="meta"><span class="id">quote_r007</span><span class="badge s">S</span><span class="mood">recognition</span></div>
+<div class="text">«Сознание в бодрствовании — это тот же сон, только ограниченный внешней реальностью.»</div><div class="src">Оливер Сакс — Sacks, Goodreads verified quotes</div>
+</div>
+<div class="card quote">
+<div class="meta"><span class="id">quote_r008</span><span class="badge s">S</span><span class="mood">recognition</span></div>
+<div class="text">«Каковы твои постоянные воображения, такой будет и твой ум. Ибо душа окрашивается своими образами.»</div><div class="src">Марк Аврелий — Marcus Aurelius, Meditations, Book 5, ~161–180 AD; перевод George Long (1862)</div>
+</div>
+<div class="card quote">
+<div class="meta"><span class="id">quote_r009</span><span class="badge s">S</span><span class="mood">recognition</span></div>
+<div class="text">«Боль — ни невыносима, ни бесконечна — если только ты помнишь её пределы и не преувеличиваешь их в воображении.»</div><div class="src">Марк Аврелий — Marcus Aurelius, Meditations</div>
+</div>
+<div class="card quote">
+<div class="meta"><span class="id">quote_r010</span><span class="badge s">S</span><span class="mood">recognition</span></div>
+<div class="text">«Людей тревожат не события, а их суждения о событиях.»</div><div class="src">Эпиктет — Epictetus, Enchiridion, ch. 5; перевод Elizabeth Carter / George Long</div>
+</div>
+<div class="card quote">
+<div class="meta"><span class="id">quote_r011</span><span class="badge s">S</span><span class="mood">recognition</span></div>
+<div class="text">«В стратегии важно видеть далёкое как близкое, и смотреть на близкое с дистанции.»</div><div class="src">Миямото Мусаси — Miyamoto Musashi, The Book of Five Rings (Go Rin no Sho), ~1645</div>
+</div>
+<div class="card quote">
+<div class="meta"><span class="id">quote_r012</span><span class="badge s">S</span><span class="mood">recognition</span></div>
+<div class="text">«Воспринимай то, что нельзя увидеть глазом.»</div><div class="src">Миямото Мусаси — Miyamoto Musashi, The Book of Five Rings</div>
+</div>
+<div class="card quote">
+<div class="meta"><span class="id">quote_r013</span><span class="badge s">S</span><span class="mood">recognition</span></div>
+<div class="text">«Сознание — это театр одновременных возможностей.»</div><div class="src">Уильям Джеймс — James, The Principles of Psychology, 1890, ch. 11</div>
+</div>
+<div class="card quote">
+<div class="meta"><span class="id">quote_r014</span><span class="badge s">S</span><span class="mood">recognition</span></div>
+<div class="text">«Посейте действие — пожнёте привычку. Посейте привычку — пожнёте характер. Посейте характер — пожнёте судьбу.»</div><div class="src">Уильям Джеймс — приписывается Джеймсу; близкая мысль есть в Psychology: Briefer Course (1892), но точная формулировка не верифицирована как его</div>
+</div>
+<div class="card quote">
+<div class="meta"><span class="id">quote_r015</span><span class="badge m">M</span><span class="mood">recognition</span></div>
+<div class="text">«Что человек может быть — он должен быть. Музыкант должен творить музыку, художник — рисовать, поэт — писать, иначе он не будет в мире с собой.»</div><div class="src">Абрахам Маслоу — Maslow, Motivation and Personality, 1954</div>
+</div>
+<div class="more">… ещё 30 в JSON-файле</div>
+</div>
+
+<div id="logic" style="margin-top:2rem">
+<h2 style="color:#555;background:#1e1e1e;display:inline-block;padding:.35rem .7rem;border-radius:3px">Логика подачи — для разработчика</h2>
+</div>
+<div class="logic-section"># ALIGN / Elyne — Логика подачи контента на экране загрузки
+## Файл: loading_v2_system_logic.md
+*Создан: 2026-05-19. Системная документация для разработчика и редактора контента.*
+
+---
+
+## О документе
+
+Этот файл описывает **архитектуру подачи**, а не сам контент. Контент — в `ALIGN_GENERATION_LOADING_CONTENT.md`. Здесь — как, когда и в каком порядке он появляется.
+
+Принцип: loading — не пауза между действиями. Это начало опыта. Пользователь уже внутри.
+
+---
+
+## Часть 1: Sequencing Engine
+
+### Временные окна и логика подачи
+
+---
+
+#### 0–5 секунд
+
+**Что показывать:**
+- Один элемент типа `system_microcopy`, размер XS
+- Немедленно после него (через 2–3 сек) — один элемент типа `brand`, размер S
+
+**Почему именно это:**
+Пользователь только что нажал «Создать сцену». Внимание ещё рассеяно — он ждёт, что произойдёт что-то конкретное. `system_microcopy` даёт технический сигнал «всё работает, мы делаем». `brand` тут же переключает тон: это не просто загрузка — это что-то своё.
+
+Ошибка: начинать с нейрофакта или цитаты. Читатель ещё не внутри — он смотрит на экран снаружи. Тяжёлый контент на холодный ум не усваивается.
+
+**Частота смены:**
+- `system_microcopy` держится 2–3 секунды
+- `brand` держится до конца окна (3–5 сек)
+
+**Mood окна:** `neutral` → `curiosity`
+Окно начинается нейтрально и заканчивается лёгким вопросом: «а что это такое».
+
+---
+
+#### 5–15 секунд
+
+**Что показывать:**
+- `brand` (S) → `future_recognition` (S) → `neuroscience` или `psychology` (M)
+- Чередование: короткое → короткое → чуть длиннее
+
+**Почему именно это:**
+Пользователь понял: загрузка не мгновенная. Внимание перестраивается — он готов читать. `future_recognition` вводит первое персональное касание: «это про меня, про то, что я описал». `neuroscience` или `psychology` в конце окна даёт первое интеллектуальное обоснование — почему то, что происходит, имеет смысл.
+
+Момент перехода 5–15 — самый важный. Именно здесь решается: пользователь начинает читать или смотрит на индикатор загрузки. Если контент не зацепил за 8 секунд — он потерян до конца загрузки.
+
+**Частота смены:**
+- S-элементы: 3–4 секунды каждый
+- M-элемент: 5–7 секунд
+
+**Mood окна:** `curiosity` → `recognition`
+Читатель начинает узнавать что-то своё.
+
+---
+
+#### 15–40 секунд
+
+**Что показывать:**
+- `emotional_transition` (S или M) → `neuroscience` / `psychology` (M) → `contemplative` (L) → снова `brand` (S) как «выдох»
+- Это первый полный цикл: нарастание → спад
+
+**Почему именно это:**
+40 секунд — это уже долго. Пользователь либо полностью вошёл в состояние, либо начинает раздражаться. Задача: не дать ему выйти. `emotional_transition` продолжает тему узнавания, но добавляет движение — «ты приближаешься». Длинный `contemplative`-фрагмент даётся тогда, когда внимание разогрето: он не перегружает, а даёт возможность остановиться. `brand` в конце — как короткий выдох после длинного абзаца.
+
+**Частота смены:**
+- S: 3–5 сек
+- M: 6–8 сек
+- L: 9–12 сек
+
+**Mood окна:** `recognition` → `embodiment`
+Читатель перестаёт смотреть снаружи —
+...
+<em>[полная версия — в ALIGN_LOADING_EXPERIENCE_SYSTEM.md]</em></div>
+
+<div style="font-size:.6rem;color:#222;text-align:center;margin-top:2rem;border-top:1px solid #1a1a1a;padding-top:1rem">
+Полный контент — JSON: ALIGN_LOADING_EXPERIENCE_SYSTEM.json · MD: ALIGN_LOADING_EXPERIENCE_SYSTEM.md · Elyne 2026
+</div>
+</div>
+</body>
+</html>
