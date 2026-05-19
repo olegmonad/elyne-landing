@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALIGN — Контент загрузочного экрана</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f0f0f;
+    color: #e8e8e8;
+    line-height: 1.6;
+    padding: 2rem 1rem;
+  }
+  .container { max-width: 820px; margin: 0 auto; }
+
+  h1 {
+    font-size: 1.4rem;
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 0.3rem;
+  }
+  .subtitle {
+    font-size: 0.8rem;
+    color: #444;
+    margin-bottom: 3rem;
+    letter-spacing: 0.05em;
+  }
+
+  .section { margin-bottom: 3.5rem; }
+  .section-title {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.4rem 0.8rem;
+    border-radius: 3px;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+  }
+
+  .viz .section-title  { background: #1a2a1a; color: #5a9a5a; }
+  .neuro .section-title { background: #1a1a2a; color: #5a5a9a; }
+  .psy .section-title  { background: #2a1a2a; color: #8a5a8a; }
+  .quote .section-title { background: #2a2a1a; color: #9a8a4a; }
+  .brand .section-title { background: #1a2a2a; color: #4a8a8a; }
+  .dev .section-title  { background: #1e1e1e; color: #666; }
+
+  .card {
+    border-left: 2px solid;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1rem;
+    background: #141414;
+    border-radius: 0 6px 6px 0;
+  }
+  .viz .card   { border-color: #3a6a3a; }
+  .neuro .card  { border-color: #3a3a6a; }
+  .psy .card   { border-color: #5a3a5a; }
+  .quote .card  { border-color: #6a5a2a; }
+  .brand .card  { border-color: #2a5a5a; }
+  .dev .card   { border-color: #333; }
+
+  .card-id {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: #444;
+    margin-bottom: 0.5rem;
+  }
+  .card-text {
+    font-size: 1rem;
+    color: #ddd;
+    margin-bottom: 0.6rem;
+    line-height: 1.55;
+  }
+  .card-source {
+    font-size: 0.75rem;
+    color: #555;
+    font-style: italic;
+  }
+  .card-author {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #999;
+    margin-bottom: 0.3rem;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    padding: 0.15rem 0.45rem;
+    border-radius: 2px;
+    margin-left: 0.4rem;
+    vertical-align: middle;
+    letter-spacing: 0.05em;
+  }
+  .badge-ok  { background: #1a3a1a; color: #5a9a5a; }
+  .badge-maybe { background: #2a2a1a; color: #8a7a3a; }
+  .badge-check { background: #2a1a1a; color: #8a4a4a; }
+
+  .tag-yes  { color: #5a9a5a; }
+  .tag-maybe { color: #8a7a3a; }
+  .tag-no  { color: #8a4a4a; }
+
+  .meta-row {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .meta-item {
+    font-size: 0.72rem;
+    color: #555;
+  }
+  .meta-item strong { color: #666; }
+
+  blockquote {
+    font-size: 1.05rem;
+    color: #ccc;
+    font-style: italic;
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+  }
+  blockquote::before { content: '«'; }
+  blockquote::after  { content: '»'; }
+
+  .dev-block {
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+    margin-bottom: 1rem;
+  }
+  .dev-block h4 {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #555;
+    margin-bottom: 0.7rem;
+  }
+  .dev-block ul, .dev-block ol {
+    padding-left: 1.2rem;
+    font-size: 0.85rem;
+    color: #666;
+  }
+  .dev-block li { margin-bottom: 0.3rem; }
+
+  .toc {
+    background: #141414;
+    border: 1px solid #222;
+    border-radius: 8px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 3rem;
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+  }
+  .toc a {
+    font-size: 0.75rem;
+    text-decoration: none;
+    padding: 0.3rem 0.7rem;
+    border-radius: 3px;
+    letter-spacing: 0.05em;
+    transition: opacity 0.2s;
+  }
+  .toc a:hover { opacity: 0.7; }
+  .toc a.viz  { background: #1a2a1a; color: #5a9a5a; }
+  .toc a.neuro { background: #1a1a2a; color: #5a5a9a; }
+  .toc a.psy  { background: #2a1a2a; color: #8a5a8a; }
+  .toc a.quote { background: #2a2a1a; color: #9a8a4a; }
+  .toc a.brand { background: #1a2a2a; color: #4a8a8a; }
+  .toc a.dev  { background: #1e1e1e; color: #666; }
+
+  hr { border: none; border-top: 1px solid #1e1e1e; margin: 2rem 0; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>ALIGN — Контент загрузочного экрана</h1>
+<div class="subtitle">ALIGN_GENERATION_LOADING_CONTENT · v1.0 · 2026-05-19</div>
+
+<div class="toc">
+  <a href="#viz" class="viz">VIZ — Визуализация</a>
+  <a href="#neuro" class="neuro">NEURO — Нейрофакты</a>
+  <a href="#psy" class="psy">PSY — Психология</a>
+  <a href="#quote" class="quote">QUOTE — Цитаты</a>
+  <a href="#brand" class="brand">BRAND — Фразы Elyne</a>
+  <a href="#dev" class="dev">Dev — Для разработчика</a>
+</div>
+
+<!-- РАЗДЕЛ 1 -->
+<div class="section viz" id="viz">
+  <div class="section-title">01 · Научные факты о визуализации</div>
+
+  <div class="card">
+    <div class="card-id">VIZ-001</div>
+    <div class="card-text">Когда спортсмены мысленно репетируют движение, двигательная кора мозга активируется так же, как при реальном выполнении. Мозг тренируется без движения тела.</div>
+    <div class="card-source">Jeannerod, 1994; Decety, 1996 — нейровизуализация</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Достоверность:</strong> <span class="tag-yes">высокая</span></div>
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">VIZ-002</div>
+    <div class="card-text">В 1995 году Паскуаль-Леоне (Гарвард) показал: пианисты, которые только мысленно репетировали новую пьесу, улучшили результат почти так же, как те, кто репетировал за инструментом. Карта моторной коры изменилась в обоих случаях.</div>
+    <div class="card-source">Pascual-Leone et al., 1995, Science</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Достоверность:</strong> <span class="tag-yes">высокая</span></div>
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">VIZ-003</div>
+    <div class="card-text">Мета-анализ 35 исследований показал: мысленные репетиции улучшают реальные результаты приблизительно на треть — особенно в задачах с когнитивным компонентом.</div>
+    <div class="card-source">Driskell, Copper & Moran, 1994, Journal of Applied Psychology</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Достоверность:</strong> <span class="tag-yes">высокая</span></div>
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">VIZ-004</div>
+    <div class="card-text">Никола Тесла разрабатывал каждое изобретение — включая проверку на износ — полностью в уме, до первого чертежа. За тридцать лет этой практики не было ни одного случая, когда построенное устройство не работало.</div>
+    <div class="card-source">Tesla, «Мои изобретения», Electrical Experimenter, 1919</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Достоверность:</strong> <span class="tag-yes">высокая</span></div>
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">VIZ-005</div>
+    <div class="card-text">Когда испытуемые очень ярко воображали зрительный паттерн, они с большей вероятностью заявляли, что видели реальный объект — даже когда ничего не было показано. Граница между воображением и реальностью определяется силой сигнала.</div>
+    <div class="card-source">Dijkstra, Fleming et al., 2023, Nature Human Behaviour</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Достоверность:</strong> <span class="tag-yes">высокая</span></div>
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">VIZ-006</div>
+    <div class="card-text">Олимпийские спортсмены, использующие систематические ментальные репетиции, демонстрировали значимо более стабильные результаты в соревновательных условиях — там, где чисто физическая тренировка начинает давать сбои.</div>
+    <div class="card-source">Murphy & Jowdy, 1992; Hall, 1995, The Sport Psychologist</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Достоверность:</strong> <span class="tag-yes">высокая</span></div>
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- РАЗДЕЛ 2 -->
+<div class="section neuro" id="neuro">
+  <div class="section-title">02 · Нейрофакты</div>
+
+  <div class="card">
+    <div class="card-id">NEURO-001</div>
+    <div class="card-text">Гиппокамп — область памяти — при воображении будущих событий активируется сильнее, чем при воспоминании о прошлом. Мозг создан не только хранить — но и проектировать.</div>
+    <div class="card-source">Addis, Wong & Schacter, 2007, Neuropsychologia</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Достоверность:</strong> <span class="tag-yes">высокая</span></div>
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">NEURO-002</div>
+    <div class="card-text">В состоянии свободного воображения включается Сеть Пассивного Режима (Default Mode Network) — та же нейронная сеть, что активна при понимании других людей и при поиске смысла в событиях. Воображение — не уход от реальности, а её переработка.</div>
+    <div class="card-source">Buckner, Andrews-Hanna & Schacter, 2008, Annals of the NY Academy of Sciences</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Достоверность:</strong> <span class="tag-yes">высокая</span></div>
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">NEURO-003</div>
+    <div class="card-text">Мозг использует «порог реальности» в веретенообразной извилине: если ментальный образ достаточно силён, он классифицируется как реальный опыт. Именно поэтому яркое воображение оставляет следы.</div>
+    <div class="card-source">Dijkstra et al., 2023, Nature Human Behaviour; Pearson, 2019, Nature Reviews Neuroscience</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Достоверность:</strong> <span class="tag-yes">высокая</span></div>
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-maybe">после проверки формулировки</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">NEURO-004</div>
+    <div class="card-text">Когда человек называет своё переживание словами, активность миндалины (центра тревоги) снижается. Язык — не описание опыта, а его трансформация.</div>
+    <div class="card-source">Lieberman et al., 2007, Psychological Science</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Достоверность:</strong> <span class="tag-yes">высокая</span></div>
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">NEURO-005</div>
+    <div class="card-text">Повторное воображение будущего события снижает его новизну для гиппокампа: будущее постепенно «привыкает» присутствовать в сознании и перестаёт ощущаться чужим. Так работает подготовка к переходу.</div>
+    <div class="card-source">Szpunar, Spreng & Schacter, 2014, Journal of Cognitive Neuroscience</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Достоверность:</strong> <span class="tag-yes">высокая</span></div>
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">NEURO-006</div>
+    <div class="card-text">Зеркальные нейроны активируются не только при наблюдении за действием, но и при его мысленном воспроизведении. Видеть себя в будущем нейробиологически похоже на встречу с реально существующим человеком.</div>
+    <div class="card-source">Rizzolatti & Craighero, 2004, Annual Review of Neuroscience</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Достоверность:</strong> <span class="tag-yes">высокая</span></div>
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-maybe">после проверки формулировки</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">NEURO-007</div>
+    <div class="card-text">фМРТ показывает: представление о своём будущем «я» активирует те же зоны мозга, что и представление о незнакомом человеке — если будущее «я» воспринимается как далёкое и абстрактное. Чем конкретнее образ, тем «ближе» к себе он обрабатывается.</div>
+    <div class="card-source">Hershfield et al., 2009, Social Cognitive and Affective Neuroscience</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Достоверность:</strong> <span class="tag-yes">высокая</span></div>
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- РАЗДЕЛ 3 -->
+<div class="section psy" id="psy">
+  <div class="section-title">03 · Психологические факты</div>
+
+  <div class="card">
+    <div class="card-id">PSY-001</div>
+    <div class="card-text">Мета-анализ 123 исследований (5 685 участников) показал: ментальная симуляция будущих сценариев значимо влияет на реальное изменение поведения (эффект g = 0,49). Сопоставимо с результативностью многих форматов психотерапии.</div>
+    <div class="card-source">Cole et al., 2021, Psychonomic Bulletin & Review</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Достоверность:</strong> <span class="tag-yes">высокая</span></div>
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">PSY-002</div>
+    <div class="card-text">Люди, ощущающие близость со своим будущим «я», принимают более выгодные долгосрочные решения. Воображение будущего себя — это не мотивация, это коммуникация с тем, кто уже существует.</div>
+    <div class="card-source">Hershfield et al., 2011, Journal of Marketing Research</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Достоверность:</strong> <span class="tag-yes">высокая</span></div>
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">PSY-003</div>
+    <div class="card-text">«Эпизодическое мышление о будущем» — способность представлять конкретный сценарий в деталях — коррелирует со снижением импульсивного поведения. Конкретность образа работает сильнее, чем абстрактное намерение.</div>
+    <div class="card-source">Peters & Büchel, 2010, Neuron; Benoit et al., 2011</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Достоверность:</strong> <span class="tag-yes">высокая</span></div>
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">PSY-004</div>
+    <div class="card-text">Люди, способные чётко описать свои варианты будущего, проявляют большую устойчивость при неудачах и лучше восстанавливаются после кризисов. Не потому что оптимисты — а потому что у них есть карта.</div>
+    <div class="card-source">Markus & Nurius, 1986, American Psychologist</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Достоверность:</strong> <span class="tag-yes">высокая</span></div>
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">PSY-005</div>
+    <div class="card-text">Техника implementation intentions («если X, то я сделаю Y») увеличивает вероятность реализации намерения в 2–3 раза. Конкретный сценарий — не украшение, а механизм.</div>
+    <div class="card-source">Gollwitzer, 1999; Gollwitzer & Sheeran, 2006, American Psychologist</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Достоверность:</strong> <span class="tag-yes">высокая</span></div>
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">PSY-006</div>
+    <div class="card-text">Люди точнее представляют «как» будущее событие произойдёт, чем «что именно» они почувствуют. Ценность образа — в структуре сценария, а не в предсказании эмоций.</div>
+    <div class="card-source">Gilbert & Wilson, 2007, Science</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Достоверность:</strong> <span class="tag-yes">высокая</span></div>
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- РАЗДЕЛ 4 -->
+<div class="section quote" id="quote">
+  <div class="section-title">04 · Цитаты — <span style="opacity:0.6">✓ подтверждено · ~ приписывается</span></div>
+
+  <div class="card">
+    <div class="card-id">QUOTE-001 <span class="badge badge-ok">✓ подтверждено</span></div>
+    <div class="card-author">Альберт Эйнштейн</div>
+    <blockquote>Воображение важнее знания. Знание ограничено. Воображение охватывает весь мир.</blockquote>
+    <div class="card-source">интервью The Saturday Evening Post, 26 октября 1929</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">QUOTE-002 <span class="badge badge-ok">✓ подтверждено</span></div>
+    <div class="card-author">Карл Юнг</div>
+    <blockquote>Когда внутренняя ситуация не становится осознанной, она происходит снаружи — как судьба.</blockquote>
+    <div class="card-source">Aion, Collected Works, vol. 9ii, стр. 70–71, Princeton University Press, 1951</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">QUOTE-003 <span class="badge badge-ok">✓ подтверждено</span></div>
+    <div class="card-author">Райнер Мария Рильке</div>
+    <blockquote>Будущее входит в нас именно так — чтобы преобразиться в нас — задолго до того, как оно происходит.</blockquote>
+    <div class="card-source">Письма к молодому поэту, письмо 8, 1904</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">QUOTE-004 <span class="badge badge-ok">✓ подтверждено</span></div>
+    <div class="card-author">Луций Анней Сенека</div>
+    <blockquote>Мы страдаем от воображаемого чаще, чем от реального.</blockquote>
+    <div class="card-source">Письма к Луцилию, I в. н. э.</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">QUOTE-005 <span class="badge badge-ok">✓ подтверждено</span></div>
+    <div class="card-author">Никола Тесла</div>
+    <blockquote>Прежде чем построить устройство, я прорабатывал его полностью в уме. Я изменял конструкцию, вносил улучшения, управлял им мысленно. Без моделей, без чертежей, без экспериментов.</blockquote>
+    <div class="card-source">«Мои изобретения», Electrical Experimenter, 1919</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">QUOTE-006 <span class="badge badge-ok">✓ подтверждено</span></div>
+    <div class="card-author">Джим Керри</div>
+    <blockquote>Примерно в 1987 году я написал себе чек на десять миллионов долларов за актёрские услуги — к оплате на День благодарения 1995 года. За шесть месяцев до этой даты мне заплатили именно десять миллионов за «Тупой и ещё тупее».</blockquote>
+    <div class="card-source">интервью Опре Уинфри, 1997</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">QUOTE-007 <span class="badge badge-ok">✓ подтверждено</span></div>
+    <div class="card-author">Мартин Лютер Кинг</div>
+    <blockquote>У меня есть мечта.</blockquote>
+    <div class="card-source">речь у мемориала Линкольна, 28 августа 1963 · вся речь — детальный образ будущего, которого ещё не было</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">QUOTE-008 <span class="badge badge-ok">✓ подтверждено</span></div>
+    <div class="card-author">Марк Аврелий</div>
+    <blockquote>Качество жизни определяется тем, какие мысли ты думаешь весь день.</blockquote>
+    <div class="card-source">Размышления, книга 4, §3 — смысловой пересказ; греч. оригинал: «каков характер ума, такова и жизнь»</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">QUOTE-009 <span class="badge badge-ok">✓ подтверждено</span></div>
+    <div class="card-author">Майя Энджелоу</div>
+    <blockquote>Нельзя до конца использовать творчество. Чем больше им пользуешься — тем его больше.</blockquote>
+    <div class="card-source">Bell Telephone Magazine, 1977</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">QUOTE-010 <span class="badge badge-ok">✓ подтверждено</span></div>
+    <div class="card-author">Эпиктет</div>
+    <blockquote>Не то, что с нами происходит, — а то, как мы к этому относимся, составляет нашу жизнь.</blockquote>
+    <div class="card-source">Энхиридион, глава 5, I–II вв. н. э.</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">QUOTE-011 <span class="badge badge-ok">✓ подтверждено</span></div>
+    <div class="card-author">Эдгар Аллан По</div>
+    <blockquote>Те, кто мечтает днём, знают много из того, что недоступно тем, кто мечтает только ночью.</blockquote>
+    <div class="card-source">«Элеонора», 1841 — первая строка рассказа</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">QUOTE-012 <span class="badge badge-ok">✓ подтверждено</span></div>
+    <div class="card-author">Джордж Бернард Шоу</div>
+    <blockquote>Воображение — начало творения. Ты воображаешь то, чего желаешь; желаешь то, что воображаешь; и, наконец, создаёшь то, чего желаешь.</blockquote>
+    <div class="card-source">Back to Methuselah, часть I, 1921</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div>
+    </div>
+  </div>
+
+  <hr>
+  <div style="font-size:0.72rem; color:#444; margin-bottom:1rem; padding-left:0.5rem;">Цитаты ниже — спорная атрибуция. Использовать с осторожностью.</div>
+
+  <div class="card">
+    <div class="card-id">QUOTE-013 <span class="badge badge-maybe">~ приписывается</span></div>
+    <div class="card-author">приписывается Элеоноре Рузвельт</div>
+    <blockquote>Будущее принадлежит тем, кто верит в красоту своих мечтаний.</blockquote>
+    <div class="card-source">точный источник не установлен; возможно, вариация письма 1960-х</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-maybe">после проверки / без имени автора</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">QUOTE-014 <span class="badge badge-maybe">~ приписывается</span></div>
+    <div class="card-author">приписывается Махатме Ганди</div>
+    <blockquote>Станьте тем изменением, которое хотите видеть в мире.</blockquote>
+    <div class="card-source">парафраз; смысл соответствует его взглядам, но точная формулировка — позднейшая</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-maybe">после проверки / без имени автора</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-id">QUOTE-015 <span class="badge badge-maybe">~ приписывается</span></div>
+    <div class="card-author">пересказ Аристотеля (через Уилла Дюранта)</div>
+    <blockquote>Мы такие, каково наше постоянное занятие. Совершенство — не действие, а привычка.</blockquote>
+    <div class="card-source">The Story of Philosophy, Durant, 1926; не прямая цитата из Никомаховой этики</div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Показывать:</strong> <span class="tag-maybe">да, но без «Аристотель» — лучше без подписи</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- РАЗДЕЛ 5 -->
+<div class="section brand" id="brand">
+  <div class="section-title">05 · Брендовые фразы ALIGN / Elyne</div>
+  <div style="font-size:0.75rem; color:#4a6a6a; margin-bottom:1.5rem; padding-left:0.2rem;">Тон: свидетельствуй, не учи · нет восклицательных знаков · нет «ты можешь»</div>
+
+  <div class="card"><div class="card-id">BRAND-001</div><div class="card-text">Возможно, сейчас ты смотришь не на фантазию, а на один из вариантов своей жизни.</div><div class="meta-row"><div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div></div></div>
+  <div class="card"><div class="card-id">BRAND-002</div><div class="card-text">Будущее становится ближе, когда перестаёт быть абстрактным.</div><div class="meta-row"><div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div></div></div>
+  <div class="card"><div class="card-id">BRAND-003</div><div class="card-text">Мозг не очень хорошо умеет отличать то, что видит, от того, что представляет с достаточной ясностью.</div><div class="meta-row"><div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div></div></div>
+  <div class="card"><div class="card-id">BRAND-004</div><div class="card-text">Сцена — не картинка. Это якорь для части себя, которая ещё не проявилась.</div><div class="meta-row"><div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div></div></div>
+  <div class="card"><div class="card-id">BRAND-005</div><div class="card-text">Иногда нужно сначала увидеть — чтобы понять, что это уже было внутри.</div><div class="meta-row"><div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div></div></div>
+  <div class="card"><div class="card-id">BRAND-006</div><div class="card-text">Там, где нет образа, нет и направления. Образ — это первый шаг навигации.</div><div class="meta-row"><div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div></div></div>
+  <div class="card"><div class="card-id">BRAND-007</div><div class="card-text">Каждая сцена — не желание. Это вопрос: «Тебе близко это ощущение?»</div><div class="meta-row"><div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div></div></div>
+  <div class="card"><div class="card-id">BRAND-008</div><div class="card-text">Ты не загадываешь — ты настраиваешь. Разница существенная.</div><div class="meta-row"><div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div></div></div>
+  <div class="card"><div class="card-id">BRAND-009</div><div class="card-text">Визуализация — не магия. Это язык, на котором мозг разговаривает с будущим поведением.</div><div class="meta-row"><div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div></div></div>
+  <div class="card"><div class="card-id">BRAND-010</div><div class="card-text">То, что ты сейчас видишь, появилось из твоих ответов. Это не случайная картинка.</div><div class="meta-row"><div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div></div></div>
+  <div class="card"><div class="card-id">BRAND-011</div><div class="card-text">Некоторые вещи трудно выразить словами. Иногда проще — через образ.</div><div class="meta-row"><div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div></div></div>
+  <div class="card"><div class="card-id">BRAND-012</div><div class="card-text">Сцена уже готова. Осталось подождать несколько секунд.</div><div class="meta-row"><div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div></div></div>
+  <div class="card"><div class="card-id">BRAND-013</div><div class="card-text">Ты описал своё пространство. Сейчас это пространство оформляется.</div><div class="meta-row"><div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div></div></div>
+  <div class="card"><div class="card-id">BRAND-014</div><div class="card-text">Исследования показывают: люди, которые умеют чётко представить своё возможное будущее, лучше справляются с трудностями настоящего. Не потому что оптимисты — а потому что у них есть карта.</div><div class="meta-row"><div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div></div></div>
+  <div class="card"><div class="card-id">BRAND-015</div><div class="card-text">Воображение — это не бегство от реальности. Это один из способов её спроектировать.</div><div class="meta-row"><div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div></div></div>
+  <div class="card"><div class="card-id">BRAND-016</div><div class="card-text">Между тем, кто ты есть сейчас, и тем, кем ты можешь стать, — только вопрос частоты. Как часто ты это видишь.</div><div class="meta-row"><div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div></div></div>
+  <div class="card"><div class="card-id">BRAND-017</div><div class="card-text">Мозг не знает разницы между «я это сделал» и «я это сделал в воображении достаточно ярко». Это не баг — это особенность.</div><div class="meta-row"><div class="meta-item"><strong>Показывать:</strong> <span class="tag-maybe">отдельно от цитат — слишком плотно вместе</span></div></div></div>
+  <div class="card"><div class="card-id">BRAND-018</div><div class="card-text">Сцена, которую ты видишь, — это не инструкция. Это приглашение к разговору с собой.</div><div class="meta-row"><div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div></div></div>
+  <div class="card"><div class="card-id">BRAND-019</div><div class="card-text">Самое точное описание себя — не в резюме. Оно в том, как ты отвечаешь на вопрос: «Как ты хочешь жить?»</div><div class="meta-row"><div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div></div></div>
+  <div class="card"><div class="card-id">BRAND-020</div><div class="card-text">Через несколько секунд появится твоя сцена. Она сделана из твоих слов.</div><div class="meta-row"><div class="meta-item"><strong>Показывать:</strong> <span class="tag-yes">да</span></div></div></div>
+</div>
+
+<!-- DEV -->
+<div class="section dev" id="dev">
+  <div class="section-title">Для разработчика</div>
+
+  <div class="dev-block">
+    <h4>Рекомендуемый показ</h4>
+    <ul>
+      <li>Выбор случайный из категории, ротация без повторов</li>
+      <li>Смена каждые 3–5 секунд при долгой загрузке</li>
+      <li>Приоритет: <strong>BRAND → NEURO → PSY → VIZ → QUOTE</strong></li>
+      <li>Цитаты показывать с именем автора и значком ✓ или ~ мелким шрифтом</li>
+    </ul>
+  </div>
+
+  <div class="dev-block">
+    <h4>По длине загрузки</h4>
+    <ul>
+      <li><strong>&lt; 5 сек</strong> — один BRAND-факт</li>
+      <li><strong>5–15 сек</strong> — BRAND + NEURO или PSY</li>
+      <li><strong>&gt; 15 сек</strong> — полная ротация, можно показать цитату</li>
+    </ul>
+  </div>
+
+  <div class="dev-block">
+    <h4>Не показывать вместе</h4>
+    <ul>
+      <li>Два научных факта подряд — перегруз</li>
+      <li>Цитату сразу за цитатой</li>
+      <li>BRAND-017 + любое QUOTE — слишком плотно по смыслу</li>
+      <li>QUOTE-013–015 без пометки об атрибуции</li>
+    </ul>
+  </div>
+</div>
+
+<div style="font-size:0.65rem; color:#333; text-align:center; padding-top:2rem; border-top:1px solid #1a1a1a; margin-top:2rem;">
+  ALIGN / Elyne · v1.0 · 2026-05-19 · обновлять при добавлении верифицированных данных
+</div>
+
+</div>
+</body>
+</html>
