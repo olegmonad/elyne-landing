@@ -1,0 +1,3165 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elyne — Вопросы сфер — актуализировано 2026-05-20</title>
+<style>
+  :root {
+    --bg: #0e0e10;
+    --surface: #16161a;
+    --surface2: #1c1c21;
+    --border: #2a2a33;
+    --text: #e8e8f0;
+    --text-muted: #7a7a96;
+    --accent: #7b5ea7;
+    --accent-light: #a07dd0;
+    --green: #3d9e6e;
+    --red: #b85450;
+    --yellow: #c9a84c;
+    --radius: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 24px;
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+  }
+  .nav-title { color: var(--text-muted); font-size: 12px; margin-right: 8px; white-space: nowrap; }
+  .nav-link {
+    color: var(--accent-light); text-decoration: none; font-size: 12px;
+    padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border);
+    white-space: nowrap; display: inline-flex; flex-direction: column; align-items: center; gap: 1px;
+  }
+  .nav-link span { color: var(--text-muted); font-size: 10px; }
+  .nav-link:hover { background: var(--surface2); border-color: var(--accent); }
+  .topbar { padding: 24px 32px 16px; border-bottom: 1px solid var(--border); }
+  .topbar h1 { font-size: 20px; font-weight: 600; }
+  .topbar .meta { color: var(--text-muted); font-size: 12px; margin-top: 6px; }
+  .instructions {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 14px 18px;
+    margin: 16px 32px 0; font-size: 13px; color: var(--text-muted);
+  }
+  .instructions strong { color: var(--text); }
+  .content { padding: 24px 32px; }
+  .sphere-block {
+    margin-bottom: 40px; border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+  }
+  .sphere-header {
+    background: linear-gradient(135deg, #2a1f3d 0%, #1a1a2e 100%);
+    padding: 14px 20px; display: flex; align-items: center; gap: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sphere-num {
+    background: var(--accent); color: #fff;
+    padding: 2px 10px; border-radius: 4px; font-size: 12px; font-weight: 600;
+  }
+  .sphere-name { font-size: 16px; font-weight: 600; }
+  .question-block { padding: 20px; border-bottom: 1px solid var(--border); }
+  .question-block:last-of-type { border-bottom: none; }
+  .question-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; }
+  .q-num {
+    font-size: 11px; font-weight: 600; color: var(--accent-light);
+    background: rgba(123,94,167,0.15); padding: 2px 8px; border-radius: 4px;
+  }
+  .q-text { font-size: 15px; font-weight: 500; }
+  .q-max {
+    font-size: 11px; font-weight: 600; color: var(--yellow);
+    background: rgba(201,168,76,0.12); padding: 1px 7px; border-radius: 4px; margin-left: 6px;
+  }
+  .ai-block {
+    background: rgba(201,168,76,0.06); border: 1px dashed rgba(201,168,76,0.3);
+    border-radius: 6px; padding: 14px 18px;
+    color: var(--yellow); font-size: 13px;
+  }
+  .answers-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .answers-table thead tr { background: var(--surface2); border-bottom: 1px solid var(--border); }
+  .answers-table th {
+    padding: 8px 12px; text-align: left; font-size: 11px; font-weight: 600;
+    color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .col-answer { width: 36%; } .col-keep { width: 16%; } .col-new { width: 28%; } .col-comment { width: 20%; }
+  .answer-row { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+  .answer-row:hover { background: rgba(255,255,255,0.02); }
+  .answer-row.changed { background: rgba(184,84,80,0.08); }
+  .answer-row td { padding: 9px 12px; vertical-align: middle; }
+  .keep-label {
+    display: inline-flex; align-items: center; gap: 5px; cursor: pointer;
+    padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: 500;
+    margin-right: 4px; border: 1px solid transparent; transition: all 0.15s;
+  }
+  .keep-label input[type=radio] { accent-color: var(--green); }
+  .keep-yes { color: var(--green); }
+  .keep-no  { color: var(--text-muted); }
+  .keep-yes.active { background: rgba(61,158,110,0.15); border-color: rgba(61,158,110,0.3); }
+  .keep-no.active  { background: rgba(184,84,80,0.15); border-color: rgba(184,84,80,0.3); color: var(--red); }
+  .new-text-input, .comment-input {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 4px; color: var(--text); padding: 6px 10px; font-size: 13px; outline: none;
+    transition: border-color 0.15s;
+  }
+  .new-text-input:focus, .comment-input:focus { border-color: var(--accent); }
+  .copy-bar {
+    position: sticky; bottom: 0; background: var(--surface);
+    border-top: 1px solid var(--border); padding: 12px 32px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .copy-btn {
+    background: var(--accent); color: #fff; border: none; border-radius: 6px;
+    padding: 10px 24px; font-size: 14px; font-weight: 600; cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .copy-btn:hover { opacity: 0.85; }
+  .copy-status { color: var(--text-muted); font-size: 13px; }
+  #summary-output {
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 6px;
+    padding: 16px; font-family: monospace; font-size: 12px; white-space: pre-wrap;
+    color: var(--text); margin: 16px 32px; display: none;
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <span class="nav-title">Сферы:</span>
+  <a class="nav-link" href="#sphere-1">Сфера 1<span>Я и состояни…</span></a>
+  <a class="nav-link" href="#sphere-2">Сфера 2<span>Ресурсы…</span></a>
+  <a class="nav-link" href="#sphere-3">Сфера 3<span>Реализация и…</span></a>
+  <a class="nav-link" href="#sphere-4">Сфера 4<span>Любовь и пар…</span></a>
+  <a class="nav-link" href="#sphere-5">Сфера 5<span>Дом, семья и…</span></a>
+  <a class="nav-link" href="#sphere-6">Сфера 6<span>Дети и насле…</span></a>
+  <a class="nav-link" href="#sphere-7">Сфера 7<span>Творчество и…</span></a>
+  <a class="nav-link" href="#sphere-8">Сфера 8<span>Развитие и м…</span></a>
+  <a class="nav-link" href="#sphere-9">Сфера 9<span>Свобода и ма…</span></a>
+  <a class="nav-link" href="#sphere-10">Сфера 10<span>Окружение…</span></a>
+</nav>
+
+<div class="topbar">
+  <h1>Elyne — Вопросы сфер</h1>
+  <div class="meta">Актуализировано 2026-05-20 после правок в админке &nbsp;·&nbsp; 10 сфер · 22 вопросов · 167 вариантов</div>
+</div>
+
+<div class="instructions">
+  <strong>Как работать:</strong> для каждого варианта — <strong>Да</strong> (оставляем) или <strong>Нет</strong> (убираем).
+  Если хочешь заменить текст — вписываешь в «Новый текст». Комментарий — опционально.
+  Внизу кнопка <strong>«Скопировать сводку»</strong> — только те строки где есть изменения.
+</div>
+
+<div class="content">
+
+  <div class="sphere-block" id="sphere-1">
+    <div class="sphere-header">
+      <span class="sphere-num">Сфера 1</span>
+      <span class="sphere-name">Я и состояние</span>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q1</span>
+        <span class="q-text">В каком состоянии ты хочешь проживать свою жизнь?<span class="q-max">макс. 3</span></span>
+      </div>
+      <table class="answers-table">
+        <thead>
+          <tr>
+            <th class="col-answer">Вариант ответа</th>
+            <th class="col-keep">Оставить?</th>
+            <th class="col-new">Новый текст</th>
+            <th class="col-comment">Комментарий</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="answer-row" id="row-s1q1o0">
+            <td>энергия и включённость в жизнь</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s1q1o0" value="yes" checked onchange="onKeep('s1q1o0', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s1q1o0" value="no" onchange="onKeep('s1q1o0', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s1q1o0')" data-original="энергия и включённость в жизнь"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s1q1o0')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s1q1o1">
+            <td>уверенность и ощущение силы</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s1q1o1" value="yes" checked onchange="onKeep('s1q1o1', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s1q1o1" value="no" onchange="onKeep('s1q1o1', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s1q1o1')" data-original="уверенность и ощущение силы"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s1q1o1')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s1q1o2">
+            <td>лёгкость и свобода внутри</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s1q1o2" value="yes" checked onchange="onKeep('s1q1o2', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s1q1o2" value="no" onchange="onKeep('s1q1o2', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s1q1o2')" data-original="лёгкость и свобода внутри"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s1q1o2')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s1q1o3">
+            <td>ясность и понимание себя</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s1q1o3" value="yes" checked onchange="onKeep('s1q1o3', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s1q1o3" value="no" onchange="onKeep('s1q1o3', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s1q1o3')" data-original="ясность и понимание себя"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s1q1o3')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s1q1o4">
+            <td>удовольствие от жизни</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s1q1o4" value="yes" checked onchange="onKeep('s1q1o4', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s1q1o4" value="no" onchange="onKeep('s1q1o4', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s1q1o4')" data-original="удовольствие от жизни"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s1q1o4')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s1q1o5">
+            <td>гармония внутри и снаружи</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s1q1o5" value="yes" checked onchange="onKeep('s1q1o5', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s1q1o5" value="no" onchange="onKeep('s1q1o5', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s1q1o5')" data-original="гармония внутри и снаружи"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s1q1o5')"></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Через что это состояние ощущается сильнее всего?<span class="q-max">макс. 1</span></span>
+      </div>
+      <table class="answers-table">
+        <thead>
+          <tr>
+            <th class="col-answer">Вариант ответа</th>
+            <th class="col-keep">Оставить?</th>
+            <th class="col-new">Новый текст</th>
+            <th class="col-comment">Комментарий</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="answer-row" id="row-s1q2o0">
+            <td>движение и спорт</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s1q2o0" value="yes" checked onchange="onKeep('s1q2o0', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s1q2o0" value="no" onchange="onKeep('s1q2o0', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s1q2o0')" data-original="движение и спорт"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s1q2o0')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s1q2o1">
+            <td>творчество и созидание</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s1q2o1" value="yes" checked onchange="onKeep('s1q2o1', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s1q2o1" value="no" onchange="onKeep('s1q2o1', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s1q2o1')" data-original="творчество и созидание"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s1q2o1')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s1q2o2">
+            <td>увлекательную деятельность</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s1q2o2" value="yes" checked onchange="onKeep('s1q2o2', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s1q2o2" value="no" onchange="onKeep('s1q2o2', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s1q2o2')" data-original="увлекательную деятельность"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s1q2o2')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s1q2o3">
+            <td>общение с близкими</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s1q2o3" value="yes" checked onchange="onKeep('s1q2o3', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s1q2o3" value="no" onchange="onKeep('s1q2o3', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s1q2o3')" data-original="общение с близкими"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s1q2o3')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s1q2o4">
+            <td>пребывание на природе</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s1q2o4" value="yes" checked onchange="onKeep('s1q2o4', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s1q2o4" value="no" onchange="onKeep('s1q2o4', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s1q2o4')" data-original="пребывание на природе"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s1q2o4')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s1q2o5">
+            <td>тишину и уединение</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s1q2o5" value="yes" checked onchange="onKeep('s1q2o5', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s1q2o5" value="no" onchange="onKeep('s1q2o5', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s1q2o5')" data-original="тишину и уединение"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s1q2o5')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s1q2o6">
+            <td>путешествия и новизну</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s1q2o6" value="yes" checked onchange="onKeep('s1q2o6', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s1q2o6" value="no" onchange="onKeep('s1q2o6', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s1q2o6')" data-original="путешествия и новизну"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s1q2o6')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s1q2o7">
+            <td>заботу о себе и своём теле</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s1q2o7" value="yes" checked onchange="onKeep('s1q2o7', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s1q2o7" value="no" onchange="onKeep('s1q2o7', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s1q2o7')" data-original="заботу о себе и своём теле"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s1q2o7')"></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q3</span>
+        <span class="q-text">AI-вопрос</span>
+      </div>
+      <div class="ai-block">⚡ Динамически генерируется ИИ на основе профиля пользователя</div>
+    </div>
+  </div>
+
+  <div class="sphere-block" id="sphere-2">
+    <div class="sphere-header">
+      <span class="sphere-num">Сфера 2</span>
+      <span class="sphere-name">Ресурсы</span>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Что для тебя - настоящее богатство? <span class="q-max">макс. 2</span></span>
+      </div>
+      <table class="answers-table">
+        <thead>
+          <tr>
+            <th class="col-answer">Вариант ответа</th>
+            <th class="col-keep">Оставить?</th>
+            <th class="col-new">Новый текст</th>
+            <th class="col-comment">Комментарий</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="answer-row" id="row-s2q1o0">
+            <td>Финансовая свобода и масштаб жизни</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s2q1o0" value="yes" checked onchange="onKeep('s2q1o0', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s2q1o0" value="no" onchange="onKeep('s2q1o0', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s2q1o0')" data-original="Финансовая свобода и масштаб жизни"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s2q1o0')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s2q1o1">
+            <td>Время и возможность жить в своём ритме</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s2q1o1" value="yes" checked onchange="onKeep('s2q1o1', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s2q1o1" value="no" onchange="onKeep('s2q1o1', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s2q1o1')" data-original="Время и возможность жить в своём ритме"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s2q1o1')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s2q1o2">
+            <td>Возможность создавать и реализовывать без ограничений</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s2q1o2" value="yes" checked onchange="onKeep('s2q1o2', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s2q1o2" value="no" onchange="onKeep('s2q1o2', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s2q1o2')" data-original="Возможность создавать и реализовывать без ограничений"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s2q1o2')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s2q1o3">
+            <td>Сильное окружение и доступ к новым возможностям</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s2q1o3" value="yes" checked onchange="onKeep('s2q1o3', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s2q1o3" value="no" onchange="onKeep('s2q1o3', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s2q1o3')" data-original="Сильное окружение и доступ к новым возможностям"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s2q1o3')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s2q1o4">
+            <td>Премиальный образ жизни и эстетика</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s2q1o4" value="yes" checked onchange="onKeep('s2q1o4', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s2q1o4" value="no" onchange="onKeep('s2q1o4', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s2q1o4')" data-original="Премиальный образ жизни и эстетика"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s2q1o4')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s2q1o5">
+            <td>Спокойствие за своё будущее и устойчивость</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s2q1o5" value="yes" checked onchange="onKeep('s2q1o5', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s2q1o5" value="no" onchange="onKeep('s2q1o5', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s2q1o5')" data-original="Спокойствие за своё будущее и устойчивость"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s2q1o5')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s2q1o6">
+            <td>Здоровье и благополучие близких</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s2q1o6" value="yes" checked onchange="onKeep('s2q1o6', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s2q1o6" value="no" onchange="onKeep('s2q1o6', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s2q1o6')" data-original="Здоровье и благополучие близких"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s2q1o6')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s2q1o7">
+            <td>Внутренняя свобода и осознанность</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s2q1o7" value="yes" checked onchange="onKeep('s2q1o7', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s2q1o7" value="no" onchange="onKeep('s2q1o7', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s2q1o7')" data-original="Внутренняя свобода и осознанность"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s2q1o7')"></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q2</span>
+        <span class="q-text">В чем это проявляется в твоей жизни?<span class="q-max">макс. 1</span></span>
+      </div>
+      <table class="answers-table">
+        <thead>
+          <tr>
+            <th class="col-answer">Вариант ответа</th>
+            <th class="col-keep">Оставить?</th>
+            <th class="col-new">Новый текст</th>
+            <th class="col-comment">Комментарий</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="answer-row" id="row-s2q2o0">
+            <td>красивые материалы и детали</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s2q2o0" value="yes" checked onchange="onKeep('s2q2o0', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s2q2o0" value="no" onchange="onKeep('s2q2o0', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s2q2o0')" data-original="красивые материалы и детали"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s2q2o0')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s2q2o1">
+            <td>дом и пространство</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s2q2o1" value="yes" checked onchange="onKeep('s2q2o1', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s2q2o1" value="no" onchange="onKeep('s2q2o1', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s2q2o1')" data-original="дом и пространство"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s2q2o1')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s2q2o2">
+            <td>путешествия и свобода движения</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s2q2o2" value="yes" checked onchange="onKeep('s2q2o2', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s2q2o2" value="no" onchange="onKeep('s2q2o2', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s2q2o2')" data-original="путешествия и свобода движения"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s2q2o2')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s2q2o3">
+            <td>транспорт и доступ к возможностям</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s2q2o3" value="yes" checked onchange="onKeep('s2q2o3', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s2q2o3" value="no" onchange="onKeep('s2q2o3', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s2q2o3')" data-original="транспорт и доступ к возможностям"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s2q2o3')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s2q2o4">
+            <td>внешний образ и стиль</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s2q2o4" value="yes" checked onchange="onKeep('s2q2o4', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s2q2o4" value="no" onchange="onKeep('s2q2o4', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s2q2o4')" data-original="внешний образ и стиль"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s2q2o4')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s2q2o5">
+            <td>бизнес и проекты</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s2q2o5" value="yes" checked onchange="onKeep('s2q2o5', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s2q2o5" value="no" onchange="onKeep('s2q2o5', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s2q2o5')" data-original="бизнес и проекты"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s2q2o5')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s2q2o6">
+            <td>инвестиции и активы</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s2q2o6" value="yes" checked onchange="onKeep('s2q2o6', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s2q2o6" value="no" onchange="onKeep('s2q2o6', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s2q2o6')" data-original="инвестиции и активы"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s2q2o6')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s2q2o7">
+            <td>приватность и тишина</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s2q2o7" value="yes" checked onchange="onKeep('s2q2o7', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s2q2o7" value="no" onchange="onKeep('s2q2o7', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s2q2o7')" data-original="приватность и тишина"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s2q2o7')"></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q3</span>
+        <span class="q-text">AI-вопрос</span>
+      </div>
+      <div class="ai-block">⚡ Динамически генерируется ИИ на основе профиля пользователя</div>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Как тебе хочется видеть эту сцену?<span class="q-max">макс. 1</span></span>
+      </div>
+      <table class="answers-table">
+        <thead>
+          <tr>
+            <th class="col-answer">Вариант ответа</th>
+            <th class="col-keep">Оставить?</th>
+            <th class="col-new">Новый текст</th>
+            <th class="col-comment">Комментарий</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="answer-row" id="row-s2q4o0">
+            <td>Как будто я внутри этого момента</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s2q4o0" value="yes" checked onchange="onKeep('s2q4o0', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s2q4o0" value="no" onchange="onKeep('s2q4o0', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s2q4o0')" data-original="Как будто я внутри этого момента"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s2q4o0')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s2q4o1">
+            <td>Увидеть себя со стороны в этой жизни</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s2q4o1" value="yes" checked onchange="onKeep('s2q4o1', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s2q4o1" value="no" onchange="onKeep('s2q4o1', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s2q4o1')" data-original="Увидеть себя со стороны в этой жизни"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s2q4o1')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s2q4o2">
+            <td>Как фрагмент фильма о моей жизни</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s2q4o2" value="yes" checked onchange="onKeep('s2q4o2', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s2q4o2" value="no" onchange="onKeep('s2q4o2', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s2q4o2')" data-original="Как фрагмент фильма о моей жизни"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s2q4o2')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s2q4o3">
+            <td>Почувствовать атмосферу этой реальности</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s2q4o3" value="yes" checked onchange="onKeep('s2q4o3', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s2q4o3" value="no" onchange="onKeep('s2q4o3', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s2q4o3')" data-original="Почувствовать атмосферу этой реальности"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s2q4o3')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s2q4o4">
+            <td>Удиви меня</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s2q4o4" value="yes" checked onchange="onKeep('s2q4o4', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s2q4o4" value="no" onchange="onKeep('s2q4o4', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s2q4o4')" data-original="Удиви меня"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s2q4o4')"></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sphere-block" id="sphere-3">
+    <div class="sphere-header">
+      <span class="sphere-num">Сфера 3</span>
+      <span class="sphere-name">Реализация и влияние</span>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Что для тебя значит реализоваться?<span class="q-max">макс. 2</span></span>
+      </div>
+      <table class="answers-table">
+        <thead>
+          <tr>
+            <th class="col-answer">Вариант ответа</th>
+            <th class="col-keep">Оставить?</th>
+            <th class="col-new">Новый текст</th>
+            <th class="col-comment">Комментарий</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="answer-row" id="row-s3q1o0">
+            <td>создавать своё дело</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s3q1o0" value="yes" checked onchange="onKeep('s3q1o0', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s3q1o0" value="no" onchange="onKeep('s3q1o0', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s3q1o0')" data-original="создавать своё дело"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s3q1o0')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s3q1o1">
+            <td>быть признанным экспертом</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s3q1o1" value="yes" checked onchange="onKeep('s3q1o1', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s3q1o1" value="no" onchange="onKeep('s3q1o1', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s3q1o1')" data-original="быть признанным экспертом"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s3q1o1')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s3q1o2">
+            <td>влиять и менять важное</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s3q1o2" value="yes" checked onchange="onKeep('s3q1o2', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s3q1o2" value="no" onchange="onKeep('s3q1o2', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s3q1o2')" data-original="влиять и менять важное"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s3q1o2')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s3q1o3">
+            <td>оставить след</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s3q1o3" value="yes" checked onchange="onKeep('s3q1o3', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s3q1o3" value="no" onchange="onKeep('s3q1o3', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s3q1o3')" data-original="оставить след"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s3q1o3')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s3q1o4">
+            <td>наслаждаться процессом</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s3q1o4" value="yes" checked onchange="onKeep('s3q1o4', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s3q1o4" value="no" onchange="onKeep('s3q1o4', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s3q1o4')" data-original="наслаждаться процессом"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s3q1o4')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s3q1o5">
+            <td>создать сильную команду</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s3q1o5" value="yes" checked onchange="onKeep('s3q1o5', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s3q1o5" value="no" onchange="onKeep('s3q1o5', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s3q1o5')" data-original="создать сильную команду"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s3q1o5')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s3q1o6">
+            <td>быть услышанным и замеченным</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s3q1o6" value="yes" checked onchange="onKeep('s3q1o6', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s3q1o6" value="no" onchange="onKeep('s3q1o6', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s3q1o6')" data-original="быть услышанным и замеченным"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s3q1o6')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s3q1o7">
+            <td>жить в своем масштабе</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s3q1o7" value="yes" checked onchange="onKeep('s3q1o7', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s3q1o7" value="no" onchange="onKeep('s3q1o7', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s3q1o7')" data-original="жить в своем масштабе"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s3q1o7')"></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Через что эта реализация проявляется в твоей жизни?<span class="q-max">макс. 1</span></span>
+      </div>
+      <table class="answers-table">
+        <thead>
+          <tr>
+            <th class="col-answer">Вариант ответа</th>
+            <th class="col-keep">Оставить?</th>
+            <th class="col-new">Новый текст</th>
+            <th class="col-comment">Комментарий</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="answer-row" id="row-s3q2o0">
+            <td>свой ритм и образ жизни</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s3q2o0" value="yes" checked onchange="onKeep('s3q2o0', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s3q2o0" value="no" onchange="onKeep('s3q2o0', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s3q2o0')" data-original="свой ритм и образ жизни"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s3q2o0')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s3q2o1">
+            <td>команда и управление</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s3q2o1" value="yes" checked onchange="onKeep('s3q2o1', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s3q2o1" value="no" onchange="onKeep('s3q2o1', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s3q2o1')" data-original="команда и управление"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s3q2o1')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s3q2o2">
+            <td>своё дело или бизнес</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s3q2o2" value="yes" checked onchange="onKeep('s3q2o2', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s3q2o2" value="no" onchange="onKeep('s3q2o2', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s3q2o2')" data-original="своё дело или бизнес"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s3q2o2')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s3q2o3">
+            <td>создание продуктов и идей</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s3q2o3" value="yes" checked onchange="onKeep('s3q2o3', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s3q2o3" value="no" onchange="onKeep('s3q2o3', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s3q2o3')" data-original="создание продуктов и идей"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s3q2o3')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s3q2o4">
+            <td>контент и медиа</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s3q2o4" value="yes" checked onchange="onKeep('s3q2o4', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s3q2o4" value="no" onchange="onKeep('s3q2o4', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s3q2o4')" data-original="контент и медиа"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s3q2o4')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s3q2o5">
+            <td>экспертность и знания</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s3q2o5" value="yes" checked onchange="onKeep('s3q2o5', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s3q2o5" value="no" onchange="onKeep('s3q2o5', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s3q2o5')" data-original="экспертность и знания"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s3q2o5')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s3q2o6">
+            <td>личный бренд и проявленность</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s3q2o6" value="yes" checked onchange="onKeep('s3q2o6', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s3q2o6" value="no" onchange="onKeep('s3q2o6', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s3q2o6')" data-original="личный бренд и проявленность"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s3q2o6')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s3q2o7">
+            <td>публичность и внимание</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s3q2o7" value="yes" checked onchange="onKeep('s3q2o7', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s3q2o7" value="no" onchange="onKeep('s3q2o7', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s3q2o7')" data-original="публичность и внимание"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s3q2o7')"></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q3</span>
+        <span class="q-text">AI-вопрос</span>
+      </div>
+      <div class="ai-block">⚡ Динамически генерируется ИИ на основе профиля пользователя</div>
+    </div>
+  </div>
+
+  <div class="sphere-block" id="sphere-4">
+    <div class="sphere-header">
+      <span class="sphere-num">Сфера 4</span>
+      <span class="sphere-name">Любовь и партнёрство</span>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Что для тебя значит настоящая близость и партнёрство?<span class="q-max">макс. 2</span></span>
+      </div>
+      <table class="answers-table">
+        <thead>
+          <tr>
+            <th class="col-answer">Вариант ответа</th>
+            <th class="col-keep">Оставить?</th>
+            <th class="col-new">Новый текст</th>
+            <th class="col-comment">Комментарий</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="answer-row" id="row-s4q1o0">
+            <td>спокойствие и доверие</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s4q1o0" value="yes" checked onchange="onKeep('s4q1o0', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s4q1o0" value="no" onchange="onKeep('s4q1o0', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s4q1o0')" data-original="спокойствие и доверие"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s4q1o0')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s4q1o1">
+            <td>страсть и притяжение</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s4q1o1" value="yes" checked onchange="onKeep('s4q1o1', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s4q1o1" value="no" onchange="onKeep('s4q1o1', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s4q1o1')" data-original="страсть и притяжение"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s4q1o1')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s4q1o2">
+            <td>партнёрство и движение вместе</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s4q1o2" value="yes" checked onchange="onKeep('s4q1o2', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s4q1o2" value="no" onchange="onKeep('s4q1o2', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s4q1o2')" data-original="партнёрство и движение вместе"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s4q1o2')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s4q1o3">
+            <td>быть принятым настоящим</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s4q1o3" value="yes" checked onchange="onKeep('s4q1o3', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s4q1o3" value="no" onchange="onKeep('s4q1o3', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s4q1o3')" data-original="быть принятым настоящим"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s4q1o3')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s4q1o4">
+            <td>вдохновлять друг друга</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s4q1o4" value="yes" checked onchange="onKeep('s4q1o4', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s4q1o4" value="no" onchange="onKeep('s4q1o4', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s4q1o4')" data-original="вдохновлять друг друга"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s4q1o4')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s4q1o5">
+            <td>безопасность и опора</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s4q1o5" value="yes" checked onchange="onKeep('s4q1o5', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s4q1o5" value="no" onchange="onKeep('s4q1o5', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s4q1o5')" data-original="безопасность и опора"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s4q1o5')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s4q1o6">
+            <td>ощущение «мы»</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s4q1o6" value="yes" checked onchange="onKeep('s4q1o6', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s4q1o6" value="no" onchange="onKeep('s4q1o6', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s4q1o6')" data-original="ощущение «мы»"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s4q1o6')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s4q1o7">
+            <td>глубина и честность</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s4q1o7" value="yes" checked onchange="onKeep('s4q1o7', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s4q1o7" value="no" onchange="onKeep('s4q1o7', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s4q1o7')" data-original="глубина и честность"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s4q1o7')"></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q2</span>
+        <span class="q-text">В чем близость особенно ощущается в твоей жизни?<span class="q-max">макс. 1</span></span>
+      </div>
+      <table class="answers-table">
+        <thead>
+          <tr>
+            <th class="col-answer">Вариант ответа</th>
+            <th class="col-keep">Оставить?</th>
+            <th class="col-new">Новый текст</th>
+            <th class="col-comment">Комментарий</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="answer-row" id="row-s4q2o0">
+            <td>совместное пространство и дом</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s4q2o0" value="yes" checked onchange="onKeep('s4q2o0', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s4q2o0" value="no" onchange="onKeep('s4q2o0', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s4q2o0')" data-original="совместное пространство и дом"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s4q2o0')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s4q2o1">
+            <td>свобода быть собой рядом</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s4q2o1" value="yes" checked onchange="onKeep('s4q2o1', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s4q2o1" value="no" onchange="onKeep('s4q2o1', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s4q2o1')" data-original="свобода быть собой рядом"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s4q2o1')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s4q2o2">
+            <td>путешествия и новые впечатления</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s4q2o2" value="yes" checked onchange="onKeep('s4q2o2', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s4q2o2" value="no" onchange="onKeep('s4q2o2', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s4q2o2')" data-original="путешествия и новые впечатления"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s4q2o2')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s4q2o3">
+            <td>повседневная жизнь вместе</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s4q2o3" value="yes" checked onchange="onKeep('s4q2o3', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s4q2o3" value="no" onchange="onKeep('s4q2o3', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s4q2o3')" data-original="повседневная жизнь вместе"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s4q2o3')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s4q2o4">
+            <td>поддержка в важных моментах</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s4q2o4" value="yes" checked onchange="onKeep('s4q2o4', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s4q2o4" value="no" onchange="onKeep('s4q2o4', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s4q2o4')" data-original="поддержка в важных моментах"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s4q2o4')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s4q2o5">
+            <td>общие планы и движение вперёд</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s4q2o5" value="yes" checked onchange="onKeep('s4q2o5', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s4q2o5" value="no" onchange="onKeep('s4q2o5', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s4q2o5')" data-original="общие планы и движение вперёд"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s4q2o5')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s4q2o6">
+            <td>спокойное присутствие рядом</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s4q2o6" value="yes" checked onchange="onKeep('s4q2o6', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s4q2o6" value="no" onchange="onKeep('s4q2o6', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s4q2o6')" data-original="спокойное присутствие рядом"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s4q2o6')"></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q3</span>
+        <span class="q-text">AI-вопрос</span>
+      </div>
+      <div class="ai-block">⚡ Динамически генерируется ИИ на основе профиля пользователя</div>
+    </div>
+  </div>
+
+  <div class="sphere-block" id="sphere-5">
+    <div class="sphere-header">
+      <span class="sphere-num">Сфера 5</span>
+      <span class="sphere-name">Дом, семья и близкие</span>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Что для тебя сейчас «настоящий дом»?<span class="q-max">макс. 2</span></span>
+      </div>
+      <table class="answers-table">
+        <thead>
+          <tr>
+            <th class="col-answer">Вариант ответа</th>
+            <th class="col-keep">Оставить?</th>
+            <th class="col-new">Новый текст</th>
+            <th class="col-comment">Комментарий</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="answer-row" id="row-s5q1o0">
+            <td>Место силы и спокойствия</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s5q1o0" value="yes" checked onchange="onKeep('s5q1o0', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s5q1o0" value="no" onchange="onKeep('s5q1o0', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s5q1o0')" data-original="Место силы и спокойствия"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s5q1o0')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s5q1o1">
+            <td>Тишина и приватность</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s5q1o1" value="yes" checked onchange="onKeep('s5q1o1', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s5q1o1" value="no" onchange="onKeep('s5q1o1', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s5q1o1')" data-original="Тишина и приватность"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s5q1o1')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s5q1o2">
+            <td>Пространство, которое отражает меня</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s5q1o2" value="yes" checked onchange="onKeep('s5q1o2', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s5q1o2" value="no" onchange="onKeep('s5q1o2', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s5q1o2')" data-original="Пространство, которое отражает меня"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s5q1o2')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s5q1o3">
+            <td>Дом, где собираются близкие</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s5q1o3" value="yes" checked onchange="onKeep('s5q1o3', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s5q1o3" value="no" onchange="onKeep('s5q1o3', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s5q1o3')" data-original="Дом, где собираются близкие"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s5q1o3')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s5q1o4">
+            <td>Дом в любой точке мира</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s5q1o4" value="yes" checked onchange="onKeep('s5q1o4', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s5q1o4" value="no" onchange="onKeep('s5q1o4', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s5q1o4')" data-original="Дом в любой точке мира"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s5q1o4')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s5q1o5">
+            <td>Приватность и уединение</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s5q1o5" value="yes" checked onchange="onKeep('s5q1o5', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s5q1o5" value="no" onchange="onKeep('s5q1o5', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s5q1o5')" data-original="Приватность и уединение"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s5q1o5')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s5q1o6">
+            <td>Место, где можно собирать людей</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s5q1o6" value="yes" checked onchange="onKeep('s5q1o6', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s5q1o6" value="no" onchange="onKeep('s5q1o6', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s5q1o6')" data-original="Место, где можно собирать людей"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s5q1o6')"></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Как ты хочешь чувствовать себя рядом со своими близкими?<span class="q-max">макс. 1</span></span>
+      </div>
+      <table class="answers-table">
+        <thead>
+          <tr>
+            <th class="col-answer">Вариант ответа</th>
+            <th class="col-keep">Оставить?</th>
+            <th class="col-new">Новый текст</th>
+            <th class="col-comment">Комментарий</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="answer-row" id="row-s5q2o0">
+            <td>Спокойно и защищённо</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s5q2o0" value="yes" checked onchange="onKeep('s5q2o0', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s5q2o0" value="no" onchange="onKeep('s5q2o0', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s5q2o0')" data-original="Спокойно и защищённо"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s5q2o0')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s5q2o1">
+            <td>Свободно и легко</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s5q2o1" value="yes" checked onchange="onKeep('s5q2o1', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s5q2o1" value="no" onchange="onKeep('s5q2o1', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s5q2o1')" data-original="Свободно и легко"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s5q2o1')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s5q2o2">
+            <td>Тепло и уютно</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s5q2o2" value="yes" checked onchange="onKeep('s5q2o2', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s5q2o2" value="no" onchange="onKeep('s5q2o2', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s5q2o2')" data-original="Тепло и уютно"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s5q2o2')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s5q2o3">
+            <td>Красиво и эстетично</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s5q2o3" value="yes" checked onchange="onKeep('s5q2o3', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s5q2o3" value="no" onchange="onKeep('s5q2o3', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s5q2o3')" data-original="Красиво и эстетично"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s5q2o3')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s5q2o4">
+            <td>Масштабно и уверенно</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s5q2o4" value="yes" checked onchange="onKeep('s5q2o4', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s5q2o4" value="no" onchange="onKeep('s5q2o4', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s5q2o4')" data-original="Масштабно и уверенно"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s5q2o4')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s5q2o5">
+            <td>Живо и наполненно</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s5q2o5" value="yes" checked onchange="onKeep('s5q2o5', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s5q2o5" value="no" onchange="onKeep('s5q2o5', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s5q2o5')" data-original="Живо и наполненно"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s5q2o5')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s5q2o6">
+            <td>Хочется выдохнуть</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s5q2o6" value="yes" checked onchange="onKeep('s5q2o6', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s5q2o6" value="no" onchange="onKeep('s5q2o6', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s5q2o6')" data-original="Хочется выдохнуть"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s5q2o6')"></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Через что должно быть видно, что ты «на своём месте»?<span class="q-max">макс. 2</span></span>
+      </div>
+      <table class="answers-table">
+        <thead>
+          <tr>
+            <th class="col-answer">Вариант ответа</th>
+            <th class="col-keep">Оставить?</th>
+            <th class="col-new">Новый текст</th>
+            <th class="col-comment">Комментарий</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="answer-row" id="row-s5q3o0">
+            <td>Архитектура / форма дома</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s5q3o0" value="yes" checked onchange="onKeep('s5q3o0', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s5q3o0" value="no" onchange="onKeep('s5q3o0', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s5q3o0')" data-original="Архитектура / форма дома"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s5q3o0')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s5q3o1">
+            <td>Интерьер / детали</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s5q3o1" value="yes" checked onchange="onKeep('s5q3o1', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s5q3o1" value="no" onchange="onKeep('s5q3o1', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s5q3o1')" data-original="Интерьер / детали"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s5q3o1')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s5q3o2">
+            <td>Свет и воздух</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s5q3o2" value="yes" checked onchange="onKeep('s5q3o2', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s5q3o2" value="no" onchange="onKeep('s5q3o2', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s5q3o2')" data-original="Свет и воздух"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s5q3o2')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s5q3o3">
+            <td>Вид из окон</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s5q3o3" value="yes" checked onchange="onKeep('s5q3o3', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s5q3o3" value="no" onchange="onKeep('s5q3o3', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s5q3o3')" data-original="Вид из окон"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s5q3o3')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s5q3o4">
+            <td>Терраса / сад</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s5q3o4" value="yes" checked onchange="onKeep('s5q3o4', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s5q3o4" value="no" onchange="onKeep('s5q3o4', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s5q3o4')" data-original="Терраса / сад"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s5q3o4')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s5q3o5">
+            <td>Кухня и стол</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s5q3o5" value="yes" checked onchange="onKeep('s5q3o5', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s5q3o5" value="no" onchange="onKeep('s5q3o5', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s5q3o5')" data-original="Кухня и стол"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s5q3o5')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s5q3o6">
+            <td>Семейные детали</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s5q3o6" value="yes" checked onchange="onKeep('s5q3o6', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s5q3o6" value="no" onchange="onKeep('s5q3o6', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s5q3o6')" data-original="Семейные детали"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s5q3o6')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s5q3o7">
+            <td>Приватность пространства</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s5q3o7" value="yes" checked onchange="onKeep('s5q3o7', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s5q3o7" value="no" onchange="onKeep('s5q3o7', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s5q3o7')" data-original="Приватность пространства"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s5q3o7')"></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q4</span>
+        <span class="q-text">AI-вопрос</span>
+      </div>
+      <div class="ai-block">⚡ Динамически генерируется ИИ на основе профиля пользователя</div>
+    </div>
+  </div>
+
+  <div class="sphere-block" id="sphere-6">
+    <div class="sphere-header">
+      <span class="sphere-num">Сфера 6</span>
+      <span class="sphere-name">Дети и наследие</span>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Что для тебя значит продолжение рода?<span class="q-max">макс. 2</span></span>
+      </div>
+      <table class="answers-table">
+        <thead>
+          <tr>
+            <th class="col-answer">Вариант ответа</th>
+            <th class="col-keep">Оставить?</th>
+            <th class="col-new">Новый текст</th>
+            <th class="col-comment">Комментарий</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="answer-row" id="row-s6q1o0">
+            <td>создать крепкую семью</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s6q1o0" value="yes" checked onchange="onKeep('s6q1o0', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s6q1o0" value="no" onchange="onKeep('s6q1o0', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s6q1o0')" data-original="создать крепкую семью"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s6q1o0')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s6q1o1">
+            <td>быть примером для своих детей</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s6q1o1" value="yes" checked onchange="onKeep('s6q1o1', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s6q1o1" value="no" onchange="onKeep('s6q1o1', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s6q1o1')" data-original="быть примером для своих детей"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s6q1o1')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s6q1o2">
+            <td>дать детям больше возможностей</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s6q1o2" value="yes" checked onchange="onKeep('s6q1o2', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s6q1o2" value="no" onchange="onKeep('s6q1o2', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s6q1o2')" data-original="дать детям больше возможностей"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s6q1o2')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s6q1o3">
+            <td>сохранять семейные традиции</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s6q1o3" value="yes" checked onchange="onKeep('s6q1o3', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s6q1o3" value="no" onchange="onKeep('s6q1o3', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s6q1o3')" data-original="сохранять семейные традиции"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s6q1o3')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s6q1o4">
+            <td>быть опорой для близких</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s6q1o4" value="yes" checked onchange="onKeep('s6q1o4', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s6q1o4" value="no" onchange="onKeep('s6q1o4', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s6q1o4')" data-original="быть опорой для близких"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s6q1o4')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s6q1o5">
+            <td>видеть, как растут дети </td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s6q1o5" value="yes" checked onchange="onKeep('s6q1o5', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s6q1o5" value="no" onchange="onKeep('s6q1o5', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s6q1o5')" data-original="видеть, как растут дети "></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s6q1o5')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s6q1o6">
+            <td>дом, в который хочется возвращаться</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s6q1o6" value="yes" checked onchange="onKeep('s6q1o6', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s6q1o6" value="no" onchange="onKeep('s6q1o6', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s6q1o6')" data-original="дом, в который хочется возвращаться"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s6q1o6')"></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Через что тебе хочется увидеть свое продолжение?<span class="q-max">макс. 1</span></span>
+      </div>
+      <table class="answers-table">
+        <thead>
+          <tr>
+            <th class="col-answer">Вариант ответа</th>
+            <th class="col-keep">Оставить?</th>
+            <th class="col-new">Новый текст</th>
+            <th class="col-comment">Комментарий</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="answer-row" id="row-s6q2o0">
+            <td>совместное время с семьёй</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s6q2o0" value="yes" checked onchange="onKeep('s6q2o0', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s6q2o0" value="no" onchange="onKeep('s6q2o0', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s6q2o0')" data-original="совместное время с семьёй"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s6q2o0')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s6q2o1">
+            <td>дом и семейное пространство</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s6q2o1" value="yes" checked onchange="onKeep('s6q2o1', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s6q2o1" value="no" onchange="onKeep('s6q2o1', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s6q2o1')" data-original="дом и семейное пространство"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s6q2o1')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s6q2o2">
+            <td>забота и поддержка близких</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s6q2o2" value="yes" checked onchange="onKeep('s6q2o2', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s6q2o2" value="no" onchange="onKeep('s6q2o2', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s6q2o2')" data-original="забота и поддержка близких"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s6q2o2')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s6q2o3">
+            <td>воспитание и развитие детей</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s6q2o3" value="yes" checked onchange="onKeep('s6q2o3', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s6q2o3" value="no" onchange="onKeep('s6q2o3', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s6q2o3')" data-original="воспитание и развитие детей"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s6q2o3')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s6q2o4">
+            <td>семейные традиции и праздники</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s6q2o4" value="yes" checked onchange="onKeep('s6q2o4', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s6q2o4" value="no" onchange="onKeep('s6q2o4', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s6q2o4')" data-original="семейные традиции и праздники"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s6q2o4')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s6q2o5">
+            <td>большие события и новые этапы</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s6q2o5" value="yes" checked onchange="onKeep('s6q2o5', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s6q2o5" value="no" onchange="onKeep('s6q2o5', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s6q2o5')" data-original="большие события и новые этапы"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s6q2o5')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s6q2o6">
+            <td>спокойная повседневная жизнь рядом</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s6q2o6" value="yes" checked onchange="onKeep('s6q2o6', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s6q2o6" value="no" onchange="onKeep('s6q2o6', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s6q2o6')" data-original="спокойная повседневная жизнь рядом"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s6q2o6')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s6q2o7">
+            <td>совместные поездки и воспоминания</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s6q2o7" value="yes" checked onchange="onKeep('s6q2o7', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s6q2o7" value="no" onchange="onKeep('s6q2o7', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s6q2o7')" data-original="совместные поездки и воспоминания"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s6q2o7')"></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q3</span>
+        <span class="q-text">AI-вопрос</span>
+      </div>
+      <div class="ai-block">⚡ Динамически генерируется ИИ на основе профиля пользователя</div>
+    </div>
+  </div>
+
+  <div class="sphere-block" id="sphere-7">
+    <div class="sphere-header">
+      <span class="sphere-num">Сфера 7</span>
+      <span class="sphere-name">Творчество и новые начинания</span>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Что для тебя значит создавать новое?<span class="q-max">макс. 2</span></span>
+      </div>
+      <table class="answers-table">
+        <thead>
+          <tr>
+            <th class="col-answer">Вариант ответа</th>
+            <th class="col-keep">Оставить?</th>
+            <th class="col-new">Новый текст</th>
+            <th class="col-comment">Комментарий</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="answer-row" id="row-s7q1o0">
+            <td>дать жизнь новому проекту</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s7q1o0" value="yes" checked onchange="onKeep('s7q1o0', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s7q1o0" value="no" onchange="onKeep('s7q1o0', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s7q1o0')" data-original="дать жизнь новому проекту"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s7q1o0')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s7q1o1">
+            <td>начать новый этап жизни</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s7q1o1" value="yes" checked onchange="onKeep('s7q1o1', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s7q1o1" value="no" onchange="onKeep('s7q1o1', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s7q1o1')" data-original="начать новый этап жизни"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s7q1o1')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s7q1o2">
+            <td>раскрыть новые стороны себя</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s7q1o2" value="yes" checked onchange="onKeep('s7q1o2', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s7q1o2" value="no" onchange="onKeep('s7q1o2', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s7q1o2')" data-original="раскрыть новые стороны себя"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s7q1o2')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s7q1o3">
+            <td>сделать что-то своими руками</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s7q1o3" value="yes" checked onchange="onKeep('s7q1o3', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s7q1o3" value="no" onchange="onKeep('s7q1o3', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s7q1o3')" data-original="сделать что-то своими руками"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s7q1o3')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s7q1o4">
+            <td>создать что-то по-настоящему своё</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s7q1o4" value="yes" checked onchange="onKeep('s7q1o4', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s7q1o4" value="no" onchange="onKeep('s7q1o4', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s7q1o4')" data-original="создать что-то по-настоящему своё"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s7q1o4')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s7q1o5">
+            <td>выразить себя через творчество</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s7q1o5" value="yes" checked onchange="onKeep('s7q1o5', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s7q1o5" value="no" onchange="onKeep('s7q1o5', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s7q1o5')" data-original="выразить себя через творчество"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s7q1o5')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s7q1o6">
+            <td>вдохновить и повести за собой</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s7q1o6" value="yes" checked onchange="onKeep('s7q1o6', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s7q1o6" value="no" onchange="onKeep('s7q1o6', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s7q1o6')" data-original="вдохновить и повести за собой"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s7q1o6')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s7q1o7">
+            <td>создать новый мир вокруг себя</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s7q1o7" value="yes" checked onchange="onKeep('s7q1o7', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s7q1o7" value="no" onchange="onKeep('s7q1o7', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s7q1o7')" data-original="создать новый мир вокруг себя"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s7q1o7')"></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Через что ты бы хотел видеть это в своей жизни?<span class="q-max">макс. 1</span></span>
+      </div>
+      <table class="answers-table">
+        <thead>
+          <tr>
+            <th class="col-answer">Вариант ответа</th>
+            <th class="col-keep">Оставить?</th>
+            <th class="col-new">Новый текст</th>
+            <th class="col-comment">Комментарий</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="answer-row" id="row-s7q2o0">
+            <td>творчество и самовыражение</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s7q2o0" value="yes" checked onchange="onKeep('s7q2o0', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s7q2o0" value="no" onchange="onKeep('s7q2o0', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s7q2o0')" data-original="творчество и самовыражение"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s7q2o0')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s7q2o1">
+            <td>собственный проект или дело</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s7q2o1" value="yes" checked onchange="onKeep('s7q2o1', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s7q2o1" value="no" onchange="onKeep('s7q2o1', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s7q2o1')" data-original="собственный проект или дело"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s7q2o1')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s7q2o2">
+            <td>создание продукта или идеи</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s7q2o2" value="yes" checked onchange="onKeep('s7q2o2', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s7q2o2" value="no" onchange="onKeep('s7q2o2', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s7q2o2')" data-original="создание продукта или идеи"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s7q2o2')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s7q2o3">
+            <td>новое пространство жизни</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s7q2o3" value="yes" checked onchange="onKeep('s7q2o3', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s7q2o3" value="no" onchange="onKeep('s7q2o3', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s7q2o3')" data-original="новое пространство жизни"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s7q2o3')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s7q2o4">
+            <td>запуск чего-то нового</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s7q2o4" value="yes" checked onchange="onKeep('s7q2o4', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s7q2o4" value="no" onchange="onKeep('s7q2o4', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s7q2o4')" data-original="запуск чего-то нового"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s7q2o4')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s7q2o5">
+            <td>живой процесс создания</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s7q2o5" value="yes" checked onchange="onKeep('s7q2o5', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s7q2o5" value="no" onchange="onKeep('s7q2o5', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s7q2o5')" data-original="живой процесс создания"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s7q2o5')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s7q2o6">
+            <td>люди и энергия вокруг меня</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s7q2o6" value="yes" checked onchange="onKeep('s7q2o6', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s7q2o6" value="no" onchange="onKeep('s7q2o6', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s7q2o6')" data-original="люди и энергия вокруг меня"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s7q2o6')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s7q2o7">
+            <td>движение, изменения и новые этапы</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s7q2o7" value="yes" checked onchange="onKeep('s7q2o7', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s7q2o7" value="no" onchange="onKeep('s7q2o7', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s7q2o7')" data-original="движение, изменения и новые этапы"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s7q2o7')"></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q3</span>
+        <span class="q-text">AI-вопрос</span>
+      </div>
+      <div class="ai-block">⚡ Динамически генерируется ИИ на основе профиля пользователя</div>
+    </div>
+  </div>
+
+  <div class="sphere-block" id="sphere-8">
+    <div class="sphere-header">
+      <span class="sphere-num">Сфера 8</span>
+      <span class="sphere-name">Развитие и мудрость</span>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Что для тебя сейчас развитие?<span class="q-max">макс. 2</span></span>
+      </div>
+      <table class="answers-table">
+        <thead>
+          <tr>
+            <th class="col-answer">Вариант ответа</th>
+            <th class="col-keep">Оставить?</th>
+            <th class="col-new">Новый текст</th>
+            <th class="col-comment">Комментарий</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="answer-row" id="row-s8q1o0">
+            <td>глубже понимать себя и жизнь</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s8q1o0" value="yes" checked onchange="onKeep('s8q1o0', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s8q1o0" value="no" onchange="onKeep('s8q1o0', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s8q1o0')" data-original="глубже понимать себя и жизнь"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s8q1o0')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s8q1o1">
+            <td>расти интеллектуально</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s8q1o1" value="yes" checked onchange="onKeep('s8q1o1', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s8q1o1" value="no" onchange="onKeep('s8q1o1', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s8q1o1')" data-original="расти интеллектуально"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s8q1o1')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s8q1o2">
+            <td>расширять границы мышления</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s8q1o2" value="yes" checked onchange="onKeep('s8q1o2', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s8q1o2" value="no" onchange="onKeep('s8q1o2', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s8q1o2')" data-original="расширять границы мышления"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s8q1o2')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s8q1o3">
+            <td>становиться мудрее и спокойнее</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s8q1o3" value="yes" checked onchange="onKeep('s8q1o3', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s8q1o3" value="no" onchange="onKeep('s8q1o3', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s8q1o3')" data-original="становиться мудрее и спокойнее"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s8q1o3')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s8q1o4">
+            <td>находить новые смыслы</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s8q1o4" value="yes" checked onchange="onKeep('s8q1o4', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s8q1o4" value="no" onchange="onKeep('s8q1o4', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s8q1o4')" data-original="находить новые смыслы"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s8q1o4')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s8q1o5">
+            <td>учиться у сильных людей</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s8q1o5" value="yes" checked onchange="onKeep('s8q1o5', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s8q1o5" value="no" onchange="onKeep('s8q1o5', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s8q1o5')" data-original="учиться у сильных людей"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s8q1o5')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s8q1o6">
+            <td>соединять знания и практику</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s8q1o6" value="yes" checked onchange="onKeep('s8q1o6', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s8q1o6" value="no" onchange="onKeep('s8q1o6', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s8q1o6')" data-original="соединять знания и практику"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s8q1o6')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s8q1o7">
+            <td>видеть мир шире и глубже</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s8q1o7" value="yes" checked onchange="onKeep('s8q1o7', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s8q1o7" value="no" onchange="onKeep('s8q1o7', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s8q1o7')" data-original="видеть мир шире и глубже"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s8q1o7')"></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Через что это проявляется в твоей жизни?<span class="q-max">макс. 1</span></span>
+      </div>
+      <table class="answers-table">
+        <thead>
+          <tr>
+            <th class="col-answer">Вариант ответа</th>
+            <th class="col-keep">Оставить?</th>
+            <th class="col-new">Новый текст</th>
+            <th class="col-comment">Комментарий</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="answer-row" id="row-s8q2o0">
+            <td>книги, знания и новые идеи</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s8q2o0" value="yes" checked onchange="onKeep('s8q2o0', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s8q2o0" value="no" onchange="onKeep('s8q2o0', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s8q2o0')" data-original="книги, знания и новые идеи"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s8q2o0')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s8q2o1">
+            <td>путешествия и изучение мира</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s8q2o1" value="yes" checked onchange="onKeep('s8q2o1', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s8q2o1" value="no" onchange="onKeep('s8q2o1', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s8q2o1')" data-original="путешествия и изучение мира"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s8q2o1')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s8q2o2">
+            <td>глубокие разговоры с людьми</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s8q2o2" value="yes" checked onchange="onKeep('s8q2o2', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s8q2o2" value="no" onchange="onKeep('s8q2o2', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s8q2o2')" data-original="глубокие разговоры с людьми"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s8q2o2')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s8q2o3">
+            <td>обучение и новый опыт</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s8q2o3" value="yes" checked onchange="onKeep('s8q2o3', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s8q2o3" value="no" onchange="onKeep('s8q2o3', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s8q2o3')" data-original="обучение и новый опыт"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s8q2o3')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s8q2o4">
+            <td>личные практики и осознанность</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s8q2o4" value="yes" checked onchange="onKeep('s8q2o4', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s8q2o4" value="no" onchange="onKeep('s8q2o4', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s8q2o4')" data-original="личные практики и осознанность"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s8q2o4')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s8q2o5">
+            <td>сильное окружение и обмен опытом</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s8q2o5" value="yes" checked onchange="onKeep('s8q2o5', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s8q2o5" value="no" onchange="onKeep('s8q2o5', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s8q2o5')" data-original="сильное окружение и обмен опытом"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s8q2o5')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s8q2o6">
+            <td>время на размышление и тишину</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s8q2o6" value="yes" checked onchange="onKeep('s8q2o6', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s8q2o6" value="no" onchange="onKeep('s8q2o6', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s8q2o6')" data-original="время на размышление и тишину"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s8q2o6')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s8q2o7">
+            <td>исследование жизни и самого себя</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s8q2o7" value="yes" checked onchange="onKeep('s8q2o7', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s8q2o7" value="no" onchange="onKeep('s8q2o7', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s8q2o7')" data-original="исследование жизни и самого себя"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s8q2o7')"></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q3</span>
+        <span class="q-text">AI-вопрос</span>
+      </div>
+      <div class="ai-block">⚡ Динамически генерируется ИИ на основе профиля пользователя</div>
+    </div>
+  </div>
+
+  <div class="sphere-block" id="sphere-9">
+    <div class="sphere-header">
+      <span class="sphere-num">Сфера 9</span>
+      <span class="sphere-name">Свобода и масштаб жизни</span>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Что для тебя свобода?<span class="q-max">макс. 2</span></span>
+      </div>
+      <table class="answers-table">
+        <thead>
+          <tr>
+            <th class="col-answer">Вариант ответа</th>
+            <th class="col-keep">Оставить?</th>
+            <th class="col-new">Новый текст</th>
+            <th class="col-comment">Комментарий</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="answer-row" id="row-s9q1o0">
+            <td>жить в своём ритме</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s9q1o0" value="yes" checked onchange="onKeep('s9q1o0', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s9q1o0" value="no" onchange="onKeep('s9q1o0', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s9q1o0')" data-original="жить в своём ритме"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s9q1o0')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s9q1o1">
+            <td>свободно выбирать, где и как жить</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s9q1o1" value="yes" checked onchange="onKeep('s9q1o1', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s9q1o1" value="no" onchange="onKeep('s9q1o1', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s9q1o1')" data-original="свободно выбирать, где и как жить"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s9q1o1')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s9q1o2">
+            <td>путешествовать и видеть мир</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s9q1o2" value="yes" checked onchange="onKeep('s9q1o2', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s9q1o2" value="no" onchange="onKeep('s9q1o2', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s9q1o2')" data-original="путешествовать и видеть мир"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s9q1o2')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s9q1o3">
+            <td>не зависеть от обстоятельств</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s9q1o3" value="yes" checked onchange="onKeep('s9q1o3', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s9q1o3" value="no" onchange="onKeep('s9q1o3', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s9q1o3')" data-original="не зависеть от обстоятельств"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s9q1o3')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s9q1o4">
+            <td>чувствовать внутреннюю свободу</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s9q1o4" value="yes" checked onchange="onKeep('s9q1o4', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s9q1o4" value="no" onchange="onKeep('s9q1o4', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s9q1o4')" data-original="чувствовать внутреннюю свободу"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s9q1o4')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s9q1o5">
+            <td>жить шире и масштабнее</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s9q1o5" value="yes" checked onchange="onKeep('s9q1o5', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s9q1o5" value="no" onchange="onKeep('s9q1o5', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s9q1o5')" data-original="жить шире и масштабнее"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s9q1o5')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s9q1o6">
+            <td>иметь больше возможностей для жизни</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s9q1o6" value="yes" checked onchange="onKeep('s9q1o6', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s9q1o6" value="no" onchange="onKeep('s9q1o6', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s9q1o6')" data-original="иметь больше возможностей для жизни"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s9q1o6')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s9q1o7">
+            <td>самому выбирать направление своей жизни</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s9q1o7" value="yes" checked onchange="onKeep('s9q1o7', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s9q1o7" value="no" onchange="onKeep('s9q1o7', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s9q1o7')" data-original="самому выбирать направление своей жизни"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s9q1o7')"></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Через что это видно?<span class="q-max">макс. 1</span></span>
+      </div>
+      <table class="answers-table">
+        <thead>
+          <tr>
+            <th class="col-answer">Вариант ответа</th>
+            <th class="col-keep">Оставить?</th>
+            <th class="col-new">Новый текст</th>
+            <th class="col-comment">Комментарий</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="answer-row" id="row-s9q2o0">
+            <td>путешествия и новые места</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s9q2o0" value="yes" checked onchange="onKeep('s9q2o0', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s9q2o0" value="no" onchange="onKeep('s9q2o0', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s9q2o0')" data-original="путешествия и новые места"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s9q2o0')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s9q2o1">
+            <td>возможность жить в разных странах</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s9q2o1" value="yes" checked onchange="onKeep('s9q2o1', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s9q2o1" value="no" onchange="onKeep('s9q2o1', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s9q2o1')" data-original="возможность жить в разных странах"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s9q2o1')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s9q2o2">
+            <td>свободный график и свой ритм</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s9q2o2" value="yes" checked onchange="onKeep('s9q2o2', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s9q2o2" value="no" onchange="onKeep('s9q2o2', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s9q2o2')" data-original="свободный график и свой ритм"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s9q2o2')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s9q2o3">
+            <td>своё дело или независимый доход</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s9q2o3" value="yes" checked onchange="onKeep('s9q2o3', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s9q2o3" value="no" onchange="onKeep('s9q2o3', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s9q2o3')" data-original="своё дело или независимый доход"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s9q2o3')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s9q2o4">
+            <td>красивые пространства и ощущение воздуха</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s9q2o4" value="yes" checked onchange="onKeep('s9q2o4', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s9q2o4" value="no" onchange="onKeep('s9q2o4', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s9q2o4')" data-original="красивые пространства и ощущение воздуха"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s9q2o4')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s9q2o5">
+            <td>спонтанность и свобода выбора</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s9q2o5" value="yes" checked onchange="onKeep('s9q2o5', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s9q2o5" value="no" onchange="onKeep('s9q2o5', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s9q2o5')" data-original="спонтанность и свобода выбора"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s9q2o5')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s9q2o6">
+            <td>окружение, которое расширяет жизнь</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s9q2o6" value="yes" checked onchange="onKeep('s9q2o6', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s9q2o6" value="no" onchange="onKeep('s9q2o6', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s9q2o6')" data-original="окружение, которое расширяет жизнь"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s9q2o6')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s9q2o7">
+            <td>постоянное движение и новые впечатления</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s9q2o7" value="yes" checked onchange="onKeep('s9q2o7', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s9q2o7" value="no" onchange="onKeep('s9q2o7', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s9q2o7')" data-original="постоянное движение и новые впечатления"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s9q2o7')"></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q3</span>
+        <span class="q-text">AI-вопрос</span>
+      </div>
+      <div class="ai-block">⚡ Динамически генерируется ИИ на основе профиля пользователя</div>
+    </div>
+  </div>
+
+  <div class="sphere-block" id="sphere-10">
+    <div class="sphere-header">
+      <span class="sphere-num">Сфера 10</span>
+      <span class="sphere-name">Окружение</span>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Что для тебя значит сильное окружение?<span class="q-max">макс. 2</span></span>
+      </div>
+      <table class="answers-table">
+        <thead>
+          <tr>
+            <th class="col-answer">Вариант ответа</th>
+            <th class="col-keep">Оставить?</th>
+            <th class="col-new">Новый текст</th>
+            <th class="col-comment">Комментарий</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="answer-row" id="row-s10q1o0">
+            <td>сильные и амбициозные люди</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s10q1o0" value="yes" checked onchange="onKeep('s10q1o0', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s10q1o0" value="no" onchange="onKeep('s10q1o0', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s10q1o0')" data-original="сильные и амбициозные люди"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s10q1o0')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s10q1o1">
+            <td>люди, которые вдохновляют</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s10q1o1" value="yes" checked onchange="onKeep('s10q1o1', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s10q1o1" value="no" onchange="onKeep('s10q1o1', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s10q1o1')" data-original="люди, которые вдохновляют"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s10q1o1')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s10q1o2">
+            <td>глубокие и настоящие отношения</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s10q1o2" value="yes" checked onchange="onKeep('s10q1o2', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s10q1o2" value="no" onchange="onKeep('s10q1o2', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s10q1o2')" data-original="глубокие и настоящие отношения"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s10q1o2')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s10q1o3">
+            <td>люди, рядом с которыми я расту</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s10q1o3" value="yes" checked onchange="onKeep('s10q1o3', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s10q1o3" value="no" onchange="onKeep('s10q1o3', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s10q1o3')" data-original="люди, рядом с которыми я расту"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s10q1o3')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s10q1o4">
+            <td>свобода быть собой рядом с другими</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s10q1o4" value="yes" checked onchange="onKeep('s10q1o4', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s10q1o4" value="no" onchange="onKeep('s10q1o4', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s10q1o4')" data-original="свобода быть собой рядом с другими"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s10q1o4')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s10q1o5">
+            <td>поддержка и ощущение «своих»</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s10q1o5" value="yes" checked onchange="onKeep('s10q1o5', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s10q1o5" value="no" onchange="onKeep('s10q1o5', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s10q1o5')" data-original="поддержка и ощущение «своих»"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s10q1o5')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s10q1o6">
+            <td>партнёры и союзники</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s10q1o6" value="yes" checked onchange="onKeep('s10q1o6', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s10q1o6" value="no" onchange="onKeep('s10q1o6', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s10q1o6')" data-original="партнёры и союзники"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s10q1o6')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s10q1o7">
+            <td>среда, которая расширяет меня</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s10q1o7" value="yes" checked onchange="onKeep('s10q1o7', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s10q1o7" value="no" onchange="onKeep('s10q1o7', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s10q1o7')" data-original="среда, которая расширяет меня"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s10q1o7')"></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Через что это окружение проявляется в твоей жизни?<span class="q-max">макс. 1</span></span>
+      </div>
+      <table class="answers-table">
+        <thead>
+          <tr>
+            <th class="col-answer">Вариант ответа</th>
+            <th class="col-keep">Оставить?</th>
+            <th class="col-new">Новый текст</th>
+            <th class="col-comment">Комментарий</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="answer-row" id="row-s10q2o0">
+            <td>совместные проекты и идеи</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s10q2o0" value="yes" checked onchange="onKeep('s10q2o0', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s10q2o0" value="no" onchange="onKeep('s10q2o0', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s10q2o0')" data-original="совместные проекты и идеи"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s10q2o0')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s10q2o1">
+            <td>глубокие разговоры и общение</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s10q2o1" value="yes" checked onchange="onKeep('s10q2o1', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s10q2o1" value="no" onchange="onKeep('s10q2o1', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s10q2o1')" data-original="глубокие разговоры и общение"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s10q2o1')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s10q2o2">
+            <td>путешествия и новые впечатления вместе</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s10q2o2" value="yes" checked onchange="onKeep('s10q2o2', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s10q2o2" value="no" onchange="onKeep('s10q2o2', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s10q2o2')" data-original="путешествия и новые впечатления вместе"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s10q2o2')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s10q2o3">
+            <td>поддержка и движение вперёд</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s10q2o3" value="yes" checked onchange="onKeep('s10q2o3', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s10q2o3" value="no" onchange="onKeep('s10q2o3', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s10q2o3')" data-original="поддержка и движение вперёд"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s10q2o3')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s10q2o4">
+            <td>сильное сообщество вокруг</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s10q2o4" value="yes" checked onchange="onKeep('s10q2o4', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s10q2o4" value="no" onchange="onKeep('s10q2o4', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s10q2o4')" data-original="сильное сообщество вокруг"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s10q2o4')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s10q2o5">
+            <td>совместное развитие и рост</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s10q2o5" value="yes" checked onchange="onKeep('s10q2o5', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s10q2o5" value="no" onchange="onKeep('s10q2o5', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s10q2o5')" data-original="совместное развитие и рост"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s10q2o5')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s10q2o6">
+            <td>тёплые встречи и живое общение</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s10q2o6" value="yes" checked onchange="onKeep('s10q2o6', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s10q2o6" value="no" onchange="onKeep('s10q2o6', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s10q2o6')" data-original="тёплые встречи и живое общение"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s10q2o6')"></td>
+          </tr>
+
+          <tr class="answer-row" id="row-s10q2o7">
+            <td>люди, с которыми хочется создавать</td>
+            <td>
+              <label class="keep-label keep-yes active">
+                <input type="radio" name="keep-s10q2o7" value="yes" checked onchange="onKeep('s10q2o7', true)"> Да
+              </label>
+              <label class="keep-label keep-no">
+                <input type="radio" name="keep-s10q2o7" value="no" onchange="onKeep('s10q2o7', false)"> Нет
+              </label>
+            </td>
+            <td><input class="new-text-input" type="text" placeholder="новый вариант..." oninput="onChange('s10q2o7')" data-original="люди, с которыми хочется создавать"></td>
+            <td><input class="comment-input" type="text" placeholder="комментарий..." oninput="onChange('s10q2o7')"></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-block">
+      <div class="question-header">
+        <span class="q-num">Q3</span>
+        <span class="q-text">AI-вопрос</span>
+      </div>
+      <div class="ai-block">⚡ Динамически генерируется ИИ на основе профиля пользователя</div>
+    </div>
+  </div>
+</div>
+
+<div id="summary-output"></div>
+
+<div class="copy-bar">
+  <button class="copy-btn" onclick="copySummary()">Скопировать сводку изменений</button>
+  <span class="copy-status" id="copy-status">Только строки с изменениями</span>
+</div>
+
+<script>
+function onKeep(rowId, isYes) {
+  const row = document.getElementById('row-' + rowId);
+  const yesLabel = row.querySelector('.keep-yes');
+  const noLabel  = row.querySelector('.keep-no');
+  if (isYes) {
+    yesLabel.classList.add('active');
+    noLabel.classList.remove('active');
+    row.classList.remove('changed');
+  } else {
+    noLabel.classList.add('active');
+    yesLabel.classList.remove('active');
+    row.classList.add('changed');
+  }
+}
+
+function onChange(rowId) {
+  const row = document.getElementById('row-' + rowId);
+  const newText = row.querySelector('.new-text-input').value.trim();
+  const comment = row.querySelector('.comment-input').value.trim();
+  if (newText || comment) row.classList.add('changed');
+  else {
+    const isNo = row.querySelector('input[value="no"]').checked;
+    if (!isNo) row.classList.remove('changed');
+  }
+}
+
+function copySummary() {
+  const rows = document.querySelectorAll('.answer-row.changed');
+  if (!rows.length) {
+    document.getElementById('copy-status').textContent = 'Нет изменений';
+    return;
+  }
+  let lines = ['СВОДКА ИЗМЕНЕНИЙ — Elyne вопросы сфер — 2026-05-20\n'];
+  let currentSphere = '';
+  rows.forEach(row => {
+    const sphereBlock = row.closest('.sphere-block');
+    const sphereName = sphereBlock.querySelector('.sphere-name').textContent;
+    const sphereNum  = sphereBlock.querySelector('.sphere-num').textContent;
+    if (sphereName !== currentSphere) {
+      lines.push('\n=== ' + sphereNum + ': ' + sphereName + ' ===');
+      currentSphere = sphereName;
+    }
+    const qBlock = row.closest('.question-block');
+    const qText = qBlock.querySelector('.q-text').childNodes[0].textContent.trim();
+    const qNum  = qBlock.querySelector('.q-num').textContent;
+    const original = row.cells[0].textContent.trim();
+    const isNo    = row.querySelector('input[value="no"]').checked;
+    const newText = row.querySelector('.new-text-input').value.trim();
+    const comment = row.querySelector('.comment-input').value.trim();
+    let action = isNo ? '❌ УДАЛИТЬ' : (newText ? '✏️ ЗАМЕНИТЬ' : '💬 КОММЕНТАРИЙ');
+    lines.push('  ' + qNum + ': ' + qText);
+    lines.push('  Вариант: «' + original + '»');
+    lines.push('  Действие: ' + action);
+    if (newText) lines.push('  Новый текст: «' + newText + '»');
+    if (comment) lines.push('  Комментарий: ' + comment);
+    lines.push('');
+  });
+  const text = lines.join('\n');
+  navigator.clipboard.writeText(text).then(() => {
+    document.getElementById('copy-status').textContent = '✓ Скопировано (' + rows.length + ' изменений)';
+    const out = document.getElementById('summary-output');
+    out.textContent = text;
+    out.style.display = 'block';
+  });
+}
+</script>
+</body>
+</html>
