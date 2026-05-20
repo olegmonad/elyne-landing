@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elyne Loader Animation</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #031813; display: flex; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ─── ELYNE LOADER ANIMATION ───────────────────────────────────────────────
+// Living volumetric blob with golden sand particles
+// TZ: dark bg, amber/gold #D98A44/#BCA70A, ASMR hypnotic, 25-45s cycle
+// For Denis: extract the shader code and particle system into your app's loader
+
+const W = Math.min(window.innerWidth, window.innerHeight, 400);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setSize(W, W);
+renderer.setPixelRatio(window.devicePixelRatio);
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+camera.position.z = 3.5;
+
+// ─── BLOB GEOMETRY ────────────────────────────────────────────────────────
+const blobGeo = new THREE.SphereGeometry(1, 128, 128);
+const blobMat = new THREE.ShaderMaterial({
+  uniforms: {
+    uTime:       { value: 0 },
+    uAmberLight: { value: new THREE.Color(0xD98A44) },
+    uGoldLight:  { value: new THREE.Color(0xBCA70A) },
+    uDeepColor:  { value: new THREE.Color(0x1a0800) },
+  },
+  vertexShader: `
+    uniform float uTime;
+    varying vec3 vNormal;
+    varying vec3 vPos;
+
+    // Simple noise
+    vec3 mod289(vec3 x) { return x - floor(x*(1./289.))*289.; }
+    vec4 mod289(vec4 x) { return x - floor(x*(1./289.))*289.; }
+    vec4 permute(vec4 x) { return mod289(((x*34.)+1.)*x); }
+    vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159-.85373472095314*r; }
+    float snoise(vec3 v) {
+      const vec2 C = vec2(1./6.,1./3.);
+      const vec4 D = vec4(0.,.5,1.,2.);
+      vec3 i = floor(v+dot(v,C.yyy));
+      vec3 x0 = v-i+dot(i,C.xxx);
+      vec3 g = step(x0.yzx,x0.xyz);
+      vec3 l = 1.-g;
+      vec3 i1 = min(g.xyz,l.zxy);
+      vec3 i2 = max(g.xyz,l.zxy);
+      vec3 x1=x0-i1+C.xxx, x2=x0-i2+C.yyy, x3=x0-D.yyy;
+      i=mod289(i);
+      vec4 p=permute(permute(permute(i.z+vec4(0.,i1.z,i2.z,1.))+i.y+vec4(0.,i1.y,i2.y,1.))+i.x+vec4(0.,i1.x,i2.x,1.));
+      float n_=.142857142857;
+      vec3 ns=n_*D.wyz-D.xzx;
+      vec4 j=p-49.*floor(p*ns.z*ns.z);
+      vec4 x_=floor(j*ns.z), y_=floor(j-7.*x_);
+      vec4 x=x_*ns.x+ns.yyyy, y=y_*ns.x+ns.yyyy;
+      vec4 h=1.-abs(x)-abs(y);
+      vec4 b0=vec4(x.xy,y.xy), b1=vec4(x.zw,y.zw);
+      vec4 s0=floor(b0)*2.+1., s1=floor(b1)*2.+1.;
+      vec4 sh=-step(h,vec4(0.));
+      vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy, a1=b1.xzyw+s1.xzyw*sh.zzww;
+      vec3 p0=vec3(a0.xy,h.x), p1=vec3(a0.zw,h.y), p2=vec3(a1.xy,h.z), p3=vec3(a1.zw,h.w);
+      vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));
+      p0*=norm.x; p1*=norm.y; p2*=norm.z; p3*=norm.w;
+      vec4 m=max(.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.);
+      m=m*m;
+      return 42.*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
+    }
+
+    void main() {
+      vNormal = normal;
+      float t = uTime * 0.18; // slow breathing cycle
+      // Multi-frequency noise for organic deformation
+      float n1 = snoise(position * 1.2 + vec3(t * 0.7, t * 0.5, t * 0.3));
+      float n2 = snoise(position * 2.5 + vec3(-t * 0.4, t * 0.6, -t * 0.5)) * 0.4;
+      float n3 = snoise(position * 0.8 + vec3(t * 0.2, -t * 0.3, t * 0.4)) * 0.15;
+      float displacement = (n1 + n2 + n3) * 0.18;
+      vec3 newPos = position + normal * displacement;
+      vPos = newPos;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(newPos, 1.0);
+    }
+  `,
+  fragmentShader: `
+    uniform float uTime;
+    uniform vec3 uAmberLight;
+    uniform vec3 uGoldLight;
+    uniform vec3 uDeepColor;
+    varying vec3 vNormal;
+    varying vec3 vPos;
+
+    void main() {
+      // Fresnel-like rim glow
+      vec3 viewDir = normalize(cameraPosition - vPos);
+      float fresnel = pow(1.0 - max(dot(vNormal, viewDir), 0.0), 3.0);
+
+      // Inner amber glow (bottom-heavy like sand settling)
+      float yFactor = (vPos.y + 1.2) / 2.4; // 0 at bottom, 1 at top
+      float innerGlow = mix(0.8, 0.2, yFactor);
+
+      // Subtle pulsing
+      float pulse = 0.5 + 0.5 * sin(uTime * 0.4);
+
+      vec3 col = mix(uDeepColor, uAmberLight, innerGlow * 0.7);
+      col = mix(col, uGoldLight, fresnel * 0.6 * (0.8 + 0.2 * pulse));
+
+      // Translucency
+      float alpha = 0.55 + fresnel * 0.3 + innerGlow * 0.1;
+
+      gl_FragColor = vec4(col, alpha);
+    }
+  `,
+  transparent: true,
+  side: THREE.FrontSide,
+});
+
+const blob = new THREE.Mesh(blobGeo, blobMat);
+scene.add(blob);
+
+// ─── PARTICLES (golden sand) ───────────────────────────────────────────────
+const PARTICLE_COUNT = 800;
+const positions = new Float32Array(PARTICLE_COUNT * 3);
+const velocities = [];
+const lifetimes = new Float32Array(PARTICLE_COUNT);
+const maxLifetimes = new Float32Array(PARTICLE_COUNT);
+const sizes = new Float32Array(PARTICLE_COUNT);
+
+function randomInsideSphere(r) {
+  const u = Math.random(), v = Math.random(), w = Math.random();
+  const theta = 2 * Math.PI * u;
+  const phi = Math.acos(2 * v - 1);
+  const radius = r * Math.cbrt(w) * 0.85;
+  return [
+    radius * Math.sin(phi) * Math.cos(theta),
+    radius * Math.sin(phi) * Math.sin(theta),
+    radius * Math.cos(phi),
+  ];
+}
+
+for (let i = 0; i < PARTICLE_COUNT; i++) {
+  const [x, y, z] = randomInsideSphere(0.9);
+  positions[i * 3]     = x;
+  positions[i * 3 + 1] = y;
+  positions[i * 3 + 2] = z;
+  velocities.push([(Math.random() - 0.5) * 0.001, -0.002 - Math.random() * 0.003, (Math.random() - 0.5) * 0.001]);
+  const lt = 3 + Math.random() * 8;
+  maxLifetimes[i] = lt;
+  lifetimes[i] = Math.random() * lt; // stagger start
+  sizes[i] = 1.5 + Math.random() * 4;
+}
+
+const particleGeo = new THREE.BufferGeometry();
+particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+particleGeo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+const particleMat = new THREE.ShaderMaterial({
+  uniforms: {
+    uTime: { value: 0 },
+    uAmber: { value: new THREE.Color(0xD98A44) },
+    uGold:  { value: new THREE.Color(0xF3D355) },
+  },
+  vertexShader: `
+    attribute float size;
+    uniform float uTime;
+    varying float vLife;
+    void main() {
+      vLife = 1.0;
+      vec4 mvPos = modelViewMatrix * vec4(position, 1.0);
+      gl_PointSize = size * (200.0 / -mvPos.z);
+      gl_Position = projectionMatrix * mvPos;
+    }
+  `,
+  fragmentShader: `
+    uniform vec3 uAmber;
+    uniform vec3 uGold;
+    varying float vLife;
+    void main() {
+      float d = length(gl_PointCoord - vec2(0.5));
+      if (d > 0.5) discard;
+      float alpha = smoothstep(0.5, 0.1, d) * vLife * 0.9;
+      vec3 col = mix(uAmber, uGold, d * 2.0);
+      gl_FragColor = vec4(col, alpha);
+    }
+  `,
+  transparent: true,
+  depthWrite: false,
+  blending: THREE.AdditiveBlending,
+});
+
+const particles = new THREE.Points(particleGeo, particleMat);
+scene.add(particles);
+
+// ─── AMBIENT LIGHT ────────────────────────────────────────────────────────
+const ambientLight = new THREE.PointLight(0xD98A44, 2, 10);
+ambientLight.position.set(0, -1, 2);
+scene.add(ambientLight);
+
+// ─── ANIMATION LOOP ───────────────────────────────────────────────────────
+let t = 0;
+function animate() {
+  requestAnimationFrame(animate);
+  t += 0.016; // ~60fps
+
+  blobMat.uniforms.uTime.value = t;
+  particleMat.uniforms.uTime.value = t;
+
+  // Update particles
+  const pos = particleGeo.attributes.position.array;
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    lifetimes[i] += 0.016;
+    if (lifetimes[i] > maxLifetimes[i]) {
+      // Respawn
+      const [x, y, z] = randomInsideSphere(0.9);
+      pos[i * 3]     = x;
+      pos[i * 3 + 1] = Math.random() * 0.6; // spawn in upper half
+      pos[i * 3 + 2] = z;
+      lifetimes[i] = 0;
+    } else {
+      // Drift down slowly
+      pos[i * 3]     += velocities[i][0];
+      pos[i * 3 + 1] += velocities[i][1];
+      pos[i * 3 + 2] += velocities[i][2];
+      // Fade when below bottom
+      if (pos[i * 3 + 1] < -0.85) {
+        lifetimes[i] = maxLifetimes[i]; // trigger respawn
+      }
+    }
+  }
+  particleGeo.attributes.position.needsUpdate = true;
+
+  // Subtle pulse on ambient light
+  ambientLight.intensity = 1.5 + 0.5 * Math.sin(t * 0.3);
+
+  renderer.render(scene, camera);
+}
+
+animate();
+</script>
+</body>
+</html>
