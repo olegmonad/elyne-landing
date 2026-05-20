@@ -1,0 +1,42 @@
+<!doctype html><html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Loading System v3.1 — Final Review</title>
+<style>
+body{font-family:-apple-system,Inter,system-ui,sans-serif;background:#0a0a0c;color:#e8e6e3;max-width:820px;margin:40px auto;padding:0 24px;line-height:1.65}
+h1{font-weight:600;font-size:28px;color:#fff;border-bottom:1px solid #2a2a2d;padding-bottom:18px;margin-bottom:24px}
+h2{font-weight:600;color:#fff;margin-top:36px;font-size:21px}
+h3{font-weight:600;color:#d4d2cf;font-size:16px;margin-top:24px}
+code{background:#1a1a1d;padding:2px 6px;border-radius:3px;color:#e0b478;font-size:13px}
+table{border-collapse:collapse;width:100%;margin:16px 0}
+th,td{border:1px solid #2a2a2d;padding:9px 13px;text-align:left}
+th{background:#1a1a1d;color:#fff}
+hr{border:none;border-top:1px solid #2a2a2d;margin:32px 0}
+ul{padding-left:22px}li{margin:6px 0}
+strong{color:#fff}em{color:#a0a0a3}
+</style></head><body><h1>Loading System v3.1 — Final Multi-Agent Review</h1>
+Date: 2026-05-20
+Agents: content-strategist + copy-qa + qa-tester
+Verdict on: content + JSON + runtime logic (98 items, 11 reveal_proximity, 10 long)<br><br><hr><br><br><h2>БЛОКЕРЫ — починить ДО имплементации (6 шт)</h2><br><br><h3>1. B_micro_010 — «Осталось несколько секунд…»</h3>
+<strong>Флагнут как:</strong> звонок таймера (content-strategist) — буквально, нарушает принцип «не давить на ожидание»
+<strong>Где:</strong> id <code>B_micro_010</code>, флаг <code>reveal_proximity: true</code>
+<strong>Fix:</strong> переписать на «Почти» / «Сцена становится ближе» (уже есть в B_micro_007), либо убрать<br><br><h3>2. A_emotional_016 — снять reveal_proximity</h3>
+<strong>Флагнут как:</strong> «Сцена может быть первым приближением, а не окончательным ответом» — понижает ожидание прямо перед reveal (content-strategist)
+<strong>Fix:</strong> <code>reveal_proximity: false</code><br><br><h3>3. A_emotional_003 = B_consciousness_003 — точный текстовый дубль</h3>
+<strong>Где:</strong> «Некоторые будущие сначала приходят как ощущение.» — одинаковый текст, разные IDs (copy-qa)
+<strong>Эффект:</strong> history dedup по <code>fragment_id</code> не ловит → пользователь при A/B-переключении увидит ту же фразу дважды как «новую»
+<strong>Fix:</strong> заменить B_consciousness_003 на уникальный текст ИЛИ перейти на content-hash dedup<br><br><h3>4. 4 цитаты дублируются между A и B</h3>
+<strong>Где:</strong> A_quote_001-004 ≡ B_quote_001-004 (Рильке, Юнг, Маслоу, Анаис Нин) — дословно (copy-qa)
+<strong>Fix:</strong> либо взять другие переводы/формулировки для System B, либо зафиксировать в спеке «цитаты шерятся между системами»<br><br><h3>5. weight <code>long: 0.0</code> в System A при 5 long items</h3>
+<strong>Где:</strong> <code>systems.grounded_cinematic.weights.long = 0.0</code>, но A_long_001-005 присутствуют (copy-qa)
+<strong>Эффект:</strong> функционально long в System A никогда не покажется — но данные есть → conflict спеки и dataset
+<strong>Fix:</strong> либо удалить A_long_001-005 из JSON, либо поставить вес >0 (например 0.03)<br><br><h3>6. Cooldown fallback semantics — не специфицирован</h3>
+<strong>Где:</strong> <code>memory_rules.fallback_when_all_seen</code> = "pick_oldest_seen_fragment_not_from_last_session" (qa-tester BUG-003)
+<strong>Эффект:</strong> при generation_count=25 пул emotional пересыхает (нужно ~5-6 за генерацию, доступно ~3-4 после cooldown=7) → fallback активируется, но НЕ описано: уважает ли он cooldown
+<strong>Fix:</strong> добавить в спеку явно «fallback игнорирует cooldown, но не показывает last_session_ids»<br><br><hr><br><br><h2>MEDIUM — желательно закрыть</h2><br><br><h3>M1. Reveal-режим триггерится в секунду 0 при коротких генерациях</h3>
+<strong>qa-tester BUG-001:</strong> при <code>estimatedTotalSec=3</code> и <code>elapsedSec=0</code> → <code>secondsToReveal=3 ≤ 6</code> → reveal-фраза показывается СРАЗУ как первая
+<strong>Fix:</strong> в <code>selectNextFragment</code> добавить <code>elapsedSec >= MIN_ELAPSED_FOR_REVEAL</code> (≥5 сек)<br><br><h3>M2. >60 сек генерация — поведение не специфицировано</h3>
+<strong>qa-tester BUG-006:</strong> пул long=5 с cooldown=15, при долгой генерации может потребоваться 2 long → блокируется <code>not_back_to_back</code> → fallback может вернуть micro → резкий ритмический сдвиг<br><br><h3>M3. Coaching-эхо в B_consciousness_013/014</h3>
+<strong>content-strategist:</strong> «не разрешал себе рассмотреть» и «когда внутри появляется место, где оно может начаться» — мягкий therapist-tone. Не блокер, но следить на тестировании.<br><br><h3>M4. B_long_004 — метафора «двери»</h3>
+<strong>content-strategist:</strong> «замечать двери, которые раньше проходили мимо» — лёгкий привкус Law of Attraction. Не убирать, но мониторить.<br><br><hr><br><br><h2>LOW</h2><br><br><ul><li><strong>L1.</strong> Tag <code>recognition</code> в JSON — copy-qa флаг: если попадает в логи/аналитику, переименовать. Если internal — OK.</li><li><strong>L2.</strong> «Некоторые»/«Иногда» в emotional+consciousness = 25% — ровно на границе. При следующем патче нельзя добавлять с этими зачинами.</li><li><strong>L3.</strong> System A reveal_proximity = 5 кандидатов — скудно после 5+ генераций подряд. System B = 6, лучше.</li><li><strong>L4.</strong> A_science_004 ≈ B_science_magic_002 — почти дословное совпадение, разница в одном слове.</li></ul><br><br><hr><br><br><h2>NOTE — недостающие 11 юнитов</h2><br><br>content-strategist отметил, что A_emotional_021-025 и B_consciousness_021-025 (упомянуты в задании как «новые» сверх v3) <strong>в файле отсутствуют</strong>. JSON содержит только 001-020 в этих типах. Если это запланированный патч — нужен v3.2.<br><br><hr><br><br><h2>ИТОГ</h2><br><br><table><thead><tr><th>Аспект</th><th>Статус</th></tr></thead><tbody><tr><td>3 жёстких нарушения предыдущего ревью</td><td>✅ Закрыто</td></tr><tr><td>Структура (98 items, схема, weights)</td><td>✅ Готово</td></tr><tr><td>Runtime logic (violatesSequenceRules, reveal_proximity, isAllowedInBand)</td><td>✅ Готово</td></tr><tr><td>Новые блокеры</td><td>❌ 6 шт</td></tr><tr><td>MEDIUM</td><td>⚠️ 4 шт</td></tr><tr><td>LOW</td><td>ℹ️ 4 шт</td></tr></tbody></table>
+<strong>Вердикт:</strong> к имплементации можно после закрытия 6 блокеров (~15-20 мин работы). Все они point-fix'ы, не требуют переделки системы.
+</body></html>
