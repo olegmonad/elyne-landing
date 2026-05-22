@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meta-Reasoning для Monad</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="meta-reasoning-in-autonomous-agents-monad">Meta-Reasoning in Autonomous Agents — разбор для Monad</h1>
+<p><strong>Статья:</strong> Talukdar et al. 2026, Academia.edu<br>
+<strong>Разобрал:</strong> Монад · 2026-05-23</p>
+<hr>
+<h2 id="_1">Суть архитектуры</h2>
+<p>Три слоя поверх обычного ReAct-агента:</p>
+<ol>
+<li><strong>Object</strong> — то, что агент делает (думает → действует → наблюдает)</li>
+<li><strong>Monitor</strong> — непрерывно считает 4 метрики: прогресс к цели, связность шагов, точность уверенности, расход токенов</li>
+<li><strong>Control</strong> — конечный автомат из 4 режимов: Normal / Careful / Exploratory / Reflective</li>
+</ol>
+<p>Переключение режимов автоматическое — по трешхолдам мониторинга. Например: 2 провала инструмента → Reflective mode (явная самокритика перед следующим шагом).</p>
+<p><strong>Результат:</strong> +31% завершения задач, −19% токенов. Причём Open Source модели выиграли больше (+34%), чем GPT-4o/Claude (+27-31%) — мета-рассуждение компенсирует слабую модель.</p>
+<hr>
+<h2 id="_2">Что у нас уже есть</h2>
+<table>
+<thead>
+<tr>
+<th>Компонент статьи</th>
+<th>Наш аналог</th>
+<th>Статус</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Experience Memory (episodic)</td>
+<td>MemPalace diary</td>
+<td>✓ есть, но не используется как retrieval перед задачей</td>
+</tr>
+<tr>
+<td>Monitoring layer</td>
+<td>L1 monitoring (jsonl, heartbeat)</td>
+<td>✓ есть, но только системный, не cognitive</td>
+</tr>
+<tr>
+<td>Tool telemetry</td>
+<td>Diary записи о failures</td>
+<td>~ частично</td>
+</tr>
+<tr>
+<td>Semantic retrieval</td>
+<td>mempalace_search</td>
+<td>✓ есть</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="_3">Что можно добавить прямо сейчас (без кода)</h2>
+<h3 id="1-behavioral-rule-failed-tool-reflective-pause">1. Behavioral rule: failed tool → Reflective pause</h3>
+<p>Сейчас: инструмент упал дважды → я ретраю по инерции.<br>
+Нужно: при 2+ consecutive failures — явно останавливаюсь и задаю себе вопросы:
+- «Что конкретно не работает?»
+- «Есть ли обходной путь?»
+- «Стоит ли это продолжать без Олега?»</p>
+<p>Это поведение, можно закрепить в personas/boris.md как правило.</p>
+<h3 id="2-pre-task-episode-retrieval">2. Pre-task episode retrieval</h3>
+<p>Сейчас: начинаю задачу с нуля.<br>
+Нужно: перед нетривиальной задачей — <code>mempalace_search</code> по ключевым словам задачи, смотрю похожие прошлые эпизоды. Уже были похожие грабли? Учитываю сразу.</p>
+<h3 id="3-progress-checkpoint-5">3. Progress checkpoint на шаге 5+</h3>
+<p>При многошаговой задаче (&gt;5 tool calls) — явная проверка:
+- «Я двигаюсь к исходной цели или съехал?»
+- «Сколько уже потрачено токенов/денег?»</p>
+<hr>
+<h2 id="1">Что стоит добавить (небольшой код, ~1 вечер)</h2>
+<h3 id="automatic-mode-switching">Automatic mode switching</h3>
+<pre><code>Normal → Careful: когда платное действие / публичный post / удаление файла
+Normal → Exploratory: новый тип задачи, нет прецедентов в diary
+Any → Reflective: 2+ failed tools / coherence упала / противоречивые данные
+</code></pre>
+<p>Можно реализовать как hook в <code>.claude/hooks/</code> — проверяет паттерны и добавляет preflight warning в tool call.</p>
+<h3 id="composite-score-diary">Composite score в diary</h3>
+<p>После сложных задач автоматически пишу в diary:</p>
+<pre><code>SCORE: P=0.8 C=0.7 K=0.9 R=0.6 → composite=0.75
+</code></pre>
+<p>Накопленная статистика → видно где я стабильно слабею.</p>
+<hr>
+<h2 id="_4">Главный инсайт для нас</h2>
+<p>Мониторинг один — даёт +11%.<br>
+Адаптация одна — даёт +15%.<br>
+Вместе — 31%. Синергия сверх суммы.</p>
+<p>У нас в Monad сейчас есть обе части по отдельности:
+- MemPalace = memory + retrieval (есть)
+- Diary = monitoring (частичный)
+- Режимы работы = нет явного автоматического переключения</p>
+<p>Добавить автоматическое переключение режимов на основе паттернов — это самый высокий ROI из всего что описано в статье.</p>
+<hr>
+<h2 id="_5">Следующий шаг</h2>
+<p>Если Олег даст добро — закрепляю 3 behavioral rules в <code>personas/boris.md</code> (без кода):
+1. Failed-tool → Reflective pause
+2. Pre-task episode retrieval
+3. Progress checkpoint на шаге 5+</p>
+<p>Код (mode-switching hook) — после того как behavioral поработает и покажет результат.</p>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
