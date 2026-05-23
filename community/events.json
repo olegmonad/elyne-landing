@@ -1,5 +1,5 @@
 {
-  "updated": "2026-05-23T11:30:00+03:00",
+  "updated": "2026-05-23T22:50:00+03:00",
   "events": [
     {
       "id": "kapitanskaya-dochka-2026-05-23",
@@ -388,6 +388,32 @@
       "description": "Большая инсталляция одной из заметных современных российских художниц. Тема — становление формы.",
       "url": "https://ges-2.org/calendar",
       "price": "бесплатно"
+    },
+    {
+      "id": "den-moskovskogo-sporta-2026-05-30",
+      "title": "День Московского спорта 2026",
+      "date": "2026-05-30",
+      "time": "12:00",
+      "place": "Лужники, ул. Лужники, 24",
+      "category": "спорт",
+      "emoji": "🏅",
+      "description": "Городской фестиваль: 20+ спортивных зон, BMX/скейт/гребля/боевые искусства/шахматы, вечерний концерт (Zivert, SHAMAN, LYRIQ). Вход свободный. В программе — SMSTRETCHING 10-й стадион (Барре).",
+      "price": "Бесплатно",
+      "is_free": true,
+      "url": "https://www.kp.ru/afisha/msk/festivali/prazdnik-moskovskij-sport-v-luzhnikax/"
+    },
+    {
+      "id": "smstretching-10-stadion-2026-05-30",
+      "title": "SMSTRETCHING: 10-й стадион (Барре)",
+      "date": "2026-05-30",
+      "time": "12:00",
+      "place": "Лужники",
+      "category": "wellbeing",
+      "emoji": "🤸",
+      "description": "Юбилейная массовая тренировка по Барре от SMSTRETCHING вместе с Московским спортом. Запись через приложение smstretching.ru. Места заканчиваются — бронируй заранее.",
+      "price": "Бесплатно",
+      "is_free": true,
+      "url": "https://smstretching.ru"
     },
     {
       "id": "online-ryabov-soyuz-2026-05-30",
