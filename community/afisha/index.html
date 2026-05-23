@@ -264,6 +264,43 @@
   .homescreen-btn-sm.added { opacity: 0.3; pointer-events: none; }
 
   .footer { padding: 8px 16px 4px; font-size: 11px; color: var(--hint); text-align: center; }
+
+  /* Feedback modal */
+  .feedback-overlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.65); backdrop-filter: blur(4px);
+    align-items: flex-end; justify-content: center;
+  }
+  .feedback-overlay.open { display: flex; }
+  .feedback-sheet {
+    width: 100%; max-width: 600px;
+    background: var(--bg2); border-radius: 20px 20px 0 0;
+    padding: 20px 16px calc(env(safe-area-inset-bottom, 0px) + 20px);
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .feedback-title { font-size: 16px; font-weight: 700; text-align: center; }
+  .feedback-hint { font-size: 13px; color: var(--hint); text-align: center; line-height: 1.4; }
+  .feedback-textarea {
+    width: 100%; min-height: 110px; max-height: 200px;
+    background: var(--bg); color: var(--text);
+    border: 1px solid var(--border); border-radius: 12px;
+    padding: 12px 14px; font-size: 15px; line-height: 1.5;
+    resize: none; outline: none; font-family: inherit;
+  }
+  .feedback-textarea:focus { border-color: rgba(196,169,94,0.5); }
+  .feedback-actions { display: flex; gap: 10px; }
+  .feedback-cancel {
+    flex: 1; padding: 13px; border-radius: 12px;
+    background: var(--bg); border: 1px solid var(--border);
+    color: var(--hint); font-size: 15px; font-weight: 600; cursor: pointer;
+  }
+  .feedback-send {
+    flex: 2; padding: 13px; border-radius: 12px;
+    background: var(--btn); color: var(--btn-text);
+    font-size: 15px; font-weight: 700; border: none; cursor: pointer;
+  }
+  .feedback-send:disabled { opacity: 0.5; pointer-events: none; }
+  .feedback-status { font-size: 13px; text-align: center; min-height: 18px; }
 </style>
 </head>
 <body>
@@ -306,7 +343,22 @@
 <div class="bottom-bar">
   <div class="homescreen-btn-sm" id="homescreen-btn" onclick="addToHomeScreen()" title="На рабочий стол">📲</div>
   <div class="homescreen-btn-sm" onclick="shareAfisha()" title="Поделиться афишей">🔗</div>
+  <div class="homescreen-btn-sm" onclick="openFeedback()" title="Обратная связь">✉️</div>
   <div class="join-btn" onclick="openCommunity()">💬 Вступить в сообщество</div>
+</div>
+
+<!-- Feedback modal -->
+<div class="feedback-overlay" id="feedback-overlay" onclick="closeFeedbackIfBg(event)">
+  <div class="feedback-sheet">
+    <div class="feedback-title">✉️ Обратная связь</div>
+    <div class="feedback-hint">Отзыв об афише, пожелание или ссылка на интересный ресурс с мероприятиями — всё сюда</div>
+    <textarea class="feedback-textarea" id="feedback-text" placeholder="Напишите здесь..." maxlength="2000"></textarea>
+    <div class="feedback-status" id="feedback-status"></div>
+    <div class="feedback-actions">
+      <button class="feedback-cancel" onclick="closeFeedback()">Отмена</button>
+      <button class="feedback-send" id="feedback-send-btn" onclick="sendFeedback()">Отправить</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -424,6 +476,58 @@ function openOnlineSource() {
   const url = 'https://afisha.timepad.ru/online';
   if (tg) tg.openLink(url);
   else window.open(url, '_blank');
+}
+
+// ─── Feedback modal ─────────────────────────────────────────────────────────
+
+function openFeedback() {
+  document.getElementById('feedback-overlay').classList.add('open');
+  document.getElementById('feedback-text').value = '';
+  document.getElementById('feedback-status').textContent = '';
+  document.getElementById('feedback-send-btn').disabled = false;
+  setTimeout(() => document.getElementById('feedback-text').focus(), 100);
+}
+
+function closeFeedback() {
+  document.getElementById('feedback-overlay').classList.remove('open');
+}
+
+function closeFeedbackIfBg(e) {
+  if (e.target === document.getElementById('feedback-overlay')) closeFeedback();
+}
+
+async function sendFeedback() {
+  const text = document.getElementById('feedback-text').value.trim();
+  if (!text) { document.getElementById('feedback-status').textContent = 'Напишите что-нибудь'; return; }
+
+  const btn = document.getElementById('feedback-send-btn');
+  const status = document.getElementById('feedback-status');
+  btn.disabled = true;
+  status.textContent = 'Отправляю…';
+  status.style.color = 'var(--hint)';
+
+  try {
+    const initData = tg?.initData || '';
+    const r = await fetch('https://elyne-start.online/api/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Telegram-Init-Data': initData },
+      body: JSON.stringify({ text })
+    });
+    const data = await r.json();
+    if (data.ok) {
+      status.textContent = '✓ Отправлено, спасибо!';
+      status.style.color = 'var(--green)';
+      setTimeout(closeFeedback, 1500);
+    } else {
+      status.textContent = 'Ошибка: ' + (data.error || 'попробуй позже');
+      status.style.color = '#e57373';
+      btn.disabled = false;
+    }
+  } catch (e) {
+    status.textContent = 'Не удалось отправить';
+    status.style.color = '#e57373';
+    btn.disabled = false;
+  }
 }
 
 function shareAfisha() {
