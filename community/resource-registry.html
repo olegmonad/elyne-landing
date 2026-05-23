@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Реестр источников — ELYNE Community Афиша</title>
+<style>
+  :root {
+    --bg: #0f0f11; --bg2: #1a1a1f; --bg3: #222228;
+    --border: #2e2e38; --text: #e8e8f0; --hint: #6b6b80;
+    --ok: #4ade80; --warn: #fbbf24; --err: #f87171;
+    --blue: #60a5fa; --accent: #a78bfa;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; line-height: 1.5; }
+  .page { max-width: 1200px; margin: 0 auto; padding: 24px 16px 60px; }
+  h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  .subtitle { color: var(--hint); font-size: 13px; margin-bottom: 20px; }
+  .stats { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+  .stat { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 10px 16px; min-width: 100px; }
+  .stat-n { font-size: 22px; font-weight: 700; }
+  .stat-label { font-size: 11px; color: var(--hint); margin-top: 2px; }
+  .stat.ok .stat-n { color: var(--ok); }
+  .stat.warn .stat-n { color: var(--warn); }
+  .stat.err .stat-n { color: var(--err); }
+  .controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  select, input { background: var(--bg2); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 7px 12px; font-size: 13px; outline: none; }
+  select:focus, input:focus { border-color: var(--accent); }
+  button { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity 0.15s; }
+  button:hover { opacity: 0.85; }
+  button.sec { background: var(--bg3); color: var(--text); border: 1px solid var(--border); }
+  .table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; }
+  thead th { background: var(--bg3); padding: 10px 12px; text-align: left; font-size: 12px; font-weight: 600; color: var(--hint); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
+  tbody tr { border-top: 1px solid var(--border); transition: background 0.1s; }
+  tbody tr:hover { background: var(--bg2); }
+  tbody td { padding: 10px 12px; vertical-align: top; }
+  td[contenteditable="true"] { outline: none; min-width: 80px; }
+  td[contenteditable="true"]:focus { background: rgba(167,139,250,0.08); border-radius: 4px; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .badge.ok { background: rgba(74,222,128,0.12); color: var(--ok); }
+  .badge.warn { background: rgba(251,191,36,0.12); color: var(--warn); }
+  .badge.err { background: rgba(248,113,113,0.12); color: var(--err); }
+  .badge.cat { background: rgba(96,165,250,0.12); color: var(--blue); }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .url-cell { font-size: 12px; font-family: monospace; }
+  .note-cell { color: var(--hint); font-size: 12px; max-width: 280px; }
+  .del-btn { background: none; border: none; color: var(--hint); cursor: pointer; font-size: 14px; padding: 2px 6px; border-radius: 4px; }
+  .del-btn:hover { color: var(--err); background: rgba(248,113,113,0.1); }
+  .add-row { border-top: 1px solid var(--border); }
+  .section-head td { background: var(--bg3); color: var(--hint); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 6px 12px; }
+  .updated { margin-top: 16px; font-size: 12px; color: var(--hint); }
+  .export-btn { margin-top: 16px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>📚 Реестр источников — ELYNE Community Афиша</h1>
+  <div class="subtitle">Все ресурсы, которые используем для поиска и наполнения афиши. Обновлено: 24 мая 2026 · Нажмите на ячейку чтобы отредактировать.</div>
+
+  <div class="stats">
+    <div class="stat ok"><div class="stat-n" id="cnt-ok">—</div><div class="stat-label">✅ Работает</div></div>
+    <div class="stat warn"><div class="stat-n" id="cnt-warn">—</div><div class="stat-label">⚠️ Ограниченно</div></div>
+    <div class="stat err"><div class="stat-n" id="cnt-err">—</div><div class="stat-label">❌ Не получилось</div></div>
+    <div class="stat"><div class="stat-n" id="cnt-total">—</div><div class="stat-label">Всего источников</div></div>
+  </div>
+
+  <div class="controls">
+    <select id="filter-status" onchange="applyFilter()">
+      <option value="">Все статусы</option>
+      <option value="ok">✅ Работает</option>
+      <option value="warn">⚠️ Ограниченно</option>
+      <option value="err">❌ Не получилось</option>
+    </select>
+    <select id="filter-cat" onchange="applyFilter()">
+      <option value="">Все категории</option>
+    </select>
+    <input id="filter-search" type="text" placeholder="Поиск по URL или описанию..." oninput="applyFilter()" style="flex:1;min-width:180px">
+    <button onclick="addRow()">+ Добавить источник</button>
+    <button class="sec" onclick="exportCSV()">⬇ CSV</button>
+    <button class="sec" onclick="resetToDefault()">↺ Сброс</button>
+  </div>
+
+  <div class="table-wrap">
+    <table id="main-table">
+      <thead>
+        <tr>
+          <th style="width:36px"></th>
+          <th>Категория</th>
+          <th>URL / Источник</th>
+          <th>Статус</th>
+          <th>Описание</th>
+          <th>Примечание / Проблема</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="updated" id="updated-line"></div>
+  <button class="sec export-btn" onclick="saveToLocal()">💾 Сохранить изменения (localStorage)</button>
+</div>
+
+<script>
+const DEFAULT_DATA = [
+  // ── РАБОТАЕТ ──
+  {cat:"Общая афиша", url:"https://kudamoscow.ru", status:"ok", desc:"Общая афиша Москвы, топ-10 на выходные", note:"Основной источник при каждом exhaustive-поиске"},
+  {cat:"Общая афиша", url:"https://afisha.yandex.ru/moscow", status:"ok", desc:"Яндекс Афиша — концерты, события, выходные", note:"JS-рендер, но данные доступны через поиск"},
+  {cat:"Общая афиша", url:"https://www.kp.ru/afisha/msk", status:"ok", desc:"КП Москва — фестивали и крупные события", note:""},
+  {cat:"Общая афиша", url:"https://aif.ru/moscow", status:"ok", desc:"АиФ Москва — бесплатные мероприятия", note:""},
+  {cat:"Общая афиша", url:"https://moscowwalks.ru", status:"ok", desc:"Городские прогулки и уличные события", note:""},
+  {cat:"Театр", url:"https://kultura.mos.ru/theaters", status:"ok", desc:"Офиц. портал Депкульт Москвы — государственные театры", note:"Авторитетный источник по гос. театрам"},
+  {cat:"Театр", url:"https://moscowshow.com/afisha/teatry/", status:"ok", desc:"Московское шоу — репертуар театров, удобный HTML", note:"Проще для скрапинга чем Яндекс"},
+  {cat:"Театр", url:"https://www.ticketland.ru/spectacle/", status:"ok", desc:"Ticketland — партнёр Большого, МХАТ, Малого театра", note:"Официальный продавец, цены точные"},
+  {cat:"Театр", url:"https://live.mts.ru/moscow/venues/theater/", status:"ok", desc:"МТС Live — расписание и билеты театров", note:"Использовали для Театра Сатиры"},
+  {cat:"Театр", url:"https://www.satiry.ru/", status:"ok", desc:"Московский Театр Сатиры — билеты и афиша", note:"Репертуар нашли через веб-поиск, не прямой скрапинг"},
+  {cat:"Выставки", url:"https://www.museum.ru/afisha/", status:"ok", desc:"Старейший музейный портал РФ — все музеи включая частные", note:"Широкий охват, есть малые площадки"},
+  {cat:"Выставки", url:"https://www.tretyakovgallery.ru", status:"ok", desc:"Третьяковская галерея — выставки и события", note:""},
+  {cat:"Выставки", url:"https://kultura.mos.ru/museums", status:"ok", desc:"Офиц. реестр музеев Москвы от Депкульт", note:""},
+  {cat:"Выставки", url:"https://ges-2.org", status:"ok", desc:"Дом культуры ГЭС-2 — современное искусство", note:"Событий много, данные вручную через WebFetch"},
+  {cat:"Wellbeing", url:"https://organic-people.com", status:"ok", desc:"Wellbeing-фестивали, йога, осознанность", note:""},
+  {cat:"Wellbeing / Спорт", url:"https://sportsweekend.ru", status:"ok", desc:"Бесплатные городские тренировки по выходным", note:"Расписание открывается по четвергам в 12:00"},
+  {cat:"Спорт", url:"https://moscow.sport/events-year/", status:"ok", desc:"Московский спорт — официальный календарь городских событий", note:"Нашли здесь День Московского спорта 30.05"},
+  {cat:"Спорт", url:"Instagram @smstretching.comm", status:"ok", desc:"Анонсы массовых стадионных тренировок SMSTRETCHING", note:"Первоисточник их событий; привёл Олег 23.05"},
+  {cat:"IT / AI", url:"https://techweek.moscow/", status:"ok", desc:"Tech Week — крупнейшая IT/AI конференция Москвы (июнь, ВДНХ)", note:"Нашли 17-18 июня 2026"},
+  {cat:"IT / AI", url:"https://ict2go.ru/regions/moscow", status:"ok", desc:"Агрегатор IT-конференций и митапов по Москве", note:""},
+  {cat:"IT / AI", url:"https://all-events.ru/events/calendar/theme-is-ai/", status:"ok", desc:"Календарь AI/ML мероприятий по всей РФ", note:"Нашли AI CONF 2026 (1 июля, ВДНХ)"},
+  {cat:"IT / AI", url:"https://workspace.ru/events/", status:"ok", desc:"Digital / product / аналитика события", note:""},
+  {cat:"IT / AI", url:"https://hightime.media/it-conferences/ai/", status:"ok", desc:"Конференции по ИИ в России с расписанием", note:""},
+  {cat:"Парки", url:"https://mosparks.ru/events", status:"ok", desc:"Афиша северных парков Москвы (Тушино, Покровский берег)", note:"В реестре, данные пока не скрапили напрямую"},
+  {cat:"Парки", url:"https://afisha.yandex.ru/moscow/on_air", status:"ok", desc:"Яндекс — события на открытом воздухе (парки + площади)", note:""},
+  {cat:"Праздники", url:"https://www.un.org/ru/observances", status:"ok", desc:"Международные дни ООН — часто рождают крупные события", note:"ВАЖНО: пропустили День медитации 24.05 не проверив"},
+  {cat:"Праздники", url:"https://calendarina.ru/prazdniki", status:"ok", desc:"Российские и мировые праздники с датами", note:""},
+  {cat:"API", url:"https://kudago.com/public-api/v1.4/events/", status:"ok", desc:"KudaGo API — события, театр, выставки. Параметры: location=msk, categories=theater/exhibition", note:"⚠️ Возвращает исторические даты — фильтровать по end≥today"},
+  {cat:"API", url:"https://ontp.timepad.ru/api/events", status:"ok", desc:"Timepad internal API — онлайн-события (cityId=15789521)", note:"Нашли через перехват сети в Playwright. Категории: 453=психология, 525=культура, 2465=наука"},
+  {cat:"Внутренние", url:"vault/elyne/community/events.json", status:"ok", desc:"База событий афиши — основной файл", note:""},
+  {cat:"Внутренние", url:"mempalace_search", status:"ok", desc:"Поиск по дневнику MemPalace — упоминания событий", note:""},
+  {cat:"Внутренние", url:"vault/digests/", status:"ok", desc:"Утренние сводки — иногда содержат анонсы событий", note:""},
+
+  // ── ОГРАНИЧЕННО ──
+  {cat:"Театр", url:"https://afisha.yandex.ru/moscow/theatre", status:"warn", desc:"Яндекс Афиша — театры. Крупнейший агрегатор", note:"JS-рендер: данные загружаются через JavaScript, прямой скрапинг сложен. Используем через WebFetch с промптом."},
+  {cat:"Театр", url:"https://www.afisha.ru/msk/schedule_theatre/", status:"warn", desc:"Афиша.ру — полный репертуар всех театров", note:"JS-рендер. Используем WebSearch/WebFetch с промптом, не API."},
+  {cat:"Выставки", url:"https://www.afisha.ru/msk/museum-exhibition/", status:"warn", desc:"Афиша.ру — раздел выставок", note:"JS-рендер. Аналогично театрам."},
+  {cat:"Выставки / Культура", url:"https://muzeon.ru", status:"warn", desc:"Парк Мюзеон — скульптура, фестивали, кино", note:"Данные получаем через WebSearch, не прямой скрапинг сайта."},
+  {cat:"Общая афиша", url:"https://www.ticketland.ru/afisha/", status:"warn", desc:"Ticketland — общая афиша с билетами", note:"Bot-защита на некоторых страницах, используем через WebFetch."},
+
+  // ── НЕ ПОЛУЧИЛОСЬ ──
+  {cat:"Театр", url:"https://www.satyra.ru/afisha/", status:"err", desc:"Официальный сайт Театра Сатиры — афиша", note:"ECONNREFUSED — сайт не отвечает. Данные взяли через afisha.yandex.ru и live.mts.ru."},
+  {cat:"Парки", url:"https://www.park-gorkogo.com/events", status:"err", desc:"Офиц. сайт Парка Горького — события", note:"ECONNREFUSED — сайт не отвечает. Данные через поиск + kp.ru."},
+  {cat:"Парки", url:"https://bilet.mos.ru/places/parki/", status:"err", desc:"Мосбилет — события во всех парках города", note:"Timeout (60 сек exceeded). Альтернатива: mosparks.ru + yandex afisha on_air."},
+  {cat:"Театр", url:"https://www.kassir.ru/spectacle/teatry-moskvy/", status:"err", desc:"Кассир.ру — широкий охват театров", note:"Bot-защита — блокирует автоматические запросы. Используем ticketland.ru как альтернативу."},
+  {cat:"Театр", url:"https://www.bolshoi.ru/performances/", status:"err", desc:"Большой театр — официальный репертуар", note:"Данные берём через ticketland.ru (официальный партнёр). Напрямую не скрапим."},
+  {cat:"Театр", url:"https://mxat.ru/performance/", status:"err", desc:"МХАТ им. Горького — репертуар", note:"Аналогично Большому — через ticketland.ru."},
+];
+
+let tableData = [];
+
+function loadData() {
+  const saved = localStorage.getItem('elyne-registry-v2');
+  if (saved) {
+    try { tableData = JSON.parse(saved); return; } catch(e) {}
+  }
+  tableData = DEFAULT_DATA.map((r, i) => ({...r, id: i}));
+}
+
+function saveToLocal() {
+  // Собираем актуальные данные из DOM
+  syncFromDOM();
+  localStorage.setItem('elyne-registry-v2', JSON.stringify(tableData));
+  document.getElementById('updated-line').textContent = '💾 Сохранено: ' + new Date().toLocaleString('ru');
+}
+
+function syncFromDOM() {
+  const rows = document.querySelectorAll('#tbody tr[data-id]');
+  rows.forEach(row => {
+    const id = parseInt(row.dataset.id);
+    const item = tableData.find(d => d.id === id);
+    if (!item) return;
+    const cells = row.querySelectorAll('td[contenteditable]');
+    if (cells[0]) item.cat = cells[0].innerText.trim();
+    if (cells[1]) item.url = cells[1].innerText.trim();
+    if (cells[2]) item.desc = cells[2].innerText.trim();
+    if (cells[3]) item.note = cells[3].innerText.trim();
+    const sel = row.querySelector('select');
+    if (sel) item.status = sel.value;
+  });
+}
+
+function resetToDefault() {
+  if (!confirm('Сбросить все изменения к исходным данным?')) return;
+  localStorage.removeItem('elyne-registry-v2');
+  tableData = DEFAULT_DATA.map((r, i) => ({...r, id: i}));
+  renderTable();
+}
+
+function statusBadge(s) {
+  const map = {ok: ['ok','✅ Работает'], warn: ['warn','⚠️ Ограниченно'], err: ['err','❌ Не получилось']};
+  const [cls, label] = map[s] || ['warn', s];
+  return `<select class="badge ${cls}" onchange="changeStatus(this,${'{id}'})">
+    <option value="ok" ${s==='ok'?'selected':''}>✅ Работает</option>
+    <option value="warn" ${s==='warn'?'selected':''}>⚠️ Ограниченно</option>
+    <option value="err" ${s==='err'?'selected':''}>❌ Не получилось</option>
+  </select>`;
+}
+
+function changeStatus(sel, id) {
+  const item = tableData.find(d => d.id === id);
+  if (item) { item.status = sel.value; sel.className = `badge ${sel.value}`; }
+  updateStats();
+}
+
+function urlCell(url) {
+  if (url.startsWith('http')) return `<a href="${url}" target="_blank">${url}</a>`;
+  return url;
+}
+
+function renderTable(filter) {
+  const tbody = document.getElementById('tbody');
+  const cats = [...new Set(tableData.map(d => d.cat))].sort();
+
+  // Populate cat filter
+  const catSel = document.getElementById('filter-cat');
+  const curCat = catSel.value;
+  catSel.innerHTML = '<option value="">Все категории</option>' + cats.map(c => `<option value="${c}" ${c===curCat?'selected':''}>${c}</option>`).join('');
+
+  const statusF = document.getElementById('filter-status').value;
+  const catF = document.getElementById('filter-cat').value;
+  const searchF = (document.getElementById('filter-search').value || '').toLowerCase();
+
+  // Group by section: ok → warn → err
+  const sections = [
+    {key: 'ok', label: '✅ Работает — данные успешно получаем'},
+    {key: 'warn', label: '⚠️ Ограниченно — JS-рендер или частичный доступ'},
+    {key: 'err', label: '❌ Не получилось — ECONNREFUSED / timeout / bot-защита'},
+  ];
+
+  let html = '';
+  sections.forEach(sec => {
+    if (statusF && statusF !== sec.key) return;
+    const items = tableData.filter(d => {
+      if (d.status !== sec.key) return false;
+      if (catF && d.cat !== catF) return false;
+      if (searchF && !(d.url+d.desc+d.note+d.cat).toLowerCase().includes(searchF)) return false;
+      return true;
+    });
+    if (!items.length) return;
+    html += `<tr class="section-head"><td colspan="6">${sec.label} (${items.length})</td></tr>`;
+    items.forEach(d => {
+      const badge = statusBadge(d.status).replace('{id}', d.id);
+      html += `<tr data-id="${d.id}" data-status="${d.status}">
+        <td><button class="del-btn" onclick="deleteRow(${d.id})" title="Удалить">✕</button></td>
+        <td contenteditable="true" class="badge cat" style="cursor:text">${d.cat}</td>
+        <td class="url-cell" contenteditable="true" style="cursor:text">${d.url}</td>
+        <td>${badge}</td>
+        <td contenteditable="true" style="cursor:text">${d.desc}</td>
+        <td contenteditable="true" class="note-cell" style="cursor:text">${d.note}</td>
+      </tr>`;
+    });
+  });
+
+  tbody.innerHTML = html || '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--hint)">Ничего не найдено</td></tr>';
+  updateStats();
+}
+
+function updateStats() {
+  const ok = tableData.filter(d=>d.status==='ok').length;
+  const warn = tableData.filter(d=>d.status==='warn').length;
+  const err = tableData.filter(d=>d.status==='err').length;
+  document.getElementById('cnt-ok').textContent = ok;
+  document.getElementById('cnt-warn').textContent = warn;
+  document.getElementById('cnt-err').textContent = err;
+  document.getElementById('cnt-total').textContent = tableData.length;
+}
+
+function applyFilter() { renderTable(); }
+
+function addRow() {
+  const id = Date.now();
+  tableData.push({id, cat:'Общая афиша', url:'https://', status:'ok', desc:'Описание источника', note:''});
+  renderTable();
+  // scroll to new row
+  setTimeout(() => {
+    const row = document.querySelector(`tr[data-id="${id}"]`);
+    if (row) row.scrollIntoView({behavior:'smooth', block:'center'});
+  }, 100);
+}
+
+function deleteRow(id) {
+  if (!confirm('Удалить строку?')) return;
+  tableData = tableData.filter(d => d.id !== id);
+  renderTable();
+}
+
+function exportCSV() {
+  syncFromDOM();
+  const header = ['Категория','URL','Статус','Описание','Примечание'];
+  const rows = tableData.map(d => [d.cat, d.url, d.status==='ok'?'Работает':d.status==='warn'?'Ограниченно':'Не получилось', d.desc, d.note].map(v => `"${(v||'').replace(/"/g,'""')}"`).join(','));
+  const csv = [header.join(','), ...rows].join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent('﻿' + csv);
+  a.download = 'elyne-sources-' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+}
+
+// Init
+loadData();
+renderTable();
+document.getElementById('updated-line').textContent = 'Последнее обновление: 24 мая 2026 · Версия 1.0 · Изменения сохраняются в браузере (localStorage)';
+</script>
+</body>
+</html>
