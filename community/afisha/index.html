@@ -243,8 +243,8 @@
 </div>
 
 <div class="view-switcher">
-  <div class="view-btn active" id="btn-my"    onclick="setView('my')">Мои ★</div>
-  <div class="view-btn"        id="btn-today" onclick="setView('today')">Сегодня</div>
+  <div class="view-btn"        id="btn-my"    onclick="setView('my')">Мои ★</div>
+  <div class="view-btn active" id="btn-today" onclick="setView('today')">Сегодня</div>
   <div class="view-btn"        id="btn-week"  onclick="setView('week')">Неделя</div>
   <div class="view-btn"        id="btn-month" onclick="setView('month')">Месяц</div>
   <div class="view-btn"        id="btn-year"  onclick="setView('year')">Год</div>
@@ -650,8 +650,8 @@ async function loadEvents() {
     dot.style.background = '#4CAF50';
 
     renderCatStrip();
-    // Start on "Мои" — show user's saved events first
-    setView('my');
+    // Start on "Мои" if user has saved events, otherwise show "Сегодня"
+    setView(attendedIds.size > 0 ? 'my' : 'today');
     footer.textContent = `${allEvents.length} событий · ELYNE Community`;
   } catch(e) {
     label.textContent    = 'Ошибка загрузки';
