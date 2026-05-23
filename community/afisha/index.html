@@ -478,6 +478,44 @@ function openOnlineSource() {
   else window.open(url, '_blank');
 }
 
+// ─── Swipe to navigate days ─────────────────────────────────────────────────
+
+(function() {
+  let sx = 0, sy = 0;
+  const el = document.getElementById('events-section');
+  if (!el) return;
+  el.addEventListener('touchstart', e => {
+    sx = e.touches[0].clientX;
+    sy = e.touches[0].clientY;
+  }, { passive: true });
+  el.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - sx;
+    const dy = e.changedTouches[0].clientY - sy;
+    if (Math.abs(dx) < 55 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    swipeDay(dx < 0 ? 1 : -1);
+  }, { passive: true });
+})();
+
+function swipeDay(delta) {
+  const today = todayIso();
+  if (currentView === 'today') {
+    // Switch to week and jump to target day
+    const target = addDays(today, delta > 0 ? 1 : -1);
+    setView('week', true);
+    selectedDate = target;
+    renderWeekStrip();
+    renderEvents();
+  } else if (selectedDate) {
+    selectedDate = addDays(selectedDate, delta);
+    if (currentView === 'week') { renderWeekStrip(); renderEvents(); }
+    else if (currentView === 'month') { renderMonthView(); renderEvents(); }
+  } else {
+    selectedDate = addDays(today, delta > 0 ? 1 : 0);
+    if (currentView === 'week') { renderWeekStrip(); renderEvents(); }
+  }
+  try { tg?.HapticFeedback?.impactOccurred('light'); } catch(e) {}
+}
+
 // ─── Feedback modal ─────────────────────────────────────────────────────────
 
 function openFeedback() {
