@@ -819,11 +819,20 @@ function renderCatStrip() {
 
 // ─── Event card HTML ───────────────────────────────────────────────────────
 
+function openTgDetails(url) {
+  try {
+    if (tg && tg.openTelegramLink) tg.openTelegramLink(url);
+    else window.open(url, '_blank');
+  } catch(e) { window.open(url, '_blank'); }
+}
+
 function eventCardHtml(ev) {
   const attending = attendedIds.has(ev.id);
-  const sourceBtn = ev.url
-    ? `<a class="event-btn primary" href="${ev.url}" target="_blank">Подробнее</a>`
-    : '';
+  // «Подробнее» → конкретный пост если есть tg_msg_id, иначе → вся группа
+  const tgUrl = ev.tg_msg_id
+    ? `https://t.me/elyne_community/${ev.tg_msg_id}`
+    : COMMUNITY_URL;
+  const sourceBtn = `<button class="event-btn primary" onclick="openTgDetails('${tgUrl}')">Подробнее</button>`;
 
   return `<div class="event-card" data-cat="${ev.category}">
     <div class="event-header">
