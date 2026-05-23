@@ -302,7 +302,11 @@ let navYear      = null;
 function csGet(key) {
   return new Promise(resolve => {
     if (tg?.CloudStorage) {
-      tg.CloudStorage.getItem(key, (err, val) => resolve(err ? null : (val || null)));
+      const timer = setTimeout(() => resolve(null), 3000);
+      tg.CloudStorage.getItem(key, (err, val) => {
+        clearTimeout(timer);
+        resolve(err ? null : (val || null));
+      });
     } else {
       resolve(localStorage.getItem(key));
     }
