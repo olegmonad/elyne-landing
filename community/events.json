@@ -1,5 +1,5 @@
 {
-  "updated": "2026-05-23T22:00:41+03:00",
+  "updated": "2026-05-24T01:20:00+03:00",
   "events": [
     {
       "id": "meditaciya-2026-05-24",
@@ -1232,6 +1232,114 @@
       "description": "Юбилейный 2026 год — Третьяковке 170 лет. Спецпрограмма ко дню рождения галереи.",
       "url": "https://www.tretyakovgallery.ru",
       "price": "от 700 ₽"
+    },
+    {
+      "id": "online-krizis-identichnost-2026-05-24",
+      "title": "Кризис: потерять себя, чтобы найти настоящего",
+      "date": "2026-05-24",
+      "time": "12:00",
+      "place": "Онлайн",
+      "category": "онлайн",
+      "emoji": "🌐",
+      "description": "Психолог ведёт разговор об идентичности в моменты кризиса — как отделить настоящие желания от чужих установок и найти себя.",
+      "url": "https://besplatnyy-telefon-doveri.timepad.ru/event/share/3982994/",
+      "is_free": true
+    },
+    {
+      "id": "online-kniga-kobrin-amplafer-2026-05-24",
+      "title": "Презентация книги Кирилла Кобрина «Амплифаер»",
+      "date": "2026-05-24",
+      "time": "15:00",
+      "place": "Онлайн",
+      "category": "онлайн",
+      "emoji": "🌐",
+      "description": "Онлайн-презентация нового романа — разговор об искусстве, звуке и том, как меняется восприятие культуры в эпоху избытка.",
+      "url": "https://novoe-literaturnoe-obozre.timepad.ru/event/share/3985462/",
+      "is_free": true
+    },
+    {
+      "id": "online-dizain-vystavki-2026-05-25",
+      "title": "Дизайн выставки: образ, среда, сценарий",
+      "date": "2026-05-25",
+      "time": "19:00",
+      "place": "Онлайн",
+      "category": "онлайн",
+      "emoji": "🌐",
+      "description": "Как проектируется пространство выставки: от концепции к физической среде и истории, которую рассказывает экспозиция.",
+      "url": "https://101st.timepad.ru/event/share/3988939/",
+      "is_free": true
+    },
+    {
+      "id": "online-surdin-nlo-2026-05-25",
+      "title": "Лекция Сурдина: НЛО — загадки и разгадки",
+      "date": "2026-05-25",
+      "time": "19:30",
+      "place": "Онлайн",
+      "category": "онлайн",
+      "emoji": "🌐",
+      "description": "Астроном Владимир Сурдин — о природе НЛО с точки зрения науки: что за ними стоит и почему люди продолжают верить.",
+      "url": "https://soobshchestvo-vsmysle.timepad.ru/event/share/3973325/",
+      "is_free": true
+    },
+    {
+      "id": "online-enigma-lingvistika-2026-05-26",
+      "title": "Практикум «Взломать Энигму»: язык как шифр",
+      "date": "2026-05-26",
+      "time": "19:30",
+      "place": "Онлайн",
+      "category": "онлайн",
+      "emoji": "🌐",
+      "description": "Практическое занятие по лингвистике и криптографии: как работает шифр и что нам говорит логика слов.",
+      "url": "https://kulturnyy-cat-2025.timepad.ru/event/share/3973578/",
+      "is_free": true
+    },
+    {
+      "id": "online-muzey-club-2026-05-27",
+      "title": "Музейный клуб",
+      "date": "2026-05-27",
+      "time": "11:00",
+      "place": "Онлайн",
+      "category": "онлайн",
+      "emoji": "🌐",
+      "description": "Онлайн-встреча вокруг актуальных вопросов музейной практики и современного искусства.",
+      "url": "https://ideasformuseums.timepad.ru/event/share/3749244/",
+      "is_free": true
+    },
+    {
+      "id": "online-zhenshchina-tvorec-2026-05-28",
+      "title": "Стать собой. Женщина-творец на рубеже XIX–XX веков",
+      "date": "2026-05-28",
+      "time": "20:00",
+      "place": "Онлайн",
+      "category": "онлайн",
+      "emoji": "🌐",
+      "description": "Лекция Гёте-Института: как женщины выбирали творчество вопреки эпохе — и что это значит для идентичности сегодня.",
+      "url": "https://goetheinstitut.timepad.ru/event/share/3990079/",
+      "is_free": true
+    },
+    {
+      "id": "online-mozg-ii-alipov-2026-05-30",
+      "title": "Лекция: мозг человека, использующего ИИ",
+      "date": "2026-05-30",
+      "time": "19:00",
+      "place": "Онлайн",
+      "category": "онлайн",
+      "emoji": "🌐",
+      "description": "Нейробиолог Владимир Алипов — о том, как использование искусственного интеллекта меняет работу мозга и что это значит для нас.",
+      "url": "https://soobshchestvo-vsmysle.timepad.ru/event/share/3982977/",
+      "is_free": true
+    },
+    {
+      "id": "online-ryabov-soyuz-2026-05-30",
+      "title": "Лекция Рябова: от декабристов к новым тайным организациям",
+      "date": "2026-05-30",
+      "time": "16:00",
+      "place": "Онлайн",
+      "category": "онлайн",
+      "emoji": "🌐",
+      "description": "Историк Пётр Рябов — о декабристском движении и путях русского освободительного движения в XIX веке.",
+      "url": "https://tsentr-arhe-v-sankt-peter.timepad.ru/event/share/3991583/",
+      "is_free": true
     }
   ]
 }
