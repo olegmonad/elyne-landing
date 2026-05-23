@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>ELYNE · Афиша</title>
+<title>ELYNE Афиша</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
   :root {
@@ -276,7 +276,7 @@
 const tg = window.Telegram?.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
 
-const EVENTS_URL = 'https://olegmonad.github.io/elyne-landing/community/events.json';
+const EVENTS_URL = 'https://elyne-start.online/community/events.json';
 const TG_BASE = 'https://t.me/c/1003993020463/';
 
 const DAYS_RU = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
@@ -426,7 +426,7 @@ async function loadEvents() {
     label.textContent = 'Ошибка загрузки';
     dot.style.background = '#E57373';
     document.getElementById('events-section').innerHTML =
-      `<div class="empty"><div class="empty-emoji">⚠️</div><div class="empty-text">Не удалось загрузить события</div></div>`;
+      `<div class="empty"><div class="empty-emoji">⚠️</div><div class="empty-text">Не удалось загрузить события</div><div class="meta-tag" style="margin-top:8px;font-size:11px;padding:0 24px">${e.message || e}</div></div>`;
   }
 }
 
