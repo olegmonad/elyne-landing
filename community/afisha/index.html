@@ -268,6 +268,7 @@
 
 <div class="bottom-bar">
   <div class="homescreen-btn-sm" id="homescreen-btn" onclick="addToHomeScreen()" title="На рабочий стол">📲</div>
+  <div class="homescreen-btn-sm" onclick="shareAfisha()" title="Поделиться афишей">🔗</div>
   <div class="join-btn" onclick="openCommunity()">💬 Вступить в сообщество</div>
 </div>
 
@@ -277,6 +278,7 @@ if (tg) { tg.ready(); tg.expand(); }
 
 const EVENTS_URL    = 'https://elyne-start.online/community/events.json';
 const COMMUNITY_URL = 'https://t.me/elyne_community';
+const MINIAPP_URL   = 'https://t.me/elyne_moscow_bot/elyne_moscow_bot';
 
 const DAYS_RU     = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
 const DAYS_MON    = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
@@ -350,6 +352,12 @@ function matchCat(e) { return selectedCat==='все'||e.category===selectedCat; 
 function openCommunity() {
   if (tg) tg.openTelegramLink(COMMUNITY_URL);
   else window.open(COMMUNITY_URL, '_blank');
+}
+
+function shareAfisha() {
+  const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(MINIAPP_URL)}&text=${encodeURIComponent('Афиша ELYNE Community — события Москвы 🗓')}`;
+  if (tg) tg.openTelegramLink(shareUrl);
+  else window.open(shareUrl, '_blank');
 }
 
 function addToHomeScreen() {
