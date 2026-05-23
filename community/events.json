@@ -67,7 +67,8 @@
       "emoji": "🖼",
       "description": "Текущая большая выставка ГЭС-2 — диалог об искусстве, времени, повторяемости. Бесплатно.",
       "url": "https://ges-2.org/calendar",
-      "price": "бесплатно"
+      "price": "бесплатно",
+      "tg_msg_id": 210
     },
     {
       "id": "mamm-more-2026-05-24",
@@ -79,7 +80,8 @@
       "emoji": "🖼",
       "description": "Три выставки в одном музее: «Море», «Инфосплетение», «Серия Переход». До 6 июня.",
       "url": "https://www.mamm-mdf.ru",
-      "price": "до 700 ₽"
+      "price": "до 700 ₽",
+      "tg_msg_id": 211
     },
     {
       "id": "online-krizis-identichnost-2026-05-24",
@@ -91,7 +93,8 @@
       "emoji": "🌐",
       "description": "Психолог ведёт разговор об идентичности в моменты кризиса — как отделить настоящие желания от чужих установок и найти себя.",
       "url": "https://besplatnyy-telefon-doveri.timepad.ru/event/share/3982994/",
-      "is_free": true
+      "is_free": true,
+      "tg_msg_id": 212
     },
     {
       "id": "ges2-pomopoko-film-2026-05-24",
@@ -103,7 +106,8 @@
       "emoji": "🎬",
       "description": "Анимация Studio Ghibli про японских енотов, защищающих лес от застройщиков. Бесплатный показ в кинозале ГЭС-2.",
       "url": "https://ges-2.org/calendar",
-      "price": "бесплатно"
+      "price": "бесплатно",
+      "tg_msg_id": 213
     },
     {
       "id": "online-kniga-kobrin-amplafer-2026-05-24",
@@ -115,7 +119,8 @@
       "emoji": "🌐",
       "description": "Онлайн-презентация нового романа — разговор об искусстве, звуке и том, как меняется восприятие культуры в эпоху избытка.",
       "url": "https://novoe-literaturnoe-obozre.timepad.ru/event/share/3985462/",
-      "is_free": true
+      "is_free": true,
+      "tg_msg_id": 214
     },
     {
       "id": "ges2-conversation-film-2026-05-24",
@@ -127,7 +132,8 @@
       "emoji": "🎬",
       "description": "Классика Копполы 1974 года — о слежке, паранойе, частной жизни. Бесплатный показ в киноклубе ГЭС-2.",
       "url": "https://ges-2.org/calendar",
-      "price": "бесплатно"
+      "price": "бесплатно",
+      "tg_msg_id": 215
     },
     {
       "id": "zaryadye-zhilin-shostakovich-2026-05-24",
@@ -139,7 +145,8 @@
       "emoji": "🎻",
       "description": "Программа «Шум времени» — избранные шедевры к 120-летию Дмитрия Шостаковича. Джаз-симфонический взгляд на классику.",
       "url": "https://zaryadyehall.ru/events/",
-      "price": "от 5400 ₽"
+      "price": "от 5400 ₽",
+      "tg_msg_id": 216
     },
     {
       "id": "tretyakov-matisse-pikasso-2026-05-25",
@@ -151,7 +158,8 @@
       "emoji": "🖼",
       "description": "Главное событие весны: фокус-выставка двух титанов XX века в монографическом зале Марка Шагала. До 31 мая.",
       "url": "https://www.tretyakovgallery.ru",
-      "price": "от 700 ₽"
+      "price": "от 700 ₽",
+      "tg_msg_id": 217
     },
     {
       "id": "ges2-moscow-hanoi-2026-05-25",
@@ -163,7 +171,8 @@
       "emoji": "🖼",
       "description": "Совместный проект российских и вьетнамских художников: ландшафт как форма надежды.",
       "url": "https://ges-2.org/calendar",
-      "price": "бесплатно"
+      "price": "бесплатно",
+      "tg_msg_id": 218
     },
     {
       "id": "vivarte-2026-05-25",
@@ -189,7 +198,8 @@
       "emoji": "🎹",
       "description": "Камерный вечер фортепиано в Малом зале «Зарядья». Один из лучших залов Москвы для сольных концертов.",
       "url": "https://zaryadyehall.ru/events/",
-      "price": "от 3400 ₽"
+      "price": "от 3400 ₽",
+      "tg_msg_id": 219
     },
     {
       "id": "online-dizain-vystavki-2026-05-25",
@@ -201,7 +211,8 @@
       "emoji": "🌐",
       "description": "Как проектируется пространство выставки: от концепции к физической среде и истории, которую рассказывает экспозиция.",
       "url": "https://101st.timepad.ru/event/share/3988939/",
-      "is_free": true
+      "is_free": true,
+      "tg_msg_id": 220
     },
     {
       "id": "online-surdin-nlo-2026-05-25",
@@ -213,7 +224,8 @@
       "emoji": "🌐",
       "description": "Астроном Владимир Сурдин — о природе НЛО с точки зрения науки: что за ними стоит и почему люди продолжают верить.",
       "url": "https://soobshchestvo-vsmysle.timepad.ru/event/share/3973325/",
-      "is_free": true
+      "is_free": true,
+      "tg_msg_id": 221
     },
     {
       "id": "ges2-khadzar-2026-05-26",
@@ -225,7 +237,8 @@
       "emoji": "🖼",
       "description": "Инсталляция-исследование осетинского жилища и культуры рода. Один из самых эмоциональных проектов ГЭС-2.",
       "url": "https://ges-2.org/calendar",
-      "price": "бесплатно"
+      "price": "бесплатно",
+      "tg_msg_id": 222
     },
     {
       "id": "zaryadye-guitarmagfest-2026-05-26",
@@ -237,7 +250,8 @@
       "emoji": "🎸",
       "description": "Гитарный фестиваль с акцентом на встречу культур Востока и Запада. Главное событие московского гитарного календаря.",
       "url": "https://zaryadyehall.ru/events/",
-      "price": "от 4900 ₽"
+      "price": "от 4900 ₽",
+      "tg_msg_id": 223
     },
     {
       "id": "satira-igroki-2026-05-26",
@@ -250,7 +264,8 @@
       "description": "Гоголь в Театре Сатиры — авантюрная история о шулерах, которые сами оказались обмануты. Лёгкий слог, острый сюжет.",
       "price": "от 600 ₽",
       "is_free": false,
-      "url": "https://satire.ru/afisha/"
+      "url": "https://satire.ru/afisha/",
+      "tg_msg_id": 224
     },
     {
       "id": "online-enigma-lingvistika-2026-05-26",
@@ -262,7 +277,8 @@
       "emoji": "🌐",
       "description": "Практическое занятие по лингвистике и криптографии: как работает шифр и что нам говорит логика слов.",
       "url": "https://kulturnyy-cat-2025.timepad.ru/event/share/3973578/",
-      "is_free": true
+      "is_free": true,
+      "tg_msg_id": 225
     },
     {
       "id": "online-muzey-club-2026-05-27",
@@ -274,7 +290,8 @@
       "emoji": "🌐",
       "description": "Онлайн-встреча вокруг актуальных вопросов музейной практики и современного искусства.",
       "url": "https://ideasformuseums.timepad.ru/event/share/3749244/",
-      "is_free": true
+      "is_free": true,
+      "tg_msg_id": 226
     },
     {
       "id": "zaryadye-verdi-arold-2026-05-27",
@@ -286,7 +303,8 @@
       "emoji": "🎻",
       "description": "Редкая опера Верди в концертном исполнении. Государственная академическая симфоническая капелла России под управлением Валерия Полянского.",
       "url": "https://zaryadyehall.ru/events/",
-      "price": "от 3900 ₽"
+      "price": "от 3900 ₽",
+      "tg_msg_id": 227
     },
     {
       "id": "satira-ivan-vasilevich-2026-05-27",
@@ -299,7 +317,8 @@
       "description": "Булгаковский фарс: управдом меняется местами с Иваном Грозным. Классика советской абсурдной комедии на живой сцене.",
       "price": "от 600 ₽",
       "is_free": false,
-      "url": "https://satire.ru/afisha/"
+      "url": "https://satire.ru/afisha/",
+      "tg_msg_id": 228
     },
     {
       "id": "startup-village-2026-05-28",
@@ -325,7 +344,8 @@
       "emoji": "🖼",
       "description": "Куратор Ксения Гусева ведёт по выставке про китайский Новый год — традиции, ритуалы, гравюры. До 31 мая.",
       "url": "https://mosmuseum.ru/",
-      "price": "от 500 ₽"
+      "price": "от 500 ₽",
+      "tg_msg_id": 229
     },
     {
       "id": "satira-beshenye-dengi-2026-05-28",
