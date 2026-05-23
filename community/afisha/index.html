@@ -508,7 +508,7 @@ async function sendFeedback() {
 
   try {
     const initData = tg?.initData || '';
-    const r = await fetch('https://elyne-start.online/api/feedback', {
+    const r = await fetch('/api/feedback', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Telegram-Init-Data': initData },
       body: JSON.stringify({ text })
@@ -519,14 +519,18 @@ async function sendFeedback() {
       status.style.color = 'var(--green)';
       setTimeout(closeFeedback, 1500);
     } else {
-      status.textContent = 'Ошибка: ' + (data.error || 'попробуй позже');
-      status.style.color = '#e57373';
-      btn.disabled = false;
+      throw new Error(data.error || 'api error');
     }
   } catch (e) {
-    status.textContent = 'Не удалось отправить';
-    status.style.color = '#e57373';
-    btn.disabled = false;
+    // Fallback: open TG thread directly so user can write there
+    status.textContent = '→ Откроем чат — напишите там';
+    status.style.color = 'var(--hint)';
+    setTimeout(() => {
+      closeFeedback();
+      const url = 'https://t.me/c/3940564734/757';
+      if (tg) tg.openTelegramLink(url);
+      else window.open(url, '_blank');
+    }, 1000);
   }
 }
 
