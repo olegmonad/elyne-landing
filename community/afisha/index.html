@@ -296,7 +296,7 @@ let allEvents    = [];
 let attendedIds  = new Set();
 let currentView  = 'my';
 let selectedDate = null;
-let selectedCat  = 'все';
+let selectedCats = new Set(['все']);
 let navMonth     = null;
 let navYear      = null;
 
@@ -366,7 +366,7 @@ function isoToDate(iso) { const [y,m,d]=iso.split('-').map(Number); return new D
 function dateToIso(d)   { return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
 function addDays(iso,n) { const d=isoToDate(iso); d.setDate(d.getDate()+n); return dateToIso(d); }
 function formatDateFull(iso) { const d=isoToDate(iso); return `${d.getDate()} ${MONTHS_FULL[d.getMonth()]}`; }
-function matchCat(e) { return selectedCat==='все'||e.category===selectedCat; }
+function matchCat(e) { return selectedCats.has('все') || selectedCats.has(e.category); }
 
 function openCommunity() {
   if (tg) tg.openTelegramLink(COMMUNITY_URL);
@@ -589,10 +589,21 @@ function renderCatStrip() {
   CATS.forEach((label,i) => {
     const key = CAT_KEYS[i];
     const pill = document.createElement('div');
-    pill.className = 'cat-pill'+(selectedCat===key?' active':'');
+    pill.className = 'cat-pill'+(selectedCats.has(key)?' active':'');
     pill.textContent = label;
     pill.onclick = () => {
-      selectedCat = key; renderCatStrip();
+      if (key === 'все') {
+        selectedCats = new Set(['все']);
+      } else {
+        selectedCats.delete('все');
+        if (selectedCats.has(key)) {
+          selectedCats.delete(key);
+        } else {
+          selectedCats.add(key);
+        }
+        if (selectedCats.size === 0) selectedCats.add('все');
+      }
+      renderCatStrip();
       if (currentView==='today') renderTodayEvents();
       if (currentView==='week')  { renderWeekStrip(); renderEvents(); }
       if (currentView==='month') { renderMonthView(); renderEvents(); }
