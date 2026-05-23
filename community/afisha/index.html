@@ -368,9 +368,13 @@ function shareAfisha() {
 }
 
 function addToHomeScreen() {
-  if (tg && typeof tg.addToHomeScreen === 'function') {
-    tg.addToHomeScreen();
-  } else if (tg && tg.showPopup) {
+  try {
+    if (tg && typeof tg.addToHomeScreen === 'function') {
+      tg.addToHomeScreen();
+      return;
+    }
+  } catch(e) {}
+  if (tg && tg.showPopup) {
     tg.showPopup({
       title: 'На рабочий стол',
       message: 'Android: Chrome → три точки → «Добавить на главный экран»\n\niOS: Safari → Поделиться → «На экран "Домой"»',
@@ -381,17 +385,25 @@ function addToHomeScreen() {
   }
 }
 
-if (tg && typeof tg.checkHomeScreenStatus === 'function') {
-  tg.checkHomeScreenStatus(status => {
+try {
+  if (tg && typeof tg.checkHomeScreenStatus === 'function' && tg.isVersionAtLeast && tg.isVersionAtLeast('8.0')) {
+    tg.checkHomeScreenStatus(status => {
+      const btn = document.getElementById('homescreen-btn');
+      if (!btn) return;
+      if (status === 'added') {
+        btn.textContent = '✓';
+        btn.classList.add('added');
+      } else if (status === 'unsupported') {
+        btn.style.display = 'none';
+      }
+    });
+  } else {
     const btn = document.getElementById('homescreen-btn');
-    if (!btn) return;
-    if (status === 'added') {
-      btn.textContent = '✓';
-      btn.classList.add('added');
-    } else if (status === 'unsupported') {
-      btn.style.display = 'none';
-    }
-  });
+    if (btn) btn.style.display = 'none';
+  }
+} catch(e) {
+  const btn = document.getElementById('homescreen-btn');
+  if (btn) btn.style.display = 'none';
 }
 
 // ─── View switcher ─────────────────────────────────────────────────────────
