@@ -170,6 +170,10 @@
   .event-card[data-cat="наука"]::before     { background: #BA68C8; }
   .event-card[data-cat="бизнес"]::before    { background: #FFB74D; }
   .event-card[data-cat="праздник"]::before  { background: #F06292; }
+  .event-card[data-cat="онлайн"]::before   { background: #4FC3F7; }
+  .online-badge { display:inline-flex; align-items:center; gap:4px; background:rgba(79,195,247,0.15); color:#4FC3F7; font-size:11px; font-weight:600; padding:2px 7px; border-radius:10px; }
+  .online-more-link { display:inline-flex; align-items:center; gap:4px; font-size:12px; color:var(--link); text-decoration:none; opacity:0.85; padding:3px 0; }
+  .online-more-link:hover { opacity:1; }
 
   .event-header { display: flex; align-items: flex-start; gap: 10px; }
   .event-emoji { font-size: 22px; line-height: 1; flex-shrink: 0; margin-top: 1px; }
@@ -269,7 +273,10 @@
     <div class="header-title">📅 Афиша</div>
     <div class="header-subtitle" id="updated-label">Загружаю…</div>
   </div>
-  <div class="updated-dot" id="status-dot"></div>
+  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+    <div class="updated-dot" id="status-dot"></div>
+    <button onclick="openOnlineSource()" style="background:rgba(79,195,247,0.12);border:1px solid rgba(79,195,247,0.3);color:#4FC3F7;font-size:11px;font-weight:600;padding:4px 9px;border-radius:12px;cursor:pointer;white-space:nowrap;">🌐 Онлайн</button>
+  </div>
 </div>
 
 <div class="view-switcher">
@@ -315,8 +322,8 @@ const DAYS_MON    = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
 const MONTHS_RU   = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
 const MONTHS_FULL = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
 const MONTHS_NOM  = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
-const CATS        = ['Все','Театр','Выставки','Культура','Wellbeing','Спорт','Наука','Бизнес','Праздник'];
-const CAT_KEYS    = ['все','театр','выставки','культура','wellbeing','спорт','наука','бизнес','праздник'];
+const CATS        = ['Все','Онлайн','Театр','Выставки','Культура','Wellbeing','Спорт','Наука','Бизнес','Праздник'];
+const CAT_KEYS    = ['все','онлайн','театр','выставки','культура','wellbeing','спорт','наука','бизнес','праздник'];
 const CS_KEY      = 'attended_events';
 
 let allEvents    = [];
@@ -411,6 +418,12 @@ function matchCat(e) { return selectedCats.has('все') || selectedCats.has(e.c
 function openCommunity() {
   if (tg) tg.openTelegramLink(COMMUNITY_URL);
   else window.open(COMMUNITY_URL, '_blank');
+}
+
+function openOnlineSource() {
+  const url = 'https://afisha.timepad.ru/online';
+  if (tg) tg.openLink(url);
+  else window.open(url, '_blank');
 }
 
 function shareAfisha() {
@@ -672,7 +685,7 @@ function eventCardHtml(ev) {
       <div class="event-title">${ev.title}</div>
     </div>
     <div class="event-meta">
-      ${ev.place?`<span class="meta-tag">📍 ${ev.place}</span>`:''}
+      ${ev.category==='онлайн'?`<span class="online-badge">🌐 Онлайн</span>`:(ev.place?`<span class="meta-tag">📍 ${ev.place}</span>`:'')}
       ${ev.time ?`<span class="meta-tag">🕐 ${ev.time}</span>` :''}
       <span class="event-price">${ev.is_free?'Бесплатно':(ev.price||'')}</span>
     </div>
