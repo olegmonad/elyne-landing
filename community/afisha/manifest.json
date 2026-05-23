@@ -1,0 +1,10 @@
+{
+  "name": "ELYNE Афиша",
+  "short_name": "Афиша",
+  "description": "Лучшие события Москвы — ELYNE Community",
+  "start_url": "/community/afisha/?standalone=1",
+  "display": "standalone",
+  "background_color": "#0d0d0d",
+  "theme_color": "#c4a95e",
+  "orientation": "portrait-primary"
+}
