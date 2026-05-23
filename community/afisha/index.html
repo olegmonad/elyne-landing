@@ -614,7 +614,7 @@ async function loadEvents() {
     label.textContent    = updStr ? `Обновлено ${updStr}` : 'Актуально';
     dot.style.background = '#4CAF50';
 
-    selectedDate = todayIso();
+    selectedDate = null; // показываем всю неделю при старте, не только сегодня
     renderWeekStrip();
     renderCatStrip();
     renderEvents();
