@@ -824,6 +824,30 @@ function openTgDetails(url) {
   } catch(e) { window.open(url, '_blank'); }
 }
 
+function shareEvent(evId) {
+  const ev = allEvents.find(e => e.id === evId);
+  if (!ev) return;
+  const shareUrl = ev.tg_msg_id
+    ? `https://t.me/elyne_community/${ev.tg_msg_id}`
+    : 'https://olegmonad.github.io/elyne-landing/community/afisha/';
+  const text = ev.title;
+  const tgShareUrl = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(text)}`;
+  try {
+    if (navigator.share) {
+      navigator.share({ title: ev.title, url: shareUrl }).catch(() => {
+        if (tg?.openTelegramLink) tg.openTelegramLink(tgShareUrl);
+        else window.open(tgShareUrl, '_blank');
+      });
+    } else if (tg?.openTelegramLink) {
+      tg.openTelegramLink(tgShareUrl);
+    } else {
+      navigator.clipboard?.writeText(shareUrl).then(() => tg?.showAlert?.('Ссылка скопирована'));
+    }
+  } catch(e) {
+    if (tg?.openTelegramLink) tg.openTelegramLink(tgShareUrl);
+  }
+}
+
 function eventCardHtml(ev) {
   const attending = attendedIds.has(ev.id);
   // «Подробнее» → конкретный пост если есть tg_msg_id, иначе → вся группа
@@ -850,6 +874,7 @@ function eventCardHtml(ev) {
         onclick="toggleAttend('${ev.id}',this)">
         ${attending?'★ Иду':'★ Я пойду'}
       </button>
+      <button class="cal-btn" title="Поделиться" onclick="shareEvent('${ev.id}')">↗</button>
     </div>
   </div>`;
 }
