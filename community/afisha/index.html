@@ -31,7 +31,7 @@
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
-    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 72px);
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 80px);
   }
 
   /* Header */
@@ -43,13 +43,15 @@
   .header-subtitle { font-size: 13px; color: var(--hint); margin-top: 2px; }
   .updated-dot { width: 7px; height: 7px; border-radius: 50%; background: #888; flex-shrink: 0; margin-top: 6px; }
 
-  /* View switcher — 4 tabs */
+  /* View switcher — 5 tabs */
   .view-switcher {
     display: flex; background: var(--bg2); border-radius: 12px;
     margin: 12px 16px 0; padding: 3px; gap: 2px;
+    overflow-x: auto; scrollbar-width: none;
   }
+  .view-switcher::-webkit-scrollbar { display: none; }
   .view-btn {
-    flex: 1; padding: 7px 0; border-radius: 9px;
+    flex: 1; min-width: 56px; padding: 7px 8px; border-radius: 9px;
     font-size: 12px; font-weight: 500; text-align: center;
     cursor: pointer; color: var(--hint); transition: all 0.15s;
     white-space: nowrap;
@@ -204,16 +206,28 @@
     position: fixed; bottom: 0; left: 0; right: 0;
     padding: 10px 16px calc(env(safe-area-inset-bottom, 0px) + 10px);
     background: linear-gradient(to top, var(--bg) 70%, transparent);
-    display: flex; gap: 8px;
+    display: flex; gap: 8px; align-items: center;
   }
-  .community-btn {
-    flex: 1; padding: 12px; border-radius: 14px;
-    background: var(--bg2); color: var(--text); font-size: 13px; font-weight: 600;
-    text-align: center; cursor: pointer; border: 1px solid var(--border);
-    transition: opacity 0.1s;
+
+  /* Main community button — big */
+  .join-btn {
+    flex: 1; padding: 14px; border-radius: 14px;
+    background: var(--btn); color: var(--btn-text);
+    font-size: 15px; font-weight: 700; text-align: center;
+    cursor: pointer; transition: opacity 0.1s;
   }
-  .community-btn:active { opacity: 0.7; }
-  .community-btn.added { opacity: 0.45; pointer-events: none; }
+  .join-btn:active { opacity: 0.8; }
+
+  /* Home screen button — small icon */
+  .homescreen-btn-sm {
+    width: 48px; height: 48px; border-radius: 14px;
+    background: var(--bg2); color: var(--hint);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 20px; flex-shrink: 0;
+    border: 1px solid var(--border); transition: opacity 0.1s;
+  }
+  .homescreen-btn-sm:active { opacity: 0.7; }
+  .homescreen-btn-sm.added { opacity: 0.3; pointer-events: none; }
 
   .footer { padding: 8px 16px 4px; font-size: 11px; color: var(--hint); text-align: center; }
 </style>
@@ -229,10 +243,11 @@
 </div>
 
 <div class="view-switcher">
-  <div class="view-btn active" id="btn-week"  onclick="setView('week')">Неделя</div>
+  <div class="view-btn active" id="btn-my"    onclick="setView('my')">Мои ★</div>
+  <div class="view-btn"        id="btn-today" onclick="setView('today')">Сегодня</div>
+  <div class="view-btn"        id="btn-week"  onclick="setView('week')">Неделя</div>
   <div class="view-btn"        id="btn-month" onclick="setView('month')">Месяц</div>
   <div class="view-btn"        id="btn-year"  onclick="setView('year')">Год</div>
-  <div class="view-btn"        id="btn-my"    onclick="setView('my')">Мои ★</div>
 </div>
 
 <div class="nav-bar" id="nav-bar">
@@ -252,16 +267,15 @@
 <div class="footer"      id="footer"></div>
 
 <div class="bottom-bar">
-  <div class="community-btn" id="homescreen-btn" onclick="addToHomeScreen()">📲 Рабочий стол</div>
-  <div class="community-btn" onclick="openCommunity()">💬 Сообщество</div>
+  <div class="homescreen-btn-sm" id="homescreen-btn" onclick="addToHomeScreen()" title="На рабочий стол">📲</div>
+  <div class="join-btn" onclick="openCommunity()">💬 Вступить в сообщество</div>
 </div>
 
 <script>
 const tg = window.Telegram?.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
 
-const EVENTS_URL   = 'https://elyne-start.online/community/events.json';
-const TG_BASE      = 'https://t.me/c/1003993020463/';
+const EVENTS_URL    = 'https://elyne-start.online/community/events.json';
 const COMMUNITY_URL = 'https://t.me/elyne_community';
 
 const DAYS_RU     = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
@@ -275,7 +289,7 @@ const CS_KEY      = 'attended_events';
 
 let allEvents    = [];
 let attendedIds  = new Set();
-let currentView  = 'week';
+let currentView  = 'my';
 let selectedDate = null;
 let selectedCat  = 'все';
 let navMonth     = null;
@@ -317,7 +331,6 @@ async function toggleAttend(evId, btn) {
   } else {
     attendedIds.add(evId);
     if (btn) { btn.textContent = '★ Иду'; btn.classList.add('attending'); }
-    // haptic
     tg?.HapticFeedback?.impactOccurred('light');
   }
   await csSet(CS_KEY, JSON.stringify([...attendedIds]));
@@ -344,8 +357,8 @@ function addToHomeScreen() {
     tg.addToHomeScreen();
   } else if (tg && tg.showPopup) {
     tg.showPopup({
-      title: 'Добавить на рабочий стол',
-      message: 'Android: открой в Chrome, три точки → «Добавить на главный экран»\n\niOS: открой в Safari, кнопка «Поделиться» → «На экран "Домой"»\n\nСсылка: elyne-start.online/community/afisha/',
+      title: 'На рабочий стол',
+      message: 'Android: Chrome → три точки → «Добавить на главный экран»\n\niOS: Safari → Поделиться → «На экран "Домой"»',
       buttons: [{ type: 'ok' }]
     });
   } else {
@@ -353,13 +366,12 @@ function addToHomeScreen() {
   }
 }
 
-// Проверяем статус добавления на рабочий стол
 if (tg && typeof tg.checkHomeScreenStatus === 'function') {
   tg.checkHomeScreenStatus(status => {
     const btn = document.getElementById('homescreen-btn');
     if (!btn) return;
     if (status === 'added') {
-      btn.textContent = '✓ Добавлено';
+      btn.textContent = '✓';
       btn.classList.add('added');
     } else if (status === 'unsupported') {
       btn.style.display = 'none';
@@ -373,18 +385,23 @@ function setView(v, keepDate) {
   if (v !== currentView && !keepDate) selectedDate = null;
   currentView = v;
 
-  ['week','month','year','my'].forEach(k =>
-    document.getElementById('btn-'+k).classList.toggle('active', k===v)
-  );
+  ['my','today','week','month','year'].forEach(k => {
+    const el = document.getElementById('btn-'+k);
+    if (el) el.classList.toggle('active', k===v);
+  });
 
   document.getElementById('week-strip').style.display    = v==='week'  ? 'flex' : 'none';
   document.getElementById('month-grid').classList.toggle('visible', v==='month');
   document.getElementById('year-grid').classList.toggle('visible',  v==='year');
   document.getElementById('nav-bar').classList.toggle('visible', v==='month'||v==='year');
-  document.getElementById('cat-strip').style.display     = v==='year'  ? 'none' : 'flex';
+  document.getElementById('cat-strip').style.display     = (v==='year'||v==='my') ? 'none' : 'flex';
   document.getElementById('events-section').style.display = v==='year' ? 'none' : 'block';
 
-  if (v==='week') {
+  if (v==='my') {
+    renderMyEvents();
+  } else if (v==='today') {
+    renderTodayEvents();
+  } else if (v==='week') {
     if (!selectedDate) selectedDate = todayIso();
     renderWeekStrip(); renderEvents();
   } else if (v==='month') {
@@ -393,8 +410,6 @@ function setView(v, keepDate) {
   } else if (v==='year') {
     if (!navYear) navYear = isoToDate(todayIso()).getFullYear();
     renderYearView();
-  } else if (v==='my') {
-    renderMyEvents();
   }
 }
 
@@ -409,6 +424,25 @@ function navNext() {
     if (++navMonth.month>11) { navMonth.month=0; navMonth.year++; }
     selectedDate=null; renderMonthView(); renderEvents();
   } else { navYear++; renderYearView(); }
+}
+
+// ─── Today view ────────────────────────────────────────────────────────────
+
+function renderTodayEvents() {
+  const section = document.getElementById('events-section');
+  const today   = todayIso();
+  const todayEvts = allEvents.filter(e => e.date === today && matchCat(e));
+
+  if (!todayEvts.length) {
+    section.innerHTML = `<div class="empty">
+      <div class="empty-emoji">🌿</div>
+      <div class="empty-text">Сегодня событий нет.<br>Загляни в «Неделю» — скоро что-нибудь будет</div>
+    </div>`;
+    return;
+  }
+
+  section.innerHTML = `<div class="section-label">Сегодня, ${formatDateFull(today)}</div>` +
+    todayEvts.map(ev => eventCardHtml(ev)).join('');
 }
 
 // ─── Week view ─────────────────────────────────────────────────────────────
@@ -486,13 +520,13 @@ function renderMyEvents() {
   const section = document.getElementById('events-section');
   const today = todayIso();
   const myEvts = allEvents
-    .filter(e => attendedIds.has(e.id) && matchCat(e))
+    .filter(e => attendedIds.has(e.id))
     .sort((a,b) => a.date.localeCompare(b.date));
 
   if (!myEvts.length) {
     section.innerHTML = `<div class="empty">
       <div class="empty-emoji">★</div>
-      <div class="empty-text">Нажми «★ Я пойду» на понравившемся событии — оно появится здесь</div>
+      <div class="empty-text">Нажми «★ Я пойду» на событии — и оно появится здесь</div>
     </div>`;
     return;
   }
@@ -520,24 +554,22 @@ function renderCatStrip() {
     pill.textContent = label;
     pill.onclick = () => {
       selectedCat = key; renderCatStrip();
+      if (currentView==='today') renderTodayEvents();
       if (currentView==='week')  { renderWeekStrip(); renderEvents(); }
       if (currentView==='month') { renderMonthView(); renderEvents(); }
       if (currentView==='year')  renderYearView();
-      if (currentView==='my')    renderMyEvents();
     };
     strip.appendChild(pill);
   });
 }
 
-// ─── Event card HTML ────────────────────────────────────────────────────────
+// ─── Event card HTML ───────────────────────────────────────────────────────
 
 function eventCardHtml(ev) {
-  const tgLink = ev.tg_msg_id ? `${TG_BASE}${ev.tg_msg_id}` : null;
   const attending = attendedIds.has(ev.id);
-  const links = [
-    ev.url   ? `<a class="event-btn primary" href="${ev.url}" target="_blank">Источник</a>` : '',
-    tgLink   ? `<a class="event-btn" href="${tgLink}" target="_blank">В Афише</a>` : ''
-  ].filter(Boolean).join('');
+  const sourceBtn = ev.url
+    ? `<a class="event-btn primary" href="${ev.url}" target="_blank">Подробнее</a>`
+    : '';
 
   return `<div class="event-card" data-cat="${ev.category}">
     <div class="event-header">
@@ -551,7 +583,7 @@ function eventCardHtml(ev) {
     </div>
     ${ev.description?`<div class="event-desc">${ev.description}</div>`:''}
     <div class="event-actions">
-      ${links}
+      ${sourceBtn}
       <button class="attend-btn${attending?' attending':''}"
         onclick="toggleAttend('${ev.id}',this)">
         ${attending?'★ Иду':'★ Я пойду'}
@@ -617,10 +649,9 @@ async function loadEvents() {
     label.textContent    = updStr ? `Обновлено ${updStr}` : 'Актуально';
     dot.style.background = '#4CAF50';
 
-    selectedDate = null; // показываем всю неделю при старте, не только сегодня
-    renderWeekStrip();
     renderCatStrip();
-    renderEvents();
+    // Start on "Мои" — show user's saved events first
+    setView('my');
     footer.textContent = `${allEvents.length} событий · ELYNE Community`;
   } catch(e) {
     label.textContent    = 'Ошибка загрузки';
