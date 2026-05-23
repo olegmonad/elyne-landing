@@ -358,7 +358,8 @@
       "description": "Островский о том, что деньги решают всё — и ничего не решают. Острая комедия нравов, которая звучит удивительно современно.",
       "price": "от 600 ₽",
       "is_free": false,
-      "url": "https://satire.ru/afisha/"
+      "url": "https://satire.ru/afisha/",
+      "tg_msg_id": 230
     },
     {
       "id": "online-zhenshchina-tvorec-2026-05-28",
@@ -370,7 +371,8 @@
       "emoji": "🌐",
       "description": "Лекция Гёте-Института: как женщины выбирали творчество вопреки эпохе — и что это значит для идентичности сегодня.",
       "url": "https://goetheinstitut.timepad.ru/event/share/3990079/",
-      "is_free": true
+      "is_free": true,
+      "tg_msg_id": 231
     },
     {
       "id": "satira-skupoy-2026-05-29",
@@ -383,7 +385,8 @@
       "description": "Мольер в интерпретации Театра Сатиры: Гарпагон, его деньги и все, кто хочет их получить. Вечный сюжет в живом исполнении.",
       "price": "от 600 ₽",
       "is_free": false,
-      "url": "https://satire.ru/afisha/"
+      "url": "https://satire.ru/afisha/",
+      "tg_msg_id": 232
     },
     {
       "id": "tretyakov-pastel-2026-05-30",
@@ -395,7 +398,8 @@
       "emoji": "🖼",
       "description": "Редкие пастельные работы из собрания галереи — Серов, Сомов, Бакст, Левитан. Идёт до 1 ноября.",
       "url": "https://www.tretyakovgallery.ru",
-      "price": "от 600 ₽"
+      "price": "от 600 ₽",
+      "tg_msg_id": 233
     },
     {
       "id": "ges2-sukhareva-2026-05-30",
@@ -407,7 +411,8 @@
       "emoji": "🖼",
       "description": "Большая инсталляция одной из заметных современных российских художниц. Тема — становление формы.",
       "url": "https://ges-2.org/calendar",
-      "price": "бесплатно"
+      "price": "бесплатно",
+      "tg_msg_id": 234
     },
     {
       "id": "den-moskovskogo-sporta-2026-05-30",
@@ -420,7 +425,8 @@
       "description": "Городской фестиваль: 20+ спортивных зон, BMX/скейт/гребля/боевые искусства/шахматы, вечерний концерт (Zivert, SHAMAN, LYRIQ). Вход свободный. В программе — SMSTRETCHING 10-й стадион (Барре).",
       "price": "Бесплатно",
       "is_free": true,
-      "url": "https://www.kp.ru/afisha/msk/festivali/prazdnik-moskovskij-sport-v-luzhnikax/"
+      "url": "https://www.kp.ru/afisha/msk/festivali/prazdnik-moskovskij-sport-v-luzhnikax/",
+      "tg_msg_id": 235
     },
     {
       "id": "smstretching-10-stadion-2026-05-30",
@@ -433,7 +439,8 @@
       "description": "Юбилейная массовая тренировка по Барре от SMSTRETCHING вместе с Московским спортом. Запись через приложение smstretching.ru. Места заканчиваются — бронируй заранее.",
       "price": "Бесплатно",
       "is_free": true,
-      "url": "https://smstretching.ru"
+      "url": "https://smstretching.ru",
+      "tg_msg_id": 236
     },
     {
       "id": "online-ryabov-soyuz-2026-05-30",
@@ -445,7 +452,8 @@
       "emoji": "🌐",
       "description": "Историк Пётр Рябов — о декабристском движении и путях русского освободительного движения в XIX веке.",
       "url": "https://tsentr-arhe-v-sankt-peter.timepad.ru/event/share/3991583/",
-      "is_free": true
+      "is_free": true,
+      "tg_msg_id": 237
     },
     {
       "id": "rock-1000-2026-05-30",
@@ -471,7 +479,8 @@
       "emoji": "🎭",
       "description": "Премьера Юлии Пересильд по пьесе Максима Горького. Один из самых обсуждаемых дебютов сезона.",
       "url": "https://theatre-of-nations.ru/events",
-      "price": "от 2900 ₽"
+      "price": "от 2900 ₽",
+      "tg_msg_id": 238
     },
     {
       "id": "online-mozg-ii-alipov-2026-05-30",
@@ -483,7 +492,8 @@
       "emoji": "🌐",
       "description": "Нейробиолог Владимир Алипов — о том, как использование искусственного интеллекта меняет работу мозга и что это значит для нас.",
       "url": "https://soobshchestvo-vsmysle.timepad.ru/event/share/3982977/",
-      "is_free": true
+      "is_free": true,
+      "tg_msg_id": 239
     },
     {
       "id": "satira-taksi-2026-05-30",
@@ -496,7 +506,8 @@
       "description": "Французская комедия положений о таксисте с двумя семьями. Идеальный вариант для вечера, когда хочется просто посмеяться.",
       "price": "от 800 ₽",
       "is_free": false,
-      "url": "https://satire.ru/afisha/"
+      "url": "https://satire.ru/afisha/",
+      "tg_msg_id": 240
     },
     {
       "id": "nebo-festival-2026-05-31",
