@@ -199,6 +199,33 @@
     border-color: rgba(76,175,80,0.4);
   }
 
+  /* «В календарь» icon button */
+  .cal-btn {
+    width: 30px; height: 30px; padding: 0; border-radius: 50%;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    cursor: pointer; font-size: 14px; line-height: 30px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .cal-btn:active { background: rgba(255,255,255,0.12); }
+
+  /* «Все мои в календарь» banner */
+  .my-export-banner {
+    margin: 0 16px 12px; padding: 10px 14px; border-radius: 12px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    font-size: 13px; color: var(--text); cursor: pointer;
+  }
+  .my-export-banner:active { background: rgba(255,255,255,0.1); }
+  .my-export-banner .label { display: flex; align-items: center; gap: 8px; }
+
+  /* Counter chip in «Мои» tab */
+  .my-count {
+    display: inline-block; min-width: 18px; padding: 0 6px; height: 18px;
+    line-height: 18px; border-radius: 9px; font-size: 11px; font-weight: 600;
+    background: var(--btn); color: var(--btn-text); margin-left: 4px;
+    text-align: center; vertical-align: 1px;
+  }
+
   /* Empty state */
   .empty { text-align: center; padding: 48px 24px; color: var(--hint); }
   .empty-emoji { font-size: 40px; margin-bottom: 12px; }
@@ -246,7 +273,7 @@
 </div>
 
 <div class="view-switcher">
-  <div class="view-btn"        id="btn-my"    onclick="setView('my')">Мои ★</div>
+  <div class="view-btn"        id="btn-my"    onclick="setView('my')">Мои ★<span id="my-count" class="my-count" style="display:none">0</span></div>
   <div class="view-btn active" id="btn-today" onclick="setView('today')">Сегодня</div>
   <div class="view-btn"        id="btn-week"  onclick="setView('week')">Неделя</div>
   <div class="view-btn"        id="btn-month" onclick="setView('month')">Месяц</div>
@@ -352,10 +379,23 @@ async function toggleAttend(evId, btn) {
   } else {
     attendedIds.add(evId);
     if (btn) { btn.textContent = '★ Иду'; btn.classList.add('attending'); }
-    tg?.HapticFeedback?.impactOccurred('light');
+    try { tg?.HapticFeedback?.impactOccurred('light'); } catch(e){}
   }
   await csSet(CS_KEY, JSON.stringify([...attendedIds]));
+  updateMyTabCount();
   if (currentView === 'my') renderMyEvents();
+}
+
+function updateMyTabCount() {
+  const el = document.getElementById('my-count');
+  if (!el) return;
+  const n = attendedIds.size;
+  if (n > 0) {
+    el.textContent = n;
+    el.style.display = 'inline-block';
+  } else {
+    el.style.display = 'none';
+  }
 }
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
@@ -570,9 +610,14 @@ function renderMyEvents() {
     return;
   }
 
+  const banner = `<div class="my-export-banner" onclick="exportAllMyToCalendar()">
+    <span class="label">📅 Перенести все в календарь</span>
+    <span style="color: var(--hint); font-size: 12px;">${myEvts.length} соб.</span>
+  </div>`;
+
   const groups = {};
   myEvts.forEach(e => { (groups[e.date]=groups[e.date]||[]).push(e); });
-  section.innerHTML = Object.keys(groups).sort().map(date => {
+  section.innerHTML = banner + Object.keys(groups).sort().map(date => {
     let label;
     if (date===today)             label = `Сегодня, ${formatDateFull(date)}`;
     else if (date===addDays(today,1)) label = `Завтра, ${formatDateFull(date)}`;
@@ -634,12 +679,116 @@ function eventCardHtml(ev) {
     ${ev.description?`<div class="event-desc">${ev.description}</div>`:''}
     <div class="event-actions">
       ${sourceBtn}
+      <button class="cal-btn" title="Добавить в календарь" onclick="addToCalendar('${ev.id}')">📅</button>
       <button class="attend-btn${attending?' attending':''}"
         onclick="toggleAttend('${ev.id}',this)">
         ${attending?'★ Иду':'★ Я пойду'}
       </button>
     </div>
   </div>`;
+}
+
+// ─── Calendar export ───────────────────────────────────────────────────────
+
+function pad2(n){return String(n).padStart(2,'0');}
+
+function eventToUtc(ev, addHours) {
+  const [y,m,d] = ev.date.split('-').map(Number);
+  const [hh,mm] = (ev.time || '12:00').split(':').map(Number);
+  const local = new Date(Date.UTC(y, m-1, d, hh - 3, mm)); // MSK = UTC+3
+  if (addHours) local.setUTCHours(local.getUTCHours() + addHours);
+  return `${local.getUTCFullYear()}${pad2(local.getUTCMonth()+1)}${pad2(local.getUTCDate())}T${pad2(local.getUTCHours())}${pad2(local.getUTCMinutes())}00Z`;
+}
+
+function buildIcs(events) {
+  const lines = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//ELYNE Community//Afisha//RU',
+    'CALSCALE:GREGORIAN'
+  ];
+  events.forEach(ev => {
+    const start = eventToUtc(ev, 0);
+    const end   = eventToUtc(ev, 2);
+    const esc = s => (s||'').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;');
+    lines.push(
+      'BEGIN:VEVENT',
+      `UID:${ev.id}@elyne-community`,
+      `DTSTAMP:${start}`,
+      `DTSTART:${start}`,
+      `DTEND:${end}`,
+      `SUMMARY:${esc(ev.title)}`,
+      ev.place ? `LOCATION:${esc(ev.place)}` : '',
+      ev.description ? `DESCRIPTION:${esc(ev.description)}${ev.url?'\\n\\n'+esc(ev.url):''}` : (ev.url?`DESCRIPTION:${esc(ev.url)}`:''),
+      ev.url ? `URL:${ev.url}` : '',
+      'END:VEVENT'
+    );
+  });
+  lines.push('END:VCALENDAR');
+  return lines.filter(Boolean).join('\r\n');
+}
+
+function openIcs(events) {
+  const ics = buildIcs(events);
+  const b64 = btoa(unescape(encodeURIComponent(ics)));
+  const url = 'data:text/calendar;charset=utf-8;base64,' + b64;
+  try {
+    const blob = new Blob([ics], {type: 'text/calendar;charset=utf-8'});
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = (events.length === 1 ? events[0].id : 'elyne-afisha') + '.ics';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { URL.revokeObjectURL(blobUrl); a.remove(); }, 1000);
+  } catch(e) {
+    if (tg && tg.openLink) tg.openLink(url);
+    else window.open(url, '_blank');
+  }
+}
+
+function googleCalendarUrl(ev) {
+  const start = eventToUtc(ev, 0);
+  const end   = eventToUtc(ev, 2);
+  const params = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: ev.title,
+    dates: `${start}/${end}`,
+    details: (ev.description || '') + (ev.url ? '\n\n' + ev.url : ''),
+    location: ev.place || ''
+  });
+  return 'https://calendar.google.com/calendar/render?' + params.toString();
+}
+
+function addToCalendar(evId) {
+  const ev = allEvents.find(e => e.id === evId);
+  if (!ev) return;
+  if (tg && tg.showPopup) {
+    tg.showPopup({
+      title: 'В календарь',
+      message: 'Какой календарь использовать?',
+      buttons: [
+        { id: 'google', type: 'default', text: 'Google Calendar' },
+        { id: 'ical',   type: 'default', text: 'Apple / другой (.ics)' },
+        { type: 'cancel' }
+      ]
+    }, (id) => {
+      if (id === 'google') {
+        if (tg.openLink) tg.openLink(googleCalendarUrl(ev));
+        else window.open(googleCalendarUrl(ev), '_blank');
+      } else if (id === 'ical') {
+        openIcs([ev]);
+      }
+    });
+  } else {
+    openIcs([ev]);
+  }
+}
+
+function exportAllMyToCalendar() {
+  const myEvts = allEvents.filter(e => attendedIds.has(e.id));
+  if (!myEvts.length) return;
+  openIcs(myEvts);
 }
 
 // ─── Events list ───────────────────────────────────────────────────────────
@@ -700,6 +849,7 @@ async function loadEvents() {
     dot.style.background = '#4CAF50';
 
     renderCatStrip();
+    updateMyTabCount();
     // Start on "Мои" if user has saved events, otherwise show "Сегодня"
     setView(attendedIds.size > 0 ? 'my' : 'today');
     footer.textContent = `${allEvents.length} событий · ELYNE Community`;
