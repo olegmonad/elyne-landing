@@ -16,6 +16,7 @@
     --btn-text: var(--tg-theme-button-text-color, #000);
     --card: #1e1e1e;
     --border: rgba(255,255,255,0.07);
+    --green: #4CAF50;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -25,60 +26,46 @@
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
-    padding-bottom: env(safe-area-inset-bottom, 16px);
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 72px);
   }
 
+  /* Header */
   .header {
     padding: 16px 16px 0;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
+    display: flex; align-items: flex-start; justify-content: space-between;
   }
   .header-title { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
   .header-subtitle { font-size: 13px; color: var(--hint); margin-top: 2px; }
-  .updated-dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: #888; flex-shrink: 0; margin-top: 6px;
-  }
+  .updated-dot { width: 7px; height: 7px; border-radius: 50%; background: #888; flex-shrink: 0; margin-top: 6px; }
 
-  /* View switcher */
+  /* View switcher — 4 tabs */
   .view-switcher {
-    display: flex;
-    background: var(--bg2);
-    border-radius: 12px;
-    margin: 12px 16px 0;
-    padding: 3px;
-    gap: 2px;
+    display: flex; background: var(--bg2); border-radius: 12px;
+    margin: 12px 16px 0; padding: 3px; gap: 2px;
   }
   .view-btn {
     flex: 1; padding: 7px 0; border-radius: 9px;
-    font-size: 13px; font-weight: 500; text-align: center;
+    font-size: 12px; font-weight: 500; text-align: center;
     cursor: pointer; color: var(--hint); transition: all 0.15s;
+    white-space: nowrap;
   }
   .view-btn.active { background: var(--card); color: var(--text); font-weight: 600; }
 
   /* Nav bar */
   .nav-bar {
-    padding: 12px 16px 0;
-    display: none;
-    align-items: center;
-    justify-content: space-between;
+    padding: 12px 16px 0; display: none;
+    align-items: center; justify-content: space-between;
   }
   .nav-bar.visible { display: flex; }
   .nav-arrow {
-    width: 36px; height: 36px; border-radius: 10px;
-    background: var(--bg2); display: flex;
-    align-items: center; justify-content: center;
-    cursor: pointer; font-size: 20px; color: var(--text); flex-shrink: 0;
-    user-select: none;
+    width: 36px; height: 36px; border-radius: 10px; background: var(--bg2);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 20px; color: var(--text); flex-shrink: 0; user-select: none;
   }
   .nav-title { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
 
   /* Week strip */
-  .week-strip {
-    padding: 14px 16px 0;
-    display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;
-  }
+  .week-strip { padding: 14px 16px 0; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
   .week-strip::-webkit-scrollbar { display: none; }
   .day-pill {
     flex-shrink: 0; padding: 8px 14px; border-radius: 20px;
@@ -95,9 +82,7 @@
   /* Month grid */
   .month-grid { padding: 10px 16px 0; display: none; }
   .month-grid.visible { display: block; }
-  .month-weekdays {
-    display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 4px;
-  }
+  .month-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 4px; }
   .month-weekday {
     text-align: center; font-size: 11px; font-weight: 600;
     color: var(--hint); text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 0;
@@ -111,34 +96,20 @@
   .month-day:active { opacity: 0.7; }
   .month-day.other-month { opacity: 0.25; pointer-events: none; }
   .day-num-m {
-    font-size: 15px; font-weight: 600;
-    width: 28px; height: 28px; border-radius: 50%;
+    font-size: 15px; font-weight: 600; width: 28px; height: 28px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center; line-height: 1;
   }
   .month-day.is-today .day-num-m { background: var(--btn); color: var(--btn-text); }
-  .month-day.is-selected:not(.is-today) .day-num-m {
-    background: rgba(196,169,94,0.25); color: var(--btn);
-  }
-  .day-dots {
-    display: flex; gap: 2px; margin-top: 3px;
-    height: 5px; align-items: center; justify-content: center;
-  }
-  .day-dot {
-    width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0;
-    background: var(--btn);
-  }
+  .month-day.is-selected:not(.is-today) .day-num-m { background: rgba(196,169,94,0.25); color: var(--btn); }
+  .day-dots { display: flex; gap: 2px; margin-top: 3px; height: 5px; align-items: center; justify-content: center; }
+  .day-dot { width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0; background: var(--btn); }
 
   /* Year grid */
-  .year-grid {
-    padding: 10px 16px 0;
-    display: none;
-    grid-template-columns: repeat(3, 1fr); gap: 8px;
-  }
+  .year-grid { padding: 10px 16px 0; display: none; grid-template-columns: repeat(3, 1fr); gap: 8px; }
   .year-grid.visible { display: grid; }
   .year-month-card {
     background: var(--bg2); border-radius: 12px; padding: 10px 8px;
-    cursor: pointer; transition: opacity 0.1s;
-    border: 1.5px solid transparent;
+    cursor: pointer; transition: opacity 0.1s; border: 1.5px solid transparent;
   }
   .year-month-card:active { opacity: 0.7; }
   .year-month-card.has-events { border-color: rgba(196,169,94,0.3); }
@@ -148,7 +119,7 @@
   .year-month-dots { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 5px; }
   .year-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--hint); }
 
-  /* Category dots by category */
+  /* Category color classes */
   .cat-культура  { background: #E57373 !important; }
   .cat-wellbeing { background: #81C784 !important; }
   .cat-спорт     { background: #64B5F6 !important; }
@@ -157,9 +128,7 @@
   .cat-праздник  { background: #F06292 !important; }
 
   /* Category filter */
-  .cat-strip {
-    padding: 12px 16px 0; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none;
-  }
+  .cat-strip { padding: 12px 16px 0; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
   .cat-strip::-webkit-scrollbar { display: none; }
   .cat-pill {
     flex-shrink: 0; padding: 6px 12px; border-radius: 14px; font-size: 13px;
@@ -174,12 +143,13 @@
     font-size: 12px; color: var(--hint); text-transform: uppercase;
     letter-spacing: 0.8px; margin-bottom: 10px; font-weight: 600;
   }
+
   .event-card {
     background: var(--card); border-radius: 14px; padding: 14px 16px;
     margin-bottom: 10px; border: 1px solid var(--border);
     transition: opacity 0.1s; position: relative; overflow: hidden;
   }
-  .event-card:active { opacity: 0.7; }
+  .event-card:active { opacity: 0.8; }
   .event-card::before {
     content: ''; position: absolute; left: 0; top: 0; bottom: 0;
     width: 3px; background: var(--btn); border-radius: 3px 0 0 3px;
@@ -198,18 +168,48 @@
   .meta-tag { font-size: 12px; color: var(--hint); display: flex; align-items: center; gap: 3px; }
   .event-price { margin-left: auto; font-size: 12px; color: var(--link); font-weight: 600; flex-shrink: 0; }
   .event-desc { margin-top: 8px; padding-left: 32px; font-size: 13px; color: var(--hint); line-height: 1.5; }
-  .event-link-row { margin-top: 10px; padding-left: 32px; display: flex; gap: 8px; }
+
+  .event-actions { margin-top: 10px; padding-left: 32px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
   .event-btn {
     padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600;
-    background: rgba(255,255,255,0.08); color: var(--text); text-decoration: none; display: inline-block;
+    background: rgba(255,255,255,0.08); color: var(--text);
+    text-decoration: none; display: inline-block; border: none; cursor: pointer;
   }
   .event-btn.primary { background: var(--btn); color: var(--btn-text); }
 
-  .empty { text-align: center; padding: 40px 24px; color: var(--hint); }
-  .empty-emoji { font-size: 40px; margin-bottom: 12px; }
-  .empty-text { font-size: 15px; }
+  /* «Я пойду» button */
+  .attend-btn {
+    padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
+    background: rgba(255,255,255,0.06); color: var(--hint);
+    border: 1px solid rgba(255,255,255,0.1); cursor: pointer;
+    transition: all 0.2s; white-space: nowrap;
+  }
+  .attend-btn.attending {
+    background: rgba(76,175,80,0.15); color: var(--green);
+    border-color: rgba(76,175,80,0.4);
+  }
 
-  .footer { padding: 20px 16px 8px; font-size: 11px; color: var(--hint); text-align: center; }
+  /* Empty state */
+  .empty { text-align: center; padding: 48px 24px; color: var(--hint); }
+  .empty-emoji { font-size: 40px; margin-bottom: 12px; }
+  .empty-text { font-size: 15px; line-height: 1.5; }
+
+  /* Sticky bottom bar */
+  .bottom-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    padding: 10px 16px calc(env(safe-area-inset-bottom, 0px) + 10px);
+    background: linear-gradient(to top, var(--bg) 70%, transparent);
+    display: flex; gap: 8px;
+  }
+  .community-btn {
+    flex: 1; padding: 12px; border-radius: 14px;
+    background: var(--bg2); color: var(--text); font-size: 14px; font-weight: 600;
+    text-align: center; cursor: pointer; border: 1px solid var(--border);
+    transition: opacity 0.1s;
+  }
+  .community-btn:active { opacity: 0.7; }
+
+  .footer { padding: 8px 16px 4px; font-size: 11px; color: var(--hint); text-align: center; }
 </style>
 </head>
 <body>
@@ -226,6 +226,7 @@
   <div class="view-btn active" id="btn-week"  onclick="setView('week')">Неделя</div>
   <div class="view-btn"        id="btn-month" onclick="setView('month')">Месяц</div>
   <div class="view-btn"        id="btn-year"  onclick="setView('year')">Год</div>
+  <div class="view-btn"        id="btn-my"    onclick="setView('my')">Мои ★</div>
 </div>
 
 <div class="nav-bar" id="nav-bar">
@@ -234,126 +235,148 @@
   <div class="nav-arrow" onclick="navNext()">›</div>
 </div>
 
-<div class="week-strip" id="week-strip"></div>
-
-<div class="month-grid" id="month-grid">
+<div class="week-strip"  id="week-strip"></div>
+<div class="month-grid"  id="month-grid">
   <div class="month-weekdays" id="month-weekdays"></div>
-  <div class="month-days" id="month-days"></div>
+  <div class="month-days"     id="month-days"></div>
 </div>
-
-<div class="year-grid" id="year-grid"></div>
-
-<div class="cat-strip" id="cat-strip"></div>
+<div class="year-grid"   id="year-grid"></div>
+<div class="cat-strip"   id="cat-strip"></div>
 <div class="events-section" id="events-section"></div>
-<div class="footer" id="footer"></div>
+<div class="footer"      id="footer"></div>
+
+<div class="bottom-bar">
+  <div class="community-btn" onclick="openCommunity()">💬 ELYNE Community</div>
+</div>
 
 <script>
 const tg = window.Telegram?.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
 
-const EVENTS_URL = 'https://elyne-start.online/community/events.json';
-const TG_BASE    = 'https://t.me/c/1003993020463/';
+const EVENTS_URL   = 'https://elyne-start.online/community/events.json';
+const TG_BASE      = 'https://t.me/c/1003993020463/';
+const COMMUNITY_URL = 'https://t.me/elyne_community';
 
-const DAYS_RU   = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
-const DAYS_MON  = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
-const MONTHS_RU = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+const DAYS_RU     = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+const DAYS_MON    = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+const MONTHS_RU   = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
 const MONTHS_FULL = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
 const MONTHS_NOM  = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
-const CATS     = ['Все','Культура','Wellbeing','Спорт','Наука','Бизнес','Праздник'];
-const CAT_KEYS = ['все','культура','wellbeing','спорт','наука','бизнес','праздник'];
+const CATS        = ['Все','Культура','Wellbeing','Спорт','Наука','Бизнес','Праздник'];
+const CAT_KEYS    = ['все','культура','wellbeing','спорт','наука','бизнес','праздник'];
+const CS_KEY      = 'attended_events';
 
-let allEvents   = [];
-let currentView = 'week';
+let allEvents    = [];
+let attendedIds  = new Set();
+let currentView  = 'week';
 let selectedDate = null;
 let selectedCat  = 'все';
-let navMonth = null; // { year, month }
-let navYear  = null;
+let navMonth     = null;
+let navYear      = null;
 
-// ─── helpers ───────────────────────────────────────────────────────────────
+// ─── CloudStorage helpers ──────────────────────────────────────────────────
 
-function todayIso() {
-  const n = new Date();
-  return `${n.getFullYear()}-${pad(n.getMonth()+1)}-${pad(n.getDate())}`;
+function csGet(key) {
+  return new Promise(resolve => {
+    if (tg?.CloudStorage) {
+      tg.CloudStorage.getItem(key, (err, val) => resolve(err ? null : (val || null)));
+    } else {
+      resolve(localStorage.getItem(key));
+    }
+  });
 }
+function csSet(key, val) {
+  return new Promise(resolve => {
+    if (tg?.CloudStorage) {
+      tg.CloudStorage.setItem(key, val, () => resolve());
+    } else {
+      localStorage.setItem(key, val);
+      resolve();
+    }
+  });
+}
+
+async function loadAttended() {
+  const raw = await csGet(CS_KEY);
+  if (raw) {
+    try { attendedIds = new Set(JSON.parse(raw)); } catch(e) {}
+  }
+}
+
+async function toggleAttend(evId, btn) {
+  if (attendedIds.has(evId)) {
+    attendedIds.delete(evId);
+    if (btn) { btn.textContent = '★ Я пойду'; btn.classList.remove('attending'); }
+  } else {
+    attendedIds.add(evId);
+    if (btn) { btn.textContent = '★ Иду'; btn.classList.add('attending'); }
+    // haptic
+    tg?.HapticFeedback?.impactOccurred('light');
+  }
+  await csSet(CS_KEY, JSON.stringify([...attendedIds]));
+  if (currentView === 'my') renderMyEvents();
+}
+
+// ─── Helpers ───────────────────────────────────────────────────────────────
+
+function todayIso() { const n=new Date(); return `${n.getFullYear()}-${pad(n.getMonth()+1)}-${pad(n.getDate())}`; }
 function pad(n) { return String(n).padStart(2,'0'); }
-function isoToDate(iso) { const [y,m,d] = iso.split('-').map(Number); return new Date(y,m-1,d); }
+function isoToDate(iso) { const [y,m,d]=iso.split('-').map(Number); return new Date(y,m-1,d); }
 function dateToIso(d)   { return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
 function addDays(iso,n) { const d=isoToDate(iso); d.setDate(d.getDate()+n); return dateToIso(d); }
 function formatDateFull(iso) { const d=isoToDate(iso); return `${d.getDate()} ${MONTHS_FULL[d.getMonth()]}`; }
+function matchCat(e) { return selectedCat==='все'||e.category===selectedCat; }
 
-function eventsOn(iso) {
-  return allEvents.filter(e => e.date === iso && matchCat(e));
+function openCommunity() {
+  if (tg) tg.openTelegramLink(COMMUNITY_URL);
+  else window.open(COMMUNITY_URL, '_blank');
 }
-function matchCat(e) { return selectedCat === 'все' || e.category === selectedCat; }
 
-// ─── view switcher ─────────────────────────────────────────────────────────
+// ─── View switcher ─────────────────────────────────────────────────────────
 
 function setView(v, keepDate) {
   if (v !== currentView && !keepDate) selectedDate = null;
   currentView = v;
 
-  ['week','month','year'].forEach(k =>
+  ['week','month','year','my'].forEach(k =>
     document.getElementById('btn-'+k).classList.toggle('active', k===v)
   );
 
-  // week strip
-  const ws = document.getElementById('week-strip');
-  ws.style.display = v === 'week' ? 'flex' : 'none';
+  document.getElementById('week-strip').style.display    = v==='week'  ? 'flex' : 'none';
+  document.getElementById('month-grid').classList.toggle('visible', v==='month');
+  document.getElementById('year-grid').classList.toggle('visible',  v==='year');
+  document.getElementById('nav-bar').classList.toggle('visible', v==='month'||v==='year');
+  document.getElementById('cat-strip').style.display     = v==='year'  ? 'none' : 'flex';
+  document.getElementById('events-section').style.display = v==='year' ? 'none' : 'block';
 
-  // month grid
-  const mg = document.getElementById('month-grid');
-  mg.classList.toggle('visible', v === 'month');
-
-  // year grid
-  const yg = document.getElementById('year-grid');
-  yg.classList.toggle('visible', v === 'year');
-
-  // nav bar
-  document.getElementById('nav-bar').classList.toggle('visible', v !== 'week');
-
-  // cat strip + events — hidden in year view
-  document.getElementById('cat-strip').style.display     = v === 'year' ? 'none' : 'flex';
-  document.getElementById('events-section').style.display = v === 'year' ? 'none' : 'block';
-
-  if (v === 'week') {
+  if (v==='week') {
     if (!selectedDate) selectedDate = todayIso();
-    renderWeekStrip();
-    renderEvents();
-  } else if (v === 'month') {
-    if (!navMonth) {
-      const t = isoToDate(todayIso());
-      navMonth = { year: t.getFullYear(), month: t.getMonth() };
-    }
-    renderMonthView();
-    renderEvents();
-  } else {
+    renderWeekStrip(); renderEvents();
+  } else if (v==='month') {
+    if (!navMonth) { const t=isoToDate(todayIso()); navMonth={year:t.getFullYear(),month:t.getMonth()}; }
+    renderMonthView(); renderEvents();
+  } else if (v==='year') {
     if (!navYear) navYear = isoToDate(todayIso()).getFullYear();
     renderYearView();
+  } else if (v==='my') {
+    renderMyEvents();
   }
 }
 
 function navPrev() {
-  if (currentView === 'month') {
-    if (--navMonth.month < 0) { navMonth.month = 11; navMonth.year--; }
-    selectedDate = null;
-    renderMonthView(); renderEvents();
-  } else {
-    navYear--;
-    renderYearView();
-  }
+  if (currentView==='month') {
+    if (--navMonth.month<0) { navMonth.month=11; navMonth.year--; }
+    selectedDate=null; renderMonthView(); renderEvents();
+  } else { navYear--; renderYearView(); }
 }
 function navNext() {
-  if (currentView === 'month') {
-    if (++navMonth.month > 11) { navMonth.month = 0; navMonth.year++; }
-    selectedDate = null;
-    renderMonthView(); renderEvents();
-  } else {
-    navYear++;
-    renderYearView();
-  }
+  if (currentView==='month') {
+    if (++navMonth.month>11) { navMonth.month=0; navMonth.year++; }
+    selectedDate=null; renderMonthView(); renderEvents();
+  } else { navYear++; renderYearView(); }
 }
 
-// ─── week view ─────────────────────────────────────────────────────────────
+// ─── Week view ─────────────────────────────────────────────────────────────
 
 function renderWeekStrip() {
   const today = todayIso();
@@ -361,121 +384,166 @@ function renderWeekStrip() {
   strip.innerHTML = '';
   Array.from({length:8},(_,i)=>addDays(today,i)).forEach(iso => {
     const d = isoToDate(iso);
-    const cnt = eventsOn(iso).length;
+    const cnt = allEvents.filter(e=>e.date===iso&&matchCat(e)).length;
     const pill = document.createElement('div');
     pill.className = 'day-pill'+(iso===today?' today-pill':'')+(iso===selectedDate?' active':'');
     pill.innerHTML = `<div class="dn">${DAYS_RU[d.getDay()]}</div>
       <div class="dd">${d.getDate()}</div>
-      <div class="dc">${cnt>0?cnt+(cnt===1?' событие':cnt<5?' события':' событий'):'—'}</div>`;
-    pill.onclick = () => { selectedDate = selectedDate===iso?null:iso; renderWeekStrip(); renderEvents(); };
+      <div class="dc">${cnt>0?cnt+(cnt===1?' соб.':' соб.'):'—'}</div>`;
+    pill.onclick = () => { selectedDate=selectedDate===iso?null:iso; renderWeekStrip(); renderEvents(); };
     strip.appendChild(pill);
   });
 }
 
-// ─── month view ────────────────────────────────────────────────────────────
+// ─── Month view ────────────────────────────────────────────────────────────
 
 function renderMonthView() {
-  const {year, month} = navMonth;
+  const {year,month} = navMonth;
   document.getElementById('nav-title').textContent = `${MONTHS_NOM[month]} ${year}`;
+  document.getElementById('month-weekdays').innerHTML = DAYS_MON.map(d=>`<div class="month-weekday">${d}</div>`).join('');
 
-  document.getElementById('month-weekdays').innerHTML =
-    DAYS_MON.map(d=>`<div class="month-weekday">${d}</div>`).join('');
-
-  const firstDay  = new Date(year, month, 1);
-  let startOffset = firstDay.getDay() - 1;
-  if (startOffset < 0) startOffset = 6;
-  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const firstDay = new Date(year,month,1);
+  let offset = firstDay.getDay()-1; if (offset<0) offset=6;
+  const dim = new Date(year,month+1,0).getDate();
   const today = todayIso();
-
   const daysEl = document.getElementById('month-days');
   daysEl.innerHTML = '';
 
-  // leading empty cells
-  for (let i = 0; i < startOffset; i++) {
-    const cell = document.createElement('div');
-    cell.className = 'month-day other-month';
-    daysEl.appendChild(cell);
-  }
+  for (let i=0;i<offset;i++) { const c=document.createElement('div'); c.className='month-day other-month'; daysEl.appendChild(c); }
 
-  for (let d = 1; d <= daysInMonth; d++) {
+  for (let d=1;d<=dim;d++) {
     const iso = `${year}-${pad(month+1)}-${pad(d)}`;
-    const dayEvts = allEvents.filter(e => e.date===iso && matchCat(e));
-    const cats = [...new Set(dayEvts.map(e=>e.category))].slice(0,3);
-
+    const cats = [...new Set(allEvents.filter(e=>e.date===iso&&matchCat(e)).map(e=>e.category))].slice(0,3);
     const cell = document.createElement('div');
     cell.className = 'month-day'+(iso===today?' is-today':'')+(iso===selectedDate?' is-selected':'');
     cell.innerHTML = `<div class="day-num-m">${d}</div>`+
-      (cats.length ? `<div class="day-dots">${cats.map(c=>`<div class="day-dot cat-${c}"></div>`).join('')}</div>` : '');
-    cell.onclick = () => { selectedDate = selectedDate===iso?null:iso; renderMonthView(); renderEvents(); };
+      (cats.length?`<div class="day-dots">${cats.map(c=>`<div class="day-dot cat-${c}"></div>`).join('')}</div>`:'');
+    cell.onclick = () => { selectedDate=selectedDate===iso?null:iso; renderMonthView(); renderEvents(); };
     daysEl.appendChild(cell);
   }
 }
 
-// ─── year view ─────────────────────────────────────────────────────────────
+// ─── Year view ─────────────────────────────────────────────────────────────
 
 function renderYearView() {
   document.getElementById('nav-title').textContent = navYear;
   const today = isoToDate(todayIso());
-  const grid  = document.getElementById('year-grid');
+  const grid = document.getElementById('year-grid');
   grid.innerHTML = '';
-
-  for (let m = 0; m < 12; m++) {
+  for (let m=0;m<12;m++) {
     const prefix = `${navYear}-${pad(m+1)}-`;
-    const mEvts  = allEvents.filter(e => e.date.startsWith(prefix));
-    const cats   = [...new Set(mEvts.map(e=>e.category))].slice(0,6);
-    const isCur  = today.getFullYear()===navYear && today.getMonth()===m;
-
+    const mEvts = allEvents.filter(e=>e.date.startsWith(prefix));
+    const cats = [...new Set(mEvts.map(e=>e.category))].slice(0,6);
+    const isCur = today.getFullYear()===navYear&&today.getMonth()===m;
     const card = document.createElement('div');
     card.className = 'year-month-card'+(mEvts.length?' has-events':'')+(isCur?' is-current':'');
     card.innerHTML = `<div class="year-month-name">${MONTHS_NOM[m]}</div>
       <div class="year-month-count">${mEvts.length?mEvts.length+' соб.':'нет событий'}</div>`+
-      (cats.length ? `<div class="year-month-dots">${cats.map(c=>`<div class="year-dot cat-${c}"></div>`).join('')}</div>` : '');
-    card.onclick = () => { navMonth = {year:navYear,month:m}; setView('month'); };
+      (cats.length?`<div class="year-month-dots">${cats.map(c=>`<div class="year-dot cat-${c}"></div>`).join('')}</div>`:'');
+    card.onclick = () => { navMonth={year:navYear,month:m}; setView('month'); };
     grid.appendChild(card);
   }
 }
 
-// ─── category strip ────────────────────────────────────────────────────────
+// ─── My events view ────────────────────────────────────────────────────────
+
+function renderMyEvents() {
+  const section = document.getElementById('events-section');
+  const today = todayIso();
+  const myEvts = allEvents
+    .filter(e => attendedIds.has(e.id) && matchCat(e))
+    .sort((a,b) => a.date.localeCompare(b.date));
+
+  if (!myEvts.length) {
+    section.innerHTML = `<div class="empty">
+      <div class="empty-emoji">★</div>
+      <div class="empty-text">Нажми «★ Я пойду» на понравившемся событии — оно появится здесь</div>
+    </div>`;
+    return;
+  }
+
+  const groups = {};
+  myEvts.forEach(e => { (groups[e.date]=groups[e.date]||[]).push(e); });
+  section.innerHTML = Object.keys(groups).sort().map(date => {
+    let label;
+    if (date===today)             label = `Сегодня, ${formatDateFull(date)}`;
+    else if (date===addDays(today,1)) label = `Завтра, ${formatDateFull(date)}`;
+    else                          label = formatDateFull(date);
+    return `<div class="section-label">${label}</div>${groups[date].map(ev=>eventCardHtml(ev)).join('')}`;
+  }).join('');
+}
+
+// ─── Category strip ────────────────────────────────────────────────────────
 
 function renderCatStrip() {
   const strip = document.getElementById('cat-strip');
   strip.innerHTML = '';
-  CATS.forEach((label, i) => {
+  CATS.forEach((label,i) => {
     const key = CAT_KEYS[i];
     const pill = document.createElement('div');
     pill.className = 'cat-pill'+(selectedCat===key?' active':'');
     pill.textContent = label;
     pill.onclick = () => {
-      selectedCat = key;
-      renderCatStrip();
+      selectedCat = key; renderCatStrip();
       if (currentView==='week')  { renderWeekStrip(); renderEvents(); }
       if (currentView==='month') { renderMonthView(); renderEvents(); }
       if (currentView==='year')  renderYearView();
+      if (currentView==='my')    renderMyEvents();
     };
     strip.appendChild(pill);
   });
 }
 
-// ─── events list ───────────────────────────────────────────────────────────
+// ─── Event card HTML ────────────────────────────────────────────────────────
+
+function eventCardHtml(ev) {
+  const tgLink = ev.tg_msg_id ? `${TG_BASE}${ev.tg_msg_id}` : null;
+  const attending = attendedIds.has(ev.id);
+  const links = [
+    ev.url   ? `<a class="event-btn primary" href="${ev.url}" target="_blank">Источник</a>` : '',
+    tgLink   ? `<a class="event-btn" href="${tgLink}" target="_blank">В Афише</a>` : ''
+  ].filter(Boolean).join('');
+
+  return `<div class="event-card" data-cat="${ev.category}">
+    <div class="event-header">
+      <div class="event-emoji">${ev.emoji||'📌'}</div>
+      <div class="event-title">${ev.title}</div>
+    </div>
+    <div class="event-meta">
+      ${ev.place?`<span class="meta-tag">📍 ${ev.place}</span>`:''}
+      ${ev.time ?`<span class="meta-tag">🕐 ${ev.time}</span>` :''}
+      <span class="event-price">${ev.is_free?'Бесплатно':(ev.price||'')}</span>
+    </div>
+    ${ev.description?`<div class="event-desc">${ev.description}</div>`:''}
+    <div class="event-actions">
+      ${links}
+      <button class="attend-btn${attending?' attending':''}"
+        onclick="toggleAttend('${ev.id}',this)">
+        ${attending?'★ Иду':'★ Я пойду'}
+      </button>
+    </div>
+  </div>`;
+}
+
+// ─── Events list ───────────────────────────────────────────────────────────
 
 function renderEvents() {
   const section = document.getElementById('events-section');
   const today   = todayIso();
 
   let filtered = allEvents.filter(matchCat);
-
   if (selectedDate) {
-    filtered = filtered.filter(e => e.date === selectedDate);
-  } else if (currentView === 'week') {
-    const end = addDays(today, 7);
-    filtered  = filtered.filter(e => e.date >= today && e.date <= end);
-  } else if (currentView === 'month' && navMonth) {
+    filtered = filtered.filter(e=>e.date===selectedDate);
+  } else if (currentView==='week') {
+    const end = addDays(today,7);
+    filtered  = filtered.filter(e=>e.date>=today&&e.date<=end);
+  } else if (currentView==='month'&&navMonth) {
     const prefix = `${navMonth.year}-${pad(navMonth.month+1)}-`;
-    filtered = filtered.filter(e => e.date.startsWith(prefix));
+    filtered = filtered.filter(e=>e.date.startsWith(prefix));
   }
 
   const groups = {};
-  filtered.forEach(e => { (groups[e.date] = groups[e.date]||[]).push(e); });
+  filtered.forEach(e=>{ (groups[e.date]=groups[e.date]||[]).push(e); });
   const sortedDates = Object.keys(groups).sort();
 
   if (!sortedDates.length) {
@@ -488,49 +556,27 @@ function renderEvents() {
     if (date===today)             label = `Сегодня, ${formatDateFull(date)}`;
     else if (date===addDays(today,1)) label = `Завтра, ${formatDateFull(date)}`;
     else                          label = formatDateFull(date);
-
-    const cards = groups[date].map(ev => {
-      const tgLink   = ev.tg_msg_id ? `${TG_BASE}${ev.tg_msg_id}` : null;
-      const linksHtml = [
-        ev.url    ? `<a class="event-btn primary" href="${ev.url}" target="_blank">Источник</a>` : '',
-        tgLink    ? `<a class="event-btn" href="${tgLink}" target="_blank">В Афише</a>` : ''
-      ].filter(Boolean).join('');
-
-      return `<div class="event-card" data-cat="${ev.category}">
-        <div class="event-header">
-          <div class="event-emoji">${ev.emoji||'📌'}</div>
-          <div class="event-title">${ev.title}</div>
-        </div>
-        <div class="event-meta">
-          ${ev.place ? `<span class="meta-tag">📍 ${ev.place}</span>` : ''}
-          ${ev.time  ? `<span class="meta-tag">🕐 ${ev.time}</span>`  : ''}
-          <span class="event-price">${ev.is_free?'Бесплатно':(ev.price||'')}</span>
-        </div>
-        ${ev.description ? `<div class="event-desc">${ev.description}</div>` : ''}
-        ${linksHtml ? `<div class="event-link-row">${linksHtml}</div>` : ''}
-      </div>`;
-    }).join('');
-
-    return `<div class="section-label">${label}</div>${cards}`;
+    return `<div class="section-label">${label}</div>${groups[date].map(ev=>eventCardHtml(ev)).join('')}`;
   }).join('');
 }
 
-// ─── load ──────────────────────────────────────────────────────────────────
+// ─── Load ──────────────────────────────────────────────────────────────────
 
 async function loadEvents() {
   const label  = document.getElementById('updated-label');
   const dot    = document.getElementById('status-dot');
   const footer = document.getElementById('footer');
   try {
-    const resp = await fetch(EVENTS_URL + '?v=' + Date.now());
+    const [resp] = await Promise.all([
+      fetch(EVENTS_URL + '?v=' + Date.now()),
+      loadAttended()
+    ]);
     const data = await resp.json();
-    allEvents  = data.events || [];
+    allEvents = data.events || [];
 
     const upd    = data.updated ? new Date(data.updated) : null;
-    const updStr = upd
-      ? `${upd.getDate()} ${MONTHS_RU[upd.getMonth()]} ${pad(upd.getHours())}:${pad(upd.getMinutes())}`
-      : '';
-    label.textContent   = updStr ? `Обновлено ${updStr}` : 'Актуально';
+    const updStr = upd ? `${upd.getDate()} ${MONTHS_RU[upd.getMonth()]} ${pad(upd.getHours())}:${pad(upd.getMinutes())}` : '';
+    label.textContent    = updStr ? `Обновлено ${updStr}` : 'Актуально';
     dot.style.background = '#4CAF50';
 
     selectedDate = todayIso();
