@@ -602,10 +602,13 @@ async function loadEvents() {
   const dot    = document.getElementById('status-dot');
   const footer = document.getElementById('footer');
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
     const [resp] = await Promise.all([
-      fetch(EVENTS_URL + '?v=' + Date.now()),
+      fetch(EVENTS_URL + '?v=' + Date.now(), { signal: controller.signal }),
       loadAttended()
     ]);
+    clearTimeout(timeout);
     const data = await resp.json();
     allEvents = data.events || [];
 
