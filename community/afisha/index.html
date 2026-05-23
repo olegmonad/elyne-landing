@@ -302,14 +302,21 @@ let navYear      = null;
 
 // ─── CloudStorage helpers ──────────────────────────────────────────────────
 
+const CS_SUPPORTED = !!(tg?.CloudStorage && tg.isVersionAtLeast && tg.isVersionAtLeast('6.9'));
+
 function csGet(key) {
   return new Promise(resolve => {
-    if (tg?.CloudStorage) {
-      const timer = setTimeout(() => resolve(null), 3000);
-      tg.CloudStorage.getItem(key, (err, val) => {
+    if (CS_SUPPORTED) {
+      const timer = setTimeout(() => resolve(localStorage.getItem(key)), 3000);
+      try {
+        tg.CloudStorage.getItem(key, (err, val) => {
+          clearTimeout(timer);
+          resolve(err ? localStorage.getItem(key) : (val || localStorage.getItem(key)));
+        });
+      } catch(e) {
         clearTimeout(timer);
-        resolve(err ? null : (val || null));
-      });
+        resolve(localStorage.getItem(key));
+      }
     } else {
       resolve(localStorage.getItem(key));
     }
@@ -317,20 +324,25 @@ function csGet(key) {
 }
 function csSet(key, val) {
   return new Promise(resolve => {
-    if (tg?.CloudStorage) {
-      tg.CloudStorage.setItem(key, val, () => resolve());
+    try { localStorage.setItem(key, val); } catch(e) {}
+    if (CS_SUPPORTED) {
+      try {
+        tg.CloudStorage.setItem(key, val, () => resolve());
+        setTimeout(() => resolve(), 2000);
+      } catch(e) { resolve(); }
     } else {
-      localStorage.setItem(key, val);
       resolve();
     }
   });
 }
 
 async function loadAttended() {
-  const raw = await csGet(CS_KEY);
-  if (raw) {
-    try { attendedIds = new Set(JSON.parse(raw)); } catch(e) {}
-  }
+  try {
+    const raw = await csGet(CS_KEY);
+    if (raw) {
+      try { attendedIds = new Set(JSON.parse(raw)); } catch(e) {}
+    }
+  } catch(e) { /* never block load */ }
 }
 
 async function toggleAttend(evId, btn) {
