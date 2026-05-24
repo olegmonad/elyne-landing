@@ -574,7 +574,8 @@
       "emoji": "🖼",
       "description": "Иммерсивная выставка с интерактивными «говорящими» картинами. До 30 июня.",
       "url": "https://kudago.com/msk/event/vyistavka-ni-v-kakie-ramki-dekabr-2025/",
-      "price": "от 1050 ₽"
+      "price": "от 1050 ₽",
+      "tg_msg_id": 247
     },
     {
       "id": "mamm-biennale-iskusstvo-buduschego-2026-06-01",
@@ -586,7 +587,8 @@
       "emoji": "🖼",
       "description": "Большое событие: 2-я международная биеннале о будущем искусства, технологий и человека. До 6 июня.",
       "url": "https://afisha.yandex.ru/moscow/art",
-      "price": "от 100 ₽"
+      "price": "от 100 ₽",
+      "tg_msg_id": 248
     },
     {
       "id": "garage-melting-diary-2026-06-01",
@@ -598,7 +600,8 @@
       "emoji": "🖼",
       "description": "Спецпроект Музея «Гараж» в архитектурном памятнике конструктивизма. Идёт до 14 июня.",
       "url": "https://garagemca.org/event/melting-diary-at-the-narkomfin-building",
-      "price": "от 1700 ₽"
+      "price": "от 1700 ₽",
+      "tg_msg_id": 249
     },
     {
       "id": "parks-kino-leto-2026-06-01",
@@ -611,7 +614,8 @@
       "description": "С июня в московских парках — летние кинопоказы под открытым небом. Расписание на mosparks.ru. Вход свободный.",
       "price": "Бесплатно",
       "is_free": true,
-      "url": "https://mosparks.ru/events"
+      "url": "https://mosparks.ru/events",
+      "tg_msg_id": 250
     },
     {
       "id": "darwin-nakhlebniki-2026-06-02",
@@ -623,7 +627,8 @@
       "emoji": "🖼",
       "description": "Большая научно-популярная выставка о паразитах в формате пяти «фильмов-блокбастеров». До 23 августа.",
       "url": "https://www.darwinmuseum.ru/",
-      "price": "от 400 ₽"
+      "price": "от 400 ₽",
+      "tg_msg_id": 251
     },
     {
       "id": "teatr-naciy-skazka-pro-angela-2026-06-02",
@@ -635,7 +640,8 @@
       "emoji": "🎭",
       "description": "Эпическая сага Андрея Могучего по прозе Романа Михайлова. 3 часа 50 минут современного русского театра.",
       "url": "https://theatre-of-nations.ru/events",
-      "price": "от 3000 ₽"
+      "price": "от 3000 ₽",
+      "tg_msg_id": 252
     },
     {
       "id": "satira-pigmalion-2026-06-02",
@@ -648,7 +654,8 @@
       "description": "Бернард Шоу: профессор фонетики берётся превратить уличную цветочницу в светскую даму. Классическая история трансформации и достоинства.",
       "price": "от 800 ₽",
       "is_free": false,
-      "url": "https://satire.ru/afisha/"
+      "url": "https://satire.ru/afisha/",
+      "tg_msg_id": 253
     },
     {
       "id": "ai-hr-2026-06-04",
@@ -674,7 +681,8 @@
       "emoji": "🖼",
       "description": "Выставка современных художников-анималистов. С 4 июня до 16 августа.",
       "url": "https://www.darwinmuseum.ru/",
-      "price": "от 400 ₽"
+      "price": "от 400 ₽",
+      "tg_msg_id": 254
     },
     {
       "id": "darwin-koncert-na-kryshe-2026-06-04",
@@ -686,7 +694,8 @@
       "emoji": "🎸",
       "description": "Камерный концерт на крыше Дарвиновского музея с видом на Москву. Совмещение природы и звука.",
       "url": "https://www.darwinmuseum.ru/",
-      "price": "от 1000 ₽"
+      "price": "от 1000 ₽",
+      "tg_msg_id": 255
     },
     {
       "id": "vozdushny-potseluy-2026-06-04",
@@ -740,7 +749,8 @@
       "emoji": "🎭",
       "description": "Семейная драма по сценарию «Куоккала» Анны Козловой. В ролях — Вениамин Смехов и Юлия Пересильд.",
       "url": "https://theatre-of-nations.ru/events",
-      "price": "от 3400 ₽"
+      "price": "от 3400 ₽",
+      "tg_msg_id": 256
     },
     {
       "id": "satira-ukroshcheniye-2026-06-05",
@@ -753,7 +763,8 @@
       "description": "Шекспир в Театре Сатиры — дуэль характеров Катарины и Петруччио. Живая, искрящаяся постановка с отличными актёрскими работами.",
       "price": "от 600 ₽",
       "is_free": false,
-      "url": "https://satire.ru/afisha/"
+      "url": "https://satire.ru/afisha/",
+      "tg_msg_id": 257
     },
     {
       "id": "darwin-den-ekologa-2026-06-06",
@@ -765,7 +776,8 @@
       "emoji": "🌿",
       "description": "Экологический праздник для всей семьи: мастер-классы, лекции, прогулки по экотропе.",
       "url": "https://www.darwinmuseum.ru/",
-      "price": "от 400 ₽"
+      "price": "от 400 ₽",
+      "tg_msg_id": 258
     },
     {
       "id": "tretyakov-chuykov-2026-06-06",
@@ -777,7 +789,8 @@
       "emoji": "🖼",
       "description": "Большая ретроспектива легендарного советского живописца. До 12 июля. Новый корпус Третьяковки.",
       "url": "https://www.tretyakovgallery.ru",
-      "price": "от 600 ₽"
+      "price": "от 600 ₽",
+      "tg_msg_id": 259
     },
     {
       "id": "mamm-2nd-biennale-finissage-2026-06-06",
@@ -789,7 +802,8 @@
       "emoji": "🖼",
       "description": "Последний день биеннале «Искусство будущего». Шанс успеть на одну из главных выставок весны.",
       "url": "https://afisha.yandex.ru/moscow/art",
-      "price": "до 700 ₽"
+      "price": "до 700 ₽",
+      "tg_msg_id": 260
     },
     {
       "id": "zaryadye-vagner-loengrin-2026-06-06",
@@ -801,7 +815,8 @@
       "emoji": "🎻",
       "description": "Романтическая опера Вагнера в концертном исполнении. Один из самых масштабных оперных вечеров сезона.",
       "url": "https://zaryadyehall.ru/events/",
-      "price": "от 4900 ₽"
+      "price": "от 4900 ₽",
+      "tg_msg_id": 261
     },
     {
       "id": "garage-tattoo-emptiness-2026-06-07",
@@ -813,7 +828,8 @@
       "emoji": "🖼",
       "description": "Экскурсии для родителей с детьми по новой выставке «Гаража». Регистрация обязательна. Идёт до 9 августа.",
       "url": "https://garagemca.org/event/family-tours-of-the-artist-s-book-tattoo-of-emptiness-project",
-      "price": "бесплатно"
+      "price": "бесплатно",
+      "tg_msg_id": 262
     },
     {
       "id": "zaryadye-andriyaka-akvarel-2026-06-07",
@@ -825,7 +841,8 @@
       "emoji": "🖼",
       "description": "Большая выставка одного из главных мастеров акварели России в парке Зарядье.",
       "url": "https://afisha.yandex.ru/moscow/art",
-      "price": "от 500 ₽"
+      "price": "от 500 ₽",
+      "tg_msg_id": 263
     },
     {
       "id": "shabolovka-nesovetsky-2026-06-08",
@@ -837,7 +854,8 @@
       "emoji": "🖼",
       "description": "Большой исследовательский проект о советском опыте и его пределах. До 5 июля.",
       "url": "https://kudamoscow.ru/event/show/2026/",
-      "price": "от 300 ₽"
+      "price": "от 300 ₽",
+      "tg_msg_id": 264
     },
     {
       "id": "zaryadye-lugansky-2026-06-08",
@@ -849,7 +867,8 @@
       "emoji": "🎹",
       "description": "Один из ведущих пианистов России — с симфоническим оркестром Санкт-Петербургской филармонии. Дирижёр — Д. Ботинис.",
       "url": "https://zaryadyehall.ru/events/",
-      "price": "от 5900 ₽"
+      "price": "от 5900 ₽",
+      "tg_msg_id": 265
     },
     {
       "id": "teatr-naciy-dyadya-vanya-2026-06-09",
@@ -861,7 +880,8 @@
       "emoji": "🎭",
       "description": "Чехов в постановке Стефана Брауншвейга. Звёздный состав: Миронов, Пересильд, Боярская, Добронравов, Александрова.",
       "url": "https://theatre-of-nations.ru/events",
-      "price": "от 2900 ₽"
+      "price": "от 2900 ₽",
+      "tg_msg_id": 266
     },
     {
       "id": "kremlin-chingiskhan-2026-06-10",
@@ -873,7 +893,8 @@
       "emoji": "🖼",
       "description": "Большая историческая выставка о наследии монгольской империи в русской и мировой культуре. До 19 июля.",
       "url": "https://kudago.com/msk/event/vyistavka-potomki-chingishana-rus-i-mir/",
-      "price": "от 600 ₽"
+      "price": "от 600 ₽",
+      "tg_msg_id": 269
     },
     {
       "id": "vyhino-russkoe-zarubezhe-2026-06-10",
@@ -885,7 +906,8 @@
       "emoji": "🖼",
       "description": "Художники Парижской школы — Андрей Ланской и другие эмигранты XX века. До 28 июня.",
       "url": "https://kudamoscow.ru/event/show/2026/",
-      "price": "от 300 ₽"
+      "price": "от 300 ₽",
+      "tg_msg_id": 270
     },
     {
       "id": "zaryadye-mendelson-2026-06-10",
@@ -897,7 +919,8 @@
       "emoji": "🎻",
       "description": "Грандиозная оратория Мендельсона. Полный состав ГАСО им. Светланова + хор.",
       "url": "https://zaryadyehall.ru/events/",
-      "price": "от 4900 ₽"
+      "price": "от 4900 ₽",
+      "tg_msg_id": 271
     },
     {
       "id": "zaryadye-gergiev-mariinsky-2026-06-11",
@@ -909,7 +932,8 @@
       "emoji": "🎻",
       "description": "Мариинский оркестр под управлением Валерия Гергиева. Серия из четырёх вечеров 11–13 июня.",
       "url": "https://zaryadyehall.ru/events/",
-      "price": "от 4400 ₽"
+      "price": "от 4400 ₽",
+      "tg_msg_id": 272
     },
     {
       "id": "den-rossii-2026-06-12",
@@ -936,7 +960,8 @@
       "description": "Национальный праздник в главном парке Москвы: концерты, фестивальные зоны, показы кино, праздничный фейерверк вечером.",
       "price": "Бесплатно",
       "is_free": true,
-      "url": "https://www.park-gorkogo.com/events"
+      "url": "https://www.park-gorkogo.com/events",
+      "tg_msg_id": 273
     },
     {
       "id": "tretyakov-arktika-2026-06-13",
@@ -948,7 +973,8 @@
       "emoji": "🖼",
       "description": "Север как пространство света и силы — живопись и графика, посвящённые Арктике. До 21 июня.",
       "url": "https://www.tretyakovgallery.ru",
-      "price": "от 700 ₽"
+      "price": "от 700 ₽",
+      "tg_msg_id": 274
     },
     {
       "id": "teatr-naciy-mu-mu-2026-06-14",
@@ -960,7 +986,8 @@
       "emoji": "🎭",
       "description": "Комедия Дмитрия Крымова с Алексеем Вертковым. Тургенев как никогда странно и весело.",
       "url": "https://theatre-of-nations.ru/events",
-      "price": "от 2900 ₽"
+      "price": "от 2900 ₽",
+      "tg_msg_id": 275
     },
     {
       "id": "it-innovatsii-gorhoz-2026-06-15",
@@ -973,7 +1000,8 @@
       "description": "Бесплатный митап о технологиях для города: умный транспорт, ЖКХ, цифровые сервисы. Открытый вход, можно подключиться онлайн.",
       "price": "Бесплатно",
       "is_free": true,
-      "url": "https://all-events.ru/events/calendar/city-is-moskva/type-is-meet-up/"
+      "url": "https://all-events.ru/events/calendar/city-is-moskva/type-is-meet-up/",
+      "tg_msg_id": 276
     },
     {
       "id": "tretyakov-oman-2026-06-15",
@@ -985,7 +1013,8 @@
       "emoji": "🖼",
       "description": "Открытие культуры Султаната Оман глазами его художников. Идёт до 16 августа.",
       "url": "https://kudamoscow.ru/event/show/2026/",
-      "price": "от 700 ₽"
+      "price": "от 700 ₽",
+      "tg_msg_id": 277
     },
     {
       "id": "mosmuseum-istoriya-moskvy-2026-06-15",
@@ -997,7 +1026,8 @@
       "emoji": "🏛",
       "description": "Главная экспозиция о городе — от древних городищ до современной столицы. Археологические находки + интерактив.",
       "url": "https://mosmuseum.ru/",
-      "price": "от 400 ₽"
+      "price": "от 400 ₽",
+      "tg_msg_id": 278
     },
     {
       "id": "lumiere-bosch-2026-06-15",
@@ -1009,7 +1039,8 @@
       "emoji": "🖼",
       "description": "Мультимедийная выставка с проекциями работ Босха в формате 360°. До 13 сентября.",
       "url": "https://kudago.com/msk/event/vyistavka-zagadochnyie-miryi-ieronima-bosha/",
-      "price": "от 1000 ₽"
+      "price": "от 1000 ₽",
+      "tg_msg_id": 279
     },
     {
       "id": "darwin-iskusstvo-obmana-2026-06-15",
@@ -1021,7 +1052,8 @@
       "emoji": "🖼",
       "description": "Эволюция лжи: от химических уловок бактерий до сложных манипуляций приматов. До 5 июля.",
       "url": "https://www.darwinmuseum.ru/",
-      "price": "от 400 ₽"
+      "price": "от 400 ₽",
+      "tg_msg_id": 280
     },
     {
       "id": "mars-son-v-muzee-2026-06-15",
@@ -1033,7 +1065,8 @@
       "emoji": "🖼",
       "description": "Мультисенсорный иммерсивный опыт. До 30 июня.",
       "url": "https://kudago.com/msk/event/vyistavka-son-v-muzee/",
-      "price": "от 700 ₽"
+      "price": "от 700 ₽",
+      "tg_msg_id": 281
     },
     {
       "id": "sovremennik-tri-tovarisha-2026-06-15",
@@ -1045,7 +1078,8 @@
       "emoji": "🎭",
       "description": "Ремарк, дружба, потери, любовь и Берлин 30-х. Классическая большая постановка на основной сцене.",
       "url": "https://www.afisha.ru/performance/tri-tovarishcha-64909/",
-      "price": "от 3000 ₽"
+      "price": "от 3000 ₽",
+      "tg_msg_id": 282
     },
     {
       "id": "zaryadye-repin-2026-06-15",
@@ -1057,7 +1091,8 @@
       "emoji": "🎻",
       "description": "Один из главных скрипачей России с Московским государственным симфоническим оркестром.",
       "url": "https://zaryadyehall.ru/events/",
-      "price": "от 3900 ₽"
+      "price": "от 3900 ₽",
+      "tg_msg_id": 283
     },
     {
       "id": "tech-week-2026-06-17",
@@ -1083,7 +1118,8 @@
       "emoji": "🚀",
       "description": "Третий четверг месяца — вход бесплатный в Музей космонавтики и Дом-музей Королёва. По акции «Музейная неделя».",
       "url": "https://kosmo-museum.ru/",
-      "price": "бесплатно"
+      "price": "бесплатно",
+      "tg_msg_id": 284
     },
     {
       "id": "yauza-tam-zhe-2026-06-18",
@@ -1095,7 +1131,8 @@
       "emoji": "🎭",
       "description": "Камерная драма про двух людей, которые встречаются раз в год в одном и том же отеле. 30 лет отношений за два часа.",
       "url": "https://www.afisha.ru/performance/tam-zhe-togda-zhe-204163/",
-      "price": "от 1000 ₽"
+      "price": "от 1000 ₽",
+      "tg_msg_id": 285
     },
     {
       "id": "darwin-museum-week-2026-06-19",
@@ -1107,7 +1144,8 @@
       "emoji": "🖼",
       "description": "Бесплатное посещение по программе «Московская музейная неделя». Третий четверг каждого месяца.",
       "url": "https://www.darwinmuseum.ru/",
-      "price": "бесплатно"
+      "price": "бесплатно",
+      "tg_msg_id": 286
     },
     {
       "id": "mosmuseum-sozvezdiya-2026-06-19",
@@ -1119,7 +1157,8 @@
       "emoji": "🎭",
       "description": "Хит британской драматурги Ника Пэйна — про физику и любовь в параллельных вселенных. 19–21 июня.",
       "url": "https://mosmuseum.ru/",
-      "price": "от 1500 ₽"
+      "price": "от 1500 ₽",
+      "tg_msg_id": 287
     },
     {
       "id": "mayakovsky-museum-2026-06-20",
@@ -1131,7 +1170,8 @@
       "emoji": "🖼",
       "description": "Камерная экспозиция в коммунальной квартире, где жил Маяковский. Атмосфера 1920-х, личные вещи, рукописи.",
       "url": "https://muzeimayakovskogo.ru/",
-      "price": "от 400 ₽"
+      "price": "от 400 ₽",
+      "tg_msg_id": 288
     },
     {
       "id": "piknik-afishi-2026-06-20",
@@ -1157,7 +1197,8 @@
       "emoji": "🎭",
       "description": "Легендарная постановка Римаса Туминаса. Пушкин — глазами одного из главных режиссёров современности.",
       "url": "https://www.afisha.ru/performance/evgeniy-onegin-93008/",
-      "price": "от 9000 ₽"
+      "price": "от 9000 ₽",
+      "tg_msg_id": 289
     },
     {
       "id": "zaryadye-puchchini-toska-2026-06-20",
@@ -1169,7 +1210,8 @@
       "emoji": "🎻",
       "description": "Опера Пуччини в концертном исполнении. Е. Стихина, С. Скороходов, А. Марков. Один из главных оперных вечеров сезона.",
       "url": "https://zaryadyehall.ru/events/",
-      "price": "от 5900 ₽"
+      "price": "от 5900 ₽",
+      "tg_msg_id": 290
     },
     {
       "id": "tretyakov-arhetipy-avangarda-2026-06-22",
@@ -1181,7 +1223,8 @@
       "emoji": "🖼",
       "description": "Большой проект о корнях и формах русского авангарда. Малевич, Татлин, Клюн — через призму архаики.",
       "url": "https://afisha.yandex.ru/moscow/art",
-      "price": "от 600 ₽"
+      "price": "от 600 ₽",
+      "tg_msg_id": 291
     },
     {
       "id": "yugo-zapad-master-margarita-2026-06-22",
@@ -1193,7 +1236,8 @@
       "emoji": "🎭",
       "description": "Культовая постановка Беляковича. Булгаков в самой энергичной авторской интерпретации Москвы.",
       "url": "https://www.afisha.ru/performance/master-i-margarita-65097/",
-      "price": "от 1800 ₽"
+      "price": "от 1800 ₽",
+      "tg_msg_id": 292
     },
     {
       "id": "zaryadye-verdi-requiem-2026-06-22",
@@ -1205,7 +1249,8 @@
       "emoji": "🎻",
       "description": "Реквием Верди — одно из самых эмоциональных произведений мировой музыки. Большой хор, оркестр, солисты.",
       "url": "https://zaryadyehall.ru/events/",
-      "price": "от 4900 ₽"
+      "price": "от 4900 ₽",
+      "tg_msg_id": 293
     },
     {
       "id": "teatr-naciy-don-kihot-2026-06-24",
@@ -1217,7 +1262,8 @@
       "emoji": "🎭",
       "description": "Премьера Антона Фёдорова с Тимофеем Трибунцевым в главной роли. Сервантес — глазами одного из самых ярких режиссёров.",
       "url": "https://theatre-of-nations.ru/events",
-      "price": "от 2900 ₽"
+      "price": "от 2900 ₽",
+      "tg_msg_id": 294
     },
     {
       "id": "mosmuseum-onegin-2026-06-24",
@@ -1229,7 +1275,8 @@
       "emoji": "🎭",
       "description": "Авторская театральная интерпретация Пушкина в музейном пространстве. Идёт 24 и 25 июня.",
       "url": "https://mosmuseum.ru/",
-      "price": "от 1500 ₽"
+      "price": "от 1500 ₽",
+      "tg_msg_id": 295
     },
     {
       "id": "laf-analitika-2026-06-27",
@@ -1242,7 +1289,8 @@
       "description": "Одна из старейших конференций России по бизнес-аналитике и продуктовому менеджменту. Два дня практических кейсов — без маркетинга, только реальный опыт.",
       "price": "от 30 000 ₽",
       "is_free": false,
-      "url": "https://workspace.ru/events/"
+      "url": "https://workspace.ru/events/",
+      "tg_msg_id": 296
     },
     {
       "id": "zaryadye-beethoven-9-2026-06-28",
@@ -1254,7 +1302,8 @@
       "emoji": "🎻",
       "description": "Великая Девятая симфония Бетховена — оркестр, хор, четыре солиста. Главное событие классического сезона.",
       "url": "https://zaryadyehall.ru/events/",
-      "price": "от 8400 ₽"
+      "price": "от 8400 ₽",
+      "tg_msg_id": 297
     },
     {
       "id": "mosmuseum-iyulskiy-dozhd-2026-06-28",
@@ -1266,7 +1315,8 @@
       "emoji": "🎭",
       "description": "Театральное прочтение классического фильма Хуциева. Атмосфера 1960-х в музейных залах.",
       "url": "https://mosmuseum.ru/",
-      "price": "от 1500 ₽"
+      "price": "от 1500 ₽",
+      "tg_msg_id": 298
     },
     {
       "id": "zaryadye-bolshoi-orchestra-gergiev-2026-06-29",
@@ -1278,7 +1328,8 @@
       "emoji": "🎻",
       "description": "Главный оркестр страны под управлением Валерия Гергиева. Большая программа русской классики.",
       "url": "https://zaryadyehall.ru/events/",
-      "price": "от 4900 ₽"
+      "price": "от 4900 ₽",
+      "tg_msg_id": 299
     },
     {
       "id": "teatr-naciy-kto-boitsya-vulf-2026-06-30",
@@ -1290,7 +1341,8 @@
       "emoji": "🎭",
       "description": "Премьера в реж. Данила Чащина. Евгений Миронов в одной из самых жестоких пьес ХХ века.",
       "url": "https://theatre-of-nations.ru/events",
-      "price": "от 2900 ₽"
+      "price": "от 2900 ₽",
+      "tg_msg_id": 300
     },
     {
       "id": "zaryadye-berezovsky-pochekin-2026-06-30",
@@ -1302,7 +1354,8 @@
       "emoji": "🎹",
       "description": "Камерный вечер двух виртуозов. Сонаты для скрипки и фортепиано в одном из лучших залов Москвы.",
       "url": "https://zaryadyehall.ru/events/",
-      "price": "от 3900 ₽"
+      "price": "от 3900 ₽",
+      "tg_msg_id": 301
     },
     {
       "id": "mosmuseum-obyknovennoe-chudo-2026-06-30",
@@ -1314,7 +1367,8 @@
       "emoji": "🎭",
       "description": "Шварц в музейном пространстве. Камерная постановка о любви и волшебстве.",
       "url": "https://mosmuseum.ru/",
-      "price": "от 1500 ₽"
+      "price": "от 1500 ₽",
+      "tg_msg_id": 302
     },
     {
       "id": "ai-conf-2026-07-01",
@@ -1327,7 +1381,8 @@
       "description": "Практическая конференция по ML и ИИ: кейсы внедрения, маркетинг и реклама с ИИ, HR-автоматизация. Форматы от воркшопов до пленарных докладов.",
       "price": "от 10 000 ₽",
       "is_free": false,
-      "url": "https://all-events.ru/events/calendar/theme-is-ai/"
+      "url": "https://all-events.ru/events/calendar/theme-is-ai/",
+      "tg_msg_id": 303
     },
     {
       "id": "lumiere-aivazovsky-2026-07-01",
@@ -1339,7 +1394,8 @@
       "emoji": "🖼",
       "description": "Иммерсивное путешествие по миру моря Айвазовского. Проекции под музыку. До 13 сентября.",
       "url": "https://kudago.com/msk/event/vystavka-ajvazovskij-ozhivshie-polotna-rerih-zhivye-polotna/",
-      "price": "от 500 ₽"
+      "price": "от 500 ₽",
+      "tg_msg_id": 304
     },
     {
       "id": "zaryadye-mocart-don-juan-2026-07-03",
@@ -1351,7 +1407,8 @@
       "emoji": "🎻",
       "description": "Опера Моцарта «Дон Жуан» в концертном исполнении. Одна из самых известных опер в истории.",
       "url": "https://zaryadyehall.ru/events/",
-      "price": "от 7900 ₽"
+      "price": "от 7900 ₽",
+      "tg_msg_id": 305
     },
     {
       "id": "kosmos-postoyannaya-2026-07-04",
@@ -1363,7 +1420,8 @@
       "emoji": "🚀",
       "description": "Дубликат первого спутника, чучела Белки и Стрелки, скафандр Гагарина, лунный модуль. 4000 м² космической истории.",
       "url": "https://kosmo-museum.ru/",
-      "price": "от 450 ₽"
+      "price": "от 450 ₽",
+      "tg_msg_id": 306
     },
     {
       "id": "melnikov-notre-dame-2026-07-04",
@@ -1375,7 +1433,8 @@
       "emoji": "🎭",
       "description": "Легендарный французский мюзикл на русской сцене. Большая постановка с живыми вокалом и оркестром.",
       "url": "https://www.afisha.ru/performance/notr-dam-de-pari-298434/",
-      "price": "от 600 ₽"
+      "price": "от 600 ₽",
+      "tg_msg_id": 307
     },
     {
       "id": "lumiere-frida-2026-07-05",
@@ -1387,7 +1446,8 @@
       "emoji": "🖼",
       "description": "Фотовыставка о жизни и боли Фриды Кало. Идёт до 13 сентября.",
       "url": "https://kudago.com/msk/event/vystavka-frida-kalo-ozhivshie-polotna/",
-      "price": "от 500 ₽"
+      "price": "от 500 ₽",
+      "tg_msg_id": 308
     },
     {
       "id": "darwin-zazerkalye-2026-07-05",
@@ -1399,7 +1459,8 @@
       "emoji": "🖼",
       "description": "Коллаборация Дарвиновского с Академией акварели и изящных искусств Сергея Андрияки. До 26 июля.",
       "url": "https://www.darwinmuseum.ru/",
-      "price": "от 400 ₽"
+      "price": "от 400 ₽",
+      "tg_msg_id": 309
     },
     {
       "id": "teatr-naciy-kabare-2026-07-09",
@@ -1411,7 +1472,8 @@
       "emoji": "🎭",
       "description": "Бродвейский мюзикл в постановке Евгения Писарева. 2.5 часа Берлина 1930-х — джаз, любовь, обречённость.",
       "url": "https://theatre-of-nations.ru/events",
-      "price": "от 2900 ₽"
+      "price": "от 2900 ₽",
+      "tg_msg_id": 310
     },
     {
       "id": "muar-letnyaya-vystavka-2026-07-10",
@@ -1423,7 +1485,8 @@
       "emoji": "🏛",
       "description": "Главный архитектурный музей России: чертежи, макеты, фото. Постоянная экспозиция + временные летние проекты.",
       "url": "https://muar.ru/",
-      "price": "от 400 ₽"
+      "price": "от 400 ₽",
+      "tg_msg_id": 311
     },
     {
       "id": "paleo-postoyannaya-2026-07-12",
@@ -1435,7 +1498,8 @@
       "emoji": "🦖",
       "description": "5000+ экспонатов о ходе эволюции. Слепок диплодока 26 метров, скелет тарбозавра. «Древо жизни» от первых клеток до человека.",
       "url": "https://www.paleo.ru",
-      "price": "от 300 ₽"
+      "price": "от 300 ₽",
+      "tg_msg_id": 312
     },
     {
       "id": "tretyakov-avangard-ikona-2026-07-12",
@@ -1447,7 +1511,8 @@
       "emoji": "🖼",
       "description": "Большой юбилейный проект к 170-летию Третьяковки: иконопись и русский авангард в одном пространстве.",
       "url": "https://www.tretyakovgallery.ru",
-      "price": "от 700 ₽"
+      "price": "от 700 ₽",
+      "tg_msg_id": 313
     },
     {
       "id": "teatr-naciy-cabaret-2026-07-12",
@@ -1459,7 +1524,8 @@
       "emoji": "🎭",
       "description": "Финальный показ «Кабаре» Евгения Писарева в сезоне — после театр уходит на летний перерыв.",
       "url": "https://theatre-of-nations.ru/events",
-      "price": "от 2900 ₽"
+      "price": "от 2900 ₽",
+      "tg_msg_id": 314
     },
     {
       "id": "tsaritsyno-orangereya-2026-07-15",
@@ -1471,7 +1537,8 @@
       "emoji": "🌿",
       "description": "Восстановленные дворцовые оранжереи XVIII века: ананасы, цитрусы, экзотика по рецептам Екатерины II.",
       "url": "https://afisha.yandex.ru/moscow/art",
-      "price": "от 350 ₽"
+      "price": "от 350 ₽",
+      "tg_msg_id": 315
     },
     {
       "id": "garage-open-storage-2026-07-15",
@@ -1483,7 +1550,8 @@
       "emoji": "🖼",
       "description": "Экскурсии по закулисью музея: как живут и хранятся работы современного искусства.",
       "url": "https://garagemca.org/event/tours-on-the-project-open-storage-a-prologue",
-      "price": "от 625 ₽"
+      "price": "от 625 ₽",
+      "tg_msg_id": 316
     },
     {
       "id": "kuskovo-postoyannaya-2026-07-19",
@@ -1495,7 +1563,8 @@
       "emoji": "🏛",
       "description": "Дворец XVIII века, парк, оранжерея, гроты — лето в Москве в идеальном формате старинной усадьбы Шереметевых.",
       "url": "https://kuskovo.ru/",
-      "price": "от 500 ₽"
+      "price": "от 500 ₽",
+      "tg_msg_id": 317
     },
     {
       "id": "ostankino-letniy-vhod-2026-08-09",
@@ -1507,7 +1576,8 @@
       "emoji": "🏛",
       "description": "Один из лучших деревянных классицистических дворцов мира. Открыт только в тёплый сезон. Театральная зала Шереметевых.",
       "url": "https://ostankino-museum.ru/",
-      "price": "от 350 ₽"
+      "price": "от 350 ₽",
+      "tg_msg_id": 318
     },
     {
       "id": "tretyakov-veera-2026-08-15",
@@ -1519,7 +1589,8 @@
       "emoji": "🖼",
       "description": "Камерная выставка вееров XVIII века. Редкий случай увидеть аксессуары прошлого как самостоятельное искусство.",
       "url": "https://www.tretyakovgallery.ru",
-      "price": "от 600 ₽"
+      "price": "от 600 ₽",
+      "tg_msg_id": 319
     },
     {
       "id": "tretyakov-night-art-2026-08-15",
@@ -1531,7 +1602,8 @@
       "emoji": "🖼",
       "description": "Юбилейный 2026 год — Третьяковке 170 лет. Спецпрограмма ко дню рождения галереи.",
       "url": "https://www.tretyakovgallery.ru",
-      "price": "от 700 ₽"
+      "price": "от 700 ₽",
+      "tg_msg_id": 320
     },
     {
       "id": "spasskaya-bashnya-2026-08-21",
@@ -1543,7 +1615,8 @@
       "emoji": "🎺",
       "description": "Международный военно-музыкальный фестиваль на Красной площади. Оркестры Беларуси, Буркина-Фасо, Казахстана, Монголии, Сербии, Эфиопии. 21–30 августа.",
       "url": "https://spasstower.ru/",
-      "price": "от 2000 ₽"
+      "price": "от 2000 ₽",
+      "tg_msg_id": 321
     },
     {
       "id": "jazz-sezony-2026-08-22",
@@ -1555,7 +1628,8 @@
       "emoji": "🎷",
       "description": "Большой джаз под открытым небом в усадьбе Юсупова. 22 и 23 августа — традиционный конец лета для московских меломанов.",
       "url": "https://www.afisha.ru/concert/xii-mezhdunarodniy-festival-dzhazovye-sezony-abonement-na-22-23-avgusta-6035615/",
-      "price": "от 3000 ₽"
+      "price": "от 3000 ₽",
+      "tg_msg_id": 322
     },
     {
       "id": "spasskaya-bashnya-detyam-2026-08-24",
@@ -1567,7 +1641,8 @@
       "emoji": "🎺",
       "description": "Фестиваль детских духовых оркестров со всей России на главной площади страны. 24–26 августа.",
       "url": "https://spasstower.ru/",
-      "price": "от 500 ₽"
+      "price": "от 500 ₽",
+      "tg_msg_id": 323
     },
     {
       "id": "gorkiy-plus-festival-2026-08-28",
@@ -1580,7 +1655,8 @@
       "description": "Главный летний фестиваль Парка Горького: три дня музыки, искусства, паблик-арта и городской культуры. Один из главных событий лета в Москве.",
       "price": "Бесплатно",
       "is_free": true,
-      "url": "https://www.park-gorkogo.com/events"
+      "url": "https://www.park-gorkogo.com/events",
+      "tg_msg_id": 324
     }
   ]
 }
