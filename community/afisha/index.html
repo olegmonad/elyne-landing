@@ -392,7 +392,8 @@ if (tg) { tg.ready(); tg.expand(); }
 if (tg?.colorScheme === 'light') document.documentElement.setAttribute('data-theme', 'light');
 
 const EVENTS_URL    = 'https://elyne-start.online/community/events.json';
-const COMMUNITY_URL = 'https://t.me/elyne_community';
+const COMMUNITY_URL    = 'https://t.me/elyne_community';
+const AFISHA_THREAD_ID = 351;
 const MINIAPP_URL   = 'https://t.me/elyne_moscow_bot/elyne_moscow_bot';
 
 const DAYS_RU     = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
@@ -857,7 +858,7 @@ function shareEvent(evId) {
   const ev = allEvents.find(e => e.id === evId);
   if (!ev) return;
   const shareUrl = ev.tg_msg_id
-    ? `https://t.me/elyne_community/${ev.tg_msg_id}`
+    ? `https://t.me/elyne_community/${AFISHA_THREAD_ID}/${ev.tg_msg_id}`
     : 'https://olegmonad.github.io/elyne-landing/community/afisha/';
   const text = ev.title;
   const tgShareUrl = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(text)}`;
@@ -881,7 +882,7 @@ function eventCardHtml(ev) {
   const attending = attendedIds.has(ev.id);
   // «Подробнее» → конкретный пост если есть tg_msg_id, иначе → вся группа
   const tgUrl = ev.tg_msg_id
-    ? `https://t.me/elyne_community/${ev.tg_msg_id}`
+    ? `https://t.me/elyne_community/${AFISHA_THREAD_ID}/${ev.tg_msg_id}`
     : COMMUNITY_URL;
   const sourceBtn = `<button class="event-btn primary" onclick="openTgDetails('${tgUrl}')">Подробнее</button>`;
 
