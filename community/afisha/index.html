@@ -558,15 +558,16 @@ async function sendFeedback() {
       throw new Error(data.error || 'api error');
     }
   } catch (e) {
-    // Fallback: open TG thread directly so user can write there
-    status.textContent = '→ Откроем чат — напишите там';
+    // Fallback: copy text to clipboard, open bot DM (works without group membership)
+    try { await navigator.clipboard.writeText(text); } catch (_) {}
+    status.textContent = '📋 Текст скопирован — напишите боту';
     status.style.color = 'var(--hint)';
     setTimeout(() => {
       closeFeedback();
-      const url = 'https://t.me/c/3940564734/757';
-      if (tg) tg.openTelegramLink(url);
-      else window.open(url, '_blank');
-    }, 1000);
+      const botUrl = 'https://t.me/elyne_moscow_bot';
+      if (tg) tg.openTelegramLink(botUrl);
+      else window.open(botUrl, '_blank');
+    }, 1200);
   }
 }
 
