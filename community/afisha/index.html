@@ -587,16 +587,23 @@ async function sendFeedback() {
       throw new Error(data.error || 'api error');
     }
   } catch (e) {
-    // Fallback: copy text to clipboard, open bot DM (works without group membership)
-    try { await navigator.clipboard.writeText(text); } catch (_) {}
-    status.textContent = '📋 Текст скопирован — напишите боту';
-    status.style.color = 'var(--hint)';
-    setTimeout(() => {
-      closeFeedback();
-      const botUrl = 'https://t.me/elyne_moscow_bot';
-      if (tg) tg.openTelegramLink(botUrl);
-      else window.open(botUrl, '_blank');
-    }, 1200);
+    // Fallback: invite to join community, then they can write directly
+    btn.disabled = false;
+    status.textContent = '';
+    if (tg && tg.showPopup) {
+      tg.showPopup({
+        title: 'Вступите в сообщество',
+        message: 'Чтобы написать отзыв, вступите в ELYNE Community — там можно написать напрямую в тред.',
+        buttons: [
+          { id: 'join', type: 'default', text: 'Вступить' },
+          { type: 'cancel', text: 'Отмена' }
+        ]
+      }, (id) => {
+        if (id === 'join') tg.openTelegramLink(COMMUNITY_URL);
+      });
+    } else {
+      window.open(COMMUNITY_URL, '_blank');
+    }
   }
 }
 
