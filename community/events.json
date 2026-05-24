@@ -533,7 +533,8 @@
       "emoji": "🖼",
       "description": "К 80-летию художника. Большая ретроспектива одного из ярких живописцев позднесоветского времени. До 21 июня.",
       "url": "https://www.tretyakovgallery.ru",
-      "price": "от 700 ₽"
+      "price": "от 700 ₽",
+      "tg_msg_id": 243
     },
     {
       "id": "gorkiy-den-zaschity-detey-2026-05-31",
@@ -546,7 +547,8 @@
       "description": "Праздник для всей семьи: мастер-классы, аттракционы, живая музыка, детские зоны. Вход в парк свободный.",
       "price": "Бесплатно",
       "is_free": true,
-      "url": "https://www.park-gorkogo.com/events"
+      "url": "https://www.park-gorkogo.com/events",
+      "tg_msg_id": 244
     },
     {
       "id": "spektakl-v-dobry-chas-2026-05-31",
