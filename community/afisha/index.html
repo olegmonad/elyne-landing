@@ -27,6 +27,33 @@
     --green: #4CAF50;
   }
 
+  /* Light theme overrides */
+  [data-theme="light"] {
+    --card: #f2f2f7;
+    --border: rgba(0,0,0,0.08);
+  }
+  [data-theme="light"] .event-btn:not(.primary) {
+    background: rgba(0,0,0,0.07);
+    color: var(--text);
+  }
+  [data-theme="light"] .attend-btn:not(.attending) {
+    background: rgba(0,0,0,0.05);
+    border-color: rgba(0,0,0,0.12);
+    color: var(--hint);
+  }
+  [data-theme="light"] .cal-btn {
+    background: rgba(0,0,0,0.05);
+    border-color: rgba(0,0,0,0.12);
+  }
+  [data-theme="light"] .my-export-banner {
+    background: rgba(0,0,0,0.04);
+    border-color: rgba(0,0,0,0.09);
+  }
+  [data-theme="light"] .view-btn.active {
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  }
+
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
   body {
@@ -362,6 +389,7 @@
 <script>
 const tg = window.Telegram?.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
+if (tg?.colorScheme === 'light') document.documentElement.setAttribute('data-theme', 'light');
 
 const EVENTS_URL    = 'https://elyne-start.online/community/events.json';
 const COMMUNITY_URL = 'https://t.me/elyne_community';
