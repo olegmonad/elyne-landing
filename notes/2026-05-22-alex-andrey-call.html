@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elyne · документ</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<!DOCTYPE html>
+<p><html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Созвон 22 мая — Алекс + Андрей + Олег</title></p>
+<style>
+  :root {
+    --bg: #0f0f11;
+    --surface: #1a1a1f;
+    --surface2: #222228;
+    --border: #2e2e38;
+    --text: #e8e8f0;
+    --muted: #888896;
+    --accent: #a78bfa;
+    --accent2: #60a5fa;
+    --accent3: #34d399;
+    --warn: #fbbf24;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    padding: 24px 16px 80px;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+
+  .chip {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  h1 {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 36px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h2.alex { color: var(--accent); }
+  h2.product { color: var(--accent2); }
+  h2.andrey { color: var(--warn); }
+  h2.oleg { color: var(--accent3); }
+
+  h3 {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin: 24px 0 10px;
+  }
+
+  ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 0;
+  }
+
+  ul li {
+    position: relative;
+    padding-left: 18px;
+    color: var(--text);
+  }
+
+  ul li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 20px 16px;
+    margin-bottom: 12px;
+  }
+
+  .card-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin: 2px 2px 0 0;
+    font-weight: 500;
+  }
+
+  .tag-purple { background: rgba(167,139,250,0.15); color: var(--accent); }
+  .tag-blue { background: rgba(96,165,250,0.15); color: var(--accent2); }
+  .tag-green { background: rgba(52,211,153,0.15); color: var(--accent3); }
+  .tag-yellow { background: rgba(251,191,36,0.15); color: var(--warn); }
+
+  .verdict {
+    background: var(--surface);
+    border-left: 3px solid var(--warn);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 16px;
+    margin-top: 12px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .verdict strong { color: var(--warn); }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 8px 0;
+  }
+</style>
+<p></head></p>
+<body>
+<div class="container">
+
+  <div class="meta">
+    <span class="chip">22 мая 2026</span>
+    <span class="chip">~2 часа</span>
+    <span class="chip">Алекс (Перу) · Андрей · Олег</span>
+  </div>
+
+  <h1>Созвон 22 мая</h1>
+
+  <!-- === АЛЕКС → ОЛЕГУ ЛИЧНО === -->
+  <h2 class="alex">Советы Алекса — лично Олегу</h2>
+
+  <h3>Режим и энергия</h3>
+  <ul>
+    <li>Олег сам рассказал: 5 параллельных задач, 14 часов в день, выпал из практики → кишечник, перегруз</li>
+    <li><strong>Планируй отдых — 2 разгрузочных дня в неделю.</strong> Иначе выгоришь очень быстро</li>
+    <li><strong>Режим генерализации:</strong> дай уму свободное время на размышление, не только задачи</li>
+    <li><strong>Регулируй нагрузку</strong> — чтобы энергии всегда был небольшой избыток, не дефицит</li>
+  </ul>
+
+  <h3>Практики и протокол утра</h3>
+  <ul>
+    <li>Алекс предложил неделю <strong>микродозинг (1г грибов утром)</strong> с баней и природой</li>
+    <li>Олег уже делает капалабхати + поочерёдное дыхание → «буфа-состояние» с первых минут</li>
+    <li><strong>Нади-шодхана</strong> (поочерёдное дыхание) — 5–10 минут утром достаточно для активации</li>
+    <li><strong>Протокол:</strong> проснулся → 2–3 часа практика/медитация → только потом дела. «Если сразу после медицины идти в задачи — неэффективно»</li>
+    <li>Олег хочет уехать на природу (жена во Вьетнаме) — Алекс: «Баня + медицина = хорошо»</li>
+  </ul>
+
+  <h3>Информационное поле</h3>
+  <ul>
+    <li>Настрой агента на <strong>Кремниевую долину</strong> — следи за стартапами, событиями, прорывами</li>
+    <li>Слушать <strong>Дженсена Хуанга</strong> (Nvidia), <strong>Сундара Пичаи</strong> — предсказывают куда всё движется</li>
+    <li>Олег: «Мой минус — нет контактов в долине, надо создавать»</li>
+  </ul>
+
+
+  <!-- === ПРОДУКТ === -->
+  <h2 class="product">Инсайты про продукт (Elyne / AI-ассистент)</h2>
+
+  <div class="card">
+    <div class="card-label">Архитектура памяти</div>
+    <ul>
+      <li>Не нужно держать весь контекст — нужна <strong>генерализация в пирамиду:</strong> высокий уровень (миссия/стратегия) всегда в памяти, низкий (детали сессий) — по запросу</li>
+      <li>После каждой сессии — обновление генерализации, не накопление сырого контекста</li>
+      <li>Пример: 6 месяцев наставничества → не хранить все диалоги, а иметь структурированный «портрет пользователя»</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Идеальный профиль vs реальный</div>
+    <ul>
+      <li>Строить не от текущего профиля пользователя, а от <strong>идеального</strong> — и постепенно двигать к нему</li>
+      <li>Колесо баланса: AI видит где сферы не проработаны и мягко подкидывает практики в нужное время</li>
+      <li>«Как учитель-мудрец который всегда знает больше, но адаптирует под текущий уровень ученика»</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-label">AI как джин — минимум вмешательства</div>
+    <ul>
+      <li>Идеально: AI слушает фоном, выхватывает задачи → присылает <strong>список галочек</strong> («это могу я, это нужен ты»)</li>
+      <li>Подтверждение нужно, но кратко — галочка = ок</li>
+      <li>«Идеально когда 90% действий решается одной кнопкой. В идеале — голосом»</li>
+      <li>«Чем меньше человек открывает приложение — тем лучше»</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Токены = ресурс</div>
+    <ul>
+      <li>Каждая фича = инференс = деньги. «Большой контекст, много агентов, AR, звук — всё дорого»</li>
+      <li>Нужна модель где пользователь видит <strong>стоимость действия</strong> и подтверждает</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Интеграция с временем</div>
+    <ul>
+      <li>AI должен учитывать время: григорианский → лунный → <strong>ведический (индийский) календарь</strong> — оптимальные дни для разных начинаний</li>
+      <li>«Все действия привязаны ко времени. Без календаря — оторван от времени»</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Цифровой профиль</div>
+    <ul>
+      <li>Единое ядро личности, которое носишь всегда при себе</li>
+      <li>Подключаешь к разным «мозгам» (Gemini, Claude и т.д.) не теряя контекста</li>
+      <li>«Цифровой профиль должен эволюционировать и быть всегда при тебе»</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Строить на одной LLM</div>
+    <ul>
+      <li>«За основу — одну LLM. Gemini или Anthropic. Прыгать между мозгами — ошибка»</li>
+      <li>Каждая компания: своя философия, свой тюнинг, разные базы данных</li>
+      <li>Галлюцинации — нормально (человек тоже додумывает), но у каждой LLM свои паттерны</li>
+    </ul>
+  </div>
+
+  <div class="card" style="border-color: rgba(167,139,250,0.4);">
+    <div class="card-label" style="color: var(--accent);">Большой тезис — арбитражная возможность</div>
+    <ul>
+      <li>Старый мир и новый мир сейчас разделены огромным разрывом</li>
+      <li>Старый мир будет переходить в новый <strong>10–20 лет</strong></li>
+      <li>Здесь — большие ресурсы: помочь «старому миру» войти в AI-среду в <strong>наиболее естественной форме взаимодействия</strong></li>
+    </ul>
+  </div>
+
+
+  <!-- === АНДРЕЙ === -->
+  <h2 class="andrey">Андрей — что полезного, что нет</h2>
+
+  <h3>Что Алекс говорит про Андрея</h3>
+  <ul>
+    <li>«Мультипространственный ум, очень высокий уровень философии»</li>
+    <li>«Бегает галопом по европам» — не приземляет идеи</li>
+    <li>Несколько раз останавливал: «Ближе к прикладному», «Тысяча долларов в месяц чтобы быть полезным в этом разговоре»</li>
+  </ul>
+
+  <h3>Идеи Андрея (для референса)</h3>
+  <ul>
+    <li>Браслет с NFC/passkey + цифровой двойник = «Soul App» / «Last App»</li>
+    <li>Viral loop по модели Clubhouse (получи доступ только через 3 инвайта)</li>
+    <li>Canvas-интернет (5D пространство, не линки)</li>
+    <li>Human Compute — люди проверяют факты AI, получают UBI</li>
+    <li>Цифровые государства, кемпер-городки, AI в видеоиграх</li>
+  </ul>
+
+  <div class="verdict">
+    <strong>Вывод:</strong> Андрей интересен как вдохновитель и источник паттернов. Не стратег, не исполнитель. Его идеи — сырой материал, требуют приземления.
+  </div>
+
+
+  <!-- === ОЛЕГ === -->
+  <h2 class="oleg">Что Олег рассказал о себе и проекте</h2>
+  <ul>
+    <li>Выпал из практики на ~3 недели, перегруз (5 задач параллельно, 14ч/день), кишечник</li>
+    <li>Удалил все 4 зуба мудрости месяц назад (уже зажило)</li>
+    <li>Выпустили MVP, показал группе — следующий этап: углублённые вопросы + визуализация + первые внешние пользователи</li>
+    <li>Хочет уехать на природу (жена улетает во Вьетнам на 2–3 недели)</li>
+    <li>Поставил намерение посетить Перу к Алексу — после первых двух слоёв продукта</li>
+    <li>Планирует взять девочку на соцсети + управление агентами</li>
+  </ul>
+
+</div>
+</body>
+<p></html></p>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
