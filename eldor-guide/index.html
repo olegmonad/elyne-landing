@@ -301,6 +301,7 @@ cat ~/.ssh/id_ed25519.pub</pre>
 <div id="s2" class="step">
   <div class="step-header"><div class="step-num">2</div><div class="step-title">Первоначальная настройка Ubuntu</div></div>
   <div class="step-body">
+    <p>Первое, что делаем после входа на сервер — обновляем систему и ставим базовые утилиты. Это как первый запуск нового ноутбука: скачиваем обновления, устанавливаем нужные программы. Ещё создаём отдельного пользователя (не root) — это стандарт безопасности, чтобы ошибка в коде не затронула всю систему.</p>
     <div class="code-wrap"><pre><span class="c"># Обновляем систему</span>
 apt update && apt upgrade -y
 
@@ -328,6 +329,7 @@ sudo apt install -y fail2ban && sudo systemctl enable fail2ban --now</pre>
 <div id="s3" class="step">
   <div class="step-header"><div class="step-num">3</div><div class="step-title">Node.js и Python</div></div>
   <div class="step-body">
+    <p>Node.js и Python — это среды выполнения программ, как двигатели: без них код просто не запустится. Node.js нужен для Claude Code и Telegram-бота, Python — для голосовых функций (Whisper и edge-tts). Устанавливаем оба, даже если сейчас голос не нужен — потом не придётся возвращаться.</p>
     <h3>Node.js 22 через nvm</h3>
     <div class="resources">
       <a class="res-card" href="https://github.com/nvm-sh/nvm" target="_blank">
@@ -358,6 +360,7 @@ echo '<span class="s">source ~/venv/bin/activate</span>' >> ~/.bashrc</pre>
 <div id="s4" class="step">
   <div class="step-header"><div class="step-num">4</div><div class="step-title">Anthropic API ключ</div></div>
   <div class="step-body">
+    <p>API-ключ — твой личный пропуск к мозгу Claude. Без него агент не сможет получать ответы от Anthropic. Получить его можно бесплатно на сайте console.anthropic.com — понадобится карта для верификации. После этого в личном кабинете видны все расходы и можно поставить лимит на траты.</p>
     <div class="resources">
       <a class="res-card" href="https://console.anthropic.com" target="_blank">
         <div class="res-name">Anthropic Console <span class="ext-icon">↗</span><span class="res-tag">Личный кабинет</span></div>
@@ -429,6 +432,7 @@ npm install dotenv</pre>
 <div id="s5" class="step">
   <div class="step-header"><div class="step-num">5</div><div class="step-title">Установка Claude Code</div></div>
   <div class="step-body">
+    <p>Claude Code — это программа, которая превращает Claude из обычного чат-бота в автономного агента. Он запускается на сервере, читает файлы, выполняет команды и пишет в Telegram. По сути это и есть «мозг» ассистента — всё, что ты до этого настраивал, становится частью одного работающего механизма.</p>
     <div class="resources">
       <a class="res-card" href="https://github.com/anthropics/claude-code" target="_blank">
         <div class="res-name">Claude Code <span class="ext-icon">↗</span><span class="res-tag">GitHub</span></div>
@@ -458,6 +462,7 @@ echo '<span class="s">set -a && source ~/my-agent/.env && set +a</span>' >> ~/.b
 <div id="s6" class="step">
   <div class="step-header"><div class="step-num">6</div><div class="step-title">Создай Telegram-бота</div></div>
   <div class="step-body">
+    <p>Telegram-бот — это «телефонный номер» через который Claude будет принимать твои сообщения. Создаётся за 2 минуты через официальный сервис @BotFather прямо в Telegram. В итоге получишь токен — секретный ключ, который даёт агенту право отправлять и получать сообщения от твоего имени.</p>
     <div class="resources">
       <a class="res-card" href="https://t.me/BotFather" target="_blank">
         <div class="res-name">@BotFather <span class="ext-icon">↗</span><span class="res-tag">Telegram</span></div>
@@ -654,6 +659,7 @@ EOF</pre>
 <div id="s10" class="step">
   <div class="step-header"><div class="step-num">10</div><div class="step-title">Запуск: systemd или PM2</div></div>
   <div class="step-body">
+    <p>Агент должен работать, даже если ты закрыл SSH-терминал или сервер перезагрузился. Для этого нужен менеджер процессов — программа, которая запускает агента в фоне и следит, чтобы он не упал. Есть два варианта: PM2 проще для начала, systemd надёжнее для постоянной работы. Начни с PM2.</p>
 
     <h3>Вариант A — PM2 (рекомендуется новичкам)</h3>
     <div class="resources">
@@ -722,6 +728,7 @@ journalctl -u my-agent -f          <span class="c"># логи в реально�
 <div id="s11" class="step">
   <div class="step-header"><div class="step-num">11</div><div class="step-title">VS Code на ноутбуке</div></div>
   <div class="step-body">
+    <p>VS Code — редактор кода, который устанавливается на твой ноутбук. С расширением Remote-SSH он подключается к серверу и показывает его файлы как локальные — можно редактировать CLAUDE.md, смотреть логи, менять настройки без постоянного SSH-терминала. Удобнее и нагляднее, чем работать через командную строку.</p>
     <div class="resources">
       <a class="res-card" href="https://code.visualstudio.com/download" target="_blank">
         <div class="res-name">VS Code <span class="ext-icon">↗</span><span class="res-tag">Скачать</span></div>
@@ -770,6 +777,7 @@ journalctl -u my-agent -f          <span class="c"># логи в реально�
 <div id="s12" class="step">
   <div class="step-header"><div class="step-num">12</div><div class="step-title">Голосовые сообщения</div></div>
   <div class="step-body">
+    <p>Эта настройка позволяет говорить с агентом голосом в Telegram. Whisper (модель от OpenAI) переводит твою речь в текст, а edge-tts позволяет агенту отвечать вслух — русским голосом Дмитрий. Итог: можно разговаривать с ассистентом как по телефону, не набирая ничего руками.</p>
     <div class="resources">
       <a class="res-card" href="https://github.com/rany2/edge-tts" target="_blank">
         <div class="res-name">edge-tts <span class="ext-icon">↗</span><span class="res-tag">GitHub</span></div>
@@ -818,6 +826,7 @@ for s in segments: print(s.text)
 <div id="s13" class="step">
   <div class="step-header"><div class="step-num">13</div><div class="step-title">GitHub — хранение кода</div></div>
   <div class="step-body">
+    <p>GitHub — облачное хранилище кода с историей всех изменений. Если что-то сломается или случайно удалишь важный файл — можно откатиться к предыдущей версии. Храни здесь конфиг агента: CLAUDE.md, .mcp.json, скрипты. Только никогда не выгружай .env с ключами — даже в приватный репозиторий.</p>
     <div class="resources">
       <a class="res-card" href="https://github.com/signup" target="_blank">
         <div class="res-name">Создать аккаунт <span class="ext-icon">↗</span><span class="res-tag">GitHub</span></div>
