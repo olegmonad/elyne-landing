@@ -20,511 +20,591 @@
     --code-bg: #12151e;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-size: 16px;
-    line-height: 1.7;
-    padding: 0 16px;
-  }
-  .container { max-width: 820px; margin: 0 auto; padding: 60px 0 100px; }
-  .hero {
-    text-align: center;
-    padding: 60px 0 48px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 56px;
-  }
-  .hero-badge {
-    display: inline-block;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--accent);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 4px 14px;
-    border-radius: 20px;
-    margin-bottom: 24px;
-  }
-  h1 {
-    font-size: clamp(28px, 5vw, 44px);
-    font-weight: 700;
-    line-height: 1.2;
-    background: linear-gradient(135deg, #e2e8f0 30%, #7c6ef5);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 16px;
-  }
-  .hero-sub {
-    color: var(--text-muted);
-    font-size: 17px;
-    max-width: 540px;
-    margin: 0 auto 32px;
-  }
-  .pills {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  .pill {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text-muted);
-    font-size: 13px;
-    padding: 5px 14px;
-    border-radius: 20px;
-  }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 16px; line-height: 1.7; padding: 0 16px; }
+  .container { max-width: 860px; margin: 0 auto; padding: 60px 0 100px; }
+
+  /* HERO */
+  .hero { text-align: center; padding: 60px 0 48px; border-bottom: 1px solid var(--border); margin-bottom: 56px; }
+  .hero-badge { display: inline-block; background: var(--surface2); border: 1px solid var(--border); color: var(--accent); font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; margin-bottom: 24px; }
+  h1 { font-size: clamp(28px,5vw,44px); font-weight: 700; line-height: 1.2; background: linear-gradient(135deg,#e2e8f0 30%,#7c6ef5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 16px; }
+  .hero-sub { color: var(--text-muted); font-size: 17px; max-width: 580px; margin: 0 auto 32px; }
+  .pills { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 28px; }
+  .pill { background: var(--surface2); border: 1px solid var(--border); color: var(--text-muted); font-size: 13px; padding: 5px 14px; border-radius: 20px; }
+
+  /* QUICK NAV */
+  .quick-nav { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px 24px; margin-bottom: 48px; }
+  .quick-nav h3 { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px; }
+  .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 6px; }
+  .nav-link { color: var(--accent); font-size: 13px; text-decoration: none; padding: 4px 0; display: block; opacity: .85; transition: opacity .15s; }
+  .nav-link:hover { opacity: 1; }
+
+  /* QUICKSTART */
+  .quickstart { background: linear-gradient(135deg, rgba(124,110,245,.1), rgba(91,141,238,.06)); border: 1px solid rgba(124,110,245,.3); border-radius: 16px; padding: 28px; margin-bottom: 48px; }
+  .quickstart h2 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+  .quickstart p { font-size: 14px; color: var(--text-muted); margin-bottom: 16px; }
+
+  /* ARCHITECTURE */
+  .arch { background: var(--code-bg); border: 1px solid var(--border); border-radius: 14px; padding: 32px; margin: 20px 0; text-align: center; font-family: 'JetBrains Mono','Fira Code',monospace; font-size: 14px; line-height: 2; }
+  .arch-node { display: inline-block; background: var(--surface2); border: 1px solid var(--accent); color: var(--accent); padding: 6px 20px; border-radius: 8px; margin: 4px; font-weight: 600; }
+  .arch-arrow { color: var(--text-muted); display: block; text-align: center; font-size: 16px; line-height: 1.2; margin: 2px 0; }
+  .arch-group { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 4px 0; }
+  .arch-node-sm { display: inline-block; background: rgba(91,141,238,.12); border: 1px solid rgba(91,141,238,.3); color: var(--accent2); padding: 4px 14px; border-radius: 6px; font-size: 12px; margin: 3px; }
+
+  /* STEPS */
   .steps { display: flex; flex-direction: column; gap: 40px; }
-  .step {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-  }
-  .step-header {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 22px 28px;
-    border-bottom: 1px solid var(--border);
-  }
-  .step-num {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 15px;
-    font-weight: 700;
-    flex-shrink: 0;
-    color: #fff;
-  }
-  .step-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--text);
-  }
+  .step { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+  .step-header { display: flex; align-items: center; gap: 16px; padding: 22px 28px; border-bottom: 1px solid var(--border); }
+  .step-num { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg,var(--accent),var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; flex-shrink: 0; color: #fff; }
+  .step-title { font-size: 18px; font-weight: 600; }
   .step-body { padding: 24px 28px; }
-  p { margin-bottom: 14px; color: var(--text); }
+
+  /* TEXT */
+  p { margin-bottom: 14px; }
   p:last-child { margin-bottom: 0; }
   .step-body p { color: #c8d2e0; }
-  pre {
-    background: var(--code-bg);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 18px 20px;
-    overflow-x: auto;
-    margin: 16px 0;
-    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
-    font-size: 14px;
-    line-height: 1.6;
-  }
-  code {
-    font-family: 'JetBrains Mono', 'Fira Code', monospace;
-    font-size: 0.9em;
-    background: var(--code-bg);
-    border: 1px solid var(--border);
-    padding: 2px 7px;
-    border-radius: 5px;
-    color: #a5f3fc;
-  }
-  pre code {
-    background: none;
-    border: none;
-    padding: 0;
-    font-size: inherit;
-    color: var(--text);
-  }
-  .comment { color: #5a6478; }
-  .cmd { color: #7c6ef5; }
-  .str { color: #86efac; }
-  .kw { color: #fbbf24; }
-  .note {
-    background: rgba(124, 110, 245, 0.08);
-    border: 1px solid rgba(124, 110, 245, 0.25);
-    border-radius: 10px;
-    padding: 14px 18px;
-    margin: 16px 0;
-    font-size: 14px;
-    color: #c4b9fc;
-  }
-  .note strong { color: var(--accent); }
-  .warn {
-    background: rgba(251, 191, 36, 0.07);
-    border: 1px solid rgba(251, 191, 36, 0.25);
-    border-radius: 10px;
-    padding: 14px 18px;
-    margin: 16px 0;
-    font-size: 14px;
-    color: #fde68a;
-  }
-  .warn strong { color: var(--yellow); }
-  .success {
-    background: rgba(74, 222, 128, 0.07);
-    border: 1px solid rgba(74, 222, 128, 0.2);
-    border-radius: 10px;
-    padding: 14px 18px;
-    margin: 16px 0;
-    font-size: 14px;
-    color: #bbf7d0;
-  }
+  h2 { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+  h3 { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; margin: 20px 0 10px; }
   ul, ol { padding-left: 22px; margin: 12px 0; }
   li { margin-bottom: 6px; color: #c8d2e0; }
+
+  /* CODE */
+  .code-wrap { position: relative; margin: 16px 0; }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; padding-right: 60px; overflow-x: auto; font-family: 'JetBrains Mono','Fira Code',monospace; font-size: 13.5px; line-height: 1.7; }
+  .copy-btn { position: absolute; top: 10px; right: 10px; background: var(--surface2); border: 1px solid var(--border); color: var(--text-muted); font-size: 11px; font-family: inherit; padding: 4px 10px; border-radius: 6px; cursor: pointer; transition: all .15s; user-select: none; }
+  .copy-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .copy-btn.copied { background: rgba(74,222,128,.15); color: var(--green); border-color: var(--green); }
+  code { font-family: 'JetBrains Mono','Fira Code',monospace; font-size: .88em; background: var(--code-bg); border: 1px solid var(--border); padding: 2px 7px; border-radius: 5px; color: #a5f3fc; }
+  pre code { background: none; border: none; padding: 0; font-size: inherit; color: var(--text); }
+  .c { color: #5a6478; }
+  .s { color: #86efac; }
+  .k { color: #fbbf24; }
+  .v { color: #a5f3fc; }
+
+  /* ALERTS */
+  .note { background: rgba(124,110,245,.08); border: 1px solid rgba(124,110,245,.25); border-radius: 10px; padding: 14px 18px; margin: 16px 0; font-size: 14px; color: #c4b9fc; }
+  .note strong { color: var(--accent); }
+  .warn { background: rgba(251,191,36,.07); border: 1px solid rgba(251,191,36,.25); border-radius: 10px; padding: 14px 18px; margin: 16px 0; font-size: 14px; color: #fde68a; }
+  .warn strong { color: var(--yellow); }
+  .success { background: rgba(74,222,128,.07); border: 1px solid rgba(74,222,128,.2); border-radius: 10px; padding: 14px 18px; margin: 16px 0; font-size: 14px; color: #bbf7d0; }
+  .danger { background: rgba(248,113,113,.08); border: 1px solid rgba(248,113,113,.25); border-radius: 10px; padding: 14px 18px; margin: 16px 0; font-size: 14px; color: #fca5a5; }
+  .danger strong { color: var(--red); }
+
+  /* TABLES */
   .table-wrap { overflow-x: auto; margin: 16px 0; }
   table { width: 100%; border-collapse: collapse; }
-  th {
-    background: var(--surface2);
-    padding: 10px 16px;
-    text-align: left;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-muted);
-    border-bottom: 1px solid var(--border);
-  }
-  td {
-    padding: 10px 16px;
-    border-bottom: 1px solid var(--border);
-    font-size: 14px;
-    color: #c8d2e0;
-  }
+  th { background: var(--surface2); padding: 10px 16px; text-align: left; font-size: 13px; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+  td { padding: 10px 16px; border-bottom: 1px solid var(--border); font-size: 14px; color: #c8d2e0; }
   tr:last-child td { border-bottom: none; }
-  .badge {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 4px;
-  }
-  .badge-green { background: rgba(74,222,128,0.15); color: #4ade80; }
-  .badge-yellow { background: rgba(251,191,36,0.15); color: #fbbf24; }
-  .badge-red { background: rgba(248,113,113,0.15); color: #f87171; }
-  h3 {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin: 20px 0 10px;
-  }
-  .extensions-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 12px;
-    margin: 14px 0;
-  }
-  .ext-card {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px 16px;
-  }
+  .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
+  .bg { background: rgba(74,222,128,.15); color: #4ade80; }
+  .by { background: rgba(251,191,36,.15); color: #fbbf24; }
+  .br { background: rgba(248,113,113,.15); color: #f87171; }
+
+  /* RESOURCE LINKS */
+  .resources { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; margin: 16px 0; }
+  .res-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; text-decoration: none; display: block; transition: border-color .15s, background .15s; }
+  .res-card:hover { border-color: var(--accent); background: rgba(124,110,245,.07); }
+  .res-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 3px; display: flex; align-items: center; gap: 6px; }
+  .res-desc { font-size: 12px; color: var(--text-muted); }
+  .ext-icon { font-size: 11px; opacity: .5; }
+  .res-tag { font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 3px; background: rgba(124,110,245,.15); color: var(--accent); margin-left: auto; }
+  .inline-link { color: var(--accent); text-decoration: none; border-bottom: 1px dotted rgba(124,110,245,.4); transition: border-color .15s; }
+  .inline-link:hover { border-color: var(--accent); }
+
+  /* EXTENSIONS */
+  .extensions-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin: 14px 0; }
+  .ext-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
   .ext-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
   .ext-desc { font-size: 12px; color: var(--text-muted); }
-  .final-card {
-    background: linear-gradient(135deg, rgba(124,110,245,0.12), rgba(91,141,238,0.08));
-    border: 1px solid rgba(124,110,245,0.3);
-    border-radius: 16px;
-    padding: 32px 28px;
-    margin-top: 48px;
-    text-align: center;
+
+  /* TREE */
+  .tree { background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; font-family: 'JetBrains Mono','Fira Code',monospace; font-size: 13px; line-height: 1.8; margin: 16px 0; }
+  .tree-dir { color: var(--accent2); }
+  .tree-file { color: var(--text-muted); }
+  .tree-comment { color: #4a5568; }
+
+  /* ERROR LIST */
+  .error-item { background: var(--surface2); border: 1px solid var(--border); border-left: 3px solid var(--red); border-radius: 0 10px 10px 0; padding: 16px 18px; margin: 12px 0; }
+  .error-title { font-size: 13px; font-weight: 600; color: var(--red); margin-bottom: 6px; }
+  .error-fix { font-size: 13px; color: var(--green); margin-top: 6px; }
+  .error-body { font-size: 13px; color: #c8d2e0; }
+
+  /* COST TABLE */
+  .cost-total { background: rgba(124,110,245,.08); border: 1px solid rgba(124,110,245,.2); border-radius: 10px; padding: 14px 18px; margin-top: 10px; font-size: 15px; font-weight: 600; }
+
+  /* FINAL */
+  .final-card { background: linear-gradient(135deg,rgba(124,110,245,.12),rgba(91,141,238,.08)); border: 1px solid rgba(124,110,245,.3); border-radius: 16px; padding: 36px 28px; margin-top: 48px; text-align: center; }
+  .final-card h2 { font-size: 24px; margin-bottom: 12px; }
+  .final-card p { color: var(--text-muted); max-width: 500px; margin: 0 auto 20px; }
+  .readiness { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+  .readiness-badge { display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 16px; font-size: 14px; font-weight: 600; }
+  .r-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* WHAT NEXT */
+  .next-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; margin: 16px 0; }
+  .next-item { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; font-size: 13px; }
+  .next-icon { font-size: 20px; margin-bottom: 6px; }
+  .next-title { font-weight: 600; margin-bottom: 3px; }
+  .next-desc { color: var(--text-muted); font-size: 12px; }
+
+  @media (max-width: 640px) {
+    .step-body { padding: 18px 16px; }
+    .step-header { padding: 18px 16px; }
+    .arch { padding: 18px 12px; font-size: 12px; }
   }
-  .final-card h2 { font-size: 22px; margin-bottom: 12px; }
-  .final-card p { color: var(--text-muted); }
-  .spacer { height: 1px; background: var(--border); margin: 16px 0; }
-  a { color: var(--accent); text-decoration: none; }
-  a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
 <div class="container">
 
+<!-- HERO -->
 <div class="hero">
-  <div class="hero-badge">Практический гайд</div>
+  <div class="hero-badge">Production-grade Guide · v2.0</div>
   <h1>Свой AI-агент в Telegram</h1>
-  <p class="hero-sub">Пошаговая инструкция: от чистого сервера до персонального ассистента, который работает 24/7, помнит всё и отвечает голосом</p>
+  <p class="hero-sub">От чистого сервера до персонального ассистента, который работает 24/7, помнит всё, ищет в интернете и отвечает голосом</p>
   <div class="pills">
     <span class="pill">Ubuntu 24.04</span>
     <span class="pill">Claude Code</span>
     <span class="pill">Telegram Bot</span>
-    <span class="pill">Node.js</span>
-    <span class="pill">Python</span>
+    <span class="pill">Node.js 22</span>
+    <span class="pill">Python 3.12</span>
+    <span class="pill">MCP</span>
     <span class="pill">Голос</span>
+    <span class="pill">PM2</span>
   </div>
 </div>
 
+<!-- QUICK NAV -->
+<div class="quick-nav">
+  <h3>Содержание</h3>
+  <div class="nav-grid">
+    <a class="nav-link" href="#arch">→ Архитектура системы</a>
+    <a class="nav-link" href="#quickstart">→ Быстрый старт</a>
+    <a class="nav-link" href="#s1">1. Аренда сервера</a>
+    <a class="nav-link" href="#s2">2. Настройка Ubuntu</a>
+    <a class="nav-link" href="#s3">3. Node.js и Python</a>
+    <a class="nav-link" href="#s4">4. Anthropic API</a>
+    <a class="nav-link" href="#s4b">4b. Файл .env</a>
+    <a class="nav-link" href="#s5">5. Claude Code</a>
+    <a class="nav-link" href="#s6">6. Telegram Bot</a>
+    <a class="nav-link" href="#s7">7. Структура проекта</a>
+    <a class="nav-link" href="#s8">8. MCP-расширения</a>
+    <a class="nav-link" href="#s9">9. CLAUDE.md</a>
+    <a class="nav-link" href="#s10">10. Запуск: systemd / PM2</a>
+    <a class="nav-link" href="#s11">11. VS Code</a>
+    <a class="nav-link" href="#s12">12. Голосовые сообщения</a>
+    <a class="nav-link" href="#s13">13. GitHub</a>
+    <a class="nav-link" href="#s14">14. Бэкапы</a>
+    <a class="nav-link" href="#s15">15. Мониторинг</a>
+    <a class="nav-link" href="#cost">→ Стоимость</a>
+    <a class="nav-link" href="#errors">→ Типичные ошибки</a>
+    <a class="nav-link" href="#future">→ HTTPS / Nginx</a>
+    <a class="nav-link" href="#next">→ Что дальше</a>
+  </div>
+</div>
+
+<!-- ARCHITECTURE -->
+<div id="arch" class="step" style="margin-bottom:40px">
+  <div class="step-header">
+    <div class="step-num" style="background:linear-gradient(135deg,#5b8dee,#7c6ef5)">⬡</div>
+    <div class="step-title">Архитектура системы</div>
+  </div>
+  <div class="step-body">
+    <p>Так выглядит полная цепочка — от твоего сообщения в Telegram до ответа агента:</p>
+    <div class="arch">
+      <div><span class="arch-node">Ты в Telegram</span></div>
+      <div class="arch-arrow">↓</div>
+      <div><span class="arch-node">Telegram Bot API</span></div>
+      <div class="arch-arrow">↓</div>
+      <div><span class="arch-node">ClaudeClaw / Bot Wrapper</span></div>
+      <div class="arch-arrow">↓</div>
+      <div><span class="arch-node">Claude Code CLI</span></div>
+      <div class="arch-arrow">↓</div>
+      <div><span class="arch-node">Anthropic API → Claude</span></div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-group">
+        <span class="arch-node-sm">🔍 Поиск (Brave)</span>
+        <span class="arch-node-sm">📁 Файлы</span>
+        <span class="arch-node-sm">🧠 Память</span>
+        <span class="arch-node-sm">🌐 Браузер</span>
+        <span class="arch-node-sm">📅 Календарь</span>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div><span class="arch-node">Ответ → Telegram</span></div>
+    </div>
+    <div class="note"><strong>Ключевой момент:</strong> Claude — это «мозг». Всё остальное — инструменты которые мозг использует через MCP. Ты расширяешь возможности агента, добавляя новые MCP-серверы.</div>
+  </div>
+</div>
+
+<!-- QUICKSTART -->
+<div id="quickstart" class="quickstart">
+  <h2>⚡ Быстрый старт (для опытных)</h2>
+  <p>Если ты знаешь что делаешь — вот минимальный набор команд. Для всех остальных — читай гайд по шагам ниже.</p>
+  <div class="code-wrap">
+    <pre><span class="c"># 1. Сервер: Ubuntu 24.04 + SSH-ключ</span>
+<span class="c"># 2. Установка</span>
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+source ~/.bashrc && nvm install 22
+npm install -g @anthropic-ai/claude-code pm2
+
+<span class="c"># 3. Проект</span>
+mkdir ~/my-agent && cd ~/my-agent
+git init
+cp .env.example .env   <span class="c"># заполни ключи</span>
+
+<span class="c"># 4. Запуск</span>
+pm2 start "claude --dangerously-skip-permissions" --name my-agent
+pm2 save && pm2 startup</pre>
+    <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+  </div>
+</div>
+
+<!-- STEPS -->
 <div class="steps">
 
 <!-- STEP 1 -->
-<div class="step">
-  <div class="step-header">
-    <div class="step-num">1</div>
-    <div class="step-title">Арендуй сервер (VPS)</div>
-  </div>
+<div id="s1" class="step">
+  <div class="step-header"><div class="step-num">1</div><div class="step-title">Арендуй сервер (VPS)</div></div>
   <div class="step-body">
-    <p>Нужен виртуальный сервер под Ubuntu. Минимальные характеристики — 2 ядра CPU, 4 ГБ RAM, 40 ГБ SSD. Этого хватит на старт.</p>
+    <p>Нужен виртуальный сервер под Ubuntu. Минимум: 2 ядра CPU, 4 ГБ RAM, 40 ГБ SSD.</p>
 
-    <h3>Рекомендованные провайдеры</h3>
     <div class="table-wrap">
     <table>
-      <tr><th>Провайдер</th><th>Цена</th><th>Оплата РФ картой</th><th>Рекомендация</th></tr>
-      <tr><td>Hetzner (Финляндия/Германия)</td><td>~600 ₽/мес</td><td><span class="badge badge-yellow">Через обходы</span></td><td>Лучшее соотношение цена/мощность</td></tr>
-      <tr><td>Timeweb Cloud</td><td>~700 ₽/мес</td><td><span class="badge badge-green">Да</span></td><td>Легко оплатить из РФ</td></tr>
-      <tr><td>VDSina</td><td>~500 ₽/мес</td><td><span class="badge badge-green">Да</span></td><td>Дёшево, хорошая поддержка</td></tr>
-      <tr><td>DigitalOcean</td><td>~$6/мес</td><td><span class="badge badge-red">Нет</span></td><td>Только зарубежная карта</td></tr>
+      <tr><th>Провайдер</th><th>Цена</th><th>РФ карта</th><th>Особенности</th></tr>
+      <tr><td><a class="inline-link" href="https://www.hetzner.com/cloud/" target="_blank">Hetzner Cloud</a></td><td>~€4-6/мес</td><td><span class="badge by">Через обходы</span></td><td>Лучшая цена/мощность в Европе</td></tr>
+      <tr><td><a class="inline-link" href="https://timeweb.cloud/vds" target="_blank">Timeweb Cloud</a></td><td>~700 ₽/мес</td><td><span class="badge bg">Да</span></td><td>Лёгкая оплата из РФ</td></tr>
+      <tr><td><a class="inline-link" href="https://vdsina.ru" target="_blank">VDSina</a></td><td>~500 ₽/мес</td><td><span class="badge bg">Да</span></td><td>Дёшево, хорошая поддержка</td></tr>
+      <tr><td><a class="inline-link" href="https://www.digitalocean.com/pricing" target="_blank">DigitalOcean</a></td><td>~$6/мес</td><td><span class="badge br">Нет</span></td><td>Только зарубежная карта</td></tr>
     </table>
     </div>
 
-    <div class="note"><strong>Совет:</strong> бери Ubuntu 24.04 LTS. При создании — сразу добавь SSH-ключ, не пароль. Ниже объясню как.</div>
+    <div class="note"><strong>Выбери Ubuntu 24.04 LTS</strong> — это самая стабильная и поддерживаемая версия на 2026 год. Сразу добавь SSH-ключ при создании.</div>
 
-    <h3>Создай SSH-ключ на своём ноутбуке</h3>
-    <p>Открой Terminal (Mac) или PowerShell (Windows) и выполни:</p>
-    <pre>ssh-keygen -t ed25519 -C "<span class="str">ты@email.com</span>"
-<span class="comment"># Нажми Enter три раза (путь по умолчанию, без пароля)</span>
+    <h3>Создай SSH-ключ на ноутбуке</h3>
+    <div class="code-wrap"><pre>ssh-keygen -t ed25519 -C "<span class="s">ты@email.com</span>"
+<span class="c"># Три раза Enter — путь по умолчанию, без пароля</span>
 
-<span class="comment"># Посмотреть публичный ключ — его вставишь в настройки сервера</span>
+<span class="c"># Скопируй этот ключ → вставь в настройки сервера</span>
 cat ~/.ssh/id_ed25519.pub</pre>
+    <button class="copy-btn" onclick="copyCode(this)">копировать</button></div>
 
-    <p>Скопируй вывод (начинается с <code>ssh-ed25519 AAAA...</code>) и вставь в поле «SSH-ключ» при создании сервера.</p>
-
-    <div class="success">После создания сервера подключишься командой: <code>ssh root@IP-СЕРВЕРА</code></div>
+    <div class="success">После создания: <code>ssh root@IP-СЕРВЕРА</code> — должен зайти без пароля.</div>
   </div>
 </div>
 
 <!-- STEP 2 -->
-<div class="step">
-  <div class="step-header">
-    <div class="step-num">2</div>
-    <div class="step-title">Первоначальная настройка Ubuntu</div>
-  </div>
+<div id="s2" class="step">
+  <div class="step-header"><div class="step-num">2</div><div class="step-title">Первоначальная настройка Ubuntu</div></div>
   <div class="step-body">
-    <p>Подключись к серверу и выполни базовую настройку. Это займёт 5 минут.</p>
-
-    <pre><span class="comment"># Обновляем систему</span>
+    <div class="code-wrap"><pre><span class="c"># Обновляем систему</span>
 apt update && apt upgrade -y
 
-<span class="comment"># Устанавливаем базовые утилиты</span>
-apt install -y curl wget git unzip ffmpeg python3-pip python3-venv build-essential
+<span class="c"># Базовые утилиты</span>
+apt install -y curl wget git unzip ffmpeg python3-pip python3-venv build-essential htop
 
-<span class="comment"># Создаём нового пользователя (замени "oleg" на своё имя)</span>
-adduser oleg
-usermod -aG sudo oleg
+<span class="c"># Новый пользователь (замени "eldor" на своё имя)</span>
+adduser eldor
+usermod -aG sudo eldor
+rsync --archive --chown=eldor:eldor ~/.ssh /home/eldor
 
-<span class="comment"># Копируем SSH-ключ для нового пользователя</span>
-rsync --archive --chown=oleg:oleg ~/.ssh /home/oleg
-
-<span class="comment"># Выходим и заходим под новым пользователем</span>
+<span class="c"># Перезаходим под новым пользователем</span>
 exit
-ssh oleg@IP-СЕРВЕРА</pre>
+ssh eldor@IP-СЕРВЕРА</pre>
+    <button class="copy-btn" onclick="copyCode(this)">копировать</button></div>
 
     <h3>Базовая защита</h3>
-    <pre><span class="comment"># Устанавливаем файрвол</span>
-sudo ufw allow ssh
-sudo ufw allow 443
-sudo ufw enable
-
-<span class="comment"># Защита от перебора паролей</span>
-sudo apt install -y fail2ban
-sudo systemctl enable fail2ban --now</pre>
-
-    <div class="note"><strong>Зачем это?</strong> Без базовой защиты на свежий сервер в интернете приходят боты и пробуют взломать. Fail2ban автоматически блокирует подозрительные IP.</div>
+    <div class="code-wrap"><pre>sudo ufw allow ssh && sudo ufw allow 443 && sudo ufw enable
+sudo apt install -y fail2ban && sudo systemctl enable fail2ban --now</pre>
+    <button class="copy-btn" onclick="copyCode(this)">копировать</button></div>
   </div>
 </div>
 
 <!-- STEP 3 -->
-<div class="step">
-  <div class="step-header">
-    <div class="step-num">3</div>
-    <div class="step-title">Установка Node.js и Python</div>
-  </div>
+<div id="s3" class="step">
+  <div class="step-header"><div class="step-num">3</div><div class="step-title">Node.js и Python</div></div>
   <div class="step-body">
-    <h3>Node.js 22 (через nvm)</h3>
-    <pre><span class="comment"># Устанавливаем nvm — менеджер версий Node.js</span>
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-
-<span class="comment"># Применяем изменения в текущей сессии</span>
+    <h3>Node.js 22 через nvm</h3>
+    <div class="resources">
+      <a class="res-card" href="https://github.com/nvm-sh/nvm" target="_blank">
+        <div class="res-name">nvm <span class="ext-icon">↗</span><span class="res-tag">GitHub</span></div>
+        <div class="res-desc">Менеджер версий Node.js. Рекомендован для установки.</div>
+      </a>
+      <a class="res-card" href="https://nodejs.org/en/download" target="_blank">
+        <div class="res-name">Node.js <span class="ext-icon">↗</span><span class="res-tag">Офиц.</span></div>
+        <div class="res-desc">Официальная страница загрузки. Нужна версия 22 LTS.</div>
+      </a>
+    </div>
+    <div class="code-wrap"><pre>curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 source ~/.bashrc
+nvm install 22 && nvm use 22 && nvm alias default 22
+node --version   <span class="c"># v22.x.x</span></pre>
+    <button class="copy-btn" onclick="copyCode(this)">копировать</button></div>
 
-<span class="comment"># Устанавливаем Node.js 22</span>
-nvm install 22
-nvm use 22
-nvm alias default 22
-
-<span class="comment"># Проверяем</span>
-node --version   <span class="comment"># должно быть v22.x.x</span>
-npm --version</pre>
-
-    <h3>Python 3.12</h3>
-    <pre><span class="comment"># На Ubuntu 24.04 Python 3.12 уже есть</span>
-python3 --version
-
-<span class="comment"># Если нет — установить</span>
-sudo apt install -y python3.12 python3.12-venv python3.12-dev
-
-<span class="comment"># Создаём виртуальное окружение для зависимостей</span>
+    <h3>Python</h3>
+    <div class="code-wrap"><pre>python3 --version   <span class="c"># На Ubuntu 24.04 уже есть 3.12</span>
 python3 -m venv ~/venv
 source ~/venv/bin/activate
-
-<span class="comment"># Добавляем автоактивацию в ~/.bashrc</span>
-echo '<span class="str">source ~/venv/bin/activate</span>' >> ~/.bashrc</pre>
+echo '<span class="s">source ~/venv/bin/activate</span>' >> ~/.bashrc</pre>
+    <button class="copy-btn" onclick="copyCode(this)">копировать</button></div>
   </div>
 </div>
 
 <!-- STEP 4 -->
-<div class="step">
-  <div class="step-header">
-    <div class="step-num">4</div>
-    <div class="step-title">Anthropic API ключ</div>
-  </div>
+<div id="s4" class="step">
+  <div class="step-header"><div class="step-num">4</div><div class="step-title">Anthropic API ключ</div></div>
   <div class="step-body">
-    <p>Это главный ключ — без него агент не работает.</p>
+    <div class="resources">
+      <a class="res-card" href="https://console.anthropic.com" target="_blank">
+        <div class="res-name">Anthropic Console <span class="ext-icon">↗</span><span class="res-tag">Личный кабинет</span></div>
+        <div class="res-desc">Создавай API ключи, смотри расходы, настраивай лимиты.</div>
+      </a>
+      <a class="res-card" href="https://docs.anthropic.com" target="_blank">
+        <div class="res-name">Документация <span class="ext-icon">↗</span><span class="res-tag">Docs</span></div>
+        <div class="res-desc">Официальная документация API и возможностей моделей.</div>
+      </a>
+    </div>
 
     <ol>
-      <li>Зайди на <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></li>
-      <li>Зарегистрируйся (нужна карта — Visa/Mastercard, виртуальная тоже подойдёт)</li>
-      <li>Иди в раздел <strong>API Keys</strong> → <strong>Create Key</strong></li>
-      <li>Скопируй ключ — он начинается с <code>sk-ant-...</code></li>
+      <li>Зайди на <a class="inline-link" href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></li>
+      <li>Зарегистрируйся (нужна карта — подойдёт виртуальная)</li>
+      <li><strong>API Keys → Create Key</strong></li>
+      <li>Скопируй ключ вида <code>sk-ant-...</code> — показывается один раз!</li>
     </ol>
 
-    <div class="warn"><strong>Важно!</strong> Ключ показывается только один раз. Скопируй и сохрани в надёжное место. Никому не передавай — это как пароль от банка.</div>
-
-    <h3>Примерная стоимость</h3>
     <div class="table-wrap">
     <table>
-      <tr><th>Модель</th><th>Входящие токены</th><th>Исходящие токены</th><th>Реальная стоимость</th></tr>
-      <tr><td>Claude Sonnet 4.6 (быстрый)</td><td>$3 / 1M токенов</td><td>$15 / 1M токенов</td><td>~$5-15/мес при активном использовании</td></tr>
-      <tr><td>Claude Opus 4.7 (умный)</td><td>$15 / 1M токенов</td><td>$75 / 1M токенов</td><td>~$20-50/мес</td></tr>
+      <tr><th>Модель</th><th>Стоимость токенов</th><th>Когда использовать</th></tr>
+      <tr><td>Claude Sonnet 4.6</td><td>$3 вход / $15 выход за 1М</td><td>Повседневные задачи — оптимал</td></tr>
+      <tr><td>Claude Opus 4.7</td><td>$15 вход / $75 выход за 1М</td><td>Сложные стратегические задачи</td></tr>
+      <tr><td>Claude Haiku 4.5</td><td>$0.8 вход / $4 выход за 1М</td><td>Быстрые простые ответы</td></tr>
     </table>
     </div>
 
-    <div class="note"><strong>Совет:</strong> начни с Sonnet — он в 5 раз дешевле и для большинства задач ничем не хуже. На Opus переходи только для сложных стратегических задач.</div>
+    <div class="warn"><strong>Безопасность!</strong> Ключ — это как пароль от банка. Никому не передавай, не вставляй в код, не выгружай на GitHub. Ниже — правильный способ хранения через <code>.env</code>.</div>
+  </div>
+</div>
+
+<!-- STEP 4b -->
+<div id="s4b" class="step">
+  <div class="step-header"><div class="step-num" style="background:linear-gradient(135deg,#f87171,#fbbf24)">🔐</div><div class="step-title">Файл .env — хранение секретов</div></div>
+  <div class="step-body">
+    <p>Все секретные ключи хранятся в одном месте — файле <code>.env</code>. Это стандарт в профессиональной разработке.</p>
+
+    <div class="code-wrap"><pre>nano ~/my-agent/.env</pre>
+    <button class="copy-btn" onclick="copyCode(this)">копировать</button></div>
+
+    <p>Содержимое файла:</p>
+    <div class="code-wrap"><pre>ANTHROPIC_API_KEY=sk-ant-ТВОЙ_КЛЮЧ
+TELEGRAM_BOT_TOKEN=123456789:AABBcc...
+TELEGRAM_USER_ID=987654321
+BRAVE_API_KEY=BSA_ТВОЙ_КЛЮЧ
+</pre>
+    <button class="copy-btn" onclick="copyCode(this)">копировать</button></div>
+
+    <div class="danger">
+      <strong>Никогда не делай это:</strong><br>
+      ❌ Не вставляй ключи напрямую в код<br>
+      ❌ Не добавляй <code>.env</code> в git<br>
+      ❌ Не передавай файл по мессенджерам
+    </div>
+
+    <div class="success">Добавь <code>.env</code> в <code>.gitignore</code> — тогда он никогда не попадёт на GitHub случайно.</div>
+
+    <h3>Подключение .env при запуске</h3>
+    <div class="code-wrap"><pre><span class="c"># Загрузить переменные в текущую сессию</span>
+set -a && source ~/my-agent/.env && set +a
+
+<span class="c"># Или через dotenv в Node.js</span>
+npm install dotenv</pre>
+    <button class="copy-btn" onclick="copyCode(this)">копировать</button></div>
   </div>
 </div>
 
 <!-- STEP 5 -->
-<div class="step">
-  <div class="step-header">
-    <div class="step-num">5</div>
-    <div class="step-title">Установка Claude Code</div>
-  </div>
+<div id="s5" class="step">
+  <div class="step-header"><div class="step-num">5</div><div class="step-title">Установка Claude Code</div></div>
   <div class="step-body">
-    <p>Claude Code — это официальный инструмент от Anthropic. Агент работает именно через него.</p>
+    <div class="resources">
+      <a class="res-card" href="https://github.com/anthropics/claude-code" target="_blank">
+        <div class="res-name">Claude Code <span class="ext-icon">↗</span><span class="res-tag">GitHub</span></div>
+        <div class="res-desc">Официальный репозиторий CLI от Anthropic. Документация, установка, changelog.</div>
+      </a>
+    </div>
 
-    <pre><span class="comment"># Устанавливаем глобально</span>
-npm install -g @anthropic-ai/claude-code
+    <div class="code-wrap"><pre>npm install -g @anthropic-ai/claude-code
+claude --version
 
-<span class="comment"># Задаём переменные окружения</span>
-echo '<span class="str">export ANTHROPIC_API_KEY="sk-ant-ТВОЙ-КЛЮЧ"</span>' >> ~/.bashrc
-source ~/.bashrc
+<span class="c"># Экспортируем ключ в текущую сессию</span>
+export ANTHROPIC_API_KEY="$(grep ANTHROPIC_API_KEY ~/my-agent/.env | cut -d= -f2)"
 
-<span class="comment"># Проверяем</span>
-claude --version</pre>
+<span class="c"># Добавить в .bashrc чтобы работало всегда</span>
+echo '<span class="s">set -a && source ~/my-agent/.env && set +a</span>' >> ~/.bashrc</pre>
+    <button class="copy-btn" onclick="copyCode(this)">копировать</button></div>
 
-    <div class="note"><strong>Что это такое?</strong> Claude Code — CLI (программа в командной строке), которая общается с моделью Anthropic. Твой агент — это Claude Code, который умеет читать файлы, запускать команды, общаться через Telegram.</div>
+    <div class="note"><strong>Важно:</strong> Claude Code устанавливается через nvm-управляемый Node.js. Поэтому путь к бинарнику будет <strong>не</strong> <code>/usr/local/bin/claude</code>, а что-то вроде <code>~/.nvm/versions/node/v22.x.x/bin/claude</code>. Проверь командой:</div>
+
+    <div class="code-wrap"><pre>which claude
+<span class="c"># Скопируй этот путь — он понадобится для systemd</span></pre>
+    <button class="copy-btn" onclick="copyCode(this)">копировать</button></div>
   </div>
 </div>
 
 <!-- STEP 6 -->
-<div class="step">
-  <div class="step-header">
-    <div class="step-num">6</div>
-    <div class="step-title">Создай Telegram-бота</div>
-  </div>
+<div id="s6" class="step">
+  <div class="step-header"><div class="step-num">6</div><div class="step-title">Создай Telegram-бота</div></div>
   <div class="step-body">
-    <p>Telegram — интерфейс через который ты будешь общаться с агентом.</p>
+    <div class="resources">
+      <a class="res-card" href="https://t.me/BotFather" target="_blank">
+        <div class="res-name">@BotFather <span class="ext-icon">↗</span><span class="res-tag">Telegram</span></div>
+        <div class="res-desc">Официальный бот для создания ботов. Отправь /newbot.</div>
+      </a>
+      <a class="res-card" href="https://t.me/userinfobot" target="_blank">
+        <div class="res-name">@userinfobot <span class="ext-icon">↗</span><span class="res-tag">Telegram</span></div>
+        <div class="res-desc">Покажет твой числовой ID — нужен для TELEGRAM_USER_ID.</div>
+      </a>
+      <a class="res-card" href="https://core.telegram.org/bots/api" target="_blank">
+        <div class="res-name">Telegram Bot API <span class="ext-icon">↗</span><span class="res-tag">Docs</span></div>
+        <div class="res-desc">Полная документация Bot API от Telegram.</div>
+      </a>
+    </div>
 
     <ol>
-      <li>Открой Telegram и найди <strong>@BotFather</strong></li>
-      <li>Напиши <code>/newbot</code></li>
-      <li>Придумай имя (например: <em>Мой ассистент</em>)</li>
-      <li>Придумай юзернейм (заканчивается на <em>bot</em>, например: <code>eldor_ai_bot</code>)</li>
-      <li>Получишь токен вида <code>123456789:AABBcc...</code> — это твой <strong>BOT_TOKEN</strong></li>
+      <li>Открой Telegram → найди <strong>@BotFather</strong></li>
+      <li>Отправь <code>/newbot</code></li>
+      <li>Придумай имя: например <em>Мой ассистент</em></li>
+      <li>Придумай юзернейм (заканчивается на <em>bot</em>): например <code>eldor_ai_bot</code></li>
+      <li>Получишь токен вида <code>123456789:AABBcc...</code> — это <strong>TELEGRAM_BOT_TOKEN</strong></li>
+      <li>Напиши <strong>@userinfobot</strong> — получишь свой числовой ID — это <strong>TELEGRAM_USER_ID</strong></li>
     </ol>
 
-    <div class="note"><strong>Важно:</strong> узнай свой Telegram ID. Напиши боту <strong>@userinfobot</strong> — он ответит твоим числовым ID. Запиши его — это <strong>TELEGRAM_USER_ID</strong>, агент будет принимать команды только от тебя.</div>
+    <div class="note"><strong>Polling vs Webhook:</strong> для личного агента используй polling (длинный опрос). Агент сам регулярно спрашивает Telegram «есть ли новые сообщения?». Webhook нужен только для высоконагруженных сервисов с тысячами пользователей.</div>
 
-    <h3>Установка ClaudeClaw (обёртка для бота)</h3>
-    <p>ClaudeClaw — это готовая обвязка, которая соединяет Claude Code с Telegram. Устанавливается как плагин.</p>
-
-    <pre><span class="comment"># Создаём папку проекта</span>
-mkdir ~/my-agent && cd ~/my-agent
-git init
-
-<span class="comment"># Инициализируем</span>
-claude  <span class="comment"># первый запуск — авторизует аккаунт через браузер</span></pre>
-
-    <div class="note"><strong>Совет:</strong> при первом запуске Claude Code откроет ссылку для авторизации. Открой её на компьютере, войди в свой аккаунт Anthropic. Авторизация привязана к API ключу.</div>
+    <p>Вставь оба значения в свой <code>.env</code> файл.</p>
   </div>
 </div>
 
 <!-- STEP 7 -->
-<div class="step">
-  <div class="step-header">
-    <div class="step-num">7</div>
-    <div class="step-title">Файл конфигурации .mcp.json — расширения агента</div>
-  </div>
+<div id="s7" class="step">
+  <div class="step-header"><div class="step-num">7</div><div class="step-title">Структура проекта</div></div>
   <div class="step-body">
-    <p>MCP (Model Context Protocol) — это «расширения» для агента. Каждый MCP-сервер даёт агенту новую суперсилу: поиск в интернете, работу с файлами, подключение к Telegram и т.д.</p>
+    <p>Заведи сразу правильную структуру папок — потом не придётся переделывать.</p>
 
-    <p>Создай файл <code>~/my-agent/.mcp.json</code>:</p>
+    <div class="code-wrap"><pre>mkdir -p ~/my-agent/{logs,memory,media,scripts,agents,backups,tmp}
+cd ~/my-agent
+touch CLAUDE.md .mcp.json .env .gitignore</pre>
+    <button class="copy-btn" onclick="copyCode(this)">копировать</button></div>
 
-    <pre>{
-  "<span class="str">mcpServers</span>": {
-    "<span class="kw">web-search</span>": {
-      "<span class="str">type</span>": "<span class="str">stdio</span>",
-      "<span class="str">command</span>": "<span class="str">npx</span>",
-      "<span class="str">args</span>": ["<span class="str">-y</span>", "<span class="str">@modelcontextprotocol/server-brave-search</span>"],
-      "<span class="str">env</span>": {
-        "<span class="str">BRAVE_API_KEY</span>": "<span class="str">ТУТ_КЛЮЧ_BRAVE</span>"
-      }
-    },
-    "<span class="kw">filesystem</span>": {
-      "<span class="str">type</span>": "<span class="str">stdio</span>",
-      "<span class="str">command</span>": "<span class="str">npx</span>",
-      "<span class="str">args</span>": ["<span class="str">-y</span>", "<span class="str">@modelcontextprotocol/server-filesystem</span>", "<span class="str">/home/oleg/my-agent</span>"]
-    },
-    "<span class="kw">memory</span>": {
-      "<span class="str">type</span>": "<span class="str">stdio</span>",
-      "<span class="str">command</span>": "<span class="str">npx</span>",
-      "<span class="str">args</span>": ["<span class="str">-y</span>", "<span class="str">@modelcontextprotocol/server-memory</span>"]
-    }
-  }
-}</pre>
-
-    <h3>Популярные MCP-расширения</h3>
-    <div class="table-wrap">
-    <table>
-      <tr><th>Расширение</th><th>Что умеет</th><th>Ключ нужен?</th></tr>
-      <tr><td>server-brave-search</td><td>Поиск в интернете</td><td>Да (Brave API, бесплатный тариф есть)</td></tr>
-      <tr><td>server-filesystem</td><td>Читать/писать файлы</td><td>Нет</td></tr>
-      <tr><td>server-memory</td><td>Долгосрочная память</td><td>Нет</td></tr>
-      <tr><td>server-github</td><td>Работа с GitHub репозиториями</td><td>Да (GitHub token)</td></tr>
-      <tr><td>server-puppeteer</td><td>Открывать браузер, скрейпить сайты</td><td>Нет</td></tr>
-      <tr><td>server-postgres</td><td>Запросы к базе данных</td><td>Нет (нужна БД)</td></tr>
-    </table>
+    <div class="tree">
+<span class="tree-dir">my-agent/</span>
+├── <span class="tree-file">CLAUDE.md</span>          <span class="tree-comment">← личность и правила агента</span>
+├── <span class="tree-file">.mcp.json</span>          <span class="tree-comment">← подключённые расширения</span>
+├── <span class="tree-file">.env</span>               <span class="tree-comment">← секреты (не в git!)</span>
+├── <span class="tree-file">.gitignore</span>         <span class="tree-comment">← что не выгружать на GitHub</span>
+├── <span class="tree-dir">logs/</span>               <span class="tree-comment">← логи работы агента</span>
+├── <span class="tree-dir">memory/</span>             <span class="tree-comment">← долгосрочная память</span>
+├── <span class="tree-dir">media/</span>              <span class="tree-comment">← голосовые сообщения, фото</span>
+├── <span class="tree-dir">scripts/</span>            <span class="tree-comment">← скрипты автоматизации</span>
+├── <span class="tree-dir">agents/</span>             <span class="tree-comment">← конфиги дополнительных агентов</span>
+├── <span class="tree-dir">backups/</span>            <span class="tree-comment">← резервные копии</span>
+└── <span class="tree-dir">tmp/</span>                <span class="tree-comment">← временные файлы</span>
     </div>
 
-    <div class="note"><strong>Brave Search API:</strong> зарегистрируйся на <a href="https://api.search.brave.com" target="_blank">api.search.brave.com</a>. Бесплатный тариф = 2000 запросов в месяц — для личного агента хватит.</div>
+    <div class="code-wrap"><pre><span class="c"># .gitignore — что никогда не выгружается на GitHub</span>
+cat > .gitignore << 'EOF'
+.env
+secrets/
+*.key
+*.pem
+node_modules/
+__pycache__/
+logs/
+tmp/
+backups/
+media/
+EOF</pre>
+    <button class="copy-btn" onclick="copyCode(this)">копировать</button></div>
   </div>
 </div>
 
 <!-- STEP 8 -->
-<div class="step">
-  <div class="step-header">
-    <div class="step-num">8</div>
-    <div class="step-title">CLAUDE.md — личность агента</div>
-  </div>
+<div id="s8" class="step">
+  <div class="step-header"><div class="step-num">8</div><div class="step-title">MCP-расширения агента</div></div>
   <div class="step-body">
-    <p>Это главный файл — «мозг и характер» твоего агента. Всё что ты напишешь здесь, агент будет помнить и следовать этому при каждом ответе.</p>
+    <p>MCP (Model Context Protocol) — это «плагины» для агента. Каждый даёт новую способность: поиск в интернете, работу с файлами, календарь и т.д.</p>
 
-    <p>Создай файл <code>~/my-agent/CLAUDE.md</code>:</p>
+    <div class="resources">
+      <a class="res-card" href="https://modelcontextprotocol.io/introduction" target="_blank">
+        <div class="res-name">MCP Документация <span class="ext-icon">↗</span><span class="res-tag">Docs</span></div>
+        <div class="res-desc">Официальная документация протокола. Принципы работы.</div>
+      </a>
+      <a class="res-card" href="https://github.com/modelcontextprotocol/servers" target="_blank">
+        <div class="res-name">MCP Servers <span class="ext-icon">↗</span><span class="res-tag">GitHub</span></div>
+        <div class="res-desc">Каталог официальных MCP-серверов от Anthropic.</div>
+      </a>
+      <a class="res-card" href="https://api.search.brave.com" target="_blank">
+        <div class="res-name">Brave Search API <span class="ext-icon">↗</span><span class="res-tag">API</span></div>
+        <div class="res-desc">Бесплатно: 2000 запросов/мес. Регистрация — 2 минуты.</div>
+      </a>
+    </div>
 
-    <pre><span class="comment"># Мой персональный ассистент</span>
+    <p>Создай файл <code>~/my-agent/.mcp.json</code>:</p>
+    <div class="code-wrap"><pre>{
+  "mcpServers": {
+    "web-search": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-brave-search"],
+      "env": {
+        "BRAVE_API_KEY": "<span class="s">ВАШ_BRAVE_API_KEY</span>"
+      }
+    },
+    "filesystem": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem",
+               "/home/eldor/my-agent"]   <span class="c">← только папка проекта!</span>
+    },
+    "memory": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"]
+    }
+  }
+}</pre>
+    <button class="copy-btn" onclick="copyCode(this)">копировать</button></div>
+
+    <div class="danger">
+      <strong>⚠️ Безопасность filesystem MCP</strong><br>
+      Никогда не давай доступ к корневым папкам сервера!<br>
+      ❌ <code>/</code> — вся система<br>
+      ❌ <code>/home</code> — все пользователи<br>
+      ❌ <code>/etc</code> — системные конфиги<br>
+      ✅ Только <code>/home/eldor/my-agent</code> — папка проекта
+    </div>
+
+    <div class="table-wrap">
+    <table>
+      <tr><th>Расширение</th><th>Что умеет</th><th>Ключ</th></tr>
+      <tr><td>server-brave-search</td><td>Поиск в интернете</td><td>Да (Brave API, бесплатный тариф)</td></tr>
+      <tr><td>server-filesystem</td><td>Читать/писать файлы</td><td>Нет</td></tr>
+      <tr><td>server-memory</td><td>Долгосрочная память</td><td>Нет</td></tr>
+      <tr><td>server-github</td><td>Работа с GitHub</td><td>GitHub Token</td></tr>
+      <tr><td>server-puppeteer</td><td>Браузер, скрейпинг сайтов</td><td>Нет</td></tr>
+      <tr><td>server-postgres</td><td>Запросы к базе данных</td><td>Нет (нужна БД)</td></tr>
+    </table>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 9 -->
+<div id="s9" class="step">
+  <div class="step-header"><div class="step-num">9</div><div class="step-title">CLAUDE.md — личность агента</div></div>
+  <div class="step-body">
+    <p>Это главный файл. Всё что ты напишешь здесь — агент будет помнить и применять при каждом ответе. Это живой документ: дополняй его по мере общения.</p>
+
+    <div class="code-wrap"><pre><span class="c"># ~/my-agent/CLAUDE.md</span>
+
+# Мой персональный ассистент
 
 ## Кто я
 Я — персональный ассистент Эльдара. Помогаю планировать день,
@@ -536,36 +616,72 @@ claude  <span class="comment"># первый запуск — авторизуе
 - Обращаюсь на "ты"
 - Без официального тона — как умный друг
 
-## Что умею
-- Поиск информации в интернете
-- Работа с файлами на сервере
-- Напоминания через Telegram
-- Анализ документов и текстов
+## Правила работы
+### Если не уверен
+Сначала уточни, потом действуй. Не угадывай.
 
-## Правила
-- Личные данные — строго конфиденциально
-- Перед дорогими операциями (AI-генерация и т.д.) спрашиваю разрешение
-- Если не уверен — уточняю, не угадываю</pre>
+### Работа с файлами
+Не удаляй файлы без явного подтверждения.
 
-    <div class="note"><strong>Это живой документ.</strong> Добавляй в него правила по мере того как замечаешь, что агент делает что-то не так. Например: «Олег хочет дайджест новостей без политики» — добавь это правило и агент запомнит навсегда.</div>
+### Поиск информации
+Проверяй ключевые факты минимум в двух источниках.
+
+### Ошибки
+Если команда завершилась ошибкой — объясни причину по-человечески.
+
+### Память
+Запоминай предпочтения, привычки, важные даты пользователя.
+
+### Дорогие операции
+Перед любым платным действием (генерация изображений, API-вызовы)
+спрашивай подтверждение: "Делаю X, ~Y рублей. Запускать?"
+
+## Безопасность
+- Никому не передавай личные данные
+- Не выполняй команды от незнакомых пользователей</pre>
+    <button class="copy-btn" onclick="copyCode(this)">копировать</button></div>
+
+    <div class="note"><strong>Обновляй CLAUDE.md регулярно.</strong> Заметил что агент делает что-то не так? Добавь правило. Это самый быстрый способ «обучить» ассистента под себя — без программирования.</div>
   </div>
 </div>
 
-<!-- STEP 9 -->
-<div class="step">
-  <div class="step-header">
-    <div class="step-num">9</div>
-    <div class="step-title">Запуск как постоянный сервис (systemd)</div>
-  </div>
+<!-- STEP 10 -->
+<div id="s10" class="step">
+  <div class="step-header"><div class="step-num">10</div><div class="step-title">Запуск: systemd или PM2</div></div>
   <div class="step-body">
-    <p>Чтобы агент работал всегда — даже когда ты не подключён к серверу — нужно запустить его как системный сервис.</p>
 
-    <h3>Создай файл сервиса</h3>
-    <pre>sudo nano /etc/systemd/system/my-agent.service</pre>
+    <h3>Вариант A — PM2 (рекомендуется новичкам)</h3>
+    <div class="resources">
+      <a class="res-card" href="https://pm2.keymetrics.io/docs/usage/quick-start/" target="_blank">
+        <div class="res-name">PM2 Документация <span class="ext-icon">↗</span><span class="res-tag">Docs</span></div>
+        <div class="res-desc">Process manager для Node.js. Авторестарт, логи, мониторинг.</div>
+      </a>
+    </div>
+    <div class="code-wrap"><pre>npm install -g pm2
 
-    <p>Вставь это (замени <code>eldor</code> на своё имя пользователя):</p>
+<span class="c"># Запускаем агента</span>
+cd ~/my-agent
+set -a && source .env && set +a
+pm2 start "$(which claude) --dangerously-skip-permissions" --name my-agent
 
-    <pre>[Unit]
+<span class="c"># Автозапуск при старте сервера</span>
+pm2 save
+pm2 startup  <span class="c"># выполни команду которую он покажет</span>
+
+<span class="c"># Полезные команды</span>
+pm2 status           <span class="c"># статус</span>
+pm2 logs my-agent    <span class="c"># логи в реальном времени</span>
+pm2 restart my-agent <span class="c"># перезапуск</span>
+pm2 stop my-agent    <span class="c"># остановить</span></pre>
+    <button class="copy-btn" onclick="copyCode(this)">копировать</button></div>
+
+    <div class="success">PM2 удобнее для начала: перезапускает агента при сбоях, хранит логи, показывает потребление памяти/CPU.</div>
+
+    <h3>Вариант B — systemd (для продакшена)</h3>
+    <div class="code-wrap"><pre>sudo nano /etc/systemd/system/my-agent.service</pre>
+    <button class="copy-btn" onclick="copyCode(this)">копировать</button></div>
+
+    <div class="code-wrap"><pre>[Unit]
 Description=My AI Agent
 After=network.target
 
@@ -573,174 +689,372 @@ After=network.target
 Type=simple
 User=eldor
 WorkingDirectory=/home/eldor/my-agent
-Environment=ANTHROPIC_API_KEY=sk-ant-ТВОЙ_КЛЮЧ
-Environment=TELEGRAM_BOT_TOKEN=123456789:AABBcc...
-Environment=TELEGRAM_USER_ID=123456789
-ExecStart=/usr/local/bin/claude -p /home/eldor/my-agent --permission-mode bypassPermissions
+EnvironmentFile=/home/eldor/my-agent/.env
+<span class="c"># Путь к claude узнай командой: which claude</span>
+ExecStart=/home/eldor/.nvm/versions/node/v22.x.x/bin/claude \
+          --dangerously-skip-permissions
 Restart=on-failure
 RestartSec=5
+StandardOutput=append:/home/eldor/my-agent/logs/agent.log
+StandardError=append:/home/eldor/my-agent/logs/agent-error.log
 
 [Install]
 WantedBy=multi-user.target</pre>
+    <button class="copy-btn" onclick="copyCode(this)">копировать</button></div>
 
-    <h3>Запускаем</h3>
-    <pre><span class="comment"># Загружаем конфиг</span>
-sudo systemctl daemon-reload
+    <div class="warn"><strong>Замени путь!</strong> Вместо <code>/home/eldor/.nvm/versions/node/v22.x.x/bin/claude</code> вставь реальный путь из команды <code>which claude</code>. При установке через nvm путь всегда отличается.</div>
 
-<span class="comment"># Включаем автозапуск при старте сервера</span>
+    <div class="code-wrap"><pre>sudo systemctl daemon-reload
 sudo systemctl enable my-agent
-
-<span class="comment"># Запускаем сейчас</span>
 sudo systemctl start my-agent
-
-<span class="comment"># Проверяем что работает</span>
-sudo systemctl status my-agent
-
-<span class="comment"># Смотреть логи в реальном времени</span>
-journalctl -u my-agent -f</pre>
-
-    <div class="success">Если в статусе написано <strong>Active: active (running)</strong> — агент запущен и слушает сообщения от тебя в Telegram!</div>
-
-    <div class="warn"><strong>Если что-то пошло не так:</strong> посмотри логи командой <code>journalctl -u my-agent -n 50</code> — там будет описание ошибки.</div>
-  </div>
-</div>
-
-<!-- STEP 10 -->
-<div class="step">
-  <div class="step-header">
-    <div class="step-num">10</div>
-    <div class="step-title">VS Code на ноутбуке — удобная работа с кодом</div>
-  </div>
-  <div class="step-body">
-    <p>Работать с сервером через терминал неудобно. VS Code позволяет открыть папки сервера прямо у себя на ноутбуке — как будто они локальные.</p>
-
-    <h3>Скачай VS Code</h3>
-    <p>Скачай с официального сайта <a href="https://code.visualstudio.com" target="_blank">code.visualstudio.com</a></p>
-
-    <h3>Расширения — установи все сразу</h3>
-    <div class="extensions-grid">
-      <div class="ext-card">
-        <div class="ext-name">Remote - SSH</div>
-        <div class="ext-desc">Подключение к серверу. Открываешь папки прямо как локальные файлы</div>
-      </div>
-      <div class="ext-card">
-        <div class="ext-name">Claude</div>
-        <div class="ext-desc">Официальное расширение Anthropic — помощник прямо в редакторе кода</div>
-      </div>
-      <div class="ext-card">
-        <div class="ext-name">GitLens</div>
-        <div class="ext-desc">Расширенная история изменений в файлах — кто и когда что менял</div>
-      </div>
-      <div class="ext-card">
-        <div class="ext-name">Prettier</div>
-        <div class="ext-desc">Автоформатирование кода. Нажал Ctrl+S — всё сразу красиво</div>
-      </div>
-      <div class="ext-card">
-        <div class="ext-name">Markdown Preview</div>
-        <div class="ext-desc">Предпросмотр .md файлов (включён по умолчанию, просто открой Ctrl+Shift+V)</div>
-      </div>
-      <div class="ext-card">
-        <div class="ext-name">YAML</div>
-        <div class="ext-desc">Подсветка и валидация .yaml / .json файлов конфигурации</div>
-      </div>
-    </div>
-
-    <h3>Подключение к серверу через VS Code</h3>
-    <ol>
-      <li>Нажми <code>F1</code> → введи <em>Remote-SSH: Connect to Host</em></li>
-      <li>Введи <code>ты@IP-СЕРВЕРА</code></li>
-      <li>VS Code подключится и откроет файлы сервера — работай как с локальными</li>
-    </ol>
+sudo systemctl status my-agent     <span class="c"># должен быть active (running)</span>
+journalctl -u my-agent -f          <span class="c"># логи в реальном времени</span></pre>
+    <button class="copy-btn" onclick="copyCode(this)">копировать</button></div>
   </div>
 </div>
 
 <!-- STEP 11 -->
-<div class="step">
-  <div class="step-header">
-    <div class="step-num">11</div>
-    <div class="step-title">Голосовые сообщения</div>
-  </div>
+<div id="s11" class="step">
+  <div class="step-header"><div class="step-num">11</div><div class="step-title">VS Code на ноутбуке</div></div>
   <div class="step-body">
-    <p>Агент может отвечать голосом (синтез речи) и понимать голосовые сообщения (распознавание речи).</p>
+    <div class="resources">
+      <a class="res-card" href="https://code.visualstudio.com/download" target="_blank">
+        <div class="res-name">VS Code <span class="ext-icon">↗</span><span class="res-tag">Скачать</span></div>
+        <div class="res-desc">Бесплатный редактор от Microsoft. Mac, Windows, Linux.</div>
+      </a>
+    </div>
 
-    <h3>Синтез речи — edge-tts</h3>
-    <pre><span class="comment"># Устанавливаем</span>
-pip install edge-tts
+    <h3>Обязательные расширения</h3>
+    <div class="extensions-grid">
+      <a class="ext-card" href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh" target="_blank" style="text-decoration:none">
+        <div class="ext-name" style="color:var(--text)">Remote - SSH ↗</div>
+        <div class="ext-desc">Главное расширение — открывай файлы сервера как локальные</div>
+      </a>
+      <a class="ext-card" href="https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code" target="_blank" style="text-decoration:none">
+        <div class="ext-name" style="color:var(--text)">Claude ↗</div>
+        <div class="ext-desc">Официальное расширение Anthropic — ИИ прямо в редакторе</div>
+      </a>
+      <div class="ext-card">
+        <div class="ext-name">GitLens</div>
+        <div class="ext-desc">История изменений каждой строки кода</div>
+      </div>
+      <div class="ext-card">
+        <div class="ext-name">Prettier</div>
+        <div class="ext-desc">Автоформатирование — Ctrl+S и всё красиво</div>
+      </div>
+      <div class="ext-card">
+        <div class="ext-name">YAML</div>
+        <div class="ext-desc">Подсветка и проверка .yaml / .json файлов</div>
+      </div>
+      <div class="ext-card">
+        <div class="ext-name">DotENV</div>
+        <div class="ext-desc">Подсветка синтаксиса файлов .env</div>
+      </div>
+    </div>
 
-<span class="comment"># Проверяем русские голоса</span>
-edge-tts --list-voices | grep ru-RU
-
-<span class="comment"># Лучший мужской голос — Дмитрий</span>
-edge-tts --voice ru-RU-DmitryNeural --rate=-10% --pitch=-2Hz \
-  --text "Привет! Это твой ассистент" --write-media /tmp/test.mp3
-
-<span class="comment"># Воспроизвести (проверка)</span>
-ffplay -nodisp /tmp/test.mp3</pre>
-
-    <h3>Распознавание речи — faster-whisper</h3>
-    <pre><span class="comment"># Устанавливаем</span>
-pip install faster-whisper
-
-<span class="comment"># Тестируем (Python)</span>
-python3 -c "
-from faster_whisper import WhisperModel
-model = WhisperModel('small', device='cpu')
-segments, _ = model.transcribe('/tmp/test.mp3', language='ru')
-for s in segments:
-    print(s.text)
-"</pre>
-
-    <div class="note"><strong>Модели Whisper:</strong> <code>tiny</code> (быстрый, менее точный), <code>small</code> (оптимальный для сервера), <code>medium</code> (точнее, нужно больше RAM), <code>large-v3-turbo</code> (лучший результат, нужно 8+ ГБ RAM)</div>
-
-    <div class="note"><strong>Совет:</strong> для сервера с 4 ГБ RAM используй модель <code>small</code> — хорошая точность для русского языка при минимальных требованиях.</div>
+    <h3>Подключение к серверу</h3>
+    <ol>
+      <li>Нажми <code>F1</code> → <em>Remote-SSH: Connect to Host</em></li>
+      <li>Введи <code>eldor@IP-СЕРВЕРА</code></li>
+      <li>Открой папку <code>/home/eldor/my-agent</code></li>
+    </ol>
   </div>
 </div>
 
 <!-- STEP 12 -->
-<div class="step">
-  <div class="step-header">
-    <div class="step-num">12</div>
-    <div class="step-title">GitHub — хранение и синхронизация</div>
-  </div>
+<div id="s12" class="step">
+  <div class="step-header"><div class="step-num">12</div><div class="step-title">Голосовые сообщения</div></div>
   <div class="step-body">
-    <p>Храни файлы своего агента на GitHub — это и резервная копия, и возможность работать с кодом с разных устройств.</p>
+    <div class="resources">
+      <a class="res-card" href="https://github.com/rany2/edge-tts" target="_blank">
+        <div class="res-name">edge-tts <span class="ext-icon">↗</span><span class="res-tag">GitHub</span></div>
+        <div class="res-desc">Синтез речи через Microsoft Edge. Бесплатно, русский голос Дмитрий.</div>
+      </a>
+      <a class="res-card" href="https://github.com/SYSTRAN/faster-whisper" target="_blank">
+        <div class="res-name">faster-whisper <span class="ext-icon">↗</span><span class="res-tag">GitHub</span></div>
+        <div class="res-desc">Быстрое распознавание речи. В 4x быстрее оригинального Whisper.</div>
+      </a>
+    </div>
 
-    <pre><span class="comment"># Настраиваем git</span>
-git config --global user.name "Твоё имя"
+    <h3>Синтез речи — edge-tts</h3>
+    <div class="code-wrap"><pre>pip install edge-tts
+
+<span class="c"># Лучший русский голос — Дмитрий</span>
+edge-tts --voice ru-RU-DmitryNeural --rate=-10% --pitch=-2Hz \
+  --text "Привет! Это твой ассистент" --write-media /tmp/test.mp3
+
+ffplay -nodisp -autoexit /tmp/test.mp3  <span class="c"># проверка</span></pre>
+    <button class="copy-btn" onclick="copyCode(this)">копировать</button></div>
+
+    <h3>Распознавание речи — faster-whisper</h3>
+    <div class="code-wrap"><pre>pip install faster-whisper
+
+python3 -c "
+from faster_whisper import WhisperModel
+model = WhisperModel('small', device='cpu')  <span class="c"># small = хватает 4GB RAM</span>
+segments, _ = model.transcribe('/tmp/audio.ogg', language='ru')
+for s in segments: print(s.text)
+"</pre>
+    <button class="copy-btn" onclick="copyCode(this)">копировать</button></div>
+
+    <div class="table-wrap">
+    <table>
+      <tr><th>Модель</th><th>RAM</th><th>Скорость</th><th>Точность (RU)</th></tr>
+      <tr><td>tiny</td><td>1 ГБ</td><td>Очень быстро</td><td>Удовлетворительно</td></tr>
+      <tr><td>small</td><td>2 ГБ</td><td>Быстро</td><td>Хорошо — <strong>рекомендую</strong></td></tr>
+      <tr><td>medium</td><td>5 ГБ</td><td>Средне</td><td>Очень хорошо</td></tr>
+      <tr><td>large-v3-turbo</td><td>8+ ГБ</td><td>Медленнее</td><td>Отлично</td></tr>
+    </table>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 13 -->
+<div id="s13" class="step">
+  <div class="step-header"><div class="step-num">13</div><div class="step-title">GitHub — хранение кода</div></div>
+  <div class="step-body">
+    <div class="resources">
+      <a class="res-card" href="https://github.com/signup" target="_blank">
+        <div class="res-name">Создать аккаунт <span class="ext-icon">↗</span><span class="res-tag">GitHub</span></div>
+        <div class="res-desc">Бесплатный аккаунт — для хранения кода агента.</div>
+      </a>
+      <a class="res-card" href="https://github.com/new" target="_blank">
+        <div class="res-name">Создать репозиторий <span class="ext-icon">↗</span><span class="res-tag">GitHub</span></div>
+        <div class="res-desc">Новый приватный репозиторий для своего агента.</div>
+      </a>
+    </div>
+
+    <div class="code-wrap"><pre>git config --global user.name "Твоё имя"
 git config --global user.email "ты@email.com"
 
-<span class="comment"># Создаём репозиторий на github.com (через сайт), затем связываем</span>
 cd ~/my-agent
 git remote add origin https://github.com/твой-логин/my-agent.git
 
-<span class="comment"># Файл .gitignore — не загружаем секреты!</span>
-cat > .gitignore << 'EOF'
-.env
-secrets/
-*.key
-*.pem
-node_modules/
-__pycache__/
-EOF
-
-<span class="comment"># Первый коммит</span>
-git add CLAUDE.md .mcp.json
+git add CLAUDE.md .mcp.json .gitignore
 git commit -m "initial agent setup"
 git push -u origin main</pre>
+    <button class="copy-btn" onclick="copyCode(this)">копировать</button></div>
 
-    <div class="warn"><strong>Никогда не загружай на GitHub:</strong> файлы с паролями, API ключами, токенами бота. Используй <code>.gitignore</code> и храни секреты в отдельном зашифрованном файле.</div>
+    <div class="warn"><strong>Проверь перед push:</strong> <code>.env</code> должен быть в <code>.gitignore</code>. Никогда не выгружай файлы с ключами на GitHub — даже в приватный репозиторий.</div>
+  </div>
+</div>
+
+<!-- STEP 14 -->
+<div id="s14" class="step">
+  <div class="step-header"><div class="step-num">14</div><div class="step-title">Резервные копии</div></div>
+  <div class="step-body">
+    <p>Автоматические ночные бэкапы — за 5 минут настройки.</p>
+
+    <div class="code-wrap"><pre><span class="c"># Создать бэкап вручную</span>
+tar -czf ~/my-agent/backups/agent-$(date +%F).tar.gz \
+  ~/my-agent/CLAUDE.md \
+  ~/my-agent/.mcp.json \
+  ~/my-agent/memory/ \
+  ~/my-agent/scripts/
+
+<span class="c"># Настроить автоматический бэкап каждую ночь в 03:00</span>
+crontab -e</pre>
+    <button class="copy-btn" onclick="copyCode(this)">копировать</button></div>
+
+    <p>Добавь строку в crontab:</p>
+    <div class="code-wrap"><pre>0 3 * * * tar -czf /home/eldor/my-agent/backups/agent-$(date +\%F).tar.gz /home/eldor/my-agent/CLAUDE.md /home/eldor/my-agent/memory/ 2>/dev/null</pre>
+    <button class="copy-btn" onclick="copyCode(this)">копировать</button></div>
+
+    <div class="note"><strong>Чистка старых бэкапов</strong> — чтобы не переполнить диск, удаляй файлы старше 30 дней:<br><code>find ~/my-agent/backups/ -name "*.tar.gz" -mtime +30 -delete</code></div>
+  </div>
+</div>
+
+<!-- STEP 15 -->
+<div id="s15" class="step">
+  <div class="step-header"><div class="step-num">15</div><div class="step-title">Мониторинг сервера</div></div>
+  <div class="step-body">
+    <p>Держи глаз на ресурсах — Whisper и Claude могут съедать RAM.</p>
+
+    <div class="code-wrap"><pre>htop        <span class="c"># интерактивный монитор процессов (q — выход)</span>
+df -h       <span class="c"># место на диске</span>
+free -m     <span class="c"># оперативная память в МБ</span>
+
+<span class="c"># Смотреть только процессы Claude</span>
+ps aux | grep claude
+
+<span class="c"># Через PM2 — красивый дашборд</span>
+pm2 monit</pre>
+    <button class="copy-btn" onclick="copyCode(this)">копировать</button></div>
+
+    <div class="warn">
+      <strong>На что обращать внимание:</strong><br>
+      • RAM выше 85% — Whisper large-v3 не поместится, используй small/medium<br>
+      • Диск выше 80% — почисти логи и бэкапы<br>
+      • CPU 100% долгое время — проверь не завис ли агент
+    </div>
   </div>
 </div>
 
 </div><!-- end .steps -->
 
-<div class="final-card">
-  <h2>Что должно работать в итоге</h2>
-  <p>Агент запущен, слушает Telegram 24/7, отвечает на твои сообщения, может искать в интернете, работать с файлами и отвечать голосом. Это база — дальше расширяй по своим задачам.</p>
-  <br>
-  <p style="font-size:14px; color: #5a6478">Написан для Эльдара · Версия 1.0 · 2026</p>
+<!-- COST SECTION -->
+<div id="cost" class="step" style="margin-top:40px">
+  <div class="step-header"><div class="step-num" style="background:linear-gradient(135deg,#4ade80,#5b8dee)">₽</div><div class="step-title">Во сколько это обойдётся</div></div>
+  <div class="step-body">
+    <div class="table-wrap">
+    <table>
+      <tr><th>Компонент</th><th>Стоимость</th><th>Примечание</th></tr>
+      <tr><td>VPS сервер</td><td>500–1000 ₽/мес</td><td>Timeweb/VDSina — проще всего из РФ</td></tr>
+      <tr><td>Claude API (Sonnet)</td><td>500–3000 ₽/мес</td><td>Зависит от активности использования</td></tr>
+      <tr><td>Claude API (Opus)</td><td>3000–15000 ₽/мес</td><td>Если нужны сложные задачи</td></tr>
+      <tr><td>Brave Search API</td><td>0 ₽</td><td>2000 запросов/мес бесплатно</td></tr>
+      <tr><td>GitHub</td><td>0 ₽</td><td>Приватные репозитории бесплатны</td></tr>
+      <tr><td>Домен (опционально)</td><td>~1000 ₽/год</td><td>Только если нужен web-интерфейс</td></tr>
+    </table>
+    </div>
+    <div class="cost-total">Итого на старте: ~1000–4000 ₽ в месяц</div>
+    <div class="note"><strong>Совет:</strong> начни с Sonnet — он в 5 раз дешевле Opus и для 90% задач не хуже. На Opus переходи только для стратегических решений, анализа или сложного кода.</div>
+  </div>
 </div>
 
-</div><!-- end .container -->
+<!-- ERRORS SECTION -->
+<div id="errors" class="step" style="margin-top:40px">
+  <div class="step-header"><div class="step-num" style="background:linear-gradient(135deg,#f87171,#fbbf24)">!</div><div class="step-title">Типичные ошибки и решения</div></div>
+  <div class="step-body">
+
+    <div class="error-item">
+      <div class="error-title">claude: command not found</div>
+      <div class="error-body">Claude установлен через nvm, но переменные окружения не загружены.</div>
+      <div class="error-fix">✓ Решение: <code>source ~/.bashrc</code> или перезайди на сервер</div>
+    </div>
+
+    <div class="error-item">
+      <div class="error-title">Permission denied (publickey)</div>
+      <div class="error-body">SSH-ключ не добавлен или указан неверный пользователь.</div>
+      <div class="error-fix">✓ Проверь: <code>cat ~/.ssh/id_ed25519.pub</code> — этот ключ должен быть в настройках сервера</div>
+    </div>
+
+    <div class="error-item">
+      <div class="error-title">systemd service: active (failed)</div>
+      <div class="error-body">Сервис упал при запуске. Причина в ошибке конфигурации или неверном пути.</div>
+      <div class="error-fix">✓ Решение: <code>journalctl -u my-agent -n 100</code> — посмотреть последние 100 строк логов</div>
+    </div>
+
+    <div class="error-item">
+      <div class="error-title">AuthenticationError: Invalid API key</div>
+      <div class="error-body">Ключ ANTHROPIC_API_KEY не загружен или неверный.</div>
+      <div class="error-fix">✓ Проверь: <code>echo $ANTHROPIC_API_KEY</code> — должен вывести ключ начинающийся на sk-ant-</div>
+    </div>
+
+    <div class="error-item">
+      <div class="error-title">Out of memory / Killed</div>
+      <div class="error-body">Whisper large-v3 требует 8+ ГБ RAM — на сервере с 4 ГБ не поместится.</div>
+      <div class="error-fix">✓ Решение: используй модель <code>small</code> вместо large-v3</div>
+    </div>
+
+    <div class="error-item">
+      <div class="error-title">Disk full — нет места на диске</div>
+      <div class="error-body">Логи или медиафайлы заняли весь диск.</div>
+      <div class="error-fix">✓ Найди тяжёлые файлы: <code>du -sh ~/my-agent/logs/* | sort -h</code></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FUTURE: HTTPS -->
+<div id="future" class="step" style="margin-top:40px">
+  <div class="step-header"><div class="step-num" style="background:linear-gradient(135deg,#5b8dee,#4ade80)">🌐</div><div class="step-title">HTTPS / Nginx / Cloudflare — для будущего</div></div>
+  <div class="step-body">
+    <p>Пока агент работает в режиме polling — веб-сервер не нужен. Но он понадобится позже для:</p>
+    <ul>
+      <li>Webhook — когда будет много пользователей</li>
+      <li>Web-дашборда для управления агентом через браузер</li>
+      <li>Своего API для интеграции с другими сервисами</li>
+    </ul>
+
+    <div class="code-wrap"><pre><span class="c"># Установка Nginx</span>
+sudo apt install nginx
+
+<span class="c"># Бесплатный SSL-сертификат через Let's Encrypt</span>
+sudo apt install certbot python3-certbot-nginx
+sudo certbot --nginx -d твой-домен.ru</pre>
+    <button class="copy-btn" onclick="copyCode(this)">копировать</button></div>
+
+    <div class="note"><strong>Cloudflare — бесплатная защита.</strong> Если у тебя есть домен — прогони его через Cloudflare. Это бесплатно и даёт: защиту от DDoS, SSL, скрытие реального IP сервера.</div>
+  </div>
+</div>
+
+<!-- WHAT'S NEXT -->
+<div id="next" class="step" style="margin-top:40px">
+  <div class="step-header"><div class="step-num" style="background:linear-gradient(135deg,#fbbf24,#f87171)">→</div><div class="step-title">Что дальше — куда расти</div></div>
+  <div class="step-body">
+    <p>База работает. Вот направления куда агент можно развить:</p>
+    <div class="next-grid">
+      <div class="next-item">
+        <div class="next-icon">🧠</div>
+        <div class="next-title">Долгосрочная память</div>
+        <div class="next-desc">MemPalace, векторная база, граф знаний</div>
+      </div>
+      <div class="next-item">
+        <div class="next-icon">🤖</div>
+        <div class="next-title">Мультиагентность</div>
+        <div class="next-desc">Несколько агентов работают параллельно</div>
+      </div>
+      <div class="next-item">
+        <div class="next-icon">🖼️</div>
+        <div class="next-title">Генерация изображений</div>
+        <div class="next-desc">FAL.ai, DALL-E, Stable Diffusion</div>
+      </div>
+      <div class="next-item">
+        <div class="next-icon">🎬</div>
+        <div class="next-title">Генерация видео</div>
+        <div class="next-desc">Kling, Sora через FAL.ai</div>
+      </div>
+      <div class="next-item">
+        <div class="next-icon">📅</div>
+        <div class="next-title">Google Календарь</div>
+        <div class="next-desc">Управление встречами через агента</div>
+      </div>
+      <div class="next-item">
+        <div class="next-icon">📧</div>
+        <div class="next-title">Gmail / Почта</div>
+        <div class="next-desc">Читать, отвечать, сортировать письма</div>
+      </div>
+      <div class="next-item">
+        <div class="next-icon">📊</div>
+        <div class="next-title">Notion / Obsidian</div>
+        <div class="next-desc">Заметки, база знаний, дневник</div>
+      </div>
+      <div class="next-item">
+        <div class="next-icon">🌐</div>
+        <div class="next-title">OpenRouter</div>
+        <div class="next-desc">Доступ к 100+ моделям через один API</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FINAL -->
+<div class="final-card">
+  <h2>Готово. Агент запущен.</h2>
+  <p>Ты только что настроил персонального AI-ассистента на своей инфраструктуре — без подписок, без лимитов платформ, полностью под контролем.</p>
+
+  <div class="readiness">
+    <div class="readiness-badge"><div class="r-dot" style="background:#4ade80"></div> Новичок: готов</div>
+    <div class="readiness-badge"><div class="r-dot" style="background:#4ade80"></div> Продвинутый пользователь: готов</div>
+    <div class="readiness-badge"><div class="r-dot" style="background:#fbbf24"></div> Продакшн: добавь мониторинг + бэкапы</div>
+  </div>
+
+  <p style="margin-top:20px; font-size:13px; color:#3d4460">Написан для Эльдара · Версия 2.0 · Май 2026</p>
+</div>
+
+</div><!-- container -->
+
+<script>
+function copyCode(btn) {
+  const pre = btn.closest('.code-wrap').querySelector('pre');
+  const text = pre.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'скопировано!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'копировать'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
 </body>
 </html>
