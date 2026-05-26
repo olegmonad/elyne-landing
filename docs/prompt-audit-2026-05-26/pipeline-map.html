@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elyne Pipeline Map — 2026-05-26</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="elyne-prompt-pipeline-map">Elyne Prompt Pipeline Map</h1>
+<blockquote>
+<p>Audit date: 2026-05-26 | Source: code scan + admin DB</p>
+</blockquote>
+<hr>
+<h2 id="flow-1-profile-summary">Flow 1: Profile Summary</h2>
+<pre><code>Trigger: GenerateProfileAnalysisJob (after onboarding completion)
+
+1. GenerateProfileSummaryAction::execute(Card)
+   ├── placeholderService.getOnboardingAnswers(card)
+   ├── placeholderService.getSelectedClothingStyles(card)
+   └── textAi.generateProfileSummary(gender, age, answers, styles, marital_status)
+       ├── ADMIN PROMPT: profile_summary_system (ID=15) [13239 chars]
+       │   Placeholders: {gender}, {age}, {profile_extra}, {onboarding_answers}, {clothing_styles}
+       │   FALLBACK (code): &quot;Ты — психолог и консультант по персональному брендингу...&quot;
+       ├── CODE APPENDED: &quot;\n\nВерни строго JSON без markdown: {\&quot;summary\&quot;: \&quot;...\&quot;}&quot;
+       └── OpenRouter → maxTokens=3000 → Card.profile_summary + Card.profile_summary_prompt
+
+2. GenerateAffirmationAction::execute(Card)
+   └── textAi.generateAffirmation(resolvedPrompt)
+       ├── ADMIN PROMPT: affirmation (ID=16) [618 chars]
+       │   Placeholders: (TBD — needs micro analysis)
+       └── OpenRouter → Card.affirmation_text + Card.affirmation_prompt
+</code></pre>
+<hr>
+<h2 id="flow-2-first-scene-three-angles">Flow 2: First Scene (Three Angles)</h2>
+<pre><code>Trigger: SelectSphereJob → GenerateThreeAnglesJob (after profile photo + sphere selection)
+
+PRE-REQUISITES:
+  - Card.profile_summary must exist (from Flow 1)
+  - Card.selectedSphere must be set (from SelectSphereJob)
+  - ClothingChoiceJob must complete (wait via WaitsForClothingChoice concern)
+
+1. GenerateThreeAnglesJob::handle()
+   ├── placeholderService.resolveForSphere(
+   │     prompt: ADMIN three_angles_scene meta_prompt,   ← type=three_angles_scene (NOT IN DB — may use field_scene?)
+   │     card, sphere, relativeIds, questionIds)
+   │   OR falls back to: type=field_scene per sphere (if three_angles_scene missing)
+   │   Placeholders: {profile_summary}, {onboarding_answers}, {sphere_title},
+   │                 {sphere_short}, {sphere_slug}, {sphere_definition},
+   │                 {relatives_photos[]}, {micro_adjustment_answers}, {chosen_clothing_style}
+   │
+   ├── textAi.generateThreeAngles(resolvedPrompt)
+   │   ├── SYSTEM PROMPT: none (systemMessage=null by default)
+   │   ├── CODE APPENDED: JSON schema hint (3 scenes with title/short_description/detailed_description)
+   │   ├── OpenRouter → maxTokens=4000, maxRetries=3
+   │   └── STUB FALLBACK: 3 stubs if all retries fail
+   │
+   └── FOR EACH of 3 scenes:
+       ├── GeneratedScene::create(title, short_description, detailed_description, meta_prompt_text)
+       └── CreateScenePhotoAction::execute(card, sphere, scene, resolvedPrompt, relativeData, clothingBlock)
+           ├── BUILD FAL PROMPT (⚠️ BUG — missing getImageInstructions!):
+           │   scene.detailed_description
+           │   + [relatives instructions if hasRelatives]
+           │   + clothingBlock (if not empty)
+           │   ← MISSING: getImageInstructions() / image_instructions
+           └── GenerateImageJob → FAL nano-banana-pro/edit
+</code></pre>
+<hr>
+<h2 id="flow-3-first-post-payment-scene-generatefirstpostpaymentscenejob">Flow 3: First Post-Payment Scene (GenerateFirstPostPaymentSceneJob)</h2>
+<pre><code>Trigger: payment confirmed → GenerateFirstPostPaymentSceneJob
+
+Similar to Flow 2 but dispatches single scene.
+Uses same CreateScenePhotoAction — inherits same ⚠️ BUG (no image_instructions).
+</code></pre>
+<hr>
+<h2 id="flow-4-sphere-scene-initial">Flow 4: Sphere Scene (Initial)</h2>
+<pre><code>Trigger: User opens sphere, picks scene → DispatchSpherePhotoAction(base_source=profile_photo)
+
+1. DispatchSpherePhotoAction::execute(base_source='profile_photo')
+   └── promptService.buildFinalPromptText(scene.detailed_description, userScene, userComment)
+       ├── scene.detailed_description (scene_prompt)
+       ├── + image_suffix from ADMIN (per sphere if exists, else profile_photo suffix)
+       ├── + ADMIN image_instructions (ID=12) [5472 chars, FALLBACK cp-01]
+       ├── + &quot;Пожелание: {comment}&quot; if comment present
+       └── + clothingBlock from placeholderService
+       → GenerateImageJob → FAL nano-banana-pro/edit (userPhotoUrl=selfie)
+</code></pre>
+<hr>
+<h2 id="flow-5-sphere-scene-regeneration-no-comment">Flow 5: Sphere Scene Regeneration (No Comment)</h2>
+<pre><code>Trigger: User regenerates without comment → DispatchSpherePhotoAction(base_source=previous_generation, no comment)
+
+Replay iter=1 final_prompt_text verbatim.
+If iter=1 has no final_prompt_text (legacy): rebuild from scene_prompt_text + relatives + clothing.
+→ GenerateImageJob → FAL (userPhotoUrl=selfie)
+</code></pre>
+<hr>
+<h2 id="flow-6-wishcomment-flow">Flow 6: Wish/Comment Flow</h2>
+<pre><code>Trigger: User regenerates WITH comment → DispatchSpherePhotoAction → InterpretWishAndGenerateJob
+
+1. textAi.classifyWishComment(userComment, originalScene)
+   ├── CODE PROMPT: [fully hardcoded cp-10]
+   │   &quot;Текущая сцена: {currentScene}\nКомментарий: \&quot;{userComment}\&quot;\n...&quot;
+   └── OpenRouter → maxTokens=50 → LOCAL_EDIT or CONTEXT_SHIFT
+
+2a. If LOCAL_EDIT:
+    ├── PromptGenerationService::buildCommentOnlyPrompt(comment, hasRelatives, fieldNumber, isProfilePhoto)
+    │   &quot;Пожелание: {comment}&quot;
+    │   + [relatives instructions if hasRelatives]
+    │   + image_suffix (sphere or profile_photo)
+    │   + ADMIN image_instructions (ID=12)
+    ├── CODE APPENDED: LOCAL_EDIT guard [cp-04]
+    │   &quot;ЭТО ЛОКАЛЬНАЯ ПРАВКА: не меняй лицо...&quot;
+    ├── + clothingBlock
+    └── GenerateImageJob → FAL (baseGenerationUrl = previous image, userPhotoUrl=null)
+
+2b. If CONTEXT_SHIFT:
+    ├── ADMIN wish_scene (ID=34) resolved via resolveForSphere()
+    │   Placeholders: {sphere_title}, {sphere_definition}, {profile_summary}, {onboarding_answers}
+    ├── CODE PREPENDED: generateWishScene context block [cp-08]
+    │   (ОРИГИНАЛЬНАЯ СЦЕНА + ПОЖЕЛАНИЕ + ИНСТРУКЦИЯ + ПРЕЕМСТВЕННОСТЬ + АДМИН-МЕТАПРОМПТ)
+    ├── OpenRouter → maxTokens=2000 → enrichedScene (detailed_description)
+    ├── finalPrompt = enrichedScene + getImageInstructions() + clothingBlock
+    └── GenerateImageJob → FAL (userPhotoUrl=selfie, baseGenerationUrl=null)
+</code></pre>
+<hr>
+<h2 id="flow-7-photo-session-explore">Flow 7: Photo Session (Explore)</h2>
+<pre><code>Trigger: User opens photo session mode → CreatePhotoSessionVariantJob (via DispatchPhotoSessionAction)
+
+1. placeholderService.resolveWithVariants(
+      prompt: ADMIN photo_session (ID=20) [14184 chars],
+      card, sphere, relativeIds, priorVariants, userComment)
+   Placeholders: {profile_summary}, {onboarding_answers}, {sphere_title},
+                 {relatives_photos[]}, {micro_adjustment_answers},
+                 {chosen_clothing_style}, {previously_generated_variants}, {user_comment}
+
+2. textAi.generatePhotoSessionScene(resolvedPrompt, originalFullPrompt, priorVariants)
+   ├── CODE PREPENDED: photo_session context block [cp-09] (if originalFullPrompt exists)
+   │   (ОРИГИНАЛЬНЫЙ ПРОМПТ + УЖЕ СНЯТЫЕ ВАРИАНТЫ + ИНСТРУКЦИЯ КОДА + АДМИН-МЕТАПРОМПТ)
+   └── OpenRouter → maxTokens=2500 → new variant detailed_description
+
+3. Build FAL prompt:
+   variant.detailed_description
+   + getImageInstructions() [from ADMIN image_instructions (ID=12)]
+   + clothingBlock
+   → GenerateImageJob → FAL (userPhotoUrl=selfie)
+</code></pre>
+<hr>
+<h2 id="flow-8-scene-affirmation">Flow 8: Scene Affirmation</h2>
+<pre><code>Trigger: GenerateSceneAffirmationJob (after FAL image completes)
+
+1. Sphere::byFieldNumber(userScene.field_number)
+2. placeholderService.resolveScene(
+      prompt: ADMIN scene_affirmation (ID=19) [388 chars],
+      userScene, sphere)
+   Placeholders: {scene_title}, {scene_short_description}, {profile_summary}, {onboarding_answers}
+
+3. textAi.generateSceneAffirmation(resolvedPrompt)
+   ├── CODE APPENDED: JSON schema hint {affirmation_text: &quot;...&quot;}
+   └── OpenRouter → maxTokens=400 → UserScene.affirmation_text
+</code></pre>
+<hr>
+<h2 id="flow-9-ai-questionnaire-question">Flow 9: AI Questionnaire Question</h2>
+<pre><code>Trigger: GenerateAiQuestionnaireQuestionAction::handle() (on first sphere Q3 open)
+
+1. ADMIN ai_questionnaire_question PER QUESTION (ai_metaprompt on QuestionnaireQuestion model)
+   ↓ per-question meta prompt, each unique for each sphere's Q3
+
+2. placeholderService.resolveForSphere(question.ai_metaprompt, card, sphere)
+   Placeholders: {sphere_title}, {profile_summary}, {gender}, {micro_adjustment_answers}
+
+3. textAi.generateAiQuestionnaireQuestion(resolvedMetaprompt)
+   ├── SYSTEM PROMPT: ADMIN ai_questionnaire_question system prompt (ID=21) [356 chars]
+   │   FALLBACK: &quot;Ты ассистент. На основе метапромпта сформулируй ОДИН уточняющий вопрос.&quot;
+   ├── CODE APPENDED: JSON schema hint {question: &quot;...&quot;}
+   └── OpenRouter → maxTokens=400 → UserQuestionnaireResponse.ai_generated_question_text
+</code></pre>
+<hr>
+<h2 id="flow-10-scene-variants-generatescenesaction">Flow 10: Scene Variants (GenerateScenesAction)</h2>
+<pre><code>Trigger: GenerateScenesAction (API call for generating scene options)
+
+1. ADMIN field_scene per sphere (IDs 2-11, 33) resolved via resolveForSphere()
+   Placeholders: full set including {profile_summary}, {onboarding_answers}, {sphere_*},
+                 {relatives_photos[]}, {micro_adjustment_answers}, {chosen_clothing_style}
+
+2. Anti-duplication block PREPENDED [cp-05]:
+   &quot;ВАЖНО: для этой сферы пользователю уже были предложены: {existing_titles}...&quot;
+
+3. textAi.generateSceneVariants({resolved_meta_prompt, count, field_number})
+   ├── SYSTEM PROMPT: ADMIN scene_system (ID=32, with fallback cp-11)
+   │   Template: &quot;Ты — креативный сценарист... Сгенерируй {count} вариант(а/ов)&quot;
+   ├── CODE: {count} resolved via str_replace in systemMessage
+   └── OpenRouter → maxTokens=3500 → array of scene variants
+</code></pre>
+<hr>
+<h2 id="flow-11-sphere-selection">Flow 11: Sphere Selection</h2>
+<pre><code>Trigger: SelectSphereJob (after profile summary generated)
+
+1. ADMIN sphere_selector prompt (if exists in DB — NOT FOUND in fetched records)
+   + Placeholders: {profile_summary}, {onboarding_answers}, {spheres_catalog}
+
+2. textAi.selectSphere(resolvedPrompt, validSlugs)
+   ├── CODE APPENDED: &quot;Верни JSON: {\&quot;sphere\&quot;: \&quot;slug\&quot;}&quot; style hint
+   └── OpenRouter → sphere slug → Card.selected_sphere_id
+</code></pre>
+<hr>
+<h2 id="flow-12-clothing-choice">Flow 12: Clothing Choice</h2>
+<pre><code>Trigger: DispatchSphereClothingChoiceAction → ChooseClothingStyleJob
+
+1. placeholderService.resolveForClothingChoice(
+      prompt: some admin prompt (sphere clothing choice),
+      card, sphere, clothingStyles)
+   Placeholders: {profile_summary}, {user_clothing_styles}, {sphere_title}
+
+2. textAi.chooseClothingStyle(resolvedPrompt, userStyles)
+   ├── maxRetries=3
+   └── OpenRouter → {style: &quot;slug&quot;, reason: &quot;...&quot;} → CardSphereClothingChoice
+</code></pre>
+<hr>
+<h2 id="flow-13-profile-summary-refresh">Flow 13: Profile Summary Refresh</h2>
+<pre><code>Trigger: RefreshProfileSummaryJob
+
+Uses ADMIN profile_summary_system (ID=15) via resolveForRefresh():
+- {previous_profile_summary} placeholder used
+- OpenRouter → updated Card.profile_summary
+</code></pre>
+<hr>
+<h2 id="image-assembly-order-final-fal-prompt">Image Assembly Order (Final FAL Prompt)</h2>
+<p>For most flows (Flows 3-5), the FAL prompt is built as:</p>
+<pre><code>[scene.detailed_description / enrichedScene]
+  + [image_suffix per sphere (from ADMIN field_scene.image_suffix)]
+  + [ADMIN image_instructions (ID=12)]
+  + [&quot;Пожелание: {comment}&quot; if comment]
+  + [clothingBlock (from ClothingStyle.description_male/female)]
+  + [relatives instructions if hasRelatives]
+</code></pre>
+<p><strong>Exception (⚠️ BUG): CreateScenePhotoAction</strong> (used in Flow 2 + 3):</p>
+<pre><code>[scene.detailed_description]
+  + [relatives instructions if hasRelatives]
+  + [clothingBlock]
+  ← MISSING image_instructions!
+</code></pre>
+<p><strong>Prompt length cap</strong>: FAL cuts off at 5000 characters (FalAiService::generateImage())</p>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
