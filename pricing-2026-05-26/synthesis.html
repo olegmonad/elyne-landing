@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elyne · Pricing-разбор (синтез CFO+CMO+Growth)</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="pricing-elyne">Pricing-разбор Elyne — синтез вердикта</h1>
+<p><strong>Дата:</strong> 2026-05-26
+<strong>Состав:</strong> CFO + CMO + Growth-аналитик (параллельно, 3 независимых документа)
+<strong>Запрос Олега:</strong> разбор тарифов/пакетов/подписок с учётом ИП УСН 6%, эквайринга СБП 0.7% / карта 2.8%, cost per generation, опции аватаров, перспективы App Store</p>
+<hr>
+<h2 id="high-confidence">Где все трое сошлись (high-confidence)</h2>
+<ol>
+<li><strong>Маржа здоровая.</strong> Даже на нижнем тарифе при дорогой генерации ($0.30/сцена) маржинальность не падает в красную зону. При mid-сценарии ($0.15) — 68-80% по всем тарифам. Это премиальный диапазон для SaaS.</li>
+<li><strong>Break-even низкий.</strong> 126-178 платящих юзеров покрывают операционку (~150К₽/мес: Денис частично + инфра). Реалистично выйти в плюс на 3-5 месяце.</li>
+<li><strong>Payback быстрый.</strong> При реферале/бартере (CAC 100-300₽) — меньше месяца. При органике (300-600₽) — 1-2 мес.</li>
+<li><strong>999₽ = воронка, не основная выручка.</strong> Толкать в средний тариф через дизайн платформы — там основные деньги.</li>
+<li><strong>App Store сейчас неактуален.</strong> Подтверждено всеми тремя — РФ-эквайринг прямой через СБП эффективнее. На перспективу через зарубежное юрлицо — поднимать цены на 25-30% чтобы покрыть 30% AS-комиссию.</li>
+</ol>
+<h2 id="_1">Где разошлись (нужно решение Олега)</h2>
+<h3 id="1-3-4">1. Количество тарифов: 3 или 4?</h3>
+<p><strong>CMO предлагает 3:</strong>
+- Взгляд 999 ₽ (точка входа, 3 сцены, 3 сферы)
+- Путь 1 999 ₽ (основной, 10 сцен, все сферы, аватар включён)
+- Живу 3 499 ₽ (heavy use, ~40 сцен, приоритет)</p>
+<p><strong>CFO предлагает 4:</strong>
+- Начальный 999 ₽
+- Базовый 1 699 ₽
+- Расширенный 2 490 ₽
+- Полный 3 990 ₽</p>
+<p><strong>Кто прав:</strong> CMO — 3 тарифа лучше для premium-tone. Apple/Notion/Calm не делают 4-х. Когнитивная нагрузка ниже, anchoring чище.</p>
+<h3 id="2">2. Цена среднего тарифа</h3>
+<p><strong>CMO:</strong> 1 999 ₽
+<strong>CFO:</strong> 1 699 ₽</p>
+<p><strong>Рекомендация:</strong> 1 999 ₽. Психологически &ldquo;под две тысячи&rdquo; — премиум-якорь; 1 699 выглядит как &ldquo;хочется выглядеть дешевле&rdquo; что подсказывает неуверенность в ценности. На уровне юнит-экономики разница в марже копеечная.</p>
+<h3 id="3-free-tier">3. Free tier</h3>
+<p><strong>CMO:</strong> одна сцена бесплатно, навсегда. Если больше — насыщение без оплаты. Первая сцена = якорь возврата.
+<strong>Growth:</strong> соглашается, но добавляет — share-механика на сцене (watermark + &ldquo;Подарить&rdquo;) поднимает виральность с K=0.1 до 0.3+.</p>
+<p><strong>Это не противоречие — это дополнение.</strong> Одна бесплатная сцена + она же шерится с watermark.</p>
+<hr>
+<h2 id="chairman">Финальная рекомендация (синтез chairman)</h2>
+<h3 id="3">Тарифы (3 шт)</h3>
+<table>
+<thead>
+<tr>
+<th>Название</th>
+<th>Цена</th>
+<th>Что внутри</th>
+<th>Профиль покупателя</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Взгляд</strong></td>
+<td>999 ₽/мес</td>
+<td>3 сцены / мес, 3 сферы на выбор, без аватара</td>
+<td>Точка входа. Любопытство, проверка</td>
+</tr>
+<tr>
+<td><strong>Путь</strong></td>
+<td>1 999 ₽/мес</td>
+<td>10 сцен / мес, все 10 сфер, аватар включён</td>
+<td>Основной — для людей в переходе</td>
+</tr>
+<tr>
+<td><strong>Живу</strong></td>
+<td>3 499 ₽/мес</td>
+<td>~40 сцен / мес (fair use), всё открыто, приоритетная очередь генерации</td>
+<td>Heavy use — для тех кто работает с собой системно</td>
+</tr>
+</tbody>
+</table>
+<p><strong>По умолчанию подсвечивать &ldquo;Путь&rdquo;</strong> — но без надписи &ldquo;Популярный&rdquo;. Тихий визуальный акцент (рамка/тень), не маркетинговая болтовня.</p>
+<h3 id="-mid-015">Юнит-экономика (mid-сценарий $0.15/сцена)</h3>
+<table>
+<thead>
+<tr>
+<th>Тариф</th>
+<th>Брутто</th>
+<th>Эквайринг 0.7%</th>
+<th>УСН 6%</th>
+<th>Cost ген.</th>
+<th>Cost аватар</th>
+<th><strong>Чистая маржа</strong></th>
+<th><strong>%</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Взгляд (3 сцены)</td>
+<td>999</td>
+<td>-7</td>
+<td>-60</td>
+<td>-41</td>
+<td>0</td>
+<td><strong>891</strong></td>
+<td><strong>89%</strong></td>
+</tr>
+<tr>
+<td>Путь (10 сцен + аватар)</td>
+<td>1 999</td>
+<td>-14</td>
+<td>-120</td>
+<td>-135</td>
+<td>-100</td>
+<td><strong>1 630</strong></td>
+<td><strong>82%</strong></td>
+</tr>
+<tr>
+<td>Живу (40 сцен + аватар приоритет)</td>
+<td>3 499</td>
+<td>-24</td>
+<td>-210</td>
+<td>-540</td>
+<td>-100</td>
+<td><strong>2 625</strong></td>
+<td><strong>75%</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>При high-сценарии ($0.30/сцена):</strong> все три остаются в зелёной зоне (маржа 65-85%).</p>
+<p><strong>При low-сценарии ($0.05/сцена):</strong> маржа 88-92% по всем — золотая жила.</p>
+<h3 id="_2">Опасные сценарии</h3>
+<ul>
+<li><strong>Heavy use на &ldquo;Пути&rdquo;</strong> (50+ генераций) — fair-use policy: уведомление на 11-й сцене, hard-cap на 15-й. Если &ldquo;Живу&rdquo; не подходит — переход на pay-per-scene по 99₽.</li>
+<li><strong>Реальный cost-per-gen неизвестен</strong> — главный риск по Growth. До запуска замерить на 100 реальных юзерах. Если выйдет $0.25-0.30 — нижний тариф уходит в жёлтую зону.</li>
+<li><strong>Подписка vs пакет.</strong> Сейчас все три — подписки. Альтернатива: пакет сцен без срока (например, 10 сцен за 1 999 ₽). На soft-launch попробовать оба варианта на A/B.</li>
+</ul>
+<h3 id="free-tier">Free tier</h3>
+<p><strong>Одна бесплатная сцена</strong> — навсегда, без срока. Это якорь возврата и шеринг-механика.</p>
+<h3 id="soft-launch-10">Soft-launch (≤10К юзеров)</h3>
+<ol>
+<li><strong>Стартовать с двумя тарифами</strong> — &ldquo;Взгляд&rdquo; + &ldquo;Путь&rdquo;. &ldquo;Живу&rdquo; подключить через 4-6 недель когда увидим реальный usage.</li>
+<li><strong>Каналы:</strong>
+   - 10-20 нано-блогеров тематики «психология/переходы/self-care» через бартер. CAC ~100-300₽. <strong>С ERID на Дениса как оператора с первого же блогера.</strong>
+   - Органика @elyne_app Reels + TG-канал с реальными историями (не с красивыми картинками). CAC ~300-600₽.
+   - Share-механика на сцене (watermark + кнопка &ldquo;Подарить&rdquo; другу) — поднимает виральность.</li>
+<li><strong>VK Ads / Я.Директ — НЕ раньше 500 платящих из органики.</strong> Иначе масштабируем неизвестную воронку.</li>
+</ol>
+<h3 id="cmo">Принципиальный сдвиг копирайта (от CMO)</h3>
+<p><strong>Не лимит, а прогресс.</strong>
+- ❌ &ldquo;Осталось 7 сцен из 10&rdquo;
+- ✅ &ldquo;Вы исследовали 3 из 10 сфер&rdquo;</p>
+<p>Язык освоения вместо языка убывания. Это технически простая правка с большим эффектом на retention.</p>
+<h3 id="_3">Что нужно сделать дальше</h3>
+<ol>
+<li><strong>Олег — решение:</strong> утвердить 3 тарифа (Взгляд/Путь/Живу) + цены 999/1999/3499 — или скорректировать</li>
+<li><strong>Денис — техзадача:</strong> реализовать paywall с 3-мя тарифами + freemium логика (1 сцена сохраняется навсегда) + watermark на share</li>
+<li><strong>Денис — measurement:</strong> на первых 100 юзерах замерить реальный cost-per-gen (средний расход токенов на сессию, не per-scene)</li>
+<li><strong>CMO/Олег — копирайт paywall:</strong> утвердить заголовки + CTA в духе бренда (CMO предложил варианты в полном отчёте)</li>
+<li><strong>Маркировка ERID</strong> — Денис как оператор, оформить шаблон для первого блогер-договора (lawyer-задача отдельно)</li>
+</ol>
+<hr>
+<h2 id="_4">Полные отчёты</h2>
+<ul>
+<li><code>cfo-analysis.md</code> — детальная юнит-экономика, таблицы по 3 cost-сценариям, App Store разбор, break-even</li>
+<li><code>cmo-packaging.md</code> — упаковка тарифов, копирайт paywall, антипаттерны, soft-launch</li>
+<li><code>growth-payback.md</code> — LTV/CAC/payback по каналам, реферальная программа, виральность, риски</li>
+</ul>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
