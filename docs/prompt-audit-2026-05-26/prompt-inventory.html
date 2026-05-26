@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elyne Prompt Inventory 2026-05-26</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="elyne-prompt-inventory">Elyne Prompt Inventory</h1>
+<blockquote>
+<p>Дата аудита: 2026-05-26 | Всего: 22 admin + 15 code = 37 промптов</p>
+</blockquote>
+<hr>
+<h2 id="admin-db-generation_prompts">Admin DB Промпты (generation_prompts)</h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Тип</th>
+<th>Поле/Имя</th>
+<th>Длина meta</th>
+<th>image_suffix</th>
+<th>Статус</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>profile_photo</code></td>
+<td>Фото профиля</td>
+<td>6 545</td>
+<td>525</td>
+<td>✅ Полный</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>field_scene</code></td>
+<td>Образ я (self)</td>
+<td>~13K</td>
+<td>?</td>
+<td>⚠️ Timeout</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>field_scene</code></td>
+<td>Достаток (resources)</td>
+<td>13 282</td>
+<td>—</td>
+<td>✅ Полный</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>field_scene</code></td>
+<td>Проявленность (realization)</td>
+<td>~13K</td>
+<td>?</td>
+<td>⚠️ Timeout</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>field_scene</code></td>
+<td>Отношения (love)</td>
+<td>~13K</td>
+<td>?</td>
+<td>⚠️ Timeout</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>field_scene</code></td>
+<td>Очаг (home)</td>
+<td>~13K</td>
+<td>?</td>
+<td>⚠️ Timeout</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>field_scene</code></td>
+<td>Творчество (children)</td>
+<td>~13K</td>
+<td>?</td>
+<td>⚠️ Timeout</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>field_scene</code></td>
+<td>Образование (creativity)</td>
+<td>~13K</td>
+<td>?</td>
+<td>⚠️ Timeout</td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>field_scene</code></td>
+<td>Развитие и мудрость (wisdom)</td>
+<td>~13K</td>
+<td>?</td>
+<td>⚠️ Timeout</td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>field_scene</code></td>
+<td>Социальность (freedom)</td>
+<td>~13K</td>
+<td>?</td>
+<td>⚠️ Timeout</td>
+</tr>
+<tr>
+<td>11</td>
+<td><code>field_scene</code></td>
+<td>Окружение (environment)</td>
+<td>~13K</td>
+<td>?</td>
+<td>⚠️ Timeout</td>
+</tr>
+<tr>
+<td>12</td>
+<td><code>image_instructions</code></td>
+<td>Инструкции генерации</td>
+<td>5 472</td>
+<td>—</td>
+<td>✅ Полный</td>
+</tr>
+<tr>
+<td>13</td>
+<td>—</td>
+<td>Удалён или не существует</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>14</td>
+<td><code>relatives_instructions</code></td>
+<td>Интеграция родственников</td>
+<td>2 235</td>
+<td>—</td>
+<td>✅ Полный</td>
+</tr>
+<tr>
+<td>15</td>
+<td><code>profile_summary_system</code></td>
+<td>Profile Summary</td>
+<td>13 239</td>
+<td>—</td>
+<td>✅ Полный</td>
+</tr>
+<tr>
+<td>16</td>
+<td><code>affirmation</code></td>
+<td>Аффирмация</td>
+<td>618</td>
+<td>—</td>
+<td>✅ Полный</td>
+</tr>
+<tr>
+<td>17-18</td>
+<td>—</td>
+<td>Удалены или не существуют</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>19</td>
+<td><code>scene_affirmation</code></td>
+<td>Аффирмация сцены</td>
+<td>388</td>
+<td>—</td>
+<td>✅ Полный</td>
+</tr>
+<tr>
+<td>20</td>
+<td><code>photo_session</code></td>
+<td>Фотосессия</td>
+<td>14 184</td>
+<td>—</td>
+<td>✅ Полный</td>
+</tr>
+<tr>
+<td>21</td>
+<td><code>ai_questionnaire_question</code></td>
+<td>AI Q system prompt</td>
+<td>356</td>
+<td>—</td>
+<td>✅ Полный</td>
+</tr>
+<tr>
+<td>32</td>
+<td><code>scene_system</code></td>
+<td>System prompt сцен</td>
+<td>~1K</td>
+<td>—</td>
+<td>⚠️ Timeout</td>
+</tr>
+<tr>
+<td>33</td>
+<td><code>field_scene</code></td>
+<td>Тренды (trends)</td>
+<td>~13K</td>
+<td>?</td>
+<td>⚠️ Timeout</td>
+</tr>
+<tr>
+<td>34</td>
+<td><code>wish_scene</code></td>
+<td>Пожелание</td>
+<td>1 055</td>
+<td>—</td>
+<td>✅ Полный</td>
+</tr>
+<tr>
+<td>35</td>
+<td><code>scene_question</code></td>
+<td>Сценический вопрос</td>
+<td>386</td>
+<td>—</td>
+<td>✅ Полный</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Примечание</strong>: ⚠️ Timeout = данные не получены из-за нестабильности сервера. Preview (первые 80 символов) доступен из table-view.</p>
+<hr>
+<h2 id="11">Сферы (11 активных)</h2>
+<table>
+<thead>
+<tr>
+<th>field_number</th>
+<th>field_name (admin)</th>
+<th>Sphere name</th>
+<th>Sphere slug</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Образ я</td>
+<td>Я и состояние</td>
+<td>self</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Достаток</td>
+<td>Ресурсы, богатство и уровень жизни</td>
+<td>resources</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Проявленность</td>
+<td>Реализация и влияние</td>
+<td>realization</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Отношения</td>
+<td>Любовь и партнёрство</td>
+<td>love</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Очаг</td>
+<td>Дом, семья и близкие</td>
+<td>home</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Творчество</td>
+<td>Дети и наследие</td>
+<td>children</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Образование</td>
+<td>Творчество и новые начинания</td>
+<td>creativity</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Развитие и мудрость</td>
+<td>Развитие и мудрость</td>
+<td>wisdom</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Социальность</td>
+<td>Свобода и масштаб жизни</td>
+<td>freedom</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Окружение</td>
+<td>Окружение и люди</td>
+<td>environment</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Тренды</td>
+<td>Тренды</td>
+<td>trends</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="code-only-hardcoded-php">Code-only промпты (hardcoded в PHP)</h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Имя</th>
+<th>Файл</th>
+<th>Severity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cp-01</td>
+<td>image_instructions_fallback</td>
+<td>PromptGenerationService.php:17</td>
+<td>—</td>
+</tr>
+<tr>
+<td>cp-02</td>
+<td>relatives_instructions_fallback</td>
+<td>PromptGenerationService.php:24</td>
+<td>—</td>
+</tr>
+<tr>
+<td>cp-03</td>
+<td>append_comment_format</td>
+<td>PromptGenerationService.php:109</td>
+<td>—</td>
+</tr>
+<tr>
+<td>cp-04</td>
+<td>local_edit_guard</td>
+<td>InterpretWishAndGenerateJob.php</td>
+<td>—</td>
+</tr>
+<tr>
+<td>cp-05</td>
+<td>anti_duplication_block</td>
+<td>GenerateScenesAction.php</td>
+<td>—</td>
+</tr>
+<tr>
+<td>cp-06</td>
+<td>fallback_field_scene_metaprompt</td>
+<td>AutoCreateFieldSceneMetapromptAction.php</td>
+<td>—</td>
+</tr>
+<tr>
+<td>cp-07</td>
+<td>three_angles_stub_fallback</td>
+<td>GenerateThreeAnglesJob.php</td>
+<td>—</td>
+</tr>
+<tr>
+<td>cp-08</td>
+<td>wish_scene_context_block</td>
+<td>OpenRouterService.php:880</td>
+<td>—</td>
+</tr>
+<tr>
+<td>cp-09</td>
+<td>photo_session_context_block</td>
+<td>OpenRouterService.php:740</td>
+<td>—</td>
+</tr>
+<tr>
+<td>cp-10</td>
+<td>classify_wish_comment_prompt</td>
+<td>OpenRouterService.php:820</td>
+<td>—</td>
+</tr>
+<tr>
+<td>cp-11</td>
+<td>scene_system_fallback</td>
+<td>OpenRouterService.php:37</td>
+<td>—</td>
+</tr>
+<tr>
+<td>cp-12</td>
+<td>profile_summary_fallback</td>
+<td>OpenRouterService.php:246</td>
+<td>—</td>
+</tr>
+<tr>
+<td>cp-13</td>
+<td>ai_questionnaire_system_fallback</td>
+<td>OpenRouterService.php:793</td>
+<td>—</td>
+</tr>
+<tr>
+<td>cp-14</td>
+<td>json_schema_appended_code_side</td>
+<td>Multiple methods</td>
+<td>—</td>
+</tr>
+<tr>
+<td>cp-15</td>
+<td><strong>BUG: missing image_instructions</strong></td>
+<td>CreateScenePhotoAction.php</td>
+<td><strong>HIGH</strong></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="_1">Ключевые характеристики системы</h2>
+<ul>
+<li><strong>FAL модель</strong>: <code>fal-ai/nano-banana-pro/edit</code></li>
+<li><strong>Промпт лимит FAL</strong>: 5000 символов (обрезается hard)</li>
+<li><strong>OpenRouter</strong>: температура 0.7, json_object mode, reasoning disabled</li>
+<li><strong>Тип промптов</strong>: Все на русском, кроме <code>analyzeStyleCorrection()</code> (на английском)</li>
+<li><strong>Плейсхолдеры</strong>: 21 уникальный, все через <code>{placeholder_name}</code> формат</li>
+</ul>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
