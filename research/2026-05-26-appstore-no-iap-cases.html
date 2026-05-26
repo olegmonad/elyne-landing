@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apple App Store без оплат внутри · живые кейсы · Elyne research 26.05.2026</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="apple-app-store">Apple App Store без оплат внутри: живые кейсы и реальный опыт</h1>
+<p><strong>Сводка research-агента (26.05.2026)</strong> для проекта Elyne.</p>
+<blockquote>
+<p>Главный фрейм: Elyne хочет лежать в Apple App Store через Vietnam-аккаунт Квин (жены Олега), без оплаты внутри приложения. Оплата — на сайте elyne.online через российский эквайринг на ИП Олега. В приложении только вход и контент.</p>
+</blockquote>
+<hr>
+<h2 id="_1">Главный вывод</h2>
+<p><strong>Apple отдельного разрешения «reader app» (приложение-читатель) Elyne не выдаст.</strong> Reader app — это про доступ к ранее купленному цифровому контенту (книги, музыка, видео, журналы). Elyne — это AI-генерация и диалог-проводник, активная функциональность, не каталог.</p>
+<p>Значит схема — <strong>«бесплатное приложение со входом» (sign-in only)</strong> с реальным бесплатным уровнем функциональности. В приложении: онбординг, 1 бесплатная сцена, базовый дашборд. Никаких упоминаний оплаты. Юзер сам понимает что Elyne подписочный — заходит через браузер на elyne.online, оплачивает, возвращается, доступ открывается.</p>
+<p><strong>Риски:</strong> reject на первом submission по правилам 3.1.1 (anti-steering) или 4.2 (минимальная функциональность). Снижаются через значимый free-уровень.</p>
+<hr>
+<h2 id="1">Раздел 1. Живые российские кейсы — кто реально делает так сейчас</h2>
+<h3 id="11-elyne">1.1 Яндекс Шедеврум — самый близкий референс под Elyne</h3>
+<p>Яндекс перерегистрировал сервисы на сербские юрлица. <strong>В Шедеврум в App Store нет покупок внутри.</strong> Платная опция «Шедеврум Про» (AI-генерации YandexART 2.5 Pro) включена в подписку Яндекс Плюс, которая покупается только на сайте Яндекса. В приложении видишь статус «Плюс активен / Плюс не активен», ничего больше.</p>
+<p><strong>Почему важно для Elyne:</strong> крупный AI-сервис проходит Apple review с тем же паттерном, что планирует Олег. Прецедент рабочий, но Apple лояльнее к крупным брендам — для стартапа риск выше.</p>
+<p>Источники: <a href="https://www.forbes.ru/tekhnologii/543135-spratat-sa-za-sirmu-kak-rossijskie-kompanii-obhodat-sankcii-v-app-store">Forbes — «Спрятаться за ширму»</a>, <a href="https://apps.apple.com/ru/app/%D1%88%D0%B5%D0%B4%D0%B5%D0%B2%D1%80%D1%83%D0%BC/id1671837122">Шедеврум в App Store</a>.</p>
+<h3 id="12-telegram-premium-no-iap">1.2 Telegram Premium — классический no-IAP</h3>
+<p>Telegram Premium можно купить только на сайте telegram.org или через бота. Долго в iOS-приложении вообще не было упоминания цен — только кнопка «оформить» вела в web-checkout с оплатой картой. После 2022-2024 Apple заставила Telegram добавить покупку внутри приложения. <strong>Но web-вариант остался дешевле:</strong> 4.99 vs 3.99.</p>
+<p><strong>Что важно:</strong> Apple следит за крупными игроками и заставляет добавлять покупку внутри. Маленький стартап под этим давлением будет реже.</p>
+<p>Источники: <a href="https://9to5mac.com/2022/10/28/telegram-paid-posts-channels-apple-in-app-purchases/">9to5mac</a>.</p>
+<h3 id="13-notion-figma-productivity-">1.3 Notion / Figma — productivity-приложения</h3>
+<p>Notion Free и Figma Free доступны внутри iOS-приложения. Платные планы — только через сайт. Apple к ним лояльна, потому что это «инструменты с пользовательскими данными», не «явная продажа контента».</p>
+<p><strong>Elyne ближе к этому жанру, чем к Шедевруму</strong> — это AI-инструмент со сценами личности.</p>
+<p>Источники: <a href="https://apps.apple.com/us/app/notion-notes-tasks-ai/id1232780281">Notion</a>, <a href="https://apps.apple.com/us/app/figma/id1152747299">Figma</a>.</p>
+<h3 id="14">1.4 Реальные блоги российских разработчиков</h3>
+<ul>
+<li><strong>habr.com — «Как мы из России опубликовали платное приложение»</strong> <a href="https://habr.com/ru/articles/883998/">ссылка</a> — авторы прошли D-U-N-S, оформили Apple Developer Organization через зарубежное юрлицо, описали процедуру переноса</li>
+<li><strong>habr.com — «Как я прошел ад публикации в App Store и вывел первые деньги»</strong> <a href="https://habr.com/ru/articles/1015122/">ссылка</a> — реальный путь от submission до получения денег</li>
+<li><strong>Easy Payments — блог с кейсами клиентов 2025-2026</strong> <a href="https://easypayments.online/blog/publikaciya-prilozhenij-v-app-store-iz-rossii">ссылка</a> — посредник, ведут активный блог с цифрами и сроками</li>
+</ul>
+<h3 id="15-armenia-llc-vietnam-individual">1.5 Armenia LLC — альтернатива Vietnam Individual</h3>
+<p>Российский разработчик переехал в Армению, открыл ИП, получает выплаты от App Store на армянский банковский счёт. Полная инструкция: банк, налоги (1.5% на оборот), как привязать счёт.</p>
+<p><strong>Почему стоит рассмотреть как альтернативу Вьетнаму:</strong>
+- Армения → США: 0% удержания у источника (есть договор об избежании двойного налогообложения)
+- Вьетнам → США: 30% удержания у источника (нет договора)
+- Армянский банк открыть проще, чем вьетнамский на нерезидента
+- Связь Олег-Армения отсутствует — нужно ехать оформлять ИП, либо через ВНЖ родственника</p>
+<p>Источник: <a href="https://www.relocation2armenia.com/receiving-payments-from-app-store">Relocation2Armenia</a>.</p>
+<hr>
+<h2 id="2-vietnam-individual">Раздел 2. Vietnam Individual — что подтверждено, что гипотеза</h2>
+<h3 id="21-apple">2.1 Подтверждено документами Apple и налоговой Вьетнама</h3>
+<ul>
+<li><strong>Регистрация:</strong> через Apple Developer app на iPhone/iPad, паспорт или CCCD (вьетнамский ID-документ). $99/год можно оплатить вьетнамской картой или через виртуальную (Wise/Revolut/Payoneer)</li>
+<li><strong>KYC:</strong> фото паспорта/CCCD + телефонная верификация (на вьетнамский номер)</li>
+<li><strong>Налоги 2025:</strong> введён PIT 2% на доход вместо CIT, плюс FCT 5% на комиссию Apple. VAT exemption убрали. Apple Distribution International зарегистрирован у вьетнамской налоговой и сам удерживает FCT</li>
+<li><strong>Налоговая форма США W-8BEN:</strong> обязательна. Удержание у источника — 30% по умолчанию (нет договора об избежании между США и Вьетнамом)</li>
+</ul>
+<p>Источники: <a href="https://9to5mac.com/2025/08/21/apple-details-new-app-store-taxes-and-price-changes-in-select-countries/">9to5mac — Vietnam taxes August 2025</a>, <a href="https://asoworld.com/blog/app-store-tax-price-updates-august-2025-developer-guide/">ASO World</a>, <a href="https://developer.apple.com/help/app-store-connect/manage-tax-information/provide-tax-information/">Apple Developer — tax info</a>, <a href="https://marcabien.com/en/register-for-apple-developer-from-abroad-step-by-step-guide">MarcaBien — гайд</a>.</p>
+<h3 id="22-">2.2 Что критично, но напрямую не отвечает кейс «Олег + жена-вьетнамка»</h3>
+<p>Прицельный поиск «russian developer vietnam wife apple» / «vietnam individual apple developer russian» <strong>публичных живых кейсов не возвращает.</strong> Возможные причины:
+- Схема малочисленная, кейсы не выходят в публику
+- Все используют другие пути (Армения, Сербия) из-за 30% удержания у источника США</p>
+<p><strong>Подтвердить нужно вживую через <code>lawyer</code>-агента и <code>cfo</code>-агента:</strong>
+- Открытие банковского счёта во Вьетнаме на Квин — если она резидент, должно быть просто; если нет — сложно
+- Apple просит вьетнамский физический адрес — Квин должна быть прописана
+- Если Apple запросит верификационный звонок — звонят Квин на её вьетнамский номер
+- Имя Квин публично в магазине как разработчик — журналисты, поисковики могут найти</p>
+<h3 id="23">2.3 Сценарий выплат</h3>
+<p>Apple платит на банковский счёт во Вьетнаме (Vietcombank или Techcombank — Apple-friendly). Дальше деньги нужно перевести в РФ — это валютный контроль, но это <strong>не наш кейс пока нет оплат в приложении.</strong></p>
+<p><strong>Олег прав в воспроизведении логики:</strong>
+- Сейчас оплат в приложении нет → Apple ничего не платит → нет вопроса о переводе
+- Если когда-то добавим оплату в приложении → тогда возникнет вопрос перевода и валютного контроля</p>
+<hr>
+<h2 id="3-anti-steering-2025-2026">Раздел 3. Anti-steering в 2025-2026: где можно, где нельзя</h2>
+<h3 id="31-2025">3.1 Что изменилось в мае 2025</h3>
+<p>После апрельского решения Epic vs Apple (Judge Yvonne Gonzalez Rogers) и Apple-обновления May 2025:
+- <strong>В США</strong> — разрешены прямые ссылки и кнопки «купить на нашем сайте», без специального разрешения, без 27% комиссии
+- <strong>В Евросоюзе</strong> — через Digital Markets Act, аналогично, но с другой структурой комиссий
+- <strong>В РФ, Вьетнаме, остальных регионах</strong> — старое правило 3.1.1 действует, прямые ссылки и кнопки нельзя</p>
+<p>Источники: <a href="https://mjtsai.com/blog/2025/05/02/app-review-guidelines-updated-for-epic-anti-steering/">Michael Tsai blog</a>, <a href="https://www.revenuecat.com/blog/growth/apple-anti-steering-ruling-monetization-strategy/">RevenueCat</a>, <a href="https://www.idownloadblog.com/2025/05/02/apple-updates-app-review-guidelines-app-store-apps-external-payments/">idownloadblog</a>.</p>
+<h3 id="32">3.2 Что отвергают сейчас</h3>
+<ul>
+<li><strong>Прямое упоминание цены в приложении</strong> вне разрешённых регионов — отказ под 3.1.1. Apple реально читает текст в приложении при review</li>
+<li><strong>Картинки-намёки на покупку</strong> — изображение «iPhone с открытым браузером и страницей оплаты», скриншот «купите на сайте» — может квалифицироваться как неявное направление <em>(гипотеза, прямых reject-кейсов не нашёл)</em></li>
+<li><strong>Sign-in only приложение без значимой free-функциональности</strong> — отказ под 4.2 (минимальная функциональность)</li>
+</ul>
+<h3 id="33">3.3 Что проходит</h3>
+<ul>
+<li>«Войти» / «Зарегистрироваться» как нейтральные кнопки</li>
+<li>Реклама «попробуй бесплатно» без упоминания цен потом</li>
+<li>Описание в App Store: «AI-проводник для самореализации. Базовые функции бесплатно, расширенные возможности по подписке через elyne.online»</li>
+</ul>
+<hr>
+<h2 id="4-2025">Раздел 4. Типичные причины отказа в 2025</h2>
+<p>Из обобщающих гайдов RevenueCat, Adapty, Forge:</p>
+<table>
+<thead>
+<tr>
+<th>Правило</th>
+<th>Причина отказа</th>
+<th>Применимость к Elyne</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3.1.1</td>
+<td>Упомянули внешнюю оплату или ссылку на неё в приложении вне разрешённых регионов</td>
+<td>Высокий риск</td>
+</tr>
+<tr>
+<td>3.1.2</td>
+<td>Подписка не работает, нет восстановления, нет управления</td>
+<td>Низкий риск (у нас нет покупок)</td>
+</tr>
+<tr>
+<td>3.1.3(a)</td>
+<td>Попытка использовать «приложение-читатель» без права</td>
+<td>Высокий риск если назовём reader</td>
+</tr>
+<tr>
+<td>4.2</td>
+<td>Приложение слишком пустое, ничего нельзя без подписки</td>
+<td>Высокий риск на первом submission</td>
+</tr>
+<tr>
+<td>5.1.1</td>
+<td>Политика конфиденциальности не покрывает все собираемые данные</td>
+<td>Средний, держать в фокусе</td>
+</tr>
+</tbody>
+</table>
+<p>Источники: <a href="https://www.revenuecat.com/blog/growth/the-ultimate-guide-to-app-store-rejections/">RevenueCat — guide to rejections</a>, <a href="https://adapty.io/blog/app-store-rejection/">Adapty</a>, <a href="https://forgeasc.com/blog/app-store-rejection-reasons">Forge</a>, <a href="https://iossubmissionguide.com/guideline-3-1-in-app-purchase/">iOS Submission Guide 3.1</a>.</p>
+<hr>
+<h2 id="5-">Раздел 5. Кросс-маркеты — параллельные пути</h2>
+<h3 id="google-play">Google Play</h3>
+<ul>
+<li>Reader app exemption работает с 2022, Google лояльнее к no-IAP схемам</li>
+<li>РФ-выплаты заблокированы как у Apple</li>
+<li>Решение: Vietnam Individual / Armenia LLC аккаунт</li>
+<li>Регистрация $25 один раз (не годовой)</li>
+</ul>
+<h3 id="rustore">RuStore</h3>
+<ul>
+<li>Anti-steering ограничений нет — это российский маркет</li>
+<li>Свой Billing API через СБП, либо собственный эквайринг</li>
+<li>Регистрация: ИП Олега напрямую</li>
+<li>Комиссия 5%</li>
+<li>Только Android-юзеры</li>
+</ul>
+<h3 id="-pwa-progressive-web-app">Сайт-приложение (PWA — Progressive Web App)</h3>
+<ul>
+<li>Альтернатива всем сторам: сайт с установкой «на главный экран»</li>
+<li>Никаких комиссий, никакого review, никаких anti-steering правил</li>
+<li>Минусы: ограничения iOS Safari на push-уведомления, нет в поиске App Store</li>
+<li><strong>Запустить параллельно с iOS-приложением как обходной путь</strong></li>
+</ul>
+<hr>
+<h2 id="6">Раздел 6. Что Олегу делать</h2>
+<ol>
+<li><strong>Прочитать обзор Forbes</strong> «Спрятаться за ширму» — самый плотный live-обзор реальных схем санкционного периода</li>
+<li><strong>Зайти на Easy Payments блог</strong> — посредник публикует кейсы клиентов 2025-2026, можно оценить актуальную ситуацию по срокам и стоимости</li>
+<li><strong>Сравнить Armenia LLC vs Vietnam Individual через <code>lawyer</code>-агента и <code>cfo</code>-агента</strong> — Армения проще по налогам (0% удержания США), Вьетнам имеет один плюс — Квин близкая, доверие</li>
+<li><strong>Подготовить значимый бесплатный уровень в приложении</strong> — онбординг + 1 бесплатная сцена + базовый дашборд. Без этого reject под 4.2 неизбежен</li>
+<li><strong>Параллельно запустить PWA + RuStore</strong> — не складывать все яйца в App Store. PWA можно поднять за неделю, RuStore — за месяц</li>
+</ol>
+<hr>
+<h2 id="7">Раздел 7. Куда вступить чтобы читать дальше</h2>
+<h3 id="telegram-">Telegram-каналы</h3>
+<ul>
+<li><a href="https://tlgrm.ru/channels/@iosdevio">@iosdevio</a> — iOS-разработка, периодически обсуждение review-практик</li>
+<li><a href="https://tlgrm.ru/channels/@iosgr">@iosgr</a> — iOS Good Reads, технический, иногда про санкции</li>
+<li><a href="https://tlgrm.ru/channels/@AppStorePlus">@AppStorePlus</a> — обзоры аппрувов</li>
+<li><strong>Easy Payments Telegram-канал и чат</strong> — активная аудитория с реальными вопросами</li>
+</ul>
+<h3 id="_2">Блоги и форумы</h3>
+<ul>
+<li><a href="https://habr.com/ru/hubs/ios_dev/">habr.com — iOS-разработка</a> — десятки статей про публикацию из РФ за 2024-2026</li>
+<li><a href="https://vc.ru/migration/2714098-kak-otkryt-kompaniyu-za-granicey-dlya-vyplat-app-store-i-google-play">vc.ru — миграция</a> — про юрлица для App Store</li>
+<li><a href="https://developer.apple.com/forums/tags/app-store">Apple Developer Forums — Distribution</a> — англоязычно, кейсы reject</li>
+<li><a href="https://www.reddit.com/r/iOSProgramming/">r/iOSProgramming на Reddit</a> — англоязычно, много live кейсов</li>
+</ul>
+<h3 id="youtube">YouTube</h3>
+<ul>
+<li>На русском канала по этой теме мало. На английском: «Sean Allen», «Logan Koshenka»</li>
+</ul>
+<hr>
+<h2 id="_3">Источники (полный список)</h2>
+<ol>
+<li><a href="https://www.forbes.ru/tekhnologii/543135-spratat-sa-za-sirmu-kak-rossijskie-kompanii-obhodat-sankcii-v-app-store">Forbes — Спрятаться за ширму</a></li>
+<li><a href="https://habr.com/ru/articles/883998/">Habr — Как мы из России опубликовали платное приложение</a></li>
+<li><a href="https://habr.com/ru/articles/1015122/">Habr — Как я прошёл ад публикации в App Store</a></li>
+<li><a href="https://easypayments.online/blog/publikaciya-prilozhenij-v-app-store-iz-rossii">Easy Payments — Публикация приложений в App Store из России</a></li>
+<li><a href="https://easypayments.online/blog/kak-poluchat-vyplaty-ot-app-store-i-google-play">Easy Payments — Получение выплат</a></li>
+<li><a href="https://www.relocation2armenia.com/receiving-payments-from-app-store">Relocation2Armenia — Армянское ИП для выплат App Store</a></li>
+<li><a href="https://developer.apple.com/support/reader-apps/">Apple Developer — Distributing reader apps</a></li>
+<li><a href="https://developer.apple.com/help/app-store-connect/manage-tax-information/provide-tax-information/">Apple Developer — Provide tax information</a></li>
+<li><a href="https://9to5mac.com/2025/08/21/apple-details-new-app-store-taxes-and-price-changes-in-select-countries/">9to5mac — Vietnam taxes August 2025</a></li>
+<li><a href="https://asoworld.com/blog/app-store-tax-price-updates-august-2025-developer-guide/">ASO World — App Store Tax August 2025</a></li>
+<li><a href="https://www.revenuecat.com/blog/growth/apple-anti-steering-ruling-monetization-strategy/">RevenueCat — Apple anti-steering ruling 2025</a></li>
+<li><a href="https://www.revenuecat.com/blog/growth/the-ultimate-guide-to-app-store-rejections/">RevenueCat — Ultimate guide to App Store rejections</a></li>
+<li><a href="https://mjtsai.com/blog/2025/05/02/app-review-guidelines-updated-for-epic-anti-steering/">Michael Tsai — App Review Guidelines Updated for Epic Anti-Steering</a></li>
+<li><a href="https://www.idownloadblog.com/2025/05/02/apple-updates-app-review-guidelines-app-store-apps-external-payments/">idownloadblog — Apple changes rules</a></li>
+<li><a href="https://median.co/blog/reader-apps-on-ios-how-to-distribute-digital-content-without-in-app-purchases">Median.co — iOS reader apps no IAP</a></li>
+<li><a href="https://iossubmissionguide.com/guideline-3-1-in-app-purchase/">iOS Submission Guide — Guideline 3.1</a></li>
+<li><a href="https://adapty.io/blog/app-store-rejection/">Adapty — App Store rejection reasons</a></li>
+<li><a href="https://forgeasc.com/blog/app-store-rejection-reasons">Forge — App Store rejection reasons</a></li>
+<li><a href="https://help.uscreen.tv/en/articles/4316136-app-access-sign-in-only-vs-in-app-purchase">Uscreen — Sign-In Only vs IAP</a></li>
+<li><a href="https://9to5mac.com/2022/10/28/telegram-paid-posts-channels-apple-in-app-purchases/">9to5mac — Telegram paid posts removed</a></li>
+<li><a href="https://vc.ru/migration/2714098-kak-otkryt-kompaniyu-za-granicey-dlya-vyplat-app-store-i-google-play">vc.ru — Открыть компанию за рубежом</a></li>
+<li><a href="https://marcabien.com/en/register-for-apple-developer-from-abroad-step-by-step-guide">MarcaBien — Register Apple Developer From Abroad</a></li>
+<li><a href="https://apps.apple.com/ru/app/%D1%88%D0%B5%D0%B4%D0%B5%D0%B2%D1%80%D1%83%D0%BC/id1671837122">Шедеврум в App Store</a></li>
+<li><a href="https://postium.ru/yandexart-2-5-i-shedevrum-pro/">Postium — Шедеврум Про подписка</a></li>
+<li><a href="https://apps.apple.com/us/app/notion-notes-tasks-ai/id1232780281">Notion в App Store</a></li>
+<li><a href="https://apps.apple.com/us/app/figma/id1152747299">Figma в App Store</a></li>
+</ol>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
