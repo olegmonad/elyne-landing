@@ -27,10 +27,15 @@
     --green: #4CAF50;
   }
 
-  /* Light theme overrides */
+  /* Light theme overrides — applied when TG colorScheme === 'light' */
   [data-theme="light"] {
     --card: #f2f2f7;
     --border: rgba(0,0,0,0.08);
+  }
+  /* Explicit dark theme — ensures dark vars even if TG sends pale bg vars */
+  [data-theme="dark"] {
+    --card: #1e1e1e;
+    --border: rgba(255,255,255,0.07);
   }
   [data-theme="light"] .event-btn:not(.primary) {
     background: rgba(0,0,0,0.07);
@@ -389,7 +394,15 @@
 <script>
 const tg = window.Telegram?.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
-if (tg?.colorScheme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+
+function applyTheme() {
+  const scheme = tg?.colorScheme || 'dark';
+  document.documentElement.setAttribute('data-theme', scheme === 'light' ? 'light' : 'dark');
+}
+applyTheme();
+if (tg) {
+  try { tg.onEvent('themeChanged', applyTheme); } catch (e) {}
+}
 
 const EVENTS_URL    = 'https://elyne-start.online/community/events.json';
 const COMMUNITY_URL    = 'https://t.me/elyne_community';
