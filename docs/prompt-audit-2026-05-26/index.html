@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elyne Prompt System Audit — 2026-05-26</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0f0f1a; color: #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif; line-height: 1.6; }
+.container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+h1 { font-size: 28px; font-weight: 700; color: #f1f5f9; margin-bottom: 8px; }
+h2 { font-size: 20px; font-weight: 600; color: #94a3b8; border-bottom: 1px solid #1e293b; padding-bottom: 8px; margin: 32px 0 16px; }
+h3 { font-size: 16px; font-weight: 600; color: #cbd5e1; margin: 20px 0 8px; }
+.meta { color: #64748b; font-size: 13px; margin-bottom: 24px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 16px 0; }
+.stat-box { background: #1e293b; border-radius: 8px; padding: 16px; }
+.stat-num { font-size: 32px; font-weight: 700; color: #6366f1; }
+.stat-label { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+.bug-box { background: #2d1515; border: 1px solid #ef4444; border-radius: 8px; padding: 16px; margin: 12px 0; }
+.bug-title { color: #ef4444; font-weight: 700; font-size: 14px; margin-bottom: 8px; }
+.bug-text { color: #fca5a5; font-size: 13px; line-height: 1.5; }
+.section { margin: 32px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th { background: #1e293b; color: #94a3b8; padding: 8px 12px; text-align: left; }
+td { padding: 8px 12px; border-bottom: 1px solid #1e293b; color: #cbd5e1; vertical-align: top; }
+tr:hover td { background: #1a2035; }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+.tag-admin { background: #1e3a5f; color: #60a5fa; }
+.tag-code { background: #1a3a2e; color: #34d399; }
+.tag-bug { background: #3a1515; color: #f87171; }
+.tag-ok { background: #1a3a1a; color: #4ade80; }
+.tag-timeout { background: #3a2a00; color: #fbbf24; }
+pre { white-space: pre-wrap; word-break: break-word; }
+.toc { background: #1e293b; border-radius: 8px; padding: 16px; margin: 24px 0; }
+.toc a { color: #6366f1; text-decoration: none; display: block; padding: 4px 0; font-size: 13px; }
+.toc a:hover { color: #818cf8; }
+.note { background: #1a2a3a; border-left: 3px solid #3b82f6; padding: 12px 16px; margin: 12px 0; border-radius: 0 6px 6px 0; font-size: 13px; color: #93c5fd; }
+</style>
+</head>
+<body>
+<div class="container">
+
+
+<h1>Elyne Prompt System Audit</h1>
+<div class="meta">Дата: 2026-05-26 | Источник: elyne.online/admin + код alievdenis1/next-me | Составил: Монад</div>
+
+<div class="toc">
+  <strong style="color:#e2e8f0">Содержание</strong>
+  <a href="#summary">→ Сводка и критические находки</a>
+  <a href="#admin-prompts">→ Admin DB промпты (22 записи)</a>
+  <a href="#sphere-prompts">→ Промпты сфер (11 сфер)</a>
+  <a href="#code-prompts">→ Code-only промпты (15)</a>
+  <a href="#pipeline">→ Pipeline по флоу (14 флоу)</a>
+  <a href="#placeholders">→ Карта плейсхолдеров (22)</a>
+  <a href="#admin-vs-code">→ Admin vs Code сравнение</a>
+  <a href="#bugs">→ Критические находки (3 бага)</a>
+</div>
+
+
+<div class="section" id="summary">
+<h2>Сводка</h2>
+<div class="grid">
+  <div class="stat-box"><div class="stat-num">22</div><div class="stat-label">Admin промптов в DB</div></div>
+  <div class="stat-box"><div class="stat-num">11</div><div class="stat-label">Полностью загружено</div></div>
+  <div class="stat-box"><div class="stat-num">11</div><div class="stat-label">Timeout (сферы + scene_system)</div></div>
+  <div class="stat-box"><div class="stat-num">15</div><div class="stat-label">Code-only промптов</div></div>
+  <div class="stat-box"><div class="stat-num">22</div><div class="stat-label">Плейсхолдеров</div></div>
+  <div class="stat-box"><div class="stat-num" style="color:#ef4444">3</div><div class="stat-label">Критических находки</div></div>
+</div>
+</div>
+
+
+<div class="section" id="bugs">
+<h2>⚠️ Критические находки</h2>
+
+<div class="bug-box">
+  <div class="bug-title">BUG-01 HIGH: CreateScenePhotoAction не добавляет image_instructions</div>
+  <div class="bug-text">
+    <strong>Файл:</strong> app/Actions/Cards/CreateScenePhotoAction.php<br>
+    <strong>Затронутые флоу:</strong> Three-angles first scene + Post-payment first scene<br>
+    <strong>Симптом:</strong> FAL получает промпт без face preservation / quality instructions<br>
+    <strong>Факт:</strong> FAL prompt = scene.detailed_description + relativesIfPresent + clothingBlock<br>
+    <strong>Ожидаемо:</strong> Должен добавляться getImageInstructions() — как в buildFinalPromptText()<br>
+    <strong>Impact:</strong> Первая сцена юзера (самая важная!) без инструкций сохранения лица и качества
+  </div>
+</div>
+
+<div class="bug-box">
+  <div class="bug-title">BUG-02 LOW: Опечатка в ai_questionnaire_question system prompt (ID=21)</div>
+  <div class="bug-text">
+    <strong>Текст:</strong> "вот что <u>изместно</u> о пользователе" → должно быть "известно"<br>
+    <strong>Используется:</strong> как system prompt для OpenRouter при генерации AI-вопросов в анкете<br>
+    <strong>Fix:</strong> Правка в admin elyne.online/admin → запись ID=21
+  </div>
+</div>
+
+<div class="bug-box" style="border-color:#f59e0b;background:#2a2000">
+  <div class="bug-title" style="color:#f59e0b">NOTE-03: Тип three_angles_scene не найден в DB</div>
+  <div class="bug-text" style="color:#fde68a">
+    <strong>Код:</strong> GenerateThreeAnglesJob запрашивает type=three_angles_scene из DB<br>
+    <strong>DB:</strong> Запись с таким типом не найдена в generation_prompts<br>
+    <strong>Риск:</strong> Если job не находит промпт — завершается с ошибкой (Log::error, return)<br>
+    <strong>Проверить:</strong> Возможно, записи тimed out (ID 32-33 не загрузились) или тип используется по другому
+  </div>
+</div>
+</div>
+
+<div class="section" id="admin-prompts"><h2>Admin DB Промпты</h2>
+<table><tr><th>ID</th><th>Тип</th><th>Поле/Имя</th><th>meta_len</th><th>Статус</th><th>Превью</th></tr>
+<tr>
+      <td>1</td>
+      <td><span class="tag tag-admin">profile_photo</span></td>
+      <td>Фото профиля</td>
+      <td>6545</td>
+      <td><span class="tag tag-ok">ok</span></td>
+      <td style="max-width:400px;font-size:11px;font-family:monospace">  ---  ## FIRST SCENE PRODUCTION LAYERS  Это первая сцена жизни пользователя.  Она должна быть не просто красивой картин</td>
+    </tr>
+<tr>
+      <td>2</td>
+      <td><span class="tag tag-admin">field_scene</span></td>
+      <td>Образ я</td>
+      <td>23</td>
+      <td><span class="tag tag-timeout">timeout</span></td>
+      <td style="max-width:400px;font-size:11px;font-family:monospace">[TIMEOUT - not fetched]</td>
+    </tr>
+<tr>
+      <td>3</td>
+      <td><span class="tag tag-admin">field_scene</span></td>
+      <td>Достаток</td>
+      <td>13282</td>
+      <td><span class="tag tag-ok">ok</span></td>
+      <td style="max-width:400px;font-size:11px;font-family:monospace">Ты — AI Scene Architect внутри Elyne.  Твоя задача: создать ОДНУ ultra realistic cinematic сцену из жизни пользователя в</td>
+    </tr>
+<tr>
+      <td>4</td>
+      <td><span class="tag tag-admin">field_scene</span></td>
+      <td>Проявленность</td>
+      <td>23</td>
+      <td><span class="tag tag-timeout">timeout</span></td>
+      <td style="max-width:400px;font-size:11px;font-family:monospace">[TIMEOUT - not fetched]</td>
+    </tr>
+<tr>
+      <td>5</td>
+      <td><span class="tag tag-admin">field_scene</span></td>
+      <td>Отношения</td>
+      <td>23</td>
+      <td><span class="tag tag-timeout">timeout</span></td>
+      <td style="max-width:400px;font-size:11px;font-family:monospace">[TIMEOUT - not fetched]</td>
+    </tr>
+<tr>
+      <td>6</td>
+      <td><span class="tag tag-admin">field_scene</span></td>
+      <td>Очаг</td>
+      <td>23</td>
+      <td><span class="tag tag-timeout">timeout</span></td>
+      <td style="max-width:400px;font-size:11px;font-family:monospace">[TIMEOUT - not fetched]</td>
+    </tr>
+<tr>
+      <td>7</td>
+      <td><span class="tag tag-admin">field_scene</span></td>
+      <td>Творчество</td>
+      <td>23</td>
+      <td><span class="tag tag-timeout">timeout</span></td>
+      <td style="max-width:400px;font-size:11px;font-family:monospace">[TIMEOUT - not fetched]</td>
+    </tr>
+<tr>
+      <td>8</td>
+      <td><span class="tag tag-admin">field_scene</span></td>
+      <td>Образование</td>
+      <td>23</td>
+      <td><span class="tag tag-timeout">timeout</span></td>
+      <td style="max-width:400px;font-size:11px;font-family:monospace">[TIMEOUT - not fetched]</td>
+    </tr>
+<tr>
+      <td>9</td>
+      <td><span class="tag tag-admin">field_scene</span></td>
+      <td>Развитие и мудрость</td>
+      <td>23</td>
+      <td><span class="tag tag-timeout">timeout</span></td>
+      <td style="max-width:400px;font-size:11px;font-family:monospace">[TIMEOUT - not fetched]</td>
+    </tr>
+<tr>
+      <td>10</td>
+      <td><span class="tag tag-admin">field_scene</span></td>
+      <td>Социальность</td>
+      <td>23</td>
+      <td><span class="tag tag-timeout">timeout</span></td>
+      <td style="max-width:400px;font-size:11px;font-family:monospace">[TIMEOUT - not fetched]</td>
+    </tr>
+<tr>
+      <td>11</td>
+      <td><span class="tag tag-admin">field_scene</span></td>
+      <td>Окружение</td>
+      <td>23</td>
+      <td><span class="tag tag-timeout">timeout</span></td>
+      <td style="max-width:400px;font-size:11px;font-family:monospace">[TIMEOUT - not fetched]</td>
+    </tr>
+<tr>
+      <td>12</td>
+      <td><span class="tag tag-admin">image_instructions</span></td>
+      <td>Инструкции генерации изображений</td>
+      <td>5472</td>
+      <td><span class="tag tag-ok">ok</span></td>
+      <td style="max-width:400px;font-size:11px;font-family:monospace">  ---  ## FIRST SCENE VISUAL REALISM ADDITIONS  Изображение должно выглядеть как настоящий кадр из жизни человека, а не </td>
+    </tr>
+<tr>
+      <td>14</td>
+      <td><span class="tag tag-admin">relatives_instructions</span></td>
+      <td>Инструкции интеграции родственников</td>
+      <td>2235</td>
+      <td><span class="tag tag-ok">ok</span></td>
+      <td style="max-width:400px;font-size:11px;font-family:monospace">ВСЕ люди со ВСЕХ предоставленных изображений ДОЛЖНЫ появиться ВМЕСТЕ в финальном результате. ЦЕЛЬ: Финальное изображение</td>
+    </tr>
+<tr>
+      <td>15</td>
+      <td><span class="tag tag-admin">profile_summary_system</span></td>
+      <td>Промпт генерации Profile Summary</td>
+      <td>13239</td>
+      <td><span class="tag tag-ok">ok</span></td>
+      <td style="max-width:400px;font-size:11px;font-family:monospace">================================ ВХОДНЫЕ ДАННЫЕ ================================ Пол пользователя: {gender} Возраст / ко</td>
+    </tr>
+<tr>
+      <td>16</td>
+      <td><span class="tag tag-admin">affirmation</span></td>
+      <td>Аффирмация</td>
+      <td>618</td>
+      <td><span class="tag tag-ok">ok</span></td>
+      <td style="max-width:400px;font-size:11px;font-family:monospace">  ---  ## FIRST SCENE AFFIRMATION ADDITIONS  Аффирмация после первой сцены не должна мотивировать в лоб.  Её задача: - з</td>
+    </tr>
+<tr>
+      <td>19</td>
+      <td><span class="tag tag-admin">scene_affirmation</span></td>
+      <td>Аффирмация сцены</td>
+      <td>388</td>
+      <td><span class="tag tag-ok">ok</span></td>
+      <td style="max-width:400px;font-size:11px;font-family:monospace">РОЛЬ: ты пишешь аффирмацию-якорь для конкретной сцены.  ВХОД: - сцена: {scene_title} — {scene_short_description} - профи</td>
+    </tr>
+<tr>
+      <td>20</td>
+      <td><span class="tag tag-admin">photo_session</span></td>
+      <td>Фотосессия</td>
+      <td>14184</td>
+      <td><span class="tag tag-ok">ok</span></td>
+      <td style="max-width:400px;font-size:11px;font-family:monospace">Ты — AI визуальный режиссёр мирового уровня и режиссёр последовательных жизненных сцен.  Твоя задача — создать ОДИН новы</td>
+    </tr>
+<tr>
+      <td>21</td>
+      <td><span class="tag tag-admin">ai_questionnaire_question</span></td>
+      <td>AI Questionnaire Question (system prompt)</td>
+      <td>356</td>
+      <td><span class="tag tag-ok">ok</span></td>
+      <td style="max-width:400px;font-size:11px;font-family:monospace">Cформулируй ОДИН уточняющий вопрос пользователю для сферы {sphere_title}  вот что изместно о пользователе: {gender} {pro</td>
+    </tr>
+<tr>
+      <td>32</td>
+      <td><span class="tag tag-admin">scene_system</span></td>
+      <td>System prompt генерации сцен</td>
+      <td>23</td>
+      <td><span class="tag tag-timeout">timeout</span></td>
+      <td style="max-width:400px;font-size:11px;font-family:monospace">[TIMEOUT - not fetched]</td>
+    </tr>
+<tr>
+      <td>33</td>
+      <td><span class="tag tag-admin">field_scene</span></td>
+      <td>Тренды</td>
+      <td>23</td>
+      <td><span class="tag tag-timeout">timeout</span></td>
+      <td style="max-width:400px;font-size:11px;font-family:monospace">[TIMEOUT - not fetched]</td>
+    </tr>
+<tr>
+      <td>34</td>
+      <td><span class="tag tag-admin">wish_scene</span></td>
+      <td>Пожелание (Wish Scene)</td>
+      <td>1055</td>
+      <td><span class="tag tag-ok">ok</span></td>
+      <td style="max-width:400px;font-size:11px;font-family:monospace">Ты — AI-режиссёр сцены Elyne.  Пользователь находится внутри фотосессии сферы жизни «{sphere_title}» ({sphere_definition</td>
+    </tr>
+<tr>
+      <td>35</td>
+      <td><span class="tag tag-admin">scene_question</span></td>
+      <td>Сценический вопрос Elyne</td>
+      <td>386</td>
+      <td><span class="tag tag-ok">ok</span></td>
+      <td style="max-width:400px;font-size:11px;font-family:monospace">Сфера: {sphere_title} Профиль пользователя: {profile_summary} Ответы микроопросника по этой сфере: {micro_adjustment_ans</td>
+    </tr>
+</table></div>
+<div class="section" id="sphere-prompts"><h2>Промпты сфер (field_scene)</h2>
+<div class="note">Все сферы используют тип field_scene. Промпт резолвится через resolveForSphere() с плейсхолдерами {profile_summary}, {onboarding_answers}, {sphere_title}, {micro_adjustment_answers}, {chosen_clothing_style}. 
+Сфера Достаток (ID=3) — единственная с другой структурой ("AI Scene Architect" vs "AI визуальный режиссёр").</div>
+<table><tr><th>ID</th><th>field_name (admin)</th><th>Sphere slug</th><th>Структура промпта</th><th>Статус</th></tr>
+<tr><td>2</td><td>Образ я</td><td>self</td><td style="font-size:11px;font-family:monospace">[TIMEOUT - not fetched]</td><td><span class="tag tag-timeout">timeout</span></td></tr>
+<tr><td>3</td><td>Достаток</td><td>—</td><td style="font-size:11px;font-family:monospace">Ты — AI Scene Architect внутри Elyne.
+
+Твоя задача:
+создать ОДНУ ultra realistic cinematic сцену
+из </td><td><span class="tag tag-ok">ok</span></td></tr>
+<tr><td>4</td><td>Проявленность</td><td>realization</td><td style="font-size:11px;font-family:monospace">[TIMEOUT - not fetched]</td><td><span class="tag tag-timeout">timeout</span></td></tr>
+<tr><td>5</td><td>Отношения</td><td>love</td><td style="font-size:11px;font-family:monospace">[TIMEOUT - not fetched]</td><td><span class="tag tag-timeout">timeout</span></td></tr>
+<tr><td>6</td><td>Очаг</td><td>home</td><td style="font-size:11px;font-family:monospace">[TIMEOUT - not fetched]</td><td><span class="tag tag-timeout">timeout</span></td></tr>
+<tr><td>7</td><td>Творчество</td><td>children</td><td style="font-size:11px;font-family:monospace">[TIMEOUT - not fetched]</td><td><span class="tag tag-timeout">timeout</span></td></tr>
+<tr><td>8</td><td>Образование</td><td>creativity</td><td style="font-size:11px;font-family:monospace">[TIMEOUT - not fetched]</td><td><span class="tag tag-timeout">timeout</span></td></tr>
+<tr><td>9</td><td>Развитие и мудрость</td><td>wisdom</td><td style="font-size:11px;font-family:monospace">[TIMEOUT - not fetched]</td><td><span class="tag tag-timeout">timeout</span></td></tr>
+<tr><td>10</td><td>Социальность</td><td>freedom</td><td style="font-size:11px;font-family:monospace">[TIMEOUT - not fetched]</td><td><span class="tag tag-timeout">timeout</span></td></tr>
+<tr><td>11</td><td>Окружение</td><td>environment</td><td style="font-size:11px;font-family:monospace">[TIMEOUT - not fetched]</td><td><span class="tag tag-timeout">timeout</span></td></tr>
+<tr><td>33</td><td>Тренды</td><td>trends</td><td style="font-size:11px;font-family:monospace">[TIMEOUT - not fetched]</td><td><span class="tag tag-timeout">timeout</span></td></tr>
+</table>
+<h3>Пример полного промпта: Достаток (ID=3)</h3>
+<pre style="background:#1a1a2e;padding:16px;border-radius:6px;font-size:11px;max-height:400px;overflow-y:auto;border:1px solid #2d3748">Ты — AI Scene Architect внутри Elyne.
+
+Твоя задача:
+создать ОДНУ ultra realistic cinematic сцену
+из жизни пользователя
+в сфере:
+«Ресурсы и уровень жизни».
+
+Elyne — это не генератор красивых картинок.
+Это система проживания возможной версии своей жизни.
+
+Сцена должна ощущаться:
+— живой;
+— проживаемой;
+— эмоционально узнаваемой;
+— cinematic;
+— как настоящий фрагмент жизни,
+а не как постановочная визуализация желания.
+
+================================
+ВХОДНЫЕ ДАННЫЕ
+================================
+
+Название сферы: {sphere_title}
+
+Анализ профиля пользователя:
+{profile_summary}
+
+Общие ответы пользователя:
+{profile_summary}
+
+Ответы опросника этой сферы:
+{micro_adjustment_answers}
+
+Выбранный стиль одеждый:
+{chosen_clothing_style}
+
+
+================================
+ГЛАВНЫЙ ПРИНЦИП
+================================
+
+Не показывай:
+пустую демонстрацию богатства,
+luxury ради luxury
+или fake success aesthetic.
+
+Покажи:
+КАК ОЩУЩАЕТСЯ ЖИЗНЬ,
+в которой человек
+имеет ресурс жить так,
+как ему действительно хочется.
+
+Luxury, масштаб и высокий уровень жизни —
+РАЗРЕШЕНЫ,
+если они ощущаются
+естественной частью жизни человека.
+
+================================
+ФОКУС СФЕРЫ
+================================
+
+Эта сфера —
+про:
+— уровень жизни;
+— ресурсность;
+— свободу выбора;
+— возможности;
+— пространство жизни;
+— доступ;
+— масштаб;
+— mobility;
+— качество среды;
+— ощущение:
+«я могу жить так, как хочу».
+
+================================
+RESOURCE SIGNALS
+================================
+
+Сцена должна содержать
+естественные признаки ресурсной жизни:
+
+— свобода перемещения;
+— высокий уровень среды;
+— ощущение доступа;
+— масштаб пространства;
+— отсутствие ограничений;
+— premium mobility;
+— качество архитектуры;
+— качество деталей;
+— уровень решений;
+— ощущение:
+«у человека есть возможность жить широко».
+
+================================
+ОСНОВНЫЕ ПРАВИЛА
+================================
+
+DO:
+— создавай lived-in cinematic moments;
+— показывай жизнь в процессе;
+— передавай состояние через среду, движение и выбор;
+— создавай aspirational realism.
+
+DON’T:
+— не делай posing shots;
+— не используй stock-photo aesthetic;
+— не делай empty luxury flex;
+— не делай generic “successful success”.
+
+================================
+ЖИЗНЬ ДОЛЖНА ПРОИСХОДИТЬ
+================================
+
+Используй micro-actions и lived moments.
+
+Например:
+— прибывает в пространство после перелёта;
+— выходит из машины и идёт ко входу;
+— собирает вещи перед поездкой;
+— переключает музыку во время движения;
+— заходит в красивое пространство;
+— выбирает маршрут или место;
+— возвращается после тренировки;
+— взаимодействует со средой естественно;
+— проживает момент, а не позирует.
+
+Не:
+— «стоит»;
+— «смотрит в окно»;
+— «держит кофе»;
+— generic laptop lifestyle;
+— Pinterest creator loft aesthetic.
+
+================================
+МАСШТАБ И ТИП СЦЕНЫ
+================================
+
+Сцена МОЖЕТ быть:
+— камерной;
+— масштабной;
+— динамичной;
+— premium;
+— luxury;
+— movement-based;
+— global lifestyle;
+— atmospheric;
+— quiet premium;
+— immersive;
+— cinematic everyday life.
+
+Выбирай тип сцены,
+который лучше всего соответствует
+ответам пользователя.
+
+================================
+ПЕРСПЕКТИВА СЦЕНЫ
+================================
+
+scene_perspective_choice определяет:
+— first-person immersive;
+— cinematic third-person;
+— atmospheric observer;
+— film fragment;
+— AI-selected perspective.
+
+Если:
+— ответы про движение, свободу, вовлечённость →
+  immersive first-person POV;
+
+— ответы про пространство, уровень жизни, среду →
+  wide cinematic third-person;
+
+— ответы про внутреннее состояние, спокойствие, атмосферу →
+  atmospheric observer framing.
+
+================================
+ВИЗУАЛЬНЫЙ ЯЗЫК СФЕРЫ
+================================
+
+Используй:
+— тёплый янтарный свет;
+— мягкий дневной свет;
+— premium tactile textures;
+— лён;
+— кожа;
+— латунь;
+— камень;
+— реалистичную архитектуру;
+— ощущение воздуха и пространства;
+— elevated realism;
+— natural premium atmosphere.
+
+Сцена должна ощущаться:
+— premium;
+— современной;
+— естественной;
+— lived-in;
+— aspirational;
+— emotionally real.
+
+================================
+ВЫХОДНОЙ ФОРМАТ
+================================
+
+Верни сцену СТРУКТУРИРОВАННО:
+
+SCENE TYPE:
+(тип сцены)
+
+ENVIRONMENT:
+(пространство и среда)
+
+MAIN ACTION:
+(что происходит)
+
+EMOTIONAL CORE:
+(что ощущается)
+
+CAMERA &amp; PERSPECTIVE:
+(ракурс и cinematic language)
+
+LIGHT &amp; PALETTE:
+(свет, цвет, материалы)
+
+RESOURCE SIGNALS:
+(через что ощущается уровень жизни)
+
+WHAT MAKES THE SCENE FEEL REAL:
+(какие детали делают сцену живой)
+
+FINAL CINEMATIC PROMPT:
+(финальный цельный prompt для image/video generation)
+
+================================
+СТИЛЬ ИЗОБРАЖЕНИЯ
+================================
+
+— ultra realistic
+— cinematic photography
+— modern premium realism
+— aspirational realism
+— emotional realism
+— believable lighting
+— natural skin texture
+— atmospheric composition
+— Apple / A24 / Netflix realism
+— no artificial perfection
+
+================================
+ГЛАВНАЯ ЦЕЛЬ
+================================
+
+Создай сцену,
+после которой человек ощущает:
+
+«Это не просто красивая картинка.
+Это как будто фрагмент жизни,
+в которой я действительно живу
+шире, свободнее и на своём уровне».
+
+Сформируй на РУССКОМ языке
+
+
+## Style Interpretation Rules
+
+Блок «Выбранный стиль одежды» — это не буквальный список вещей.
+
+Используй его как источник визуального направления:
+- силуэт;
+- степень расслабленности;
+- степень собранности;
+- современность подачи;
+- тип уверенности;
+- цветовая логика;
+- допустимые материалы;
+- ограничения Avoid.
+
+Перед описанием одежды в сцене адаптируй стиль под:
+- сферу;
+- конкретный угол сцены;
+- среду;
+- действие человека;
+- уровень жизни;
+- настроение сцены;
+- пол и возрастной контекст пользователя.
+
+Не копируй все элементы Base Wardrobe. Выбери 1–3 уместных стилевых признака и собери цельный образ.
+
+Если стиль конфликтует со сценой, не ломай сцену под стиль. Создай более мягкую, уместную версию стиля.
+
+Стиль должен выглядеть современно, естественно и не костюмно.
+
+Запрещено:
+- одевать человека как манекен из справочника стиля;
+- использовать все элементы стиля одновременно;
+- превращать стиль в карикатуру;
+- делать устаревший Pinterest-образ;
+- делать образ слишком домашним, если сцена требует собранности;
+- делать образ слишком нарядным, если сцена приватная.
+
+## Multi-Style Interpretation
+
+Если пользователь выбрал несколько стилей, не пытайся визуально показать все стили одновременно.
+
+Multi-style не означает fashion fusion, коллаж вещей или экспериментальное смешение эстетик.
+
+Сначала определи:
+- какой стиль является главным identity signal;
+- какие стили совместимы с текущей сценой;
+- какие сигналы должны быть ослаблены;
+- какие сигналы лучше не использовать в этой сцене.
+
+Secondary styles должны влиять мягко:
+- на посадку;
+- на уровень расслабленности;
+- на степень формальности;
+- на материалы;
+- на силуэт;
+- на настроение;
+- на небольшие детали.
+
+Не создавай stylistic collage.
+
+Комбинация должна выглядеть culturally believable: так, как реальный современный человек действительно мог бы одеваться в этой ситуации.
+
+Запрещено:
+- механически смешивать wardrobe elements;
+- пытаться показать все выбранные стили одновременно;
+- создавать AI-looking hybrid aesthetics;
+- делать образ ради оригинальности;
+- смешивать несовместимые fashion signals без реальной стилистической логики.
+
+Если стили конфликтуют:
+- выбери dominant style;
+- остальные используй только как слабые influence modifiers;
+- при необходимости полностью подави неподходящий стиль для этой сцены.
+
+Стиль должен выглядеть как цельный вкус одного человека, а не как результат сложения нескольких moodboard.
+
+## Style Is Not Scene Selection
+
+Выбранный стиль одежды не должен самостоятельно выбирать сцену, профессию, действие или среду.
+
+Сначала выбери сцену по:
+- profile_summary;
+- onboarding_answers;
+- sphere context;
+- micro_adjustment_answers;
+- Key Answer Locks;
+- environment type;
+- life level;
+- expression model;
+- social signal;
+- generation mode.
+
+После этого адаптируй стиль под выбранную сцену.
+
+Если стиль и сцена конфликтуют, не меняй сцену под стиль. Сделай стиль более мягким, уместным и реалистичным.
+
+Не выводи из стиля:
+- профессию;
+- уровень дохода;
+- lifestyle archetype;
+- страну;
+- тип дома;
+- тип деятельности;
+- социальную роль.
+
+## Sphere Behavioral Engine
+
+Эта сфера должна отличаться не только темой, но и способом проживания жизни.
+
+Перед построением сцены определи:
+
+1. Life Pacing
+Как течёт жизнь в этой сфере:
+- медленно;
+- свободно;
+- насыщенно;
+- интимно;
+- динамично;
+- устойчиво;
+- глубоко;
+- открыто.
+
+2. Movement Logic
+Как человек движется:
+- идёт;
+- входит;
+- выходит;
+- приближается;
+- взаимодействует;
+- наблюдает;
+- выбирает направление;
+- находится в процессе;
+- проживает паузу.
+
+3. Environmental Behavior
+Как ведёт себя пространство:
+- открывает мир;
+- защищает;
+- собирает людей;
+- даёт ресурс;
+- создаёт intimacy;
+- показывает масштаб;
+- поддерживает развитие.
+
+4. Emotional Density
+Какая эмоциональная плотность сцены:
+- лёгкая;
+- тёплая;
+- спокойная;
+- насыщенная;
+- глубокая;
+- заряженная;
+- созерцательная;
+- живая.
+
+5. World Interaction
+Как человек взаимодействует с миром:
+- через движение;
+- через людей;
+- через выбор;
+- через созидание;
+- через близость;
+- через влияние;
+- через отдых;
+- через принадлежность.
+
+Сфера должна формировать не просто красивую сцену, а уникальный способ проживания жизни.
+
+## Sphere Differentiation Rule
+
+Сцена должна быть уникальной для этой сферы.
+
+Если эту же сцену можно без изменений перенести в другую сферу — сцена слабая.
+
+Перед финальной генерацией проверь:
+
+- чем эта сцена отличается от сцены про ресурсы?
+- чем отличается от сцены про свободу?
+- чем отличается от сцены про отношения?
+- чем отличается от сцены про реализацию?
+- чем отличается от сцены про состояние?
+
+Сфера должна менять:
+- тип действия;
+- ритм;
+- пространство;
+- плотность среды;
+- эмоциональный фокус;
+- способ присутствия человека;
+- narrative behavior.
+
+Не делай разные сферы вариациями одной красивой жизни.
+
+## Relatives / Close People Optional Layer
+
+Если у пользователя есть загруженные близкие или relatives_instructions, учитывай их как мягкий relational context.
+
+Не вставляй близких автоматически в каждый кадр.
+
+Близкие появляются только если это:
+- уместно для сферы;
+- уместно для сцены;
+- поддерживает emotional truth;
+- усиливает ощущение жизни;
+- не ломает фокус пользователя;
+- не превращает сцену в семейную постановку.
+
+Близкие могут проявляться:
+- в кадре;
+- частично;
+- со спины;
+- в движении рядом;
+- через жест;
+- через присутствие рядом;
+- через следы жизни;
+- через bokeh / background;
+- через ожидание, встречу, совместное действие.
+
+Если сфера про отношения, дом, близость, семью, окружение — близкие могут иметь более сильное влияние.
+
+Если сфера про свободу, ресурсы, реализацию, состояние — близкие должны появляться только если они естественно поддерживают сцену.
+
+Не придумывай романтического партнёра, детей или семью без данных пользователя.
+
+Если пользователь явно просит добавить близких через комментарий — использовать это как сильный directing signal.
+
+## Relational Density By Sphere
+
+Определи, насколько в этой сфере уместно присутствие других людей.
+
+Low relational density:
+- личное состояние;
+- одиночное восстановление;
+- личная свобода;
+- внутренний выбор.
+
+Medium relational density:
+- свобода в мире;
+- ресурсы;
+- развитие;
+- реализация;
+- окружение;
+- стиль жизни.
+
+High relational density:
+- отношения;
+- семья;
+- близость;
+- партнёрство;
+- социальная принадлежность.
+
+Даже при high relational density пользователь остаётся главным эмоциональным центром сцены.
+
+Другие люди не должны перетягивать сцену на себя.
+
+## Scene-Type Per Sphere
+
+Перед генерацией выбери dominant scene type, соответствующий сфере.
+
+Возможные scene types:
+- movement
+- restoration
+- connection
+- intimacy
+- realization
+- resource_access
+- exploration
+- belonging
+- influence
+- transition
+- private_life
+- world_expansion
+- embodied_presence
+
+Scene type должен соответствовать сфере, а не быть случайным.
+## Sphere Behavioral Profile — Ресурсы и уровень жизни
+
+Life Pacing:
+устойчивый, свободный, уверенный, без спешки.
+
+Movement Logic:
+выбор, доступ, спокойное управление, перемещение между качественными пространствами, возможность не торопиться.
+
+Environment Behavior:
+пространство должно ощущаться поддерживающим, качественным, ресурсным, но не демонстративно богатым.
+
+Emotional Density:
+устойчивость, ease, внутренняя свобода, зрелое спокойствие, чувство опоры.
+
+Relational Density:
+medium. Люди могут быть как часть среды, команды, партнёрства или сервиса, но не должны создавать корпоративный театр.
+
+World Interaction:
+через доступ к возможностям, качество среды, свободу решений, пространство, время, mobility.
+
+Best Scene Types:
+resource_access, private_life, transition, world_expansion, calm_control.
+
+Avoided Scene Types:
+executive cliché, crypto flex, laptop wealth, phone with money, luxury bragging.
+
+Cliché Risks:
+мужчина у окна, экран с деньгами, небоскрёб, деловой костюм без жизни, богатство в лоб.
+
+Visual Energy:
+тёплый свет, качественные материалы, спокойная насыщенность, ощущение &quot;жизнь поддерживает меня&quot;.
+
+Narrative Behavior:
+ресурсы должны показываться как расширение возможностей жизни, а не как объект обладания.
+
+На русском языке </pre>
+</div>
+<div class="section" id="code-prompts"><h2>Code-only Промпты (hardcoded в PHP)</h2>
+<table><tr><th>ID</th><th>Имя</th><th>Файл</th><th>Admin override</th><th>Severity</th><th>Preview</th></tr>
+<tr>
+      <td>cp-01</td>
+      <td><span class="tag tag-code">image_instructions_fallback</span></td>
+      <td style="font-size:11px">app/Services/PromptGenerationService.php:17</td>
+      <td style="font-size:11px">admin GenerationPrompt type=image_instructions (ID=12)</td>
+      <td style="color:#4ade80">normal</td>
+      <td style="font-size:11px;font-family:monospace;max-width:300px">КРИТИЧЕСКИ ВАЖНО: лицо человека должно быть сохранено с его чертами и мимикой как на исходном фото, </td>
+    </tr>
+<tr>
+      <td>cp-02</td>
+      <td><span class="tag tag-code">relatives_instructions_fallback</span></td>
+      <td style="font-size:11px">app/Services/PromptGenerationService.php:24</td>
+      <td style="font-size:11px">admin GenerationPrompt type=relatives_instructions (ID=14)</td>
+      <td style="color:#4ade80">normal</td>
+      <td style="font-size:11px;font-family:monospace;max-width:300px">ВСЕ люди со ВСЕХ предоставленных изображений ДОЛЖНЫ появиться ВМЕСТЕ в финальном результате.</td>
+    </tr>
+<tr>
+      <td>cp-03</td>
+      <td><span class="tag tag-code">append_comment_format</span></td>
+      <td style="font-size:11px">app/Services/PromptGenerationService.php:109</td>
+      <td style="font-size:11px">NOT admin-editable — code-only format</td>
+      <td style="color:#4ade80">normal</td>
+      <td style="font-size:11px;font-family:monospace;max-width:300px">Пожелание: {userComment}</td>
+    </tr>
+<tr>
+      <td>cp-04</td>
+      <td><span class="tag tag-code">local_edit_guard</span></td>
+      <td style="font-size:11px">app/Jobs/InterpretWishAndGenerateJob.php:~130</td>
+      <td style="font-size:11px">NOT admin-editable — safety guard code-only</td>
+      <td style="color:#4ade80">normal</td>
+      <td style="font-size:11px;font-family:monospace;max-width:300px">ЭТО ЛОКАЛЬНАЯ ПРАВКА: не меняй лицо, возраст, общий образ человека, фон, композицию, одежду — измени</td>
+    </tr>
+<tr>
+      <td>cp-05</td>
+      <td><span class="tag tag-code">anti_duplication_block</span></td>
+      <td style="font-size:11px">app/Actions/Scenes/GenerateScenesAction.php</td>
+      <td style="font-size:11px">NOT admin-editable — built from DB of existing scenes</td>
+      <td style="color:#4ade80">normal</td>
+      <td style="font-size:11px;font-family:monospace;max-width:300px">ВАЖНО: для этой сферы пользователю уже были предложены следующие сцены: {existing_scene_titles}. Сге</td>
+    </tr>
+<tr>
+      <td>cp-06</td>
+      <td><span class="tag tag-code">fallback_field_scene_metaprompt</span></td>
+      <td style="font-size:11px">app/Actions/Spheres/AutoCreateFieldSceneMetapromptAction.php:15</td>
+      <td style="font-size:11px">Used when no sphere prompt exists in DB — replaced by clone </td>
+      <td style="color:#4ade80">normal</td>
+      <td style="font-size:11px;font-family:monospace;max-width:300px">Сгенерируй варианты сцены для сферы «{field_name}».  Контекст пользователя: {onboarding_answers}  Пр</td>
+    </tr>
+<tr>
+      <td>cp-07</td>
+      <td><span class="tag tag-code">three_angles_stub_fallback</span></td>
+      <td style="font-size:11px">app/Jobs/GenerateThreeAnglesJob.php:~85</td>
+      <td style="font-size:11px">NOT admin-editable — emergency stub</td>
+      <td style="color:#4ade80">normal</td>
+      <td style="font-size:11px;font-family:monospace;max-width:300px">[{&quot;title&quot;:&quot;[stub] Угол 1&quot;,&quot;short_description&quot;:&quot;Тихое.&quot;,&quot;detailed_description&quot;:&quot;[stub] Внутренний тих</td>
+    </tr>
+<tr>
+      <td>cp-08</td>
+      <td><span class="tag tag-code">wish_scene_context_block</span></td>
+      <td style="font-size:11px">app/Services/Ai/OpenRouterService.php:~880</td>
+      <td style="font-size:11px">NOT admin-editable — structural context wrapper</td>
+      <td style="color:#4ade80">normal</td>
+      <td style="font-size:11px;font-family:monospace;max-width:300px">============== ОРИГИНАЛЬНАЯ СЦЕНА ============== {originalScene}  ============== ПОЖЕЛАНИЕ ПОЛЬЗОВАТ</td>
+    </tr>
+<tr>
+      <td>cp-09</td>
+      <td><span class="tag tag-code">photo_session_context_block</span></td>
+      <td style="font-size:11px">app/Services/Ai/OpenRouterService.php:~740</td>
+      <td style="font-size:11px">NOT admin-editable — structural context wrapper</td>
+      <td style="color:#4ade80">normal</td>
+      <td style="font-size:11px;font-family:monospace;max-width:300px">============== ОРИГИНАЛЬНЫЙ ПРОМПТ ДЛЯ FAL ============== {originalFullPrompt}  ============== УЖЕ С</td>
+    </tr>
+<tr>
+      <td>cp-10</td>
+      <td><span class="tag tag-code">classify_wish_comment_prompt</span></td>
+      <td style="font-size:11px">app/Services/Ai/OpenRouterService.php:~820</td>
+      <td style="font-size:11px">NOT admin-editable — pure classification logic</td>
+      <td style="color:#4ade80">normal</td>
+      <td style="font-size:11px;font-family:monospace;max-width:300px">Текущая сцена: {currentScene}  Комментарий пользователя: &quot;{userComment}&quot;  Задача: определи тип комме</td>
+    </tr>
+<tr>
+      <td>cp-11</td>
+      <td><span class="tag tag-code">scene_system_fallback</span></td>
+      <td style="font-size:11px">app/Services/Ai/OpenRouterService.php:~37</td>
+      <td style="font-size:11px">admin GenerationPrompt type=scene_system (ID=32)</td>
+      <td style="color:#4ade80">normal</td>
+      <td style="font-size:11px;font-family:monospace;max-width:300px">Ты — креативный сценарист визуализаций. Сгенерируй {count} вариант(а/ов) сцены. Ответь строго в форм</td>
+    </tr>
+<tr>
+      <td>cp-12</td>
+      <td><span class="tag tag-code">profile_summary_fallback</span></td>
+      <td style="font-size:11px">app/Services/Ai/OpenRouterService.php:~246</td>
+      <td style="font-size:11px">admin GenerationPrompt type=profile_summary_system (ID=15)</td>
+      <td style="color:#4ade80">normal</td>
+      <td style="font-size:11px;font-family:monospace;max-width:300px">Ты — психолог и консультант по персональному брендингу. Проанализируй профиль человека и создай крат</td>
+    </tr>
+<tr>
+      <td>cp-13</td>
+      <td><span class="tag tag-code">ai_questionnaire_system_fallback</span></td>
+      <td style="font-size:11px">app/Services/Ai/OpenRouterService.php:~793</td>
+      <td style="font-size:11px">admin GenerationPrompt type=ai_questionnaire_question (ID=21</td>
+      <td style="color:#4ade80">normal</td>
+      <td style="font-size:11px;font-family:monospace;max-width:300px">Ты ассистент. На основе метапромпта сформулируй ОДИН уточняющий вопрос пользователю. Не задавай неск</td>
+    </tr>
+<tr>
+      <td>cp-14</td>
+      <td><span class="tag tag-code">json_schema_appended_code_side</span></td>
+      <td style="font-size:11px">app/Services/Ai/OpenRouterService.php (multiple)</td>
+      <td style="font-size:11px">NOT admin-editable — hardcoded rule to prevent admin from br</td>
+      <td style="color:#4ade80">normal</td>
+      <td style="font-size:11px;font-family:monospace;max-width:300px">Per method: generateThreeAngles → {&quot;scenes&quot;:[...]}, generateSceneAffirmation → {&quot;affirmation_text&quot;:&quot;</td>
+    </tr>
+<tr>
+      <td>cp-15</td>
+      <td><span class="tag tag-code">bug_create_scene_photo_missing_image_instructions</span></td>
+      <td style="font-size:11px">app/Actions/Cards/CreateScenePhotoAction.php:~60</td>
+      <td style="font-size:11px">BUG: should call PromptGenerationService::getImageInstructio</td>
+      <td style="color:#ef4444">HIGH</td>
+      <td style="font-size:11px;font-family:monospace;max-width:300px">MISSING — CreateScenePhotoAction builds FAL prompt as: scene.detailed_description + relativesIfPrese</td>
+    </tr>
+</table></div>
+<div class="section" id="pipeline"><h2>Pipeline по флоу</h2>
+<div class="note">Полная карта пайплайна: <a href="pipeline-map.md" style="color:#6366f1">pipeline-map.md</a></div>
+
+<h3>Flow 1: Profile Summary (GenerateProfileAnalysisJob)</h3>
+<pre style="background:#1a1a2e;padding:12px;border-radius:6px;font-size:11px">
+ADMIN profile_summary_system (ID=15) → resolvedPrompt → OpenRouter → Card.profile_summary
+  └─ Placeholders: {gender}, {age}, {profile_extra}, {onboarding_answers}, {clothing_styles}
+  └─ maxTokens: 3000 | JSON schema appended code-side: {"summary":"..."}
+→ GenerateAffirmationAction: ADMIN affirmation (ID=16) → Card.affirmation_text
+</pre>
+
+<h3>Flow 2: First Scene / Three Angles (GenerateThreeAnglesJob)</h3>
+<pre style="background:#1a1a2e;padding:12px;border-radius:6px;font-size:11px">
+ADMIN three_angles_scene [NOT FOUND in DB!] → resolveForSphere() → OpenRouter generateThreeAngles()
+  └─ 3 scenes × (title + short_description + detailed_description)
+→ CreateScenePhotoAction (×3):
+  ⚠️ FAL prompt = scene.detailed_description + relatives? + clothing
+  ⚠️ MISSING: image_instructions (BUG-01)
+</pre>
+
+<h3>Flow 3: Sphere Scene Initial (DispatchSpherePhotoAction)</h3>
+<pre style="background:#1a1a2e;padding:12px;border-radius:6px;font-size:11px">
+buildFinalPromptText(scene.detailed_description, userScene, comment):
+  scene.detailed_description
+  + ADMIN image_suffix (per sphere if exists)  
+  + ADMIN image_instructions (ID=12) ← correct
+  + "Пожелание: {comment}" if comment
+  + clothingBlock
+→ GenerateImageJob → FAL (userPhotoUrl=selfie)
+</pre>
+
+<h3>Flow 4: Wish/Comment (InterpretWishAndGenerateJob)</h3>
+<pre style="background:#1a1a2e;padding:12px;border-radius:6px;font-size:11px">
+classifyWishComment(comment, originalScene)
+  ├─ LOCAL_EDIT → buildCommentOnlyPrompt + LOCAL_EDIT guard → FAL (base image=previous)
+  └─ CONTEXT_SHIFT → generateWishScene(wish_scene_prompt, originalScene, wish) → enrichedScene
+       └─ code context block [cp-08] + ADMIN wish_scene (ID=34) + image_instructions
+       → FAL (userPhotoUrl=selfie)
+</pre>
+
+<h3>Flow 5: Photo Session (CreatePhotoSessionVariantJob)</h3>
+<pre style="background:#1a1a2e;padding:12px;border-radius:6px;font-size:11px">
+resolveWithVariants(ADMIN photo_session (ID=20), card, sphere, priorVariants, comment)
+  └─ Placeholders: {profile_summary}, {relatives}, {micro_adjustment_answers}, {previously_generated_variants}
+→ generatePhotoSessionScene(resolvedPrompt, originalFullPrompt, priorVariants)
+  └─ code context block [cp-09] prepended + ADMIN photo_session metaprompt
+→ FAL (userPhotoUrl=selfie) + image_instructions appended
+</pre>
+
+<h3>Flow 6: Scene Affirmation (GenerateSceneAffirmationJob)</h3>
+<pre style="background:#1a1a2e;padding:12px;border-radius:6px;font-size:11px">
+ADMIN scene_affirmation (ID=19) → resolveScene() → generateSceneAffirmation()
+  └─ Placeholders: {scene_title}, {scene_short_description}, {profile_summary}, {onboarding_answers}
+  └─ JSON schema: {"affirmation_text":"..."}
+→ UserScene.affirmation_text
+</pre>
+
+<h3>Flow 7: AI Questionnaire Question (GenerateAiQuestionnaireQuestionAction)</h3>
+<pre style="background:#1a1a2e;padding:12px;border-radius:6px;font-size:11px">
+QuestionnaireQuestion.ai_metaprompt (per-question, stored in questionnaire_questions table)
+  → resolveForSphere() with {sphere_title}, {profile_summary}, {micro_adjustment_answers}
+  → generateAiQuestionnaireQuestion(resolvedMetaprompt)
+     └─ SYSTEM: ADMIN ai_questionnaire_question (ID=21) ← BUG-02: опечатка "изместно"
+     └─ maxTokens: 400, JSON schema: {"question":"..."}
+→ UserQuestionnaireResponse.ai_generated_question_text
+</pre>
+</div>
+<div class="section" id="placeholders"><h2>Карта плейсхолдеров (22)</h2>
+<table><tr><th>Плейсхолдер</th><th>Источник</th><th>Используется в типах</th><th>Примечание</th></tr>
+<tr>
+      <td style="font-family:monospace;color:#a78bfa">{gender}</td>
+      <td style="font-size:11px">Card::$gender</td>
+      <td style="font-size:11px">profile_summary_system, ai_questionnaire_question, field_scene</td>
+      <td style="font-size:11px;color:#94a3b8">Resolved to &#x27;Мужчина&#x27;/&#x27;Женщина&#x27; by generateProfileSummary() before resolve()</td>
+    </tr>
+<tr>
+      <td style="font-family:monospace;color:#a78bfa">{age}</td>
+      <td style="font-size:11px">Card::$birth_date</td>
+      <td style="font-size:11px">profile_summary_system</td>
+      <td style="font-size:11px;color:#94a3b8">Fallback: 25 if no birth_date</td>
+    </tr>
+<tr>
+      <td style="font-family:monospace;color:#a78bfa">{marital_status}</td>
+      <td style="font-size:11px">Card::$marital_status</td>
+      <td style="font-size:11px">profile_summary_system</td>
+      <td style="font-size:11px;color:#94a3b8">Only if not null; added to profile_extra block</td>
+    </tr>
+<tr>
+      <td style="font-family:monospace;color:#a78bfa">{profile_summary}</td>
+      <td style="font-size:11px">Card::$profile_summary</td>
+      <td style="font-size:11px">field_scene, wish_scene, scene_affirmation</td>
+      <td style="font-size:11px;color:#94a3b8">Generated by GenerateProfileAnalysisJob before first scene</td>
+    </tr>
+<tr>
+      <td style="font-family:monospace;color:#a78bfa">{onboarding_answers}</td>
+      <td style="font-size:11px">UserQuestionnaireResponse</td>
+      <td style="font-size:11px">field_scene, three_angles_scene, profile_summary_system</td>
+      <td style="font-size:11px;color:#94a3b8">Groups by onboarding questionnaire; empty string if no answers</td>
+    </tr>
+<tr>
+      <td style="font-family:monospace;color:#a78bfa">{spheres_catalog}</td>
+      <td style="font-size:11px">Sphere</td>
+      <td style="font-size:11px">sphere_selector</td>
+      <td style="font-size:11px;color:#94a3b8">Used in SelectSphereJob for sphere selection</td>
+    </tr>
+<tr>
+      <td style="font-family:monospace;color:#a78bfa">{sphere_title}</td>
+      <td style="font-size:11px">Sphere</td>
+      <td style="font-size:11px">field_scene, three_angles_scene, wish_scene</td>
+      <td style="font-size:11px;color:#94a3b8">Long name if available, else short</td>
+    </tr>
+<tr>
+      <td style="font-family:monospace;color:#a78bfa">{sphere_short}</td>
+      <td style="font-size:11px">Sphere</td>
+      <td style="font-size:11px">field_scene</td>
+      <td style="font-size:11px;color:#94a3b8">Short sphere name</td>
+    </tr>
+<tr>
+      <td style="font-family:monospace;color:#a78bfa">{sphere_slug}</td>
+      <td style="font-size:11px">Sphere</td>
+      <td style="font-size:11px">field_scene</td>
+      <td style="font-size:11px;color:#94a3b8">Used for slug reference in prompts</td>
+    </tr>
+<tr>
+      <td style="font-family:monospace;color:#a78bfa">{sphere_definition}</td>
+      <td style="font-size:11px">Sphere</td>
+      <td style="font-size:11px">wish_scene</td>
+      <td style="font-size:11px;color:#94a3b8">Sphere description text</td>
+    </tr>
+<tr>
+      <td style="font-family:monospace;color:#a78bfa">{relatives_photos[]}</td>
+      <td style="font-size:11px">UserRelative</td>
+      <td style="font-size:11px">field_scene, three_angles_scene, photo_session</td>
+      <td style="font-size:11px;color:#94a3b8">Empty string &#x27;[нет близких]&#x27; if no relatives</td>
+    </tr>
+<tr>
+      <td style="font-family:monospace;color:#a78bfa">{micro_adjustment_answers}</td>
+      <td style="font-size:11px">UserQuestionnaireResponse (sphere-level Q3)</td>
+      <td style="font-size:11px">field_scene, three_angles_scene, photo_session</td>
+      <td style="font-size:11px;color:#94a3b8">Per-sphere micro-questionnaire answers; format &#x27;В: вопрос\nО: ответ&#x27;</td>
+    </tr>
+<tr>
+      <td style="font-family:monospace;color:#a78bfa">{chosen_clothing_style}</td>
+      <td style="font-size:11px">CardSphereClothingChoice + ClothingStyle</td>
+      <td style="font-size:11px">field_scene, three_angles_scene</td>
+      <td style="font-size:11px;color:#94a3b8">Only if clothing choice exists for (card, sphere)</td>
+    </tr>
+<tr>
+      <td style="font-family:monospace;color:#a78bfa">{user_clothing_styles}</td>
+      <td style="font-size:11px">CardSphereClothingChoice + ClothingStyle</td>
+      <td style="font-size:11px">clothing_choice prompt (not directly in generation prompts)</td>
+      <td style="font-size:11px;color:#94a3b8">List of available styles for clothing choice selection</td>
+    </tr>
+<tr>
+      <td style="font-family:monospace;color:#a78bfa">{scene_title}</td>
+      <td style="font-size:11px">UserScene::$scene-&gt;title</td>
+      <td style="font-size:11px">scene_affirmation</td>
+      <td style="font-size:11px;color:#94a3b8">Title of the current scene</td>
+    </tr>
+<tr>
+      <td style="font-family:monospace;color:#a78bfa">{scene_short_description}</td>
+      <td style="font-size:11px">UserScene::$scene-&gt;short_description</td>
+      <td style="font-size:11px">scene_affirmation</td>
+      <td style="font-size:11px;color:#94a3b8">Short description of the current scene</td>
+    </tr>
+<tr>
+      <td style="font-family:monospace;color:#a78bfa">{previously_generated_variants}</td>
+      <td style="font-size:11px">GenerationRequest (previous iterations)</td>
+      <td style="font-size:11px">photo_session</td>
+      <td style="font-size:11px;color:#94a3b8">&#x27;(нет — это первый кадр)&#x27; if no prior variants</td>
+    </tr>
+<tr>
+      <td style="font-family:monospace;color:#a78bfa">{user_comment}</td>
+      <td style="font-size:11px">GenerationRequest::$user_comment</td>
+      <td style="font-size:11px">photo_session</td>
+      <td style="font-size:11px;color:#94a3b8">Wrapped in format &#x27;Пожелание пользователя к этому ракурсу: «...»&#x27;</td>
+    </tr>
+<tr>
+      <td style="font-family:monospace;color:#a78bfa">{previous_profile_summary}</td>
+      <td style="font-size:11px">Card::$profile_summary</td>
+      <td style="font-size:11px">profile_summary_system (refresh variant)</td>
+      <td style="font-size:11px;color:#94a3b8">Used when refreshing profile summary (RefreshProfileSummaryJob)</td>
+    </tr>
+<tr>
+      <td style="font-family:monospace;color:#a78bfa">{count}</td>
+      <td style="font-size:11px">context array</td>
+      <td style="font-size:11px">scene_system</td>
+      <td style="font-size:11px;color:#94a3b8">Number of scene variants to generate; resolved in systemMessage via str_replace</td>
+    </tr>
+<tr>
+      <td style="font-family:monospace;color:#a78bfa">{field_name}</td>
+      <td style="font-size:11px">Sphere::$name</td>
+      <td style="font-size:11px">AutoCreateFieldSceneMetapromptAction::FALLBACK_META_PROMPT</td>
+      <td style="font-size:11px;color:#94a3b8">Used in fallback metaprompt creation</td>
+    </tr>
+<tr>
+      <td style="font-family:monospace;color:#a78bfa">{profile_extra}</td>
+      <td style="font-size:11px">Card::$marital_status</td>
+      <td style="font-size:11px">profile_summary_system (resolved before template)</td>
+      <td style="font-size:11px;color:#94a3b8">Multi-line extra context block in profile summary</td>
+    </tr>
+</table></div>
+<div class="section" id="admin-vs-code"><h2>Admin vs Code — что где редактируется</h2>
+<table>
+<tr><th>Тип промпта</th><th>Редактируется</th><th>Причина</th></tr>
+<tr><td>Все field_scene (сферы)</td><td><span class="tag tag-admin">admin</span></td><td>Содержательные — Олег настраивает под аудиторию</td></tr>
+<tr><td>image_instructions</td><td><span class="tag tag-admin">admin</span></td><td>Визуальный стиль меняется — нужен быстрый доступ</td></tr>
+<tr><td>profile_summary_system</td><td><span class="tag tag-admin">admin</span></td><td>Психологический профиль — ключевой нарратив</td></tr>
+<tr><td>photo_session</td><td><span class="tag tag-admin">admin</span></td><td>Режиссёрские инструкции — художественный контроль</td></tr>
+<tr><td>wish_scene</td><td><span class="tag tag-admin">admin</span></td><td>Обогащение пожелания — контентная логика</td></tr>
+<tr><td>affirmation, scene_affirmation</td><td><span class="tag tag-admin">admin</span></td><td>Тон и язык аффирмаций — бренд</td></tr>
+<tr><td>LOCAL_EDIT guard</td><td><span class="tag tag-code">code</span></td><td>Safety — не должен меняться без code review</td></tr>
+<tr><td>classifyWishComment</td><td><span class="tag tag-code">code</span></td><td>Classification logic — меняется только с тестами</td></tr>
+<tr><td>JSON schema hints</td><td><span class="tag tag-code">code</span></td><td>Parser-coupling — менять = сломать JSON parsing</td></tr>
+<tr><td>Anti-duplication block</td><td><span class="tag tag-code">code</span></td><td>Динамически строится из DB — не статичный текст</td></tr>
+<tr><td>Context blocks (wish, photo_session)</td><td><span class="tag tag-code">code</span></td><td>Structural — меняется вместе с архитектурой флоу</td></tr>
+</table>
+</div>
+
+<div class="section">
+<h2>Полные тексты ключевых admin промптов</h2>
+
+<h3>ID=12 — image_instructions (Инструкции генерации изображений)</h3>
+<pre style="background:#1a1a2e;padding:16px;border-radius:6px;font-size:11px;max-height:300px;overflow-y:auto;border:1px solid #2d3748">
+
+---
+
+## FIRST SCENE VISUAL REALISM ADDITIONS
+
+Изображение должно выглядеть как настоящий кадр из жизни человека, а не как luxury campaign.
+
+---
+
+## Visual Realism Rules
+
+Избегай:
+- overly polished skin;
+- plastic beauty;
+- excessive glamour;
+- fashion-commercial look;
+- influencer aesthetics;
+- stock photography lighting;
+- hyper-clean unrealistic interiors;
+- artificial posing.
+
+Предпочитай:
+- natural skin texture;
+- lived-in spaces;
+- soft natural lighting;
+- realistic environments;
+- imperfect human presence;
+- atmospheric realism;
+- emotional subtlety.
+
+---
+
+## Human Presence Rules
+
+Человек должен ощущаться:
+- живым;
+- присутствующим;
+- эмоционально включённым;
+- находящимся внутри момента.
+
+Добавляй:
+- микродвижения;
+- естественную posture;
+- real-life gestures;
+- authentic interaction with environment.
+
+Не делай человека статичной фигурой, вставленной в красивый фон.
+
+---
+
+## Cinematic Atmosphere Rules
+
+Создавай:
+- cinematic realism;
+- emotional atmosphere;
+- depth;
+- texture;
+- air;
+- natural framing;
+- realistic lighting behavior.
+
+Изображение должно выглядеть как кадр из жизни, а не как рекламный баннер.
+
+
+## Modern Clothing Rendering
+
+Одежда должна выглядеть современной, естественной и уместной для сцены.
+
+Важно:
+- актуальные пропорции;
+- естественная посадка;
+- реалистичные ткани;
+- отсутствие ощущения костюма;
+- одежда не должна выглядеть старомодно, если только это не часть выбранного стиля;
+- образ должен выглядеть так, будто человек действительно так живёт.
+
+Избегай:
+- устаревшего Pinterest-образа;
+- чрезмерной этники;
+- случайной богемности;
+- офисной шаблонности;
+- чрезмерной глянцевости;
+- одежды, которая выглядит как наряд для фотосессии, а не для жизни.
+
+## Emotional Visual Amplification
+
+Изображение должно не только выглядеть реалистично,
+но и эмоционально притягивать пользователя.
+
+Цвет, свет, cinematic rendering и atmosphere должны усиливать эмоциональное состояние сцены.
+
+Избегай:
+- flat cinematic grading;
+- grey realism;
+- emotionally empty realism;
+- overly muted palette;
+- visual sterility;
+- raw unprocessed look.
+
+Используй:
+- emotionally readable light;
+- cinematic depth;
+- atmospheric richness;
+- sensory realism;
+- emotionally expressive color;
+- depth through light and color;
+- emotionally enhanced realism.
+
+Свет и цвет должны помогать человеку чувствовать:
+- желание жизни;
+- свободу;
+- вдохновение;
+- пространство;
+- warmth;
+- vitality;
+- emotional openness;
+- calm energy.
+
+Не уходить:
+- в fake gloss;
+- influencer aesthetics;
+- luxury advertisement;
+- artificial perfection.
+
+Но и не делать изображение emotionally flat.
+
+## Identity Refinement Layer
+
+Сохраняй:
+- лицо пользователя;
+- ключевые черты;
+- возраст;
+- энергетику;
+- узнаваемость;
+- естественность.
+
+Но при этом мягко улучшай:
+- grooming;
+- visual coherence;
+- vitality;
+- posture;
+- hair neatness;
+- skin freshness;
+- clothing coherence;
+- overall presence quality.
+
+Пользователь должен ощущаться:
+- более собранным;
+- более живым;
+- более ресурсным;
+- более aligned with self.
+
+Важно:
+не уходить:
+- в fake beauty;
+- в influencer aesthetics;
+- в plastic perfection;
+- в luxury glamour;
+- в AI prettification.
+
+Это не beautification.
+Это:
+emotionally elevated realism.
+
+Опрятность и visual coherence
+должны ощущаться:
+- естественно;
+- жизненно;
+- правдоподобно;
+- соответствующе желаемой жизни пользователя.
+
+---
+
+## Emotional Elevation Layer
+
+Изображение должно не только быть believable — оно должно эмоционально возвышать пользователя.
+
+Это НЕ означает:
+- fake luxury;
+- influencer fantasy;
+- unrealistic aspiration;
+- perfect life staging.
+
+Это означает:
+- emotional beauty (красота, которая ощущается, а не демонстрируется);
+- cinematic warmth (тепло, которое чувствуется через экран);
+- inspiring atmosphere (атмосфера, в которую хочется войти);
+- visual vitality (жизнь, которая пульсирует в кадре);
+- emotionally amplified realism (реализм, усиленный правильным светом и цветом).
+
+Изображение должно вызывать у пользователя:
+- желание поделиться этим кадром;
+- желание сохранить и возвращаться;
+- ощущение «это моя жизнь, в которую я хочу войти».
+
+НЕ делать:
+- emotionally flat realism (технически правильно, но мертво);
+- grey neutrality (мрачный, безжизненный реализм);
+- over-muted atmosphere (всё приглушено до потери эмоции);
+- dead realism (реализм без пульса).
+
+Свет, цвет и атмосфера должны быть настроены так, чтобы сцена ощущалась живой и притягательной — не идеальной.
+
+---
+
+## F4 + F5 CINEMATIC UPGRADE — 2026-05-18
+
+## Cultural Assumption Filter for Image Generation
+
+НЕ включай автоматически в изображение:
+- бокалы с вином, алкогольные напитки,
+- сигареты,
+- luxury signifiers (яхты, виллы, брендовые аксессуары),
+если это не следует явно из промта сцены.
+
+Высокий уровень жизни = качество среды, свобода, глубина атмосферы.
+НЕ = алкоголь или luxury shorthand.
+
+## Camera Grammar for Image Generation
+
+Если в detailed_description указан camera type — строго соблюдать его:
+
+- OTS: герой занимает ~⅓ кадра, мир открывается перед ним
+- POV walking: камера «идёт» вместе с человеком, динамика
+- Environmental wide: герой небольшой в масштабе среды, пространство доминирует
+- Fragment close-up: герой не виден полностью, только деталь/часть
+- Silhouette contre-jour: герой — тёмный силуэт, яркий фон
+- Low angle movement: взгляд снизу вверх, динамическая энергия
+- Side-follow: камера параллельна движению героя
+
+Не центрировать героя автоматически в каждом кадре.
+Не делать eye-level medium portrait по умолчанию.
+</pre>
+<h3>ID=14 — relatives_instructions (Инструкции интеграции родственников)</h3>
+<pre style="background:#1a1a2e;padding:16px;border-radius:6px;font-size:11px;max-height:300px;overflow-y:auto;border:1px solid #2d3748">ВСЕ люди со ВСЕХ предоставленных изображений ДОЛЖНЫ появиться ВМЕСТЕ в финальном результате. ЦЕЛЬ: Финальное изображение должно выглядеть как подлинный спонтанный момент — как будто все были сфотографированы вместе естественным образом, а не скомпонованы. Требования к интеграции:
+- НЕ игнорировать и не пропускать ни одного человека ни с одного изображения — все ДОЛЖНЫ быть видны
+- Люди должны выглядеть как естественная группа, стоящая/сидящая БЛИЗКО друг к другу
+- Масштабировать каждого человека реалистично, исходя из его положения в глубине сцены
+- АДАПТИРОВАТЬ одежду людей под контекст сцены (формальный/повседневный/на улице и т.д.), сохраняя общий стиль
+- Язык тела должен быть расслабленным и естественным, не скованным и не постановочным
+- Все должны быть в одинаковом освещении и атмосфере
+
+Сохранение лица (КРИТИЧЕСКИ ВАЖНО):
+- Сохранить ВСЕ черты лица в точности как на исходных изображениях — без морфинга, без изменений
+- Глаза, нос, рот, выражение должны оставаться попиксельно идентичными оригиналу
+
+БЛОКИРОВКА ЛИЦА И ВЫРАЖЕНИЯ (АБСОЛЮТНЫЙ ПРИОРИТЕТ — НЕ ПОДЛЕЖИТ ОБСУЖДЕНИЮ):
+Это требование имеет приоритет над ВСЕМИ остальными корректировками.
+- Геометрия лица: сохранить точную костную структуру, форму лица, пропорции между чертами
+- Глаза: точная форма, размер, расположение, цвет глаз, положение век, направление взгляда — БЕЗ изменений
+- Выражение: ТОЧНОЕ эмоциональное выражение должно быть сохранено — интенсивность улыбки, положение бровей, форма рта, мышечное напряжение
+- НЕ морфить, не смешивать и не усреднять черты лица между людьми
+- НЕ менять выражение (например, заставлять улыбаться того, кто не улыбался на исходнике)
+- НЕ изменять направление глаз, взгляд или положение век
+- ЕДИНСТВЕННЫЕ допустимые корректировки лица: адаптация освещения/теней под сцену — ничего больше
+
+Естественное смешивание:
+- Привести тона кожи в соответствие с цветовой температурой сцены
+- Добавить реалистичные тени, соединяющие людей с землёй
+- Обеспечить согласованную фокусировку/размытие со сценой
+- Люди должны выглядеть так, будто они принадлежат этому моменту
+
+Согласованность масштаба (КРИТИЧЕСКИ ВАЖНО):
+- Если композиция сцены меняет глубину/перспективу, ВСЕ элементы должны масштабироваться пропорционально</pre>
+<h3>ID=16 — affirmation (Аффирмация)</h3>
+<pre style="background:#1a1a2e;padding:16px;border-radius:6px;font-size:11px;max-height:300px;overflow-y:auto;border:1px solid #2d3748">
+
+---
+
+## FIRST SCENE AFFIRMATION ADDITIONS
+
+Аффирмация после первой сцены не должна мотивировать в лоб.
+
+Её задача:
+- закрепить эмоциональное узнавание;
+- усилить ощущение возможности;
+- помочь человеку почувствовать связь со сценой.
+
+Аффирмация должна быть:
+- спокойной;
+- человечной;
+- grounded;
+- без self-help clichés;
+- без manifestation language;
+- без fake positivity.
+
+Человек должен чувствовать:
+- «это может быть моей жизнью»;
+- «я узнаю себя здесь»;
+- «это ощущается настоящим».
+
+Запрещено:
+- «ты достоин всего»;
+- «твоя новая реальность уже здесь»;
+- «манифестируй жизнь мечты»;
+- «ты магнит для успеха».
+</pre>
+<h3>ID=19 — scene_affirmation (Аффирмация сцены)</h3>
+<pre style="background:#1a1a2e;padding:16px;border-radius:6px;font-size:11px;max-height:300px;overflow-y:auto;border:1px solid #2d3748">РОЛЬ: ты пишешь аффирмацию-якорь для конкретной сцены.
+
+ВХОД:
+- сцена: {scene_title} — {scene_short_description}
+- профиль: {profile_summary}
+- онбординг: {onboarding_answers}
+
+ЗАДАЧА: 1 аффирмация, которая
+- резонирует именно с этой сценой (не generic)
+- от первого лица, в настоящем времени
+
+АНТИ-ПАТТЕРН: не &quot;я заслуживаю всего лучшего&quot;, не духовные клише.
+
+Сформируй на РУССКОМ языке
+</pre>
+<h3>ID=21 — ai_questionnaire_question (AI Questionnaire Question (system prompt))</h3>
+<pre style="background:#1a1a2e;padding:16px;border-radius:6px;font-size:11px;max-height:300px;overflow-y:auto;border:1px solid #2d3748">Cформулируй ОДИН уточняющий вопрос пользователю для сферы {sphere_title} 
+вот что изместно о пользователе: {gender} {profile_summary}     
+Вот ответы которые он дал ужн для этой сферы {micro_adjustment_answers}
+Задай один важный уточняющий вопрос чтобы у нас была более персонализированная и детализированная под пользователя сцена его жизни для этой сферы</pre>
+<h3>ID=34 — wish_scene (Пожелание (Wish Scene))</h3>
+<pre style="background:#1a1a2e;padding:16px;border-radius:6px;font-size:11px;max-height:300px;overflow-y:auto;border:1px solid #2d3748">Ты — AI-режиссёр сцены Elyne.
+
+Пользователь находится внутри фотосессии сферы жизни «{sphere_title}» ({sphere_definition}).
+
+Профиль пользователя:
+{profile_summary}
+
+Онбординг-ответы:
+{onboarding_answers}
+
+== ЗАДАЧА ==
+На основе профиля и тональности сферы построй новую cinematic сцену,
+которая:
+1. Резонирует с этой сферой жизни — даже в новой локации.
+2. Держит эмоциональную тональность ОРИГИНАЛЬНОЙ сцены (свет, темп, настроение) — пожелание это смена СЦЕНОГРАФИИ, не смена человека.
+3. Использует профиль и онбординг как fallback для тонкой настройки атмосферы.
+4. Ощущается как «жизнь, в которую хочется войти».
+
+== ЧТО ОПИСЫВАТЬ ==
+ЯВНО: локация, свет, одежда, время суток, действие, настроение.
+НЕ ОПИСЫВАТЬ: лицо, возраст, телосложение, общий образ человека — идентичность фиксируется КОДОМ через selfie на этапе FAL.
+
+Верни самодостаточный FAL-промпт.
+
+Примечание: блок «ОРИГИНАЛЬНАЯ СЦЕНА / ПОЖЕЛАНИЕ ПОЛЬЗОВАТЕЛЯ /
+ПРЕЕМСТВЕННОСТЬ» добавляется КОДОМ перед этим метапромптом —
+не ссылайся на него плейсхолдерами {user_wish} / {original_scene}.</pre>
+<h3>ID=35 — scene_question (Сценический вопрос Elyne)</h3>
+<pre style="background:#1a1a2e;padding:16px;border-radius:6px;font-size:11px;max-height:300px;overflow-y:auto;border:1px solid #2d3748">Сфера: {sphere_title}
+Профиль пользователя: {profile_summary}
+Ответы микроопросника по этой сфере: {micro_adjustment_answers}
+
+Задача: задай пользователю ОДИН короткий открытый вопрос (5-7 слов),
+который поможет ему лучше представить и описать желаемую сцену в этой
+сфере жизни. Вопрос должен быть конкретным, чувственным, без клише.
+Не используй вступления. Не задавай yes/no вопросов.</pre>
+</div>
+
+<div style="margin-top:48px;padding-top:24px;border-top:1px solid #1e293b;color:#475569;font-size:12px">
+Elyne Prompt System Audit | 2026-05-26 | Монад | <a href="pipeline-map.md" style="color:#6366f1">pipeline-map.md</a> | <a href="admin-vs-code.md" style="color:#6366f1">admin-vs-code.md</a>
+</div>
+</div>
+</body>
+</html>
