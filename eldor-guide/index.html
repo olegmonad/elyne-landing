@@ -147,6 +147,16 @@
   .next-title { font-weight: 600; margin-bottom: 3px; }
   .next-desc { color: var(--text-muted); font-size: 12px; }
 
+  /* WHERE BADGE */
+  .where { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; padding:4px 12px; border-radius:20px; margin-bottom:16px; letter-spacing:.02em; }
+  .where-local { background:rgba(91,141,238,.12); border:1px solid rgba(91,141,238,.3); color:#7aadff; }
+  .where-server { background:rgba(124,110,245,.12); border:1px solid rgba(124,110,245,.3); color:#b4a9fc; }
+  .where-browser { background:rgba(251,191,36,.08); border:1px solid rgba(251,191,36,.25); color:#fbbf24; }
+  .where-tg { background:rgba(74,222,128,.08); border:1px solid rgba(74,222,128,.2); color:#4ade80; }
+  .where-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:14px 0; }
+  .where-card { background:var(--code-bg); border-radius:10px; padding:16px; }
+  @media (max-width:500px) { .where-grid { grid-template-columns:1fr; } }
+
   @media (max-width: 640px) {
     .step-body { padding: 18px 16px; }
     .step-header { padding: 18px 16px; }
@@ -180,6 +190,7 @@
   <div class="nav-grid">
     <a class="nav-link" href="#arch">→ Архитектура системы</a>
     <a class="nav-link" href="#quickstart">→ Быстрый старт</a>
+    <a class="nav-link" href="#terminal-basics">0. Командная строка</a>
     <a class="nav-link" href="#s1">1. Аренда сервера</a>
     <a class="nav-link" href="#s2">2. Настройка Ubuntu</a>
     <a class="nav-link" href="#s3">3. Node.js и Python</a>
@@ -259,6 +270,51 @@ pm2 save && pm2 startup</pre>
   </div>
 </div>
 
+<!-- TERMINAL BASICS -->
+<div id="terminal-basics" class="step" style="margin-bottom:40px">
+  <div class="step-header">
+    <div class="step-num" style="background:linear-gradient(135deg,#4ade80,#5b8dee)">⌨</div>
+    <div class="step-title">Командная строка — читай это первым</div>
+  </div>
+  <div class="step-body">
+    <p>Большинство шагов гайда выполняются в <strong>командной строке (терминале)</strong> — это тёмное окно, куда ты вводишь текстовые команды и жмёшь Enter. Ничего знать заранее не нужно — просто копируй команды из гайда и вставляй.</p>
+
+    <h3>Как открыть на своём компьютере</h3>
+    <div class="where-grid">
+      <div class="where-card" style="border:1px solid #2e3349">
+        <div style="font-weight:700;margin-bottom:8px">🍎 Mac</div>
+        <div style="font-size:14px;color:#c8d2e0">Нажми <strong>Cmd + Пробел</strong>, напечатай <strong>Terminal</strong>, Enter.<br><br>Или: Finder → Программы → Утилиты → Terminal</div>
+      </div>
+      <div class="where-card" style="border:1px solid #2e3349">
+        <div style="font-weight:700;margin-bottom:8px">🪟 Windows</div>
+        <div style="font-size:14px;color:#c8d2e0">Нажми <strong>Win + R</strong>, напечатай <strong>powershell</strong>, Enter.<br><br>Или: меню Пуск → поиск «PowerShell»</div>
+      </div>
+    </div>
+
+    <h3>Два типа терминала в этом гайде</h3>
+    <p>Ты будешь работать в <em>двух разных</em> терминалах — на своём компьютере и на сервере. В начале каждого шага написано, где именно выполнять команды.</p>
+    <div class="where-grid">
+      <div class="where-card" style="border:2px solid rgba(91,141,238,.35)">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="font-size:16px">💻</span><span style="font-weight:700;color:#7aadff">Свой компьютер</span></div>
+        <div style="font-size:13px;color:#c8d2e0">Обычный терминал на твоём ноутбуке или ПК. Используется для создания SSH-ключа и первого подключения к серверу.</div>
+      </div>
+      <div class="where-card" style="border:2px solid rgba(124,110,245,.35)">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="font-size:16px">🖥</span><span style="font-weight:700;color:#b4a9fc">Сервер (SSH)</span></div>
+        <div style="font-size:13px;color:#c8d2e0">Тот же терминал на ноутбуке, но после команды <code>ssh root@IP</code> — ты уже <em>внутри</em> удалённого сервера. Большинство команд выполняется здесь.</div>
+      </div>
+    </div>
+
+    <h3>Как подключиться к серверу</h3>
+    <p>После покупки VPS провайдер пришлёт IP-адрес вроде <code>95.216.12.34</code>. Открой терминал <strong>на своём компьютере</strong> и введи:</p>
+    <div class="code-wrap"><pre>ssh root@95.216.12.34
+<span class="c"># Замени IP на свой. Если спросит "yes/no" — введи yes.</span></pre>
+    <button class="copy-btn" onclick="copyCode(this)">копировать</button></div>
+    <div class="success">Если видишь <code>root@hostname:~#</code> — ты на сервере. Теперь вводи команды из шагов 2–15.</div>
+
+    <div class="note"><strong>Как вставить команду:</strong> на Mac — Cmd+V, на Windows в PowerShell — правая кнопка мыши. Никогда не вставляй команды, которые не понимаешь откуда они — только из этого гайда.</div>
+  </div>
+</div>
+
 <!-- STEPS -->
 <div class="steps">
 
@@ -266,6 +322,7 @@ pm2 save && pm2 startup</pre>
 <div id="s1" class="step">
   <div class="step-header"><div class="step-num">1</div><div class="step-title">Арендуй сервер (VPS)</div></div>
   <div class="step-body">
+    <span class="where where-browser">🌐 В браузере</span> <span class="where where-local">💻 Свой компьютер (терминал)</span>
     <p>Нужен виртуальный сервер под Ubuntu. Минимум: 2 ядра CPU, 4 ГБ RAM, 40 ГБ SSD.</p>
 
     <div class="note" style="border-left-color:#7c6ef5"><strong>Зачем вообще сервер?</strong><br>
@@ -301,6 +358,7 @@ cat ~/.ssh/id_ed25519.pub</pre>
 <div id="s2" class="step">
   <div class="step-header"><div class="step-num">2</div><div class="step-title">Первоначальная настройка Ubuntu</div></div>
   <div class="step-body">
+    <span class="where where-server">🖥 На сервере (SSH)</span>
     <p>Первое, что делаем после входа на сервер — обновляем систему и ставим базовые утилиты. Это как первый запуск нового ноутбука: скачиваем обновления, устанавливаем нужные программы. Ещё создаём отдельного пользователя (не root) — это стандарт безопасности, чтобы ошибка в коде не затронула всю систему.</p>
     <div class="code-wrap"><pre><span class="c"># Обновляем систему</span>
 apt update && apt upgrade -y
@@ -329,6 +387,7 @@ sudo apt install -y fail2ban && sudo systemctl enable fail2ban --now</pre>
 <div id="s3" class="step">
   <div class="step-header"><div class="step-num">3</div><div class="step-title">Node.js и Python</div></div>
   <div class="step-body">
+    <span class="where where-server">🖥 На сервере (SSH)</span>
     <p>Node.js и Python — это среды выполнения программ, как двигатели: без них код просто не запустится. Node.js нужен для Claude Code и Telegram-бота, Python — для голосовых функций (Whisper и edge-tts). Устанавливаем оба, даже если сейчас голос не нужен — потом не придётся возвращаться.</p>
     <h3>Node.js 22 через nvm</h3>
     <div class="resources">
@@ -360,6 +419,7 @@ echo '<span class="s">source ~/venv/bin/activate</span>' >> ~/.bashrc</pre>
 <div id="s4" class="step">
   <div class="step-header"><div class="step-num">4</div><div class="step-title">Anthropic API ключ</div></div>
   <div class="step-body">
+    <span class="where where-browser">🌐 В браузере</span>
     <p>API-ключ — твой личный пропуск к мозгу Claude. Без него агент не сможет получать ответы от Anthropic. Получить его можно бесплатно на сайте console.anthropic.com — понадобится карта для верификации. После этого в личном кабинете видны все расходы и можно поставить лимит на траты.</p>
     <div class="resources">
       <a class="res-card" href="https://console.anthropic.com" target="_blank">
@@ -396,6 +456,7 @@ echo '<span class="s">source ~/venv/bin/activate</span>' >> ~/.bashrc</pre>
 <div id="s4b" class="step">
   <div class="step-header"><div class="step-num" style="background:linear-gradient(135deg,#f87171,#fbbf24)">🔐</div><div class="step-title">Файл .env — хранение секретов</div></div>
   <div class="step-body">
+    <span class="where where-server">🖥 На сервере (SSH)</span>
     <p>Все секретные ключи хранятся в одном месте — файле <code>.env</code>. Это стандарт в профессиональной разработке.</p>
 
     <div class="code-wrap"><pre>nano ~/my-agent/.env</pre>
@@ -432,6 +493,7 @@ npm install dotenv</pre>
 <div id="s5" class="step">
   <div class="step-header"><div class="step-num">5</div><div class="step-title">Установка Claude Code</div></div>
   <div class="step-body">
+    <span class="where where-server">🖥 На сервере (SSH)</span>
     <p>Claude Code — это программа, которая превращает Claude из обычного чат-бота в автономного агента. Он запускается на сервере, читает файлы, выполняет команды и пишет в Telegram. По сути это и есть «мозг» ассистента — всё, что ты до этого настраивал, становится частью одного работающего механизма.</p>
     <div class="resources">
       <a class="res-card" href="https://github.com/anthropics/claude-code" target="_blank">
@@ -462,6 +524,7 @@ echo '<span class="s">set -a && source ~/my-agent/.env && set +a</span>' >> ~/.b
 <div id="s6" class="step">
   <div class="step-header"><div class="step-num">6</div><div class="step-title">Создай Telegram-бота</div></div>
   <div class="step-body">
+    <span class="where where-tg">📱 В Telegram</span>
     <p>Telegram-бот — это «телефонный номер» через который Claude будет принимать твои сообщения. Создаётся за 2 минуты через официальный сервис @BotFather прямо в Telegram. В итоге получишь токен — секретный ключ, который даёт агенту право отправлять и получать сообщения от твоего имени.</p>
     <div class="resources">
       <a class="res-card" href="https://t.me/BotFather" target="_blank">
@@ -497,6 +560,7 @@ echo '<span class="s">set -a && source ~/my-agent/.env && set +a</span>' >> ~/.b
 <div id="s7" class="step">
   <div class="step-header"><div class="step-num">7</div><div class="step-title">Структура проекта</div></div>
   <div class="step-body">
+    <span class="where where-server">🖥 На сервере (SSH)</span>
     <p>Заведи сразу правильную структуру папок — потом не придётся переделывать.</p>
 
     <div class="code-wrap"><pre>mkdir -p ~/my-agent/{logs,memory,media,scripts,agents,backups,tmp}
@@ -540,6 +604,7 @@ EOF</pre>
 <div id="s8" class="step">
   <div class="step-header"><div class="step-num">8</div><div class="step-title">MCP-расширения агента</div></div>
   <div class="step-body">
+    <span class="where where-server">🖥 На сервере (SSH)</span>
     <p>MCP (Model Context Protocol) — это «плагины» для агента. Каждый даёт новую способность: поиск в интернете, работу с файлами, календарь и т.д.</p>
 
     <div class="resources">
@@ -610,6 +675,7 @@ EOF</pre>
 <div id="s9" class="step">
   <div class="step-header"><div class="step-num">9</div><div class="step-title">CLAUDE.md — личность агента</div></div>
   <div class="step-body">
+    <span class="where where-server">🖥 На сервере (SSH)</span>
     <p>Это главный файл. Всё что ты напишешь здесь — агент будет помнить и применять при каждом ответе. Это живой документ: дополняй его по мере общения.</p>
 
     <div class="code-wrap"><pre><span class="c"># ~/my-agent/CLAUDE.md</span>
@@ -659,6 +725,7 @@ EOF</pre>
 <div id="s10" class="step">
   <div class="step-header"><div class="step-num">10</div><div class="step-title">Запуск: systemd или PM2</div></div>
   <div class="step-body">
+    <span class="where where-server">🖥 На сервере (SSH)</span>
     <p>Агент должен работать, даже если ты закрыл SSH-терминал или сервер перезагрузился. Для этого нужен менеджер процессов — программа, которая запускает агента в фоне и следит, чтобы он не упал. Есть два варианта: PM2 проще для начала, systemd надёжнее для постоянной работы. Начни с PM2.</p>
 
     <h3>Вариант A — PM2 (рекомендуется новичкам)</h3>
@@ -728,6 +795,7 @@ journalctl -u my-agent -f          <span class="c"># логи в реально�
 <div id="s11" class="step">
   <div class="step-header"><div class="step-num">11</div><div class="step-title">VS Code на ноутбуке</div></div>
   <div class="step-body">
+    <span class="where where-local">💻 Свой компьютер</span>
     <p>VS Code — редактор кода, который устанавливается на твой ноутбук. С расширением Remote-SSH он подключается к серверу и показывает его файлы как локальные — можно редактировать CLAUDE.md, смотреть логи, менять настройки без постоянного SSH-терминала. Удобнее и нагляднее, чем работать через командную строку.</p>
     <div class="resources">
       <a class="res-card" href="https://code.visualstudio.com/download" target="_blank">
@@ -777,6 +845,7 @@ journalctl -u my-agent -f          <span class="c"># логи в реально�
 <div id="s12" class="step">
   <div class="step-header"><div class="step-num">12</div><div class="step-title">Голосовые сообщения</div></div>
   <div class="step-body">
+    <span class="where where-server">🖥 На сервере (SSH)</span>
     <p>Эта настройка позволяет говорить с агентом голосом в Telegram. Whisper (модель от OpenAI) переводит твою речь в текст, а edge-tts позволяет агенту отвечать вслух — русским голосом Дмитрий. Итог: можно разговаривать с ассистентом как по телефону, не набирая ничего руками.</p>
     <div class="resources">
       <a class="res-card" href="https://github.com/rany2/edge-tts" target="_blank">
@@ -826,6 +895,7 @@ for s in segments: print(s.text)
 <div id="s13" class="step">
   <div class="step-header"><div class="step-num">13</div><div class="step-title">GitHub — хранение кода</div></div>
   <div class="step-body">
+    <span class="where where-server">🖥 На сервере (SSH)</span>
     <p>GitHub — облачное хранилище кода с историей всех изменений. Если что-то сломается или случайно удалишь важный файл — можно откатиться к предыдущей версии. Храни здесь конфиг агента: CLAUDE.md, .mcp.json, скрипты. Только никогда не выгружай .env с ключами — даже в приватный репозиторий.</p>
     <div class="resources">
       <a class="res-card" href="https://github.com/signup" target="_blank">
@@ -857,6 +927,7 @@ git push -u origin main</pre>
 <div id="s14" class="step">
   <div class="step-header"><div class="step-num">14</div><div class="step-title">Резервные копии</div></div>
   <div class="step-body">
+    <span class="where where-server">🖥 На сервере (SSH)</span>
     <p>Автоматические ночные бэкапы — за 5 минут настройки.</p>
 
     <div class="code-wrap"><pre><span class="c"># Создать бэкап вручную</span>
@@ -882,6 +953,7 @@ crontab -e</pre>
 <div id="s15" class="step">
   <div class="step-header"><div class="step-num">15</div><div class="step-title">Мониторинг сервера</div></div>
   <div class="step-body">
+    <span class="where where-server">🖥 На сервере (SSH)</span>
     <p>Держи глаз на ресурсах — Whisper и Claude могут съедать RAM.</p>
 
     <div class="code-wrap"><pre>htop        <span class="c"># интерактивный монитор процессов (q — выход)</span>
