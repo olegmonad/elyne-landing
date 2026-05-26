@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elyne · Путь пользователя · monad1@elyne.online</title>
+<style>
+:root {
+  --bg: #0c0c0f;
+  --surface: #131318;
+  --surface2: #1a1a22;
+  --border: #2a2a38;
+  --text: #e8e8f0;
+  --text-dim: #6b6b80;
+  --text-muted: #3a3a50;
+  --accent: #a78bfa;
+  --accent2: #fbbf24;
+  --green: #34d399;
+  --red: #f43f5e;
+  --blue: #60a5fa;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  display: flex;
+}
+/* Sidebar */
+nav {
+  width: 220px;
+  min-height: 100vh;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+nav .logo {
+  padding: 24px 20px 16px;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border-bottom: 1px solid var(--border);
+}
+nav ul { list-style: none; padding: 12px 0; }
+nav ul li a {
+  display: block;
+  padding: 8px 20px;
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 13px;
+  transition: color 0.15s;
+  border-left: 2px solid transparent;
+}
+nav ul li a:hover, nav ul li a.active {
+  color: var(--text);
+  border-left-color: var(--accent);
+  background: rgba(167,139,250,0.06);
+}
+/* Main */
+main {
+  flex: 1;
+  max-width: 900px;
+  padding: 40px 48px;
+  overflow: hidden;
+}
+h1 { font-size: 24px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+h2 { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 20px; }
+h3 { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 12px; }
+.section { margin-bottom: 56px; scroll-margin-top: 32px; }
+.section-header {
+  display: flex; align-items: baseline; gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.section-header h2 { margin: 0; }
+.section-num {
+  font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-muted); font-weight: 500;
+}
+/* Cards */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.card-sm { padding: 14px 18px; border-radius: 8px; }
+/* Meta row */
+.meta-row {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px;
+  margin-bottom: 24px;
+}
+.meta-item label {
+  display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text-muted); margin-bottom: 4px;
+}
+.meta-item .value { font-size: 15px; color: var(--text); font-weight: 500; }
+.meta-item .value.ok { color: var(--green); }
+.meta-item .value.warn { color: var(--accent2); }
+/* Badges */
+.badge {
+  display: inline-block;
+  background: rgba(167,139,250,0.12);
+  color: var(--accent);
+  border: 1px solid rgba(167,139,250,0.25);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 13px;
+  margin: 3px;
+}
+.badge.selected {
+  background: rgba(167,139,250,0.18);
+  color: #c4b5fd;
+  border-color: rgba(167,139,250,0.4);
+}
+.badge.option {
+  background: rgba(255,255,255,0.03);
+  color: var(--text-dim);
+  border-color: var(--border);
+  cursor: default;
+}
+.badge.option.matched {
+  background: rgba(167,139,250,0.18);
+  color: #c4b5fd;
+  border-color: rgba(167,139,250,0.5);
+  font-weight: 500;
+}
+.badge.empty { color: var(--text-muted); border-color: var(--text-muted); background: none; }
+.badge.cat {
+  font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase;
+  padding: 2px 8px; margin: 0;
+}
+.badge.cat-onboarding { background: rgba(251,191,36,0.12); color: #fbbf24; border-color: rgba(251,191,36,0.3); }
+.badge.cat-sphere { background: rgba(52,211,153,0.1); color: #34d399; border-color: rgba(52,211,153,0.25); }
+.badge.cat-ai_deep { background: rgba(96,165,250,0.1); color: #60a5fa; border-color: rgba(96,165,250,0.25); }
+.badge.cat-scene { background: rgba(244,63,94,0.1); color: #f43f5e; border-color: rgba(244,63,94,0.25); }
+/* QA Table */
+.qa-table { width: 100%; border-collapse: collapse; }
+.qa-table tr { border-bottom: 1px solid var(--border); }
+.qa-table tr:last-child { border-bottom: none; }
+.qa-table td { padding: 12px 8px; vertical-align: top; }
+.qa-table .q-col { color: var(--text-dim); font-size: 13px; width: 45%; }
+.qa-table .a-col { color: var(--text); font-size: 13px; font-weight: 500; }
+.qa-table .cat-col { width: 100px; text-align: right; }
+/* Sphere section */
+.sphere-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.sphere-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 20px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+.sphere-header:hover { background: rgba(255,255,255,0.03); }
+.sphere-icon { font-size: 20px; }
+.sphere-name { font-size: 15px; font-weight: 600; flex: 1; }
+.sphere-body { padding: 20px; background: var(--surface); }
+.q-block { margin-bottom: 20px; }
+.q-block:last-child { margin-bottom: 0; }
+.q-block .q-text {
+  font-size: 13px; color: var(--text-dim);
+  margin-bottom: 10px; font-style: italic;
+}
+.options-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.selected-answer {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: rgba(167,139,250,0.07);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 6px 6px 0;
+  font-size: 13px;
+  color: #c4b5fd;
+}
+/* Details */
+details { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+summary {
+  padding: 12px 16px;
+  background: var(--surface2);
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-dim);
+  user-select: none;
+  list-style: none;
+}
+summary:hover { color: var(--text); }
+summary::before { content: '▶  '; font-size: 10px; }
+details[open] summary::before { content: '▼  '; }
+.details-body {
+  padding: 16px;
+  background: var(--bg);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #a0a0c0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 500px;
+  overflow-y: auto;
+}
+/* Alert */
+.alert {
+  padding: 14px 18px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+.alert-warn {
+  background: rgba(251,191,36,0.08);
+  border: 1px solid rgba(251,191,36,0.25);
+  color: #fcd34d;
+}
+.alert-info {
+  background: rgba(96,165,250,0.08);
+  border: 1px solid rgba(96,165,250,0.2);
+  color: #93c5fd;
+}
+/* Stats */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+}
+.stat-card .num {
+  font-size: 28px; font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), var(--blue));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.stat-card .lbl {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--text-muted); margin-top: 4px;
+}
+/* Progress bar */
+.progress-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.progress-label { font-size: 12px; color: var(--text-dim); width: 160px; flex-shrink: 0; }
+.progress-bar { flex: 1; height: 4px; background: var(--border); border-radius: 2px; }
+.progress-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--accent), var(--blue)); }
+.progress-val { font-size: 12px; color: var(--text-dim); width: 40px; text-align: right; }
+/* Collapse toggle */
+.collapsible-body { display: none; }
+details[open] .collapsible-body { display: block; }
+/* Separator */
+.sep { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+/* Tag row */
+.tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+/* AI deepening Q */
+.deep-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--blue);
+  border-radius: 0 10px 10px 0;
+  padding: 16px 20px;
+  margin-bottom: 14px;
+}
+.deep-card .dq { font-size: 13px; color: var(--text-dim); margin-bottom: 8px; }
+.deep-card .da { font-size: 14px; color: var(--text); font-style: italic; }
+</style>
+</head>
+<body>
+<nav><div class="logo">Elyne · Journey</div><ul><li><a href="#overview">Обзор пользователя</a></li><li><a href="#profile">Профиль персонажа</a></li><li><a href="#scene">Сцена и итерации</a></li><li><a href="#onboarding">Онбординг</a></li><li><a href="#sphere-micro">Микроопросники сфер</a></li><li><a href="#ai-deep">AI-углубления</a></li><li><a href="#analytics">Аналитика</a></li></ul></nav><main><div class="section" id="overview">
+<div class="section-header">
+  <span class="section-num">01</span>
+  <h2>Обзор пользователя</h2>
+</div><div class="meta-row">
+  <div class="meta-item"><label>Email</label><div class="value">monad1@elyne.online</div></div>
+  <div class="meta-item"><label>Пол</label><div class="value">Мужской</div></div>
+  <div class="meta-item"><label>Статус</label><div class="value ok">active</div></div>
+  <div class="meta-item"><label>Кредиты</label><div class="value warn">19</div></div>
+  <div class="meta-item"><label>Зарегистрирован</label><div class="value">May 23, 2026 11:43:07</div></div>
+  <div class="meta-item"><label>Card ID</label><div class="value">8551</div></div>
+</div>
+</div><div class="section" id="profile">
+<div class="section-header">
+  <span class="section-num">02</span>
+  <h2>Профиль персонажа (meta_prompt)</h2>
+</div><div class="card" style="border-left: 3px solid var(--accent);"><p style="color: var(--text); font-size: 14px; line-height: 1.7; margin-bottom: 16px;">Character Profile: Мужчина, 25 лет. Устойчивое ядро личности строится на созидании и внутреннем масштабе. Его ключевая мотивация — переход от статики к движению, расширение горизонтов и жизнь в ритме между странами. Он проявляет себя через творение, оставляя после себя ощущение тихой, непоколебимой силы и спокойствия, не требующего словесных подтверждений. Эмоциональный вектор направлен на вдохнов…</p><details>
+<summary>Полный raw meta_prompt (2086 символов)</summary>
+<div class="details-body">Character Profile: Мужчина, 25 лет. Устойчивое ядро личности строится на созидании и внутреннем масштабе. Его ключевая мотивация — переход от статики к движению, расширение горизонтов и жизнь в ритме между странами. Он проявляет себя через творение, оставляя после себя ощущение тихой, непоколебимой силы и спокойствия, не требующего словесных подтверждений. Эмоциональный вектор направлен на вдохновение, простор и реализацию потенциала. Визуальная идентичность: Доминирующий вектор — «Relaxed Global Sophistication» (Расслабленная глобальная утонченность). Это синтез естественности Boho и мягкой чувственности Romantic, очищенный от театральности и этнических клише. Образ транслирует свободную творческую зрелость и теплую открытость. Силуэт характеризуется мягкими линиями, использованием натуральных фактур (лен, мягкая шерсть, замша) и светлой, природной палитрой (песочный, кремовый, теплый серый, оливковый). Стиль поведения в одежде — сдержанная природность: один выразительный фактурный элемент вместо многослойного костюма странника. В разных контекстах образ адаптируется: в движении и путешествиях — больше воздуха и свободы; в моменты реализации — чище и современнее, с акцентом на качество материалов; в intimate-сценах — максимально тактильный и теплый. Избегать: фестивального хиппи-стиля, рыхлости, чрезмерной нежности без стержня, логотипов и демонстративной роскоши. Key Answer Locks для первой сцены: 1. Главный приоритет: Ощущение масштаба, возможностей и движения вперед. 2. Желаемая среда: Жизнь между разными странами (атмосфера путешествия/транзита/новой локации). 3. Способ проявления: Через акт создания/творения. 4. Социальный сигнал: Уверенность без лишних слов, спокойствие, внутренняя сила. 5. Визуальный образ: Светлые, мягкие ткани, свободный но собранный силуэт, эстетика открытости и тепла. 6. Эмоциональный фон: Вдохновение, простор, жизнь, наполненная возможностями. Сцена должна транслировать состояние человека, который уже живет той жизнью, к которой стремится: свободный, творческий, находящийся в пути, но при этом глубоко укорененный в себе.</div>
+</details>
+</div></div><div class="section" id="scene">
+<div class="section-header">
+  <span class="section-num">03</span>
+  <h2>Сцена и итерации</h2>
+</div><div class="card">
+  <div style="display: flex; align-items: baseline; gap: 16px; margin-bottom: 12px;">
+    <h3 style="font-size: 18px; margin: 0;">«Утренний переход в новом городе»</h3>
+  </div>
+  <div style="margin-bottom: 12px;">
+    <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted);">Комментарий пользователя</span><br>
+    <span style="font-size: 14px; color: #f9a8d4; font-style: italic;">«Слишком я сладкий»</span>
+  </div>
+</div><div class="alert alert-warn">
+  ⚠️ Данные GenerationsRelationManager недоступны — Livewire lazy-компонент требует server-side HMAC-ключ для инициализации.
+  Недоступно: изображения генераций, final_prompt_text, scene_prompt_text, история итераций, фотографии близких.
+</div></div><div class="section" id="onboarding">
+<div class="section-header">
+  <span class="section-num">04</span>
+  <h2>Онбординг — все вопросы и ответы</h2>
+</div><div class="card"><table class="qa-table"><thead><tr><td style="color:var(--text-muted); font-size:11px; text-transform:uppercase; padding:8px; letter-spacing:.1em">№</td><td style="color:var(--text-muted); font-size:11px; text-transform:uppercase; padding:8px; letter-spacing:.1em">Вопрос</td><td style="color:var(--text-muted); font-size:11px; text-transform:uppercase; padding:8px; letter-spacing:.1em">Ответ пользователя</td><td style="color:var(--text-muted); font-size:11px; text-transform:uppercase; padding:8px; letter-spacing:.1em">Тип</td></tr></thead><tbody><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">1</td>
+      <td class="q-col" style="padding:10px 8px">Как ты существуешь в потоке трендов?</td>
+      <td class="a-col" style="padding:10px 8px">делюсь и объясняю другим</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-sphere">Сфера</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">2</td>
+      <td class="q-col" style="padding:10px 8px">Какое ощущение тебе хочется оставлять после себя? (Первое впечатление — Ядро личности)</td>
+      <td class="a-col" style="padding:10px 8px">уверенности без лишних слов, спокойствия и внутренней силы</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-onboarding">Онбординг</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">3</td>
+      <td class="q-col" style="padding:10px 8px">Что для тебя значит продолжение рода? <span style="color:var(--text-muted); font-size:11px">Сф.6</span></td>
+      <td class="a-col" style="padding:10px 8px">быть опорой для близких, быть примером для своих детей</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-sphere">Сфера</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">4</td>
+      <td class="q-col" style="padding:10px 8px">Какой образ тебе ближе всего? (Визуальный образ — Визуал)</td>
+      <td class="a-col" style="padding:10px 8px">Romantic / Feminine, Boho</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-onboarding">Онбординг</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">5</td>
+      <td class="q-col" style="padding:10px 8px">В чём тебе нравится проявлять себя? (Способ проявления — Ядро личности)</td>
+      <td class="a-col" style="padding:10px 8px">в том, что я создаю</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-onboarding">Онбординг</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">6</td>
+      <td class="q-col" style="padding:10px 8px">Какое окружение тебе хочется видеть вокруг себя? <span style="color:var(--text-muted); font-size:11px">Сф.10</span></td>
+      <td class="a-col" style="padding:10px 8px">сильных и амбициозных людей, живое и насыщенное общение</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-sphere">Сфера</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">7</td>
+      <td class="q-col" style="padding:10px 8px">Какими тебе хочется видеть сцены дальше? (Режим генерации — Визуал)</td>
+      <td class="a-col" style="padding:10px 8px">масштабными и наполненными</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-onboarding">Онбординг</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">8</td>
+      <td class="q-col" style="padding:10px 8px">Как для тебя проявляются ресурсы и богатство? <span style="color:var(--text-muted); font-size:11px">Сф.2</span></td>
+      <td class="a-col" style="padding:10px 8px">финансовая свобода и отсутствие ограничений, красивые и дорогие вещи вокруг, доступ к местам и возможностям</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-sphere">Сфера</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">9</td>
+      <td class="q-col" style="padding:10px 8px">Где тебе хочется жить? <span style="color:var(--text-muted); font-size:11px">Сф.5</span></td>
+      <td class="a-col" style="padding:10px 8px">Современный коттедж-шале</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-sphere">Сфера</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">10</td>
+      <td class="q-col" style="padding:10px 8px">В чём тебе хочется реализовываться в этой жизни? <span style="color:var(--text-muted); font-size:11px">Сф.3</span></td>
+      <td class="a-col" style="padding:10px 8px">в творчестве и создании, в инвестициях и больших проектах</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-sphere">Сфера</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">11</td>
+      <td class="q-col" style="padding:10px 8px">Что в этой сцене ощущается твоим?</td>
+      <td class="a-col" style="padding:10px 8px">мой ритм и состояние</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-scene">Сцена</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">12</td>
+      <td class="q-col" style="padding:10px 8px">Каким тебе хочется ощущать себя в своём теле и состоянии? <span style="color:var(--text-muted); font-size:11px">Сф.1</span></td>
+      <td class="a-col" style="padding:10px 8px">лёгким и энергичным, сильным и собранным</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-sphere">Сфера</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">13</td>
+      <td class="q-col" style="padding:10px 8px">Какой мир трендов тебе ближе?</td>
+      <td class="a-col" style="padding:10px 8px">цифровые технологии и AI</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-sphere">Сфера</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">14</td>
+      <td class="q-col" style="padding:10px 8px">Каким тебе хочется увидеть себя?</td>
+      <td class="a-col" style="padding:10px 8px">почувствовать жизнь, в которую хочется войти</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-scene">Сцена</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">15</td>
+      <td class="q-col" style="padding:10px 8px">Что тебе сейчас хочется почувствовать в своей жизни? (Приоритеты — Ядро личности)</td>
+      <td class="a-col" style="padding:10px 8px">больше масштаба и возможностей, вдохновение и движение вперёд</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-onboarding">Онбординг</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">16</td>
+      <td class="q-col" style="padding:10px 8px">Как выглядит свобода в твоей жизни? <span style="color:var(--text-muted); font-size:11px">Сф.9</span></td>
+      <td class="a-col" style="padding:10px 8px">легко менять окружение и образ жизни</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-sphere">Сфера</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">17</td>
+      <td class="q-col" style="padding:10px 8px">Где именно вы сейчас чувствуете самый сильный сдвиг: в конкретном инструменте, чате или месте?</td>
+      <td class="a-col" style="padding:10px 8px">Я освоил агентов ии</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-ai_deep">AI-углубление</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">18</td>
+      <td class="q-col" style="padding:10px 8px">Что для тебя значит настоящая близость и партнёрство? <span style="color:var(--text-muted); font-size:11px">Сф.4</span></td>
+      <td class="a-col" style="padding:10px 8px">ощущение «мы», партнёрство и движение вместе</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-sphere">Сфера</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">19</td>
+      <td class="q-col" style="padding:10px 8px">Что для тебя сейчас развитие? <span style="color:var(--text-muted); font-size:11px">Сф.8</span></td>
+      <td class="a-col" style="padding:10px 8px">глубже понимать себя и жизнь, учиться у сильных людей</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-sphere">Сфера</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">20</td>
+      <td class="q-col" style="padding:10px 8px">Что для тебя значит создавать новое? <span style="color:var(--text-muted); font-size:11px">Сф.7</span></td>
+      <td class="a-col" style="padding:10px 8px">сделать что-то своими руками, создать новый мир вокруг себя</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-sphere">Сфера</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">21</td>
+      <td class="q-col" style="padding:10px 8px">Как тебе хочется жить в этом пространстве? <span style="color:var(--text-muted); font-size:11px">Сф.5</span></td>
+      <td class="a-col" style="padding:10px 8px">в тёплой семейной жизни, в живой атмосфере с друзьями и гостями</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-sphere">Сфера</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">22</td>
+      <td class="q-col" style="padding:10px 8px">В какой атмосфере тебе хочется жить? (Среда жизни — Контекст жизни)</td>
+      <td class="a-col" style="padding:10px 8px">жизнь между разными странами</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-onboarding">Онбординг</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">23</td>
+      <td class="q-col" style="padding:10px 8px">Через что тебе хочется приходить к этому состоянию? <span style="color:var(--text-muted); font-size:11px">Сф.1</span></td>
+      <td class="a-col" style="padding:10px 8px">спорт и движение, забота о теле и здоровье, активный и насыщенный образ жизни</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-sphere">Сфера</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">24</td>
+      <td class="q-col" style="padding:10px 8px">Где именно вы находитесь в самый обычный день своей работы и что вас окружает?</td>
+      <td class="a-col" style="padding:10px 8px">В теплой стране, солнечная погода. Я на приеме по случаю презентации моего приложения</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-ai_deep">AI-углубление</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">25</td>
+      <td class="q-col" style="padding:10px 8px">Как тебе хочется ощущать свою жизнь? (Уровень проявления — Контекст жизни)</td>
+      <td class="a-col" style="padding:10px 8px">просторной и полной возможностей</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-onboarding">Онбординг</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">26</td>
+      <td class="q-col" style="padding:10px 8px">Через что ты бы хотел видеть это в своей жизни?</td>
+      <td class="a-col" style="padding:10px 8px">создание продукта или идеи</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-sphere">Сфера</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">27</td>
+      <td class="q-col" style="padding:10px 8px">Опишите один конкретный момент вашего обычного дня, когда вы чувствуете себя максимально живым и наполненным: где вы находитесь, что вас окружает и чем вы заняты в эту секунду?</td>
+      <td class="a-col" style="padding:10px 8px">Когда утром я делаю кундалини йогу утром на свежем воздухе</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-ai_deep">AI-углубление</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">28</td>
+      <td class="q-col" style="padding:10px 8px">Где и с кем вы чаще всего проводите вечера, когда чувствуете себя максимально «в своей тарелке»?</td>
+      <td class="a-col" style="padding:10px 8px">Когда делюсь с кем то своими откровениями или открытиями</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-ai_deep">AI-углубление</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">29</td>
+      <td class="q-col" style="padding:10px 8px">Что тебе особенно хочется видеть в этой жизни?</td>
+      <td class="a-col" style="padding:10px 8px">премиальный уровень повседневной жизни</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-sphere">Сфера</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">30</td>
+      <td class="q-col" style="padding:10px 8px">Через что тебе хочется увидеть свое продолжение? <span style="color:var(--text-muted); font-size:11px">Сф.6</span></td>
+      <td class="a-col" style="padding:10px 8px">спокойная повседневная жизнь рядом</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-sphere">Сфера</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">31</td>
+      <td class="q-col" style="padding:10px 8px">Как тебе хочется увидеть эту жизнь?</td>
+      <td class="a-col" style="padding:10px 8px">Я вижу себя со стороны</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-scene">Сцена</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">32</td>
+      <td class="q-col" style="padding:10px 8px">Какое маленькое, почти незаметное действие в вашем доме — например, запах завтрака на кухне или свет лампы в углу — сразу даёт вам чувство, что вы дома?</td>
+      <td class="a-col" style="padding:10px 8px">Я выхожу из просторной кухни в большой зал с панорамными окнами и красивейшим видом на сосны ели и лук и в гостиной на диване сидит моя жена и мои друзья</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-ai_deep">AI-углубление</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">33</td>
+      <td class="q-col" style="padding:10px 8px">В чем близость особенно ощущается в твоей жизни? <span style="color:var(--text-muted); font-size:11px">Сф.4</span></td>
+      <td class="a-col" style="padding:10px 8px">поддержка в важных моментах</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-sphere">Сфера</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">34</td>
+      <td class="q-col" style="padding:10px 8px">Через что это проявляется в твоей жизни? <span style="color:var(--text-muted); font-size:11px">Сф.3</span></td>
+      <td class="a-col" style="padding:10px 8px">сильное окружение и обмен опытом</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-sphere">Сфера</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">35</td>
+      <td class="q-col" style="padding:10px 8px">Какой звук слышен в этой тишине?</td>
+      <td class="a-col" style="padding:10px 8px">Смотря какой тишине</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-scene">Сцена</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">36</td>
+      <td class="q-col" style="padding:10px 8px">Как тебе хочется увидеть эту жизнь?</td>
+      <td class="a-col" style="padding:10px 8px">Как кадр из фильма</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-scene">Сцена</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">37</td>
+      <td class="q-col" style="padding:10px 8px">Что лежит у тебя в руках в этот момент?</td>
+      <td class="a-col" style="padding:10px 8px">Ничего</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-scene">Сцена</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">38</td>
+      <td class="q-col" style="padding:10px 8px">Тёплый ветер или прохладный воздух касается лица?</td>
+      <td class="a-col" style="padding:10px 8px">Нет</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-scene">Сцена</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">39</td>
+      <td class="q-col" style="padding:10px 8px">Как тебе хочется увидеть эту жизнь?</td>
+      <td class="a-col" style="padding:10px 8px">Я вижу всё своими глазами</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-scene">Сцена</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">40</td>
+      <td class="q-col" style="padding:10px 8px">Как тебе хочется увидеть эту жизнь?</td>
+      <td class="a-col" style="padding:10px 8px">Своими глазами</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-scene">Сцена</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">41</td>
+      <td class="q-col" style="padding:10px 8px">Какой инструмент лежит у тебя под рукой прямо сейчас?</td>
+      <td class="a-col" style="padding:10px 8px"><span style="color:var(--text-muted)">—</span></td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-scene">Сцена</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">42</td>
+      <td class="q-col" style="padding:10px 8px">Что именно стоит на столе прямо сейчас?</td>
+      <td class="a-col" style="padding:10px 8px">Мы играем в настольную игру с дочкой Ариной на природе</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-scene">Сцена</span></td>
+    </tr><tr>
+      <td style="color:var(--text-muted); font-size:12px; padding:10px 8px; vertical-align:top">43</td>
+      <td class="q-col" style="padding:10px 8px">Как тебе хочется увидеть эту жизнь?</td>
+      <td class="a-col" style="padding:10px 8px">Я вижу всё своими глазами</td>
+      <td class="cat-col" style="padding:10px 8px; text-align:right; white-space:nowrap"><span class="badge cat cat-scene">Сцена</span></td>
+    </tr></tbody></table></div></div><div class="section" id="sphere-micro">
+<div class="section-header">
+  <span class="section-num">05</span>
+  <h2>Микроопросники сфер — все варианты</h2>
+</div><div class="alert alert-info">
+  Отмеченные варианты определены на основе <strong>нечёткого сопоставления</strong> ответов пользователя с вариантами сферы.
+  Полной точности без прямых данных из БД нет.
+</div><div class="sphere-card"><div class="sphere-header" onclick="this.parentElement.querySelector('.sphere-body').style.display=this.parentElement.querySelector('.sphere-body').style.display==='none'?'block':'none'"><span class="sphere-icon">⚡</span><span class="sphere-name" style="color:#c084fc">Я и состояние</span><span style="font-size:11px; color:var(--text-muted)">3 вопроса · нажми чтобы раскрыть</span></div><div class="sphere-body" style="display:none"><div class="q-block"><div class="q-text">В1. Что для тебя сейчас «быть в своём состоянии»?</div><div class="options-row"><span class="badge option">внутренняя опора</span><span class="badge option">энергия и включённость</span><span class="badge option matched">ощущение силы</span><span class="badge option">лёгкость внутри</span><span class="badge option">ясность</span><span class="badge option matched">удовольствие от себя</span><span class="badge option matched">ценность себя</span><span class="badge option matched">ощущение себя привлекательным</span></div><div class="selected-answer">↑ совпадение: ощущение силы, удовольствие от себя, ценность себя, ощущение себя привлекательным</div></div><div class="q-block"><div class="q-text">В2. Как ты хочешь ощущать себя каждый день?</div><div class="options-row"><span class="badge option matched">спокойно и уверенно</span><span class="badge option matched">живо и включённо</span><span class="badge option matched">свободно и легко</span><span class="badge option">ясно и собранно</span><span class="badge option matched">сильно и устойчиво</span><span class="badge option">вдохновлённо</span><span class="badge option matched">естественно и уверенно</span></div><div class="selected-answer">↑ совпадение: спокойно и уверенно, живо и включённо, свободно и легко, сильно и устойчиво, естественно и уверенно</div></div><div class="q-block"><div class="q-text">В3. Через что это видно?</div><div class="options-row"><span class="badge option">тело и осанка</span><span class="badge option">взгляд</span><span class="badge option matched">ритм жизни</span><span class="badge option">решения, которые принимаю</span><span class="badge option matched">пространство вокруг</span></div><div class="selected-answer">↑ совпадение: ритм жизни, пространство вокруг</div></div></div></div><div class="sphere-card"><div class="sphere-header" onclick="this.parentElement.querySelector('.sphere-body').style.display=this.parentElement.querySelector('.sphere-body').style.display==='none'?'block':'none'"><span class="sphere-icon">💎</span><span class="sphere-name" style="color:#fbbf24">Ресурсы и уровень жизни</span><span style="font-size:11px; color:var(--text-muted)">3 вопроса · нажми чтобы раскрыть</span></div><div class="sphere-body" style="display:none"><div class="q-block"><div class="q-text">В1. Что для тебя значит «достаточно ресурсов»?</div><div class="options-row"><span class="badge option matched">свобода выбора</span><span class="badge option matched">высокий доход и масштаб</span><span class="badge option">жить на своём уровне</span><span class="badge option">время на своё</span><span class="badge option matched">возможность создавать без ограничений</span><span class="badge option">спокойствие за завтра</span><span class="badge option">путешествовать без подсчёта</span><span class="badge option matched">окружение, которое усиливает меня</span></div><div class="selected-answer">↑ совпадение: свобода выбора, высокий доход и масштаб, возможность создавать без ограничений, окружение, которое усиливает меня</div></div><div class="q-block"><div class="q-text">В2. Как ты хочешь ощущать свой уровень жизни?</div><div class="options-row"><span class="badge option">устойчиво и спокойно</span><span class="badge option">масштабно и щедро</span><span class="badge option">красиво и со вкусом</span><span class="badge option matched">легко и без ограничений</span><span class="badge option">с запасом и воздухом</span><span class="badge option">широко и свободно</span></div><div class="selected-answer">↑ совпадение: легко и без ограничений</div></div><div class="q-block"><div class="q-text">В3. Через что это видно?</div><div class="options-row"><span class="badge option">дом и пространство</span><span class="badge option">путешествия</span><span class="badge option matched">транспорт и свобода движения</span><span class="badge option matched">вещи со вкусом</span><span class="badge option">бизнес и проекты</span><span class="badge option">свободное время</span><span class="badge option">приватность</span></div><div class="selected-answer">↑ совпадение: транспорт и свобода движения, вещи со вкусом</div></div></div></div><div class="sphere-card"><div class="sphere-header" onclick="this.parentElement.querySelector('.sphere-body').style.display=this.parentElement.querySelector('.sphere-body').style.display==='none'?'block':'none'"><span class="sphere-icon">🎯</span><span class="sphere-name" style="color:#f97316">Реализация и влияние</span><span style="font-size:11px; color:var(--text-muted)">3 вопроса · нажми чтобы раскрыть</span></div><div class="sphere-body" style="display:none"><div class="q-block"><div class="q-text">В1. Что для тебя значит реализоваться?</div><div class="options-row"><span class="badge option">создавать своё дело</span><span class="badge option matched">быть признанным экспертом</span><span class="badge option matched">влиять на людей</span><span class="badge option">оставить след</span><span class="badge option">работать через любимое</span><span class="badge option">создавать сильные проекты</span><span class="badge option matched">быть услышанным и замеченным</span><span class="badge option">выйти на свой максимум</span></div><div class="selected-answer">↑ совпадение: быть признанным экспертом, влиять на людей, быть услышанным и замеченным</div></div><div class="q-block"><div class="q-text">В2. Как ты хочешь это ощущать?</div><div class="options-row"><span class="badge option">через признание</span><span class="badge option matched">через масштаб</span><span class="badge option">через свободу</span><span class="badge option">через творчество</span><span class="badge option">через влияние</span><span class="badge option">через видимый результат</span><span class="badge option matched">я на своём месте</span></div><div class="selected-answer">↑ совпадение: через масштаб, я на своём месте</div></div><div class="q-block"><div class="q-text">В3. Через что это проявляется?</div><div class="options-row"><span class="badge option">публичность</span><span class="badge option">команда и управление</span><span class="badge option">личный бренд</span><span class="badge option">бизнес</span><span class="badge option matched">продукт</span><span class="badge option">контент</span><span class="badge option">экспертиза</span></div><div class="selected-answer">↑ совпадение: продукт</div></div></div></div><div class="sphere-card"><div class="sphere-header" onclick="this.parentElement.querySelector('.sphere-body').style.display=this.parentElement.querySelector('.sphere-body').style.display==='none'?'block':'none'"><span class="sphere-icon">❤️</span><span class="sphere-name" style="color:#f43f5e">Любовь и партнёрство</span><span style="font-size:11px; color:var(--text-muted)">3 вопроса · нажми чтобы раскрыть</span></div><div class="sphere-body" style="display:none"><div class="q-block"><div class="q-text">В1. Что для тебя настоящая любовь?</div><div class="options-row"><span class="badge option">спокойствие и доверие</span><span class="badge option">страсть и притяжение</span><span class="badge option matched">партнёрство</span><span class="badge option matched">поддержка</span><span class="badge option matched">вдохновение</span><span class="badge option">глубина</span><span class="badge option matched">ощущение «мы»</span></div><div class="selected-answer">↑ совпадение: партнёрство, поддержка, вдохновение, ощущение «мы»</div></div><div class="q-block"><div class="q-text">В2. Как ты хочешь чувствовать себя в отношениях?</div><div class="options-row"><span class="badge option">любимым</span><span class="badge option">желанным и притягательным</span><span class="badge option">спокойным</span><span class="badge option">свободным</span><span class="badge option">вдохновлённым</span><span class="badge option">увиденным</span><span class="badge option">собой</span></div></div><div class="q-block"><div class="q-text">В3. Через что это видно?</div><div class="options-row"><span class="badge option">совместное пространство</span><span class="badge option">путешествия</span><span class="badge option matched">бытовая жизнь вместе</span><span class="badge option matched">партнёрство</span><span class="badge option">общие планы</span><span class="badge option">спокойное присутствие</span></div><div class="selected-answer">↑ совпадение: бытовая жизнь вместе, партнёрство</div></div></div></div><div class="sphere-card"><div class="sphere-header" onclick="this.parentElement.querySelector('.sphere-body').style.display=this.parentElement.querySelector('.sphere-body').style.display==='none'?'block':'none'"><span class="sphere-icon">🏡</span><span class="sphere-name" style="color:#34d399">Дом, семья и близкие</span><span style="font-size:11px; color:var(--text-muted)">4 вопроса · нажми чтобы раскрыть</span></div><div class="sphere-body" style="display:none"><div class="q-block"><div class="q-text">В1. Что для тебя сейчас «настоящий дом»?</div><div class="options-row"><span class="badge option matched">Место силы и спокойствия</span><span class="badge option">Тишина и приватность</span><span class="badge option matched">Пространство, которое отражает меня</span><span class="badge option">Дом, где собираются близкие</span><span class="badge option">Дом в любой точке мира</span><span class="badge option">Приватность и уединение</span><span class="badge option matched">Место, где можно собирать людей</span></div><div class="selected-answer">↑ совпадение: Место силы и спокойствия, Пространство, которое отражает меня, Место, где можно собирать людей</div></div><div class="q-block"><div class="q-text">В2. Какой ты хочешь быть в кругу близких?</div><div class="options-row"><span class="badge option">Тёплые и доверительные отношения</span><span class="badge option matched">Сильное партнёрство</span><span class="badge option matched">Ощущение семьи</span><span class="badge option">Эмоциональная связь</span><span class="badge option">Спокойствие и гармония</span><span class="badge option matched">Свобода быть собой рядом</span><span class="badge option">Опора и принятие</span></div><div class="selected-answer">↑ совпадение: Сильное партнёрство, Ощущение семьи, Свобода быть собой рядом</div></div><div class="q-block"><div class="q-text">В3. Что ты хочешь ощущать в своём пространстве?</div><div class="options-row"><span class="badge option">Спокойно и защищённо</span><span class="badge option matched">Свободно и легко</span><span class="badge option matched">Тепло и уютно</span><span class="badge option">Красиво и эстетично</span><span class="badge option matched">Масштабно и уверенно</span><span class="badge option matched">Живо и наполненно</span><span class="badge option matched">Хочется выдохнуть</span></div><div class="selected-answer">↑ совпадение: Свободно и легко, Тепло и уютно, Масштабно и уверенно, Живо и наполненно, Хочется выдохнуть</div></div><div class="q-block"><div class="q-text">В4. Через что должно быть видно, что ты «на своём месте»?</div><div class="options-row"><span class="badge option">Архитектура / форма дома</span><span class="badge option">Интерьер / детали</span><span class="badge option matched">Свет и воздух</span><span class="badge option">Вид из окон</span><span class="badge option">Терраса / сад</span><span class="badge option matched">Кухня и стол</span><span class="badge option">Семейные детали</span><span class="badge option">Приватность пространства</span></div><div class="selected-answer">↑ совпадение: Свет и воздух, Кухня и стол</div></div></div></div><div class="sphere-card"><div class="sphere-header" onclick="this.parentElement.querySelector('.sphere-body').style.display=this.parentElement.querySelector('.sphere-body').style.display==='none'?'block':'none'"><span class="sphere-icon">🌱</span><span class="sphere-name" style="color:#22d3ee">Дети и наследие</span><span style="font-size:11px; color:var(--text-muted)">3 вопроса · нажми чтобы раскрыть</span></div><div class="sphere-body" style="display:none"><div class="q-block"><div class="q-text">В1. Что для тебя значит продолжение?</div><div class="options-row"><span class="badge option">дети</span><span class="badge option">дело, которое остаётся</span><span class="badge option">передача опыта</span><span class="badge option">ученики</span><span class="badge option">семья</span><span class="badge option">долгий вклад</span></div></div><div class="q-block"><div class="q-text">В2. Как ты хочешь это проживать?</div><div class="options-row"><span class="badge option">глубоко и осмысленно</span><span class="badge option">спокойно и постепенно</span><span class="badge option">с теплом</span><span class="badge option">с радостью</span><span class="badge option">в своём ритме и глубине</span></div></div><div class="q-block"><div class="q-text">В3. Через что это считывается?</div><div class="options-row"><span class="badge option matched">дети и их рост</span><span class="badge option">семья</span><span class="badge option">наставничество</span><span class="badge option matched">дело или проект</span><span class="badge option">традиции</span></div><div class="selected-answer">↑ совпадение: дети и их рост, дело или проект</div></div></div></div><div class="sphere-card"><div class="sphere-header" onclick="this.parentElement.querySelector('.sphere-body').style.display=this.parentElement.querySelector('.sphere-body').style.display==='none'?'block':'none'"><span class="sphere-icon">✨</span><span class="sphere-name" style="color:#a78bfa">Творчество и новые начинания</span><span style="font-size:11px; color:var(--text-muted)">3 вопроса · нажми чтобы раскрыть</span></div><div class="sphere-body" style="display:none"><div class="q-block"><div class="q-text">В1. Что для тебя значит создавать своё?</div><div class="options-row"><span class="badge option matched">новый проект</span><span class="badge option">творчество</span><span class="badge option matched">новый этап</span><span class="badge option matched">сделать что-то реальное руками</span><span class="badge option">вдохновить других</span><span class="badge option matched">создать с нуля</span></div><div class="selected-answer">↑ совпадение: новый проект, новый этап, сделать что-то реальное руками, создать с нуля</div></div><div class="q-block"><div class="q-text">В2. Как ты хочешь это проживать?</div><div class="options-row"><span class="badge option matched">легко и вдохновлённо</span><span class="badge option">смело и масштабно</span><span class="badge option">свободно</span><span class="badge option">красиво и тонко</span><span class="badge option">в своём ритме</span><span class="badge option">в потоке</span></div><div class="selected-answer">↑ совпадение: легко и вдохновлённо</div></div><div class="q-block"><div class="q-text">В3. Через что это видно?</div><div class="options-row"><span class="badge option">творчество и самовыражение</span><span class="badge option matched">собственный проект</span><span class="badge option">запуск нового</span><span class="badge option">работа с материалом</span><span class="badge option">готовый результат</span></div><div class="selected-answer">↑ совпадение: собственный проект</div></div></div></div><div class="sphere-card"><div class="sphere-header" onclick="this.parentElement.querySelector('.sphere-body').style.display=this.parentElement.querySelector('.sphere-body').style.display==='none'?'block':'none'"><span class="sphere-icon">📚</span><span class="sphere-name" style="color:#60a5fa">Развитие и мудрость</span><span style="font-size:11px; color:var(--text-muted)">3 вопроса · нажми чтобы раскрыть</span></div><div class="sphere-body" style="display:none"><div class="q-block"><div class="q-text">В1. Что для тебя сейчас развитие?</div><div class="options-row"><span class="badge option matched">глубже понимать себя</span><span class="badge option">расти в мышлении</span><span class="badge option">становиться спокойнее</span><span class="badge option matched">выйти на новый уровень</span><span class="badge option">управлять собой</span><span class="badge option matched">соединять знания и опыт</span><span class="badge option">передавать дальше</span></div><div class="selected-answer">↑ совпадение: глубже понимать себя, выйти на новый уровень, соединять знания и опыт</div></div><div class="q-block"><div class="q-text">В2. Как ты хочешь это ощущать?</div><div class="options-row"><span class="badge option">ясность</span><span class="badge option">глубина</span><span class="badge option matched">спокойная сила</span><span class="badge option">зрелость</span><span class="badge option matched">свобода мышления</span><span class="badge option matched">рост</span><span class="badge option">уверенность</span></div><div class="selected-answer">↑ совпадение: спокойная сила, свобода мышления, рост</div></div><div class="q-block"><div class="q-text">В3. Через что это видно?</div><div class="options-row"><span class="badge option">книги и знания</span><span class="badge option">практика</span><span class="badge option">наставники</span><span class="badge option">разговоры</span><span class="badge option matched">опыт</span><span class="badge option">время на размышления</span></div><div class="selected-answer">↑ совпадение: опыт</div></div></div></div><div class="sphere-card"><div class="sphere-header" onclick="this.parentElement.querySelector('.sphere-body').style.display=this.parentElement.querySelector('.sphere-body').style.display==='none'?'block':'none'"><span class="sphere-icon">🌍</span><span class="sphere-name" style="color:#fb923c">Свобода и масштаб жизни</span><span style="font-size:11px; color:var(--text-muted)">3 вопроса · нажми чтобы раскрыть</span></div><div class="sphere-body" style="display:none"><div class="q-block"><div class="q-text">В1. Что для тебя свобода?</div><div class="options-row"><span class="badge option">жить в своём ритме</span><span class="badge option">выбирать страну и место</span><span class="badge option matched">масштаб жизни без ограничений</span><span class="badge option matched">свобода времени</span><span class="badge option matched">свобода решений</span><span class="badge option">независимость</span><span class="badge option">лёгкость движения</span></div><div class="selected-answer">↑ совпадение: масштаб жизни без ограничений, свобода времени, свобода решений</div></div><div class="q-block"><div class="q-text">В2. Как ты хочешь ощущать свободу?</div><div class="options-row"><span class="badge option matched">легко и воздушно</span><span class="badge option matched">уверенно и спокойно</span><span class="badge option">широко и масштабно</span><span class="badge option matched">спонтанно и живо</span><span class="badge option">мощно и независимо</span><span class="badge option">стабильно</span></div><div class="selected-answer">↑ совпадение: легко и воздушно, уверенно и спокойно, спонтанно и живо</div></div><div class="q-block"><div class="q-text">В3. Через что это видно?</div><div class="options-row"><span class="badge option">путешествия</span><span class="badge option matched">жизнь в разных странах</span><span class="badge option">работа без привязки</span><span class="badge option matched">ритм жизни без жёстких рамок</span><span class="badge option matched">ощущение, что мир открыт</span></div><div class="selected-answer">↑ совпадение: жизнь в разных странах, ритм жизни без жёстких рамок, ощущение, что мир открыт</div></div></div></div><div class="sphere-card"><div class="sphere-header" onclick="this.parentElement.querySelector('.sphere-body').style.display=this.parentElement.querySelector('.sphere-body').style.display==='none'?'block':'none'"><span class="sphere-icon">👥</span><span class="sphere-name" style="color:#4ade80">Окружение</span><span style="font-size:11px; color:var(--text-muted)">3 вопроса · нажми чтобы раскрыть</span></div><div class="sphere-body" style="display:none"><div class="q-block"><div class="q-text">В1. Какие люди тебе сейчас важны?</div><div class="options-row"><span class="badge option">сильные и амбициозные</span><span class="badge option">спокойные и устойчивые</span><span class="badge option">творческие и живые</span></div></div><div class="q-block"><div class="q-text">В2. Как ты хочешь чувствовать себя среди них?</div><div class="options-row"><span class="badge option">признанным</span><span class="badge option">вдохновлённым</span><span class="badge option">спокойным</span><span class="badge option matched">сильным</span><span class="badge option">свободным</span><span class="badge option">собой</span></div><div class="selected-answer">↑ совпадение: сильным</div></div><div class="q-block"><div class="q-text">В3. Через что это проявляется?</div><div class="options-row"><span class="badge option">проекты</span><span class="badge option">разговоры</span><span class="badge option">встречи</span><span class="badge option matched">совместный опыт</span><span class="badge option">стиль общения</span><span class="badge option matched">ощущение «свои»</span></div><div class="selected-answer">↑ совпадение: совместный опыт, ощущение «свои»</div></div></div></div></div><div class="section" id="ai-deep">
+<div class="section-header">
+  <span class="section-num">06</span>
+  <h2>AI-углубляющие вопросы</h2>
+</div><div class="deep-card">
+  <div class="dq">Где именно вы сейчас чувствуете самый сильный сдвиг: в конкретном инструменте, чате или месте?</div>
+  <div class="da">«Я освоил агентов ии»</div>
+</div><div class="deep-card">
+  <div class="dq">Где именно вы находитесь в самый обычный день своей работы и что вас окружает?</div>
+  <div class="da">«В теплой стране, солнечная погода. Я на приеме по случаю презентации моего приложения»</div>
+</div><div class="deep-card">
+  <div class="dq">Опишите один конкретный момент вашего обычного дня, когда вы чувствуете себя максимально живым и наполненным: где вы находитесь, что вас окружает и чем вы заняты в эту секунду?</div>
+  <div class="da">«Когда утром я делаю кундалини йогу утром на свежем воздухе»</div>
+</div><div class="deep-card">
+  <div class="dq">Где и с кем вы чаще всего проводите вечера, когда чувствуете себя максимально «в своей тарелке»?</div>
+  <div class="da">«Когда делюсь с кем то своими откровениями или открытиями»</div>
+</div><div class="deep-card">
+  <div class="dq">Какое маленькое, почти незаметное действие в вашем доме — например, запах завтрака на кухне или свет лампы в углу — сразу даёт вам чувство, что вы дома?</div>
+  <div class="da">«Я выхожу из просторной кухни в большой зал с панорамными окнами и красивейшим видом на сосны ели и лук и в гостиной на диване сидит моя жена и мои друзья»</div>
+</div></div><div class="section" id="analytics">
+<div class="section-header">
+  <span class="section-num">07</span>
+  <h2>Аналитика и полнота данных</h2>
+</div><div class="stats-grid">
+  <div class="stat-card"><div class="num">43</div><div class="lbl">Всего ответов</div></div>
+  <div class="stat-card"><div class="num">42</div><div class="lbl">Заполненных</div></div>
+  <div class="stat-card"><div class="num">98%</div><div class="lbl">Полнота</div></div>
+  <div class="stat-card"><div class="num">19</div><div class="lbl">Кредитов</div></div>
+  <div class="stat-card"><div class="num">5</div><div class="lbl">AI-углублений</div></div>
+  <div class="stat-card"><div class="num">19</div><div class="lbl">Сферных Q</div></div>
+</div>
+<div style="margin-top: 24px;"></div>
+<div class="card"><h3 style="margin-bottom:16px">Полнота по категориям</h3><div class="progress-row">
+  <div class="progress-label">Онбординг</div>
+  <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+  <div class="progress-val">100%</div>
+  <div style="font-size:12px; color:var(--text-muted); width:80px; text-align:right">7/7</div>
+</div><div class="progress-row">
+  <div class="progress-label">Сферы</div>
+  <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+  <div class="progress-val">100%</div>
+  <div style="font-size:12px; color:var(--text-muted); width:80px; text-align:right">19/19</div>
+</div><div class="progress-row">
+  <div class="progress-label">AI-углубления</div>
+  <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+  <div class="progress-val">100%</div>
+  <div style="font-size:12px; color:var(--text-muted); width:80px; text-align:right">5/5</div>
+</div><div class="progress-row">
+  <div class="progress-label">Сцена</div>
+  <div class="progress-bar"><div class="progress-fill" style="width:92%"></div></div>
+  <div class="progress-val">92%</div>
+  <div style="font-size:12px; color:var(--text-muted); width:80px; text-align:right">11/12</div>
+</div></div><div class="card" style="margin-top:16px">
+<h3 style="margin-bottom:16px">Доступность данных</h3>
+<table style="width:100%; font-size:13px; border-collapse:collapse;">
+<tr style="border-bottom:1px solid var(--border)"><td style="padding:8px 0; color:var(--text)">Профиль пользователя</td><td style="padding:8px; text-align:right; color:var(--green); font-weight:600">✓</td></tr><tr style="border-bottom:1px solid var(--border)"><td style="padding:8px 0; color:var(--text)">Ответы на карточки (43 пары)</td><td style="padding:8px; text-align:right; color:var(--green); font-weight:600">✓</td></tr><tr style="border-bottom:1px solid var(--border)"><td style="padding:8px 0; color:var(--text)">meta_prompt (Character Profile)</td><td style="padding:8px; text-align:right; color:var(--green); font-weight:600">✓</td></tr><tr style="border-bottom:1px solid var(--border)"><td style="padding:8px 0; color:var(--text)">Название сцены</td><td style="padding:8px; text-align:right; color:var(--green); font-weight:600">✓</td></tr><tr style="border-bottom:1px solid var(--border)"><td style="padding:8px 0; color:var(--text)">Комментарий к сцене</td><td style="padding:8px; text-align:right; color:var(--green); font-weight:600">✓</td></tr><tr style="border-bottom:1px solid var(--border)"><td style="padding:8px 0; color:var(--text)">Кредиты / статус</td><td style="padding:8px; text-align:right; color:var(--green); font-weight:600">✓</td></tr><tr style="border-bottom:1px solid var(--border)"><td style="padding:8px 0; color:var(--text)">Изображения генераций<span style="color:var(--text-muted); font-size:11px"> (lazy component, нужен app key)</span></td><td style="padding:8px; text-align:right; color:var(--red); font-weight:600">✗</td></tr><tr style="border-bottom:1px solid var(--border)"><td style="padding:8px 0; color:var(--text)">final_prompt_text (FAL-промт)<span style="color:var(--text-muted); font-size:11px"> (lazy component, нужен app key)</span></td><td style="padding:8px; text-align:right; color:var(--red); font-weight:600">✗</td></tr><tr style="border-bottom:1px solid var(--border)"><td style="padding:8px 0; color:var(--text)">scene_prompt_text<span style="color:var(--text-muted); font-size:11px"> (lazy component, нужен app key)</span></td><td style="padding:8px; text-align:right; color:var(--red); font-weight:600">✗</td></tr><tr style="border-bottom:1px solid var(--border)"><td style="padding:8px 0; color:var(--text)">История итераций<span style="color:var(--text-muted); font-size:11px"> (lazy component, нужен app key)</span></td><td style="padding:8px; text-align:right; color:var(--red); font-weight:600">✗</td></tr><tr style="border-bottom:1px solid var(--border)"><td style="padding:8px 0; color:var(--text)">Фотографии близких<span style="color:var(--text-muted); font-size:11px"> (lazy component, нужен app key)</span></td><td style="padding:8px; text-align:right; color:var(--red); font-weight:600">✗</td></tr><tr style="border-bottom:1px solid var(--border)"><td style="padding:8px 0; color:var(--text)">Карточка стиля (фото)<span style="color:var(--text-muted); font-size:11px"> (lazy component, нужен app key)</span></td><td style="padding:8px; text-align:right; color:var(--red); font-weight:600">✗</td></tr></table></div></div>
+<div style="padding: 32px 0; text-align: center; color: var(--text-muted); font-size: 12px;">
+  Сформировано: 2026-05-26 · monad1@elyne.online · Boris for Elyne
+</div>
+</main>
+</body>
+</html>
