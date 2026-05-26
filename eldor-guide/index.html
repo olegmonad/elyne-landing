@@ -268,6 +268,11 @@ pm2 save && pm2 startup</pre>
   <div class="step-body">
     <p>Нужен виртуальный сервер под Ubuntu. Минимум: 2 ядра CPU, 4 ГБ RAM, 40 ГБ SSD.</p>
 
+    <div class="note" style="border-left-color:#7c6ef5"><strong>Зачем вообще сервер?</strong><br>
+    Твой агент должен работать <strong>круглосуточно</strong> — отвечать в Telegram пока ты спишь, выполнять задачи по расписанию, не зависеть от того, включён ли твой ноутбук. Домашний компьютер для этого не подходит — он выключается, уходит в сон, меняет IP.<br><br>
+    <strong>Зачем Ubuntu (Linux)?</strong><br>
+    Ubuntu — это операционная система, как Windows, но для серверов. Все инструменты для AI-агентов (Node.js, Claude Code, PM2) лучше всего работают именно на Linux. Timeweb и VDSina дают тебе удалённый компьютер с Ubuntu — ты подключаешься к нему через SSH (как к рабочему столу, только в терминале) и устанавливаешь всё что нужно.</div>
+
     <div class="table-wrap">
     <table>
       <tr><th>Провайдер</th><th>Цена</th><th>РФ карта</th><th>Особенности</th></tr>
@@ -896,19 +901,53 @@ pm2 monit</pre>
 <div id="cost" class="step" style="margin-top:40px">
   <div class="step-header"><div class="step-num" style="background:linear-gradient(135deg,#4ade80,#5b8dee)">₽</div><div class="step-title">Во сколько это обойдётся</div></div>
   <div class="step-body">
+
+    <p style="color:#8892a4;margin-bottom:20px">Есть два способа платить за Claude. Выбирай в зависимости от того, как часто будешь пользоваться агентом.</p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:24px">
+
+      <div style="background:#1a1d27;border:2px solid #7c6ef5;border-radius:14px;padding:22px">
+        <div style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#7c6ef5;margin-bottom:10px">Вариант А — Подписка Claude Max</div>
+        <div style="font-size:28px;font-weight:700;margin-bottom:4px">$100 <span style="font-size:15px;font-weight:400;color:#8892a4">или</span> $200 <span style="font-size:15px;font-weight:400;color:#8892a4">/мес</span></div>
+        <div style="font-size:13px;color:#8892a4;margin-bottom:16px">≈ 9 000 ₽ или 18 000 ₽/мес</div>
+        <ul style="font-size:13px;line-height:1.8;padding-left:18px;color:#c8d2e0">
+          <li>Фиксированная цена — никаких неожиданных счётов</li>
+          <li>Неограниченное использование в рамках плана</li>
+          <li>Доступ ко всем моделям (Sonnet, Opus, Haiku)</li>
+          <li>$100/мес — для умеренного использования</li>
+          <li>$200/мес — для интенсивного (голос + много задач)</li>
+        </ul>
+        <div style="margin-top:14px;font-size:12px;color:#4ade80;font-weight:600">✓ Рекомендуется для активного агента</div>
+      </div>
+
+      <div style="background:#1a1d27;border:1px solid #2a2d3a;border-radius:14px;padding:22px">
+        <div style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#8892a4;margin-bottom:10px">Вариант Б — API (оплата по факту)</div>
+        <div style="font-size:28px;font-weight:700;margin-bottom:4px">~500–3 000 ₽ <span style="font-size:15px;font-weight:400;color:#8892a4">/мес</span></div>
+        <div style="font-size:13px;color:#8892a4;margin-bottom:16px">Платишь только за то что используешь</div>
+        <ul style="font-size:13px;line-height:1.8;padding-left:18px;color:#c8d2e0">
+          <li>Создаёшь API-ключ на console.anthropic.com</li>
+          <li>Счёт приходит по реальному использованию</li>
+          <li>Sonnet: $3 за 1М токенов (вход)</li>
+          <li>Opus: $15 за 1М токенов (вход) — дороже</li>
+          <li>Хорошо если пользуешься редко</li>
+        </ul>
+        <div style="margin-top:14px;font-size:12px;color:#fbbf24;font-weight:600">⚠ Может выйти дороже при активном использовании</div>
+      </div>
+
+    </div>
+
     <div class="table-wrap">
     <table>
       <tr><th>Компонент</th><th>Стоимость</th><th>Примечание</th></tr>
       <tr><td>VPS сервер</td><td>500–1000 ₽/мес</td><td>Timeweb/VDSina — проще всего из РФ</td></tr>
-      <tr><td>Claude API (Sonnet)</td><td>500–3000 ₽/мес</td><td>Зависит от активности использования</td></tr>
-      <tr><td>Claude API (Opus)</td><td>3000–15000 ₽/мес</td><td>Если нужны сложные задачи</td></tr>
+      <tr><td>Claude Max подписка</td><td>$100 или $200/мес</td><td>Фиксированная, для активного агента</td></tr>
+      <tr><td><em>или</em> Claude API</td><td>500–3000 ₽/мес</td><td>По факту использования, для редкого</td></tr>
       <tr><td>Brave Search API</td><td>0 ₽</td><td>2000 запросов/мес бесплатно</td></tr>
       <tr><td>GitHub</td><td>0 ₽</td><td>Приватные репозитории бесплатны</td></tr>
-      <tr><td>Домен (опционально)</td><td>~1000 ₽/год</td><td>Только если нужен web-интерфейс</td></tr>
     </table>
     </div>
-    <div class="cost-total">Итого на старте: ~1000–4000 ₽ в месяц</div>
-    <div class="note"><strong>Совет:</strong> начни с Sonnet — он в 5 раз дешевле Opus и для 90% задач не хуже. На Opus переходи только для стратегических решений, анализа или сложного кода.</div>
+
+    <div class="note" style="margin-top:16px"><strong>Как платить за Claude Max из России?</strong> Подписка оформляется на claude.ai — нужна карта. Работают виртуальные карты (<a class="inline-link" href="https://revolut.com" target="_blank">Revolut</a>, <a class="inline-link" href="https://wise.com" target="_blank">Wise</a>) или карты зарубежных банков. Оплата через крипту (USDT) тоже возможна через посредников.</div>
   </div>
 </div>
 
