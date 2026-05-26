@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin vs Code — Elyne Prompts 2026-05-26</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="admin-vs-code">Admin vs Code: Сравнительная таблица промптов</h1>
+<blockquote>
+<p>Дата аудита: 2026-05-26</p>
+</blockquote>
+<h2 id="_1">Принцип разделения</h2>
+<table>
+<thead>
+<tr>
+<th>Уровень</th>
+<th>Где живёт</th>
+<th>Редактируется кем</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Admin-editable</strong></td>
+<td><code>generation_prompts</code> таблица</td>
+<td>Олег через elyne.online/admin</td>
+<td>Содержательные промпты — что говорить LLM о контексте, сфере, персонаже</td>
+</tr>
+<tr>
+<td><strong>Code-only</strong></td>
+<td>Файлы PHP (Services, Jobs, Actions)</td>
+<td>Денис через код</td>
+<td>Структурные промпты — JSON-схемы, safety guards, context blocks</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Правило</strong>: JSON schema никогда не выносится в admin — если admin сломает схему, JSON-парсинг упадёт молча (зафиксировано как feedback_ai_prompt_json_schema_code_only).</p>
+<hr>
+<h2 id="admin-code-consumer">Маппинг: Admin тип → Code consumer</h2>
+<table>
+<thead>
+<tr>
+<th>Admin type</th>
+<th>DB ID</th>
+<th>Code method</th>
+<th>Используется в</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>profile_photo</code></td>
+<td>1</td>
+<td><code>PromptGenerationService::buildFinalPromptText()</code></td>
+<td>First scene, profile photo flow</td>
+</tr>
+<tr>
+<td><code>field_scene</code> (10 сфер + тренды)</td>
+<td>2-11, 33</td>
+<td><code>resolveForSphere()</code> in GenerateScenesAction, GenerateThreeAnglesJob</td>
+<td>Scene variants, 3 angles</td>
+</tr>
+<tr>
+<td><code>scene_system</code></td>
+<td>32</td>
+<td><code>generateSceneVariants()</code> as systemMessage</td>
+<td>System prompt для генерации вариантов</td>
+</tr>
+<tr>
+<td><code>image_instructions</code></td>
+<td>12</td>
+<td><code>getImageInstructions()</code> fallback</td>
+<td>FAL quality/face guard — appended to ALL prompts</td>
+</tr>
+<tr>
+<td><code>relatives_instructions</code></td>
+<td>14</td>
+<td><code>getRelativesInstructions()</code> fallback</td>
+<td>Appended when relatives present</td>
+</tr>
+<tr>
+<td><code>profile_summary_system</code></td>
+<td>15</td>
+<td><code>generateProfileSummary()</code> as template</td>
+<td>Profile analysis generation</td>
+</tr>
+<tr>
+<td><code>affirmation</code></td>
+<td>16</td>
+<td><code>generateAffirmation()</code> via resolvedPrompt</td>
+<td>Card-level affirmation</td>
+</tr>
+<tr>
+<td><code>sphere_metaprompt</code></td>
+<td><em>not found</em></td>
+<td><code>forSphereMetaprompt(int)</code></td>
+<td>Per-sphere meta (unused?)</td>
+</tr>
+<tr>
+<td><code>three_angles_scene</code></td>
+<td><em>not found</em></td>
+<td><code>GenerateThreeAnglesJob</code> → falls back to <code>field_scene</code></td>
+<td>3-angle generation</td>
+</tr>
+<tr>
+<td><code>scene_affirmation</code></td>
+<td>19</td>
+<td><code>generateSceneAffirmation()</code></td>
+<td>Per-scene affirmation</td>
+</tr>
+<tr>
+<td><code>photo_session</code></td>
+<td>20</td>
+<td><code>generatePhotoSessionScene()</code></td>
+<td>Photo session next frame</td>
+</tr>
+<tr>
+<td><code>ai_questionnaire_question</code></td>
+<td>21</td>
+<td><code>generateAiQuestionnaireQuestion()</code> as systemPrompt</td>
+<td>AI Q system prompt</td>
+</tr>
+<tr>
+<td><code>wish_scene</code></td>
+<td>34</td>
+<td><code>generateWishScene()</code> via resolveForSphere</td>
+<td>CONTEXT_SHIFT enrichment</td>
+</tr>
+<tr>
+<td><code>scene_question</code></td>
+<td>35</td>
+<td><em>unknown — new type</em></td>
+<td>Scene question (Elyne scene prompt?)</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="admin-code-only">Промпты которые есть в коде, но НЕ в admin (code-only)</h2>
+<table>
+<thead>
+<tr>
+<th>Code prompt</th>
+<th>Файл</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LOCAL_EDIT guard</td>
+<td><code>InterpretWishAndGenerateJob</code></td>
+<td>Safety: блокирует смену лица при локальной правке</td>
+</tr>
+<tr>
+<td>Anti-duplication block</td>
+<td><code>GenerateScenesAction</code></td>
+<td>Динамически строится из существующих сцен</td>
+</tr>
+<tr>
+<td>Wish scene context block</td>
+<td><code>OpenRouterService::generateWishScene</code></td>
+<td>Structural wrapper: оригинальная сцена + пожелание</td>
+</tr>
+<tr>
+<td>Photo session context block</td>
+<td><code>OpenRouterService::generatePhotoSessionScene</code></td>
+<td>Structural wrapper: оригинальный промпт + варианты</td>
+</tr>
+<tr>
+<td>classifyWishComment prompt</td>
+<td><code>OpenRouterService::classifyWishComment</code></td>
+<td>Classification: LOCAL_EDIT vs CONTEXT_SHIFT</td>
+</tr>
+<tr>
+<td>JSON schema hints</td>
+<td>Multiple methods</td>
+<td>Схемы ответов (ТОЛЬКО code-side)</td>
+</tr>
+<tr>
+<td>FALLBACK_META_PROMPT</td>
+<td><code>AutoCreateFieldSceneMetapromptAction</code></td>
+<td>Fallback при создании новой сферы</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="bugs">Критические несоответствия (⚠️ BUGS)</h2>
+<h3 id="bug-01-createscenephotoaction-image_instructions">BUG-01: CreateScenePhotoAction не добавляет image_instructions</h3>
+<p><strong>Severity</strong>: HIGH<br>
+<strong>Файл</strong>: <code>app/Actions/Cards/CreateScenePhotoAction.php</code><br>
+<strong>Затронутые флоу</strong>: Three-angles first scene, Post-payment first scene<br>
+<strong>Симптом</strong>: FAL получает промпт без face preservation / quality instructions<br>
+<strong>Ожидаемо</strong>: <code>getImageInstructions()</code> должен добавляться так же, как в <code>buildFinalPromptText()</code><br>
+<strong>Фактически</strong>: Промпт = <code>scene.detailed_description + relativesIfPresent + clothingBlock</code> (без image_instructions)</p>
+<h3 id="bug-02-ai_questionnaire_question-system-prompt-id21">BUG-02: ai_questionnaire_question system prompt (ID=21) содержит опечатку</h3>
+<p><strong>Severity</strong>: LOW<br>
+<strong>Текст</strong>: &ldquo;вот что изместно о пользователе&rdquo; → должно быть &ldquo;известно&rdquo;<br>
+<strong>Используется</strong>: как system prompt в <code>generateAiQuestionnaireQuestion()</code></p>
+<h3 id="note-01-three_angles_scene-db">NOTE-01: three_angles_scene тип не найден в DB</h3>
+<p><strong>Статус</strong>: Возможно не создан или тип не используется — код в <code>GenerateThreeAnglesJob</code> запрашивает <code>type=three_angles_scene</code>, если не находит — job завершается с ошибкой. Нужно проверить, что в DB есть запись с этим типом или код fallback&rsquo;ает на <code>field_scene</code>.</p>
+<p><strong>UPD</strong>: Проверить — возможно <code>GenerateThreeAnglesJob</code> напрямую использует <code>field_scene</code> (в коде запрос: <code>where('type', GenerationPromptType::ThreeAnglesScene-&gt;value)</code>).</p>
+<h3 id="note-02-scene_system-sphere_selector-fetched-records">NOTE-02: scene_system / sphere_selector не найдены в fetched records</h3>
+<p><strong>Статус</strong>: ID=32 и potential sphere_selector тimed out — нужна проверка при стабильном сервере.</p>
+<hr>
+<h2 id="admin">Промпты которые ДОЛЖНЫ быть в admin, но вероятно отсутствуют</h2>
+<table>
+<thead>
+<tr>
+<th>Тип</th>
+<th>Основание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>three_angles_scene</code></td>
+<td>Код ожидает его, но в таблице не видно</td>
+</tr>
+<tr>
+<td><code>sphere_selector</code></td>
+<td>Enum содержит, code references <code>forSphereSelector()</code></td>
+</tr>
+<tr>
+<td>Per-sphere <code>sphere_metaprompt</code></td>
+<td>Enum содержит тип, но не найден в DB</td>
+</tr>
+</tbody>
+</table>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
