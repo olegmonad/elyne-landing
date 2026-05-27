@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apple Developer через Армению для Elyne</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="apple-developer-elyne">Apple Developer через Армению: разбор пути для Elyne</h1>
+<p><strong>Дата:</strong> 2026-05-27
+<strong>Контекст:</strong> Олег (РФ-гражданин, живёт во Вьетнаме) рассматривает регистрацию ИП или компании в Армении специально под Apple Developer Account для Elyne. Сравнение с Вьетнамом и Эстонией.
+<strong>TL;DR ставка налога у источника США:</strong> Армения <strong>0%</strong> (по советскому договору, унаследован), Вьетнам <strong>30%</strong> (договора нет), Эстония <strong>10%</strong>.</p>
+<hr>
+<h2 id="1-apple-developer-account-vs">1. Apple Developer Account: физлицо vs компания для Армении</h2>
+<h3 id="_1">Поддержка Армении</h3>
+<p>Армения <strong>есть в списке</strong> поддерживаемых стран Apple Developer Program (220+ стран). Регистрация доступна и как физлицо (Individual), и как компания (Organization). App Store работает в Армении с 2012 года, выплаты в местные банки идут штатно.</p>
+<h3 id="individual-99">Физлицо (Individual) — $99/год</h3>
+<ul>
+<li>Подойдёт <strong>только если Олег получает армянский паспорт или ВНЖ</strong> (резидентский статус).</li>
+<li>Без резидентства Apple отклонит — нужен документ с армянским адресом + банковский счёт в Армении.</li>
+<li><strong>Минус:</strong> в App Store как имя разработчика будет указано «Oleg [фамилия]» — личное имя физлица, спрятать команду нельзя.</li>
+<li><strong>Плюс:</strong> проще и быстрее, не нужен бизнес-идентификатор DUNS.</li>
+</ul>
+<h3 id="organization-llc-99">Компания (Organization, LLC) — $99/год</h3>
+<ul>
+<li>Армянская LLC (по-армянски «ՍՊԸ» / SPC) — стандартная форма для IT.</li>
+<li>В App Store отображается название компании, а не Олега лично.</li>
+<li>Требуется бизнес-идентификатор DUNS на компанию (см. раздел 2).</li>
+<li>Юридический представитель — обычно сам учредитель.</li>
+<li><strong>Иностранец (РФ-гражданин) может быть единственным учредителем и директором</strong> — Армения это разрешает без ВНЖ.</li>
+</ul>
+<p><strong>Рекомендация:</strong> Organization (LLC). Маркетинг-обвязка Elyne требует «бренда в магазине», не личного имени Олега. Это нормативная плата за позиционирование «премиум-продукт».</p>
+<hr>
+<h2 id="2-duns">2. Бизнес-идентификатор DUNS для армянской компании</h2>
+<p><strong>DUNS (Data Universal Numbering System)</strong> — девятизначный код от агентства Dun &amp; Bradstreet, которым Apple идентифицирует юрлицо.</p>
+<h3 id="_2">Где и как получают</h3>
+<ul>
+<li>Сайт: <code>developer.apple.com/enroll</code> → раздел «D-U-N-S Number look-up».</li>
+<li>Можно проверить, есть ли уже номер на компанию (для свежей LLC — точно нет).</li>
+<li>Если нет — отправляется заявка в D&amp;B напрямую через форму Apple.</li>
+</ul>
+<h3 id="_3">Стоимость и сроки</h3>
+<ul>
+<li><strong>Бесплатно</strong> через форму Apple — это ключевой плюс перед прямой подачей в D&amp;B.</li>
+<li><strong>Сроки:</strong> заявленные «до 5 рабочих дней», по реальной практике 2024-2026 — <strong>2-6 недель</strong> (D&amp;B физически верифицирует регистрационные данные через реестры).</li>
+<li><strong>Платный ускоренный (Expedited через D&amp;B напрямую):</strong> ~$229, 3-5 рабочих дней. Не нужно, если есть пара недель в запасе.</li>
+</ul>
+<h3 id="_4">Что нужно для подачи</h3>
+<ul>
+<li>Точное юридическое название (как в учредительных документах, до буквы).</li>
+<li>Юридический адрес (армянский, реальный — D&amp;B может позвонить и проверить).</li>
+<li>Имя и должность контактного лица.</li>
+<li>Телефон (армянский номер сильно ускоряет верификацию; международный тоже принимается).</li>
+<li>Email на корпоративном домене желательно (повышает доверие).</li>
+</ul>
+<hr>
+<h2 id="3-apple">3. Выплаты от Apple в Армению</h2>
+<h3 id="_5">Валюта и схема</h3>
+<ul>
+<li>Apple платит <strong>в USD</strong> на банковский счёт компании в Армении.</li>
+<li>Все армянские банки поддерживают SWIFT-получение USD.</li>
+<li>Apple использует прямой SWIFT-перевод, без посредников типа Payoneer или Wise (для официальных payouts).</li>
+</ul>
+<h3 id="_6">Какой банк выбирать</h3>
+<ul>
+<li><strong>Ameriabank</strong> (SWIFT: ARMIAM22) — топ-выбор для IT-компаний в Армении. Открывает USD-счета иностранным учредителям, поддерживает онлайн-банкинг на английском.</li>
+<li><strong>Acba Bank</strong> и <strong>Inecobank</strong> — альтернативы, тоже работают с IT-резидентами.</li>
+<li><strong>VTB Armenia / РосБанк</strong> — НЕ рекомендую: попадают под вторичные санкции при отправлении из США.</li>
+</ul>
+<h3 id="_7">Минимальный порог и сроки</h3>
+<ul>
+<li><strong>Минимальная сумма выплаты:</strong> $150 (Apple не отправляет меньше — копит до следующего месяца).</li>
+<li><strong>График:</strong> ежемесячно, выплата приходит <strong>через ~30-45 дней после окончания финансового месяца Apple</strong> (например, продажи мая → деньги в начале июля).</li>
+<li>Apple Tax &amp; Banking в App Store Connect показывает статус каждой выплаты.</li>
+</ul>
+<h3 id="apple">Реквизиты, которые Apple запросит</h3>
+<ul>
+<li>IBAN счёта (Армения использует IBAN формата AM…).</li>
+<li>SWIFT/BIC банка.</li>
+<li>Полное название и адрес банка-получателя.</li>
+<li>Имя владельца счёта (точно как в регистрации LLC).</li>
+<li>Иногда — банк-посредник (intermediary), обычно для USD это Bank of New York Mellon или JPMorgan Chase. Ameriabank сам подскажет.</li>
+</ul>
+<hr>
+<h2 id="4">4. Налог у источника США (главная цифра разбора)</h2>
+<p>Apple — американская компания, по умолчанию удерживает <strong>30% налога у источника</strong> с роялти, выплачиваемых нерезидентам США. Этот процент можно снизить через двусторонний налоговый договор.</p>
+<h3 id="0">Армения: ставка <strong>0%</strong> на роялти</h3>
+<ul>
+<li>Армения унаследовала <strong>советско-американский налоговый договор 1973 года</strong> (вместе с Азербайджаном, Беларусью, Грузией, Кыргызстаном, Молдовой, Таджикистаном, Туркменистаном, Узбекистаном).</li>
+<li>По этому договору <strong>роялти, выплачиваемые армянским компаниям, облагаются по ставке 0%</strong>.</li>
+<li>Apple классифицирует выплаты разработчикам как роялти (лицензионные платежи за софт) → попадает под нулевую ставку.</li>
+<li>Документ для Apple: <strong>форма W-8BEN-E</strong> (для компании), в разделе «Treaty claim» указывается: USSR Treaty (1973), Article III, Royalties — 0%.</li>
+<li>Армянский налоговый номер (TIN) указывается в строке «Foreign TIN».</li>
+</ul>
+<h3 id="30">Вьетнам: ставка <strong>30%</strong> (договора нет)</h3>
+<ul>
+<li>Договор Вьетнам-США был <strong>подписан в 2015</strong>, но <strong>не ратифицирован Сенатом США</strong> до сих пор (по состоянию на май 2026).</li>
+<li>Без ратификации действует базовая ставка <strong>30%</strong>.</li>
+<li>На каждую $1000 дохода Apple Вьетнам теряет $300 → остаётся $700.</li>
+<li>Это была главная боль варианта «оформить через Квин в VN» из исследования 26.05.</li>
+</ul>
+<h3 id="10">Эстония: ставка <strong>10%</strong> (для сравнения)</h3>
+<ul>
+<li>Эстонско-американский договор работает с 1998 года.</li>
+<li>Ставка на роялти: 10%.</li>
+<li>Хуже Армении, но лучше Вьетнама.</li>
+</ul>
+<h3 id="10-000-apple">Сравнение в цифрах (на каждые $10 000 дохода Apple)</h3>
+<table>
+<thead>
+<tr>
+<th>Юрисдикция</th>
+<th>Удержание США</th>
+<th>Получено на счёт</th>
+<th>Разница vs Армения</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Армения</td>
+<td>0%</td>
+<td>$10 000</td>
+<td>базовая</td>
+</tr>
+<tr>
+<td>Эстония</td>
+<td>10%</td>
+<td>$9 000</td>
+<td>-$1 000</td>
+</tr>
+<tr>
+<td>Вьетнам</td>
+<td>30%</td>
+<td>$7 000</td>
+<td>-$3 000</td>
+</tr>
+</tbody>
+</table>
+<p>При $100k годового дохода Elyne через App Store разница Армения vs Вьетнам = <strong>$30 000 в год живых денег</strong>.</p>
+<hr>
+<h2 id="5-apple-llc">5. Что Apple хочет от армянской LLC при регистрации</h2>
+<p>Чек-лист, что должно совпадать в трёх местах: регистрационные документы, DUNS-запись, банковский счёт.</p>
+<ul>
+<li><strong>Точное юридическое название</strong> (Elyne LLC / «Элайн» ՍՊԸ — выбрать одно, использовать везде).</li>
+<li><strong>Юридический адрес</strong> в Армении (Ереван или другой город; виртуальный офис принимается).</li>
+<li><strong>Телефон</strong> — желательно армянский номер; международный тоже работает, но дольше верификация.</li>
+<li><strong>Авторизованный представитель</strong> — обычно сам Олег как учредитель и директор.</li>
+<li><strong>Корпоративный email</strong> на собственном домене (<code>oleg@elyne.am</code> или <code>legal@elyne.online</code>).</li>
+<li><strong>Верификация:</strong> Apple может позвонить по телефону, указанному в DUNS, и попросить подтвердить, что Олег связан с компанией. Звонят на английском.</li>
+</ul>
+<hr>
+<h2 id="6">6. Сроки полного цикла «от нуля до приложения в магазине»</h2>
+<table>
+<thead>
+<tr>
+<th>Этап</th>
+<th>Срок</th>
+<th>Стоимость</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Регистрация LLC в Армении</td>
+<td>3-5 рабочих дней</td>
+<td>$200-500 (юрист) + госпошлина</td>
+</tr>
+<tr>
+<td>Открытие USD-счёта в Ameriabank</td>
+<td>1-2 недели после регистрации</td>
+<td>$0-100</td>
+</tr>
+<tr>
+<td>Получение DUNS через Apple</td>
+<td>2-6 недель (или 3-5 дней за $229)</td>
+<td>бесплатно или $229</td>
+</tr>
+<tr>
+<td>Apple Developer Program enrollment</td>
+<td>2-4 недели review</td>
+<td>$99/год</td>
+</tr>
+<tr>
+<td>Первая submission Elyne</td>
+<td>1-7 дней review</td>
+<td>включено</td>
+</tr>
+<tr>
+<td><strong>Итого до первого приложения</strong></td>
+<td><strong>8-14 недель (2-3.5 месяца)</strong></td>
+<td><strong>~$400-1000 + $99/год</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Параллелить максимум: пока DUNS делается — собирать материалы для submission (скриншоты, описания, privacy policy).</p>
+<hr>
+<h2 id="7">7. Альтернативы в одном взгляде</h2>
+<h3 id="llc">Вьетнамская LLC (текущая закрытая, реактивация через Квин)</h3>
+<ul>
+<li><strong>Плюс:</strong> Олег уже жил в этой реальности, юрист есть.</li>
+<li><strong>Минус:</strong> <strong>30% налога у источника США</strong> — необратимо больно.</li>
+<li><strong>Минус:</strong> имя Квин публично в App Store как директор.</li>
+<li><strong>Вердикт:</strong> только если Армения по каким-то причинам недоступна.</li>
+</ul>
+<h3 id="ou-e-residency">Эстонская OÜ через e-Residency</h3>
+<ul>
+<li><strong>Плюс:</strong> регистрация полностью удалённо (e-Residency карточка), 1-3 дня.</li>
+<li><strong>Плюс:</strong> престижная EU-юрисдикция, легко работать с европейскими банками.</li>
+<li><strong>Минус:</strong> 10% налога у источника США (хуже Армении).</li>
+<li><strong>Минус:</strong> банки Эстонии (LHV, Wise Business) последние годы стали строже к учредителям из РФ — могут отказать.</li>
+<li><strong>Вердикт:</strong> запасной вариант, если Армения отвалится из-за санкционных проблем.</li>
+</ul>
+<h3 id="llc_1">Армянская LLC (рекомендованный путь)</h3>
+<ul>
+<li><strong>Плюс:</strong> <strong>0% налога у источника</strong> — это $30k в год экономии на каждом $100k дохода.</li>
+<li><strong>Плюс:</strong> Армения лояльна к РФ-гражданам, не требует ВНЖ для учредителя.</li>
+<li><strong>Плюс:</strong> USD-счёт в Ameriabank работает безотказно для outbound USD из США.</li>
+<li><strong>Минус:</strong> физическое посещение Армении для открытия банковского счёта (Олегу из Вьетнама — отдельный перелёт или поездка через РФ).</li>
+<li><strong>Минус:</strong> годовая отчётность армянской компании — нужен местный бухгалтер (~$50-150/месяц).</li>
+</ul>
+<hr>
+<h2 id="-">Чек-лист следующих шагов (если выбираем Армению)</h2>
+<ol>
+<li>Согласовать с юристом-агентом регистрацию LLC в Армении — название, адрес, директор.</li>
+<li>Сразу заявка на USD-счёт в Ameriabank (Олегу нужно лететь либо оформить через юриста-нотариуса).</li>
+<li>После выдачи свидетельства — заявка на DUNS через <code>developer.apple.com/enroll</code> (бесплатно, 2-6 недель).</li>
+<li>Параллельно — подготовка Apple Developer enrollment: учредительные документы переведены на английский, готовы скриншоты, privacy policy.</li>
+<li>После DUNS — оплата $99 и enrollment, ждать review 2-4 недели.</li>
+<li>Заполнить форму W-8BEN-E в App Store Connect: указать USSR Treaty (1973), Article III, ставка роялти 0%.</li>
+<li>Перед submission Elyne — снять чек-лист с публишера (anti-steering, скриншоты, описание).</li>
+<li>Подключить армянского бухгалтера на год вперёд (отчётность LLC).</li>
+</ol>
+<hr>
+<h2 id="_8">Источники</h2>
+<ul>
+<li><a href="https://developer.apple.com/programs/whats-included/">Apple Developer Program — Membership Details</a></li>
+<li><a href="https://developer.apple.com/help/account/membership/D-U-N-S/">Apple Developer — D-U-N-S Number Help</a></li>
+<li><a href="https://www.irs.gov/businesses/international-businesses/armenia-tax-treaty-documents">IRS — Armenia Tax Treaty Documents</a></li>
+<li><a href="https://freemanlaw.com/international-tax-treaties/armenia/">Freeman Law — Armenia Tax Treaty (0% royalties)</a></li>
+<li><a href="https://taxsummaries.pwc.com/armenia/corporate/withholding-taxes">PwC Tax Summaries — Armenia Withholding Taxes</a></li>
+<li><a href="https://www.dfdl.com/insights/legal-and-tax-updates/tax-alert-the-income-tax-treaty-between-vietnam/">Vietnam-US Tax Treaty Status — Tax Alert DFDL</a></li>
+<li><a href="https://taxsummaries.pwc.com/vietnam/individual/foreign-tax-relief-and-tax-treaties">PwC Tax Summaries — Vietnam Foreign Tax Relief</a></li>
+<li><a href="https://ameriabank.am/en/personal/accounts/payments/transfer-to-account">Ameriabank — Wire Transfers / SWIFT ARMIAM22</a></li>
+<li><a href="https://www.retrieve.am/en/blog/how-armenian-companies-receive-international-payments-usd-eur-wise-stripe">Retrieve.am — How Armenian Companies Receive International Payments</a></li>
+<li><a href="https://marcabien.com/en/register-for-apple-developer-from-abroad-step-by-step-guide">MarcaBien — Register Apple Developer Account from Abroad 2026</a></li>
+<li><a href="https://developer.apple.com/news/?id=ay4rbpsp">Apple Developer News — Enrollment Available in More Regions</a></li>
+</ul>
+<hr>
+<p><strong>Координация:</strong>
+- Юрист-агент — финальная сборка регистрации LLC и подбор армянского нотариуса/корп-сервиса.
+- Финансовый агент — подтвердить схему «армянская LLC → USD-счёт → перевод в РФ» по валютному контролю РФ для Олега-резидента РФ.
+- Публишер (я) — submission в App Store, anti-steering, ASO бриф.</p>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
