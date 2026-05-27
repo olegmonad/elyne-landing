@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Армения · приём платежей для Elyne</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="armenia-llc-elyne">Armenia LLC и приём оплат от пользователей Elyne</h1>
+<p><strong>Дата:</strong> 2026-05-27
+<strong>Контекст:</strong> Elyne (генерация визуальных сцен жизни через ИИ), цены 990 / 1999 / 3499 рублей. Олег рассматривает Armenia LLC как головной кошелёк проекта. Нужно разобрать, как такая компания может принимать деньги от 1) россиян с российских карт, 2) пользователей из ЕС/Великобритании/Азии/США, 3) через App Store (последнее — отдельный документ).</p>
+<hr>
+<h2 id="tldr">TL;DR (для занятых)</h2>
+<ul>
+<li><strong>Россияне платят рублями</strong> — реальный путь только три: ЮKassa (она официально берёт иностранные юрлица, включая армянские), Lava Top (киприоты, рубли+евро+доллары, комиссия 8%), и Telegram Stars или Tribute прямо внутри мини-приложения.</li>
+<li><strong>Иностранцы платят долларами/евро</strong> — Stripe напрямую в Armenia LLC не идёт. Реальные варианты: Paddle и Lemon Squeezy (оба берут всю налоговую и юридическую возню на себя), либо открыть параллельно американский LLC через Stripe Atlas — и получить полный Stripe.</li>
+<li><strong>Самая трезвая комбинация:</strong> ЮKassa (рубли) + Lava Top как страховка для рублей и евро + Paddle или Lemon Squeezy для остального мира. Если очень хочется один счёт на всё — Telegram Stars через мини-приложение (но Apple/Google съедают 30% на мобиле).</li>
+<li><strong>App Store — отдельная история</strong> (см. <code>2026-05-26-app-store-vietnam-wife.md</code>).</li>
+</ul>
+<hr>
+<h2 id="1-armenia-llc">Часть 1. Россияне платят в Armenia LLC</h2>
+<h3 id="11">1.1 Прямой эквайринг рублёвых карт через армянские банки</h3>
+<p>Картина 2026 года — холодная. Армянские банки массово отключили обслуживание карт «Мир» ещё в марте 2024 года: член-банки ArCa получили официальное уведомление и прекратили приём. Ameriabank сохранил «Мир» только в специальных кросс-системных продуктах (карта ArCa Mir), но как обычный шлюз для интернет-эквайринга это не работает.</p>
+<p>Единственный, кто реально остался в этой нише — IDBank через сервис IDPay: к нему можно привязать карту «Мир», Visa или Mastercard любого российского банка и сделать перевод в Армению. Но это инструмент для денежных переводов, а не платёжный шлюз для сайта или приложения. Сделать через IDPay «оплата подписки на сайте Elyne» — нельзя.</p>
+<p><strong>Вывод:</strong> прямой эквайринг рублёвых карт через армянский банк для Elyne как продукта недоступен.</p>
+<h3 id="12-kassa">1.2 ЮKassa с иностранным юрлицом (главная находка)</h3>
+<p>ЮKassa официально принимает иностранные юридические лица — на тех же тарифах, что и российские. Это закрытый канал на их сайте: <code>yookassa.ru/non-russian-residents/</code>. То есть Armenia LLC может подключить ЮKassa и брать рубли с российских карт через российский процессинг — на стороне пользователя это будет выглядеть как обычная оплата картой или СБП.</p>
+<p>Что нужно:
+- Выписка из армянского реестра юрлиц (аналог ЕГРЮЛ).
+- Документы, разрешающие финансовые операции в валюте.
+- Подтверждение нерезидентского статуса.
+- Анкета + бумажный договор по почте (вот это раздражает, но один раз).</p>
+<p>Тариф — от 2,8% до 3,5% за рублёвый платёж картой и СБП. Деньги выводятся на корреспондентский счёт армянского банка в долларах или евро.</p>
+<p><strong>Важное ограничение:</strong> через ЮKassa Armenia LLC может принимать оплату только от физлиц. Платежи от российских юрлиц требуют российского расчётного счёта. Для Elyne это неважно — продукт для людей, не для компаний.</p>
+<h3 id="13-lava-top">1.3 Lava Top — кипрский шлюз с рублями</h3>
+<p>Lava Top зарегистрирован на Кипре и легально принимает рубли от россиян, евро и доллары от всех остальных. Комиссия — 8% (включает все банковские издержки, без скрытых сборов). Поддерживает подписки с автосписанием. Вывод в рублях, евро, долларах, крипте — 1-10 рабочих дней.</p>
+<p>Для Armenia LLC это рабочий и простой вариант: регистрация быстрее, чем у ЮKassa (не надо бумажного договора), но комиссия выше. Хорошо как страховка или основной канал, если не хочется возиться с ЮKassa.</p>
+<p>Tribute (тоже Кипр, тоже подписки в Телеграме) — комиссия 10-12%, выплаты раз в две недели, минимальная сумма выплаты 100 евро. Подходит как канал внутри Телеграм-мини-приложения.</p>
+<h3 id="14-telegram-stars-tribute-">1.4 Telegram Stars + Tribute прямо в мини-приложении</h3>
+<p>Если Elyne живёт как Telegram Mini App — то самое прямое решение это Telegram Stars. Пользователь покупает Stars внутри Телеграма, тратит в боте/мини-приложении, разработчик выводит их в TON через Fragment (потом конвертирует в USDT при желании).</p>
+<p>Экономика жёсткая:
+- <strong>На мобиле</strong> Apple и Google забирают свои 30% за продажу Stars + 2-3% на конвертации Stars→TON. <strong>Итого ~32% сверху.</strong>
+- <strong>На десктопе и в браузере</strong> комиссии Apple/Google нет → остаётся только ~3% Fragment-спреда.
+- Минимум для вывода — 1000 Stars (примерно $20), задержка между получением Stars и возможностью вывода — 21 день.</p>
+<p>Для цены 990 рублей (~$11) на мобиле останется в районе $7. Жирно платить комиссию, зато ноль возни с юрлицом, банком, ЮKassa — Telegram сам всё делает.</p>
+<h3 id="15">1.5 Криптоэквайринг как страховочный канал</h3>
+<p>CryptoCloud, Cryptomus, NowPayments — все они умеют принимать рубли (через свой фиатный шлюз — обычно P2P-сеть), автоматически конвертировать в USDT (TRC-20) и выплачивать на криптокошелёк компании. Комиссия типично 1-3% от платёжной системы, плюс P2P-спред.</p>
+<p>Минус: для Elyne как продукта для широкой аудитории «оплата криптой» — это барьер. Большинство россиян не держат USDT. Имеет смысл как четвёртый способ оплаты для энтузиастов, не как основной канал.</p>
+<h3 id="16-2026">1.6 Кейсы 2026 года</h3>
+<ul>
+<li><strong>Boosty</strong> — работает через Гонконг, принимает рубли, комиссия ~12% всего. Подписочная модель. Подходит как альтернатива.</li>
+<li><strong>Sponsr</strong> — российский, отпадает.</li>
+<li><strong>Skyeng</strong> — Кипр, принимает рубли через ЮKassa и Lava-подобные шлюзы — то есть подтверждение, что схема «иностранное юрлицо + российский процессинг» жива и работает на больших объёмах.</li>
+</ul>
+<hr>
+<h2 id="2-armenia-llc">Часть 2. Иностранцы платят в Armenia LLC</h2>
+<h3 id="21-stripe">2.1 Stripe — напрямую нельзя</h3>
+<p>Армения не входит в список поддерживаемых стран Stripe. Что бы ни говорили посредники типа doola или incorpuk — Armenia LLC напрямую Stripe-аккаунт не получит. Все «обходные пути» сводятся к одному из двух:</p>
+<ul>
+<li><strong>Открыть американский LLC</strong> через Stripe Atlas, получить EIN, открыть американский банковский счёт (например, Mercury), и тогда Stripe полноценно работает. Это отдельная компания, не Armenia LLC. Содержание: ~$500/год на агента, налоги через 1120-F или сквозную модель.</li>
+<li><strong>Открыть британский LTD</strong> — Stripe Великобритании принимает компании из Армении в качестве собственников. Сложнее с банком в Великобритании.</li>
+</ul>
+<h3 id="22-paddle-merchant-of-record">2.2 Paddle — Merchant of Record (главный кандидат)</h3>
+<p>Paddle сам становится продавцом для конечного пользователя: берёт на себя НДС, sales tax, валидацию карт, чарджбэки. Поддерживает 200+ стран продажи, 29 валют, локальные методы оплаты. Запрещён только для продавцов из России, Беларуси, Ирана, Северной Кореи — Armenia в списке поддерживаемых.</p>
+<p>Комиссия Paddle: <strong>5% + $0,50 за транзакцию</strong> для цифровых продуктов. Это дороже Stripe (2,9% + $0,30), но включает весь налоговый и юридический головняк — особенно важно для подписочного SaaS, продающего в ЕС (там НДС-MOSS).</p>
+<h3 id="23-lemon-squeezy-paddle">2.3 Lemon Squeezy — тот же класс, что Paddle</h3>
+<p>Куплен Stripe в 2024, но юридически остаётся отдельным MoR. Принимает продавцов из 135+ стран. Armenia в списке — да. Выплаты на банковский счёт в 79 странах. Комиссия: <strong>5% + $0,50 за транзакцию</strong> (так же как Paddle).</p>
+<p>Разница с Paddle:
+- Lemon Squeezy проще регистрация (5-10 минут vs Paddle с проверкой бизнес-сайта).
+- Paddle гибче по налоговой кастомизации.
+- Lemon Squeezy более «лёгкий» для small-scale SaaS, Paddle — для enterprise.</p>
+<p>Для Elyne на старте — Lemon Squeezy быстрее запустить.</p>
+<h3 id="24-2checkout-verifone">2.4 2Checkout / Verifone</h3>
+<p>Поддерживает все страны, кроме Северной Кореи, Кубы, Ирана, Судана, Сирии, Мьянмы. Armenia не запрещена — теоретически можно. Но 2Checkout/Verifone — крупный legacy-игрок, заточенный под enterprise. Для проекта стадии Elyne проще и дешевле Paddle или Lemon Squeezy.</p>
+<h3 id="25-wise-business-swiftsepa">2.5 Wise Business для приёма SWIFT/SEPA</h3>
+<p>Wise Business открывает счета компаниям-резидентам Армении. Получаете виртуальные локальные счета в USD, GBP, EUR — то есть американский, британский и европейский клиент может прислать вам обычный местный перевод. Хорошо для B2B-сделок (продал партнёру лицензию — получил банковский перевод), но не для розничных подписок.</p>
+<h3 id="26">2.6 Локальные армянские шлюзы для международных карт</h3>
+<p>ArCa, IDPay, EasyPay — могут принимать Visa и Mastercard иностранных банков как обычные карточные платежи. Но качество интеграции, документация, поддержка подписок — заметно ниже мирового уровня. Для Elyne как глобального продукта — не подходит как основной канал, может работать как локальный армянский счёт для местных клиентов.</p>
+<hr>
+<h2 id="3">Часть 3. Сравнительная таблица</h2>
+<table>
+<thead>
+<tr>
+<th>Решение</th>
+<th>Комиссия</th>
+<th>Россияне</th>
+<th>ЕС/США</th>
+<th>Подписки</th>
+<th>Юрлицо</th>
+<th>Время выплат</th>
+<th>Риск блокировки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ЮKassa с Armenia LLC</strong></td>
+<td>2,8–3,5%</td>
+<td>да (только физлица)</td>
+<td>нет</td>
+<td>да</td>
+<td>Armenia LLC + бумажный договор</td>
+<td>T+1–T+3</td>
+<td>низкий (один из ключевых российских процессоров)</td>
+</tr>
+<tr>
+<td><strong>Lava Top</strong></td>
+<td>8%</td>
+<td>да</td>
+<td>да (евро, доллары)</td>
+<td>да</td>
+<td>Кипр (Lava сам)</td>
+<td>1–10 дней</td>
+<td>низкий</td>
+</tr>
+<tr>
+<td><strong>Telegram Stars</strong></td>
+<td>~32% мобиль / ~3% десктоп</td>
+<td>да</td>
+<td>да</td>
+<td>да</td>
+<td>не нужно</td>
+<td>21 день hold + 2 недели</td>
+<td>низкий (Telegram-собственный)</td>
+</tr>
+<tr>
+<td><strong>Paddle</strong></td>
+<td>5% + $0,50</td>
+<td>нет (Россия в стопе)</td>
+<td>да</td>
+<td>да</td>
+<td>Armenia LLC</td>
+<td>T+5–T+7</td>
+<td>низкий</td>
+</tr>
+<tr>
+<td><strong>Lemon Squeezy</strong></td>
+<td>5% + $0,50</td>
+<td>нет</td>
+<td>да</td>
+<td>да</td>
+<td>Armenia LLC</td>
+<td>T+7</td>
+<td>низкий</td>
+</tr>
+<tr>
+<td><strong>Stripe (через US LLC)</strong></td>
+<td>2,9% + $0,30</td>
+<td>нет</td>
+<td>да</td>
+<td>да</td>
+<td>US LLC + Atlas (~$500/год)</td>
+<td>T+2</td>
+<td>низкий</td>
+</tr>
+<tr>
+<td><strong>CryptoCloud/Cryptomus</strong></td>
+<td>1–3% + спред</td>
+<td>да (крипта)</td>
+<td>да</td>
+<td>через подписку плагином</td>
+<td>Armenia LLC</td>
+<td>мгновенно</td>
+<td>низкий</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="elyne">Рекомендуемая комбинация для Elyne</h2>
+<p><strong>Дано:</strong> продукт с разовыми платежами или короткими подписками от 990 до 3499 рублей, аудитория преимущественно русскоязычная, но с амбицией на международный рынок.</p>
+<p><strong>Минимальный стек (стартовый):</strong>
+1. <strong>Lava Top</strong> для россиян и для не-Apple/Google аудитории — самый быстрый запуск, 8% комиссия. Подписки сразу работают. Можно стартовать сегодня.
+2. <strong>Lemon Squeezy</strong> для иностранной аудитории через сайт — берёт на себя НДС, sales tax, регистрация за день. 5% + $0,50.</p>
+<p><strong>Расширенный стек (когда сложится поток):</strong>
+1. <strong>ЮKassa с Armenia LLC</strong> заменяет Lava Top как основной российский канал — комиссия падает с 8% до 3%. Окупает бумажную регистрацию при обороте от 200-300 тысяч рублей в месяц.
+2. <strong>Lemon Squeezy</strong> остаётся для иностранцев или переезжает на <strong>Paddle</strong> при росте.
+3. <strong>Telegram Stars</strong> включается отдельно, только для версии Elyne как Telegram Mini App — параллельный канал, не основной (комиссия мобиля 32% убивает экономику).
+4. <strong>CryptoCloud</strong> как четвёртый способ оплаты для тех, кто живёт в USDT.</p>
+<p><strong>Налоговый профиль Armenia LLC:</strong>
+- При выручке до ~$300 000 в год и попадании в реестр высоких технологий — <strong>1% налога с оборота</strong> до конца 2031 года.
+- Свыше этого порога — 18% с прибыли + 20% НДС (но НДС на экспорт цифровых услуг = 0%).
+- Старые IT-сертификаты отменены с 2025 года, замена — новый режим высоких технологий.</p>
+<hr>
+<h2 id="_1">Источники</h2>
+<ul>
+<li>ЮKassa для нерезидентов: https://yookassa.ru/non-russian-residents/</li>
+<li>Lava Top: https://lava.top/ и обзор vc.ru</li>
+<li>Telegram Stars 2026 guide: https://grambase.ai/blog/telegram-stars-guide-2026</li>
+<li>Tribute fees: https://wiki.tribute.tg/for-content-creators/fees-limits-currencies</li>
+<li>Paddle supported countries: https://www.paddle.com/help/start/intro-to-paddle/which-countries-are-supported-by-paddle</li>
+<li>Paddle sanctions impact: https://www.paddle.com/help/legal/sanctions/impact-of-sanctions-on-russia-and-belarus</li>
+<li>Lemon Squeezy supported countries: https://docs.lemonsqueezy.com/help/getting-started/supported-countries</li>
+<li>Stripe Atlas: https://docs.stripe.com/atlas</li>
+<li>Wise Business: https://wise.com/gb/business</li>
+<li>2Checkout restricted: https://verifone.cloud/docs/2checkout/Onboarding/Get-started-with-your-2Checkout-account/Restricted-countries-and-territories</li>
+<li>Armenia IT tax regime 2026: https://residentarmenia.com/en/it-tax-regime/</li>
+<li>Armenia corporate tax 2026: https://armenian-lawyer.com/taxes-armenia/</li>
+<li>MIR cards Armenia status: https://caliber.az/en/post/most-armenian-banks-stopped-servicing-russian-mir-cards</li>
+<li>IDPay (IDBank): https://idbank.am/en/information/about/news/news/idpay-the-fastest-and-beneficial-transfers-from-russia-to-armenia-to-any-armenian-bank-card/</li>
+<li>Cryptomus + OneSix: https://onesix.tech/blog/ru/cryptomus-exchange-and-payment-platform-review-202</li>
+</ul>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
