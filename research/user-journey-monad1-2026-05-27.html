@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elyne · Полный путь · monad1@elyne.online</title>
+<style>
+:root {
+  --bg:#0a0a0d; --surface:#13131a; --surface2:#1a1a23; --border:#26263a;
+  --text:#e8e8f0; --text-dim:#888aa0; --text-muted:#4a4a60;
+  --accent:#a78bfa; --amber:#fbbf24; --green:#34d399; --red:#f43f5e; --blue:#60a5fa;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;font-size:14px;line-height:1.6;display:flex;min-height:100vh}
+nav{width:240px;min-width:240px;background:var(--surface);border-right:1px solid var(--border);position:sticky;top:0;height:100vh;overflow-y:auto;flex-shrink:0;padding:24px 0}
+nav .logo{padding:0 20px 16px;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);border-bottom:1px solid var(--border);margin-bottom:12px}
+nav ul{list-style:none;padding:0}
+nav li{padding:0}
+nav a{display:block;padding:8px 20px;color:var(--text-dim);text-decoration:none;font-size:13px;border-left:2px solid transparent}
+nav a:hover{color:var(--text);background:var(--surface2)}
+nav a.section-link{font-weight:600;color:var(--text)}
+nav a.sub{padding-left:36px;font-size:12px;color:var(--text-dim)}
+main{flex:1;padding:32px 48px;max-width:1100px}
+h1{font-size:24px;font-weight:700;margin-bottom:8px;letter-spacing:-.01em}
+h2{font-size:20px;font-weight:600;margin:32px 0 16px;letter-spacing:-.01em;display:flex;align-items:baseline;gap:12px}
+h2 .num{color:var(--accent);font-size:12px;letter-spacing:.15em;text-transform:uppercase;font-weight:600;font-variant-numeric:tabular-nums}
+h3{font-size:16px;font-weight:600;margin:20px 0 10px}
+h4{font-size:13px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin:14px 0 8px}
+.muted{color:var(--text-dim)}
+.tiny{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
+.card.subtle{background:var(--surface2)}
+.meta-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px}
+.meta-grid > div{border-left:2px solid var(--border);padding-left:10px}
+.meta-grid label{display:block;font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
+.meta-grid .value{font-size:14px;color:var(--text);font-weight:500;font-variant-numeric:tabular-nums}
+.badge{display:inline-block;padding:3px 9px;border-radius:10px;font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.badge.green{background:rgba(52,211,153,.15);color:var(--green)}
+.badge.amber{background:rgba(251,191,36,.15);color:var(--amber)}
+.badge.red{background:rgba(244,63,94,.15);color:var(--red)}
+.badge.blue{background:rgba(96,165,250,.15);color:var(--blue)}
+.badge.muted{background:var(--surface2);color:var(--text-dim)}
+.badge.accent{background:rgba(167,139,250,.15);color:var(--accent)}
+.q-block{background:var(--surface2);border-left:2px solid var(--border);padding:10px 14px;margin:8px 0;border-radius:0 6px 6px 0}
+.q-block .q{font-size:13px;color:var(--text);margin-bottom:4px}
+.q-block .q .qn{color:var(--text-muted);margin-right:8px;font-variant-numeric:tabular-nums}
+.q-block .a{font-size:13px;color:var(--green);font-style:italic}
+.q-block .ans-options{margin-top:8px}
+.q-block .ans-options .opt{padding:3px 0;font-size:13px;color:var(--text-dim)}
+.q-block .ans-options .opt.chosen{color:var(--green);font-weight:500}
+.q-block .ans-options .opt.chosen::before{content:'✓ ';color:var(--green);font-weight:bold}
+.q-block .ans-options .opt::before{content:'○ ';color:var(--text-muted)}
+.q-block .lim{display:inline-block;margin-top:6px;font-size:11px;color:var(--text-muted)}
+details{background:var(--surface2);border:1px solid var(--border);border-radius:8px;margin:8px 0;overflow:hidden}
+details summary{padding:10px 14px;cursor:pointer;font-size:12px;color:var(--text-dim);font-weight:500;list-style:none;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:.05em;user-select:none}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:'▸ ';color:var(--accent);transition:transform .15s}
+details[open] summary::before{content:'▾ '}
+details summary:hover{color:var(--text)}
+details pre{padding:14px 18px;font-family:"SF Mono",Monaco,Consolas,monospace;font-size:12px;color:var(--text);background:#0a0a0d;border-top:1px solid var(--border);white-space:pre-wrap;word-break:break-word;line-height:1.55;max-height:600px;overflow:auto}
+.image-row{display:flex;gap:12px;flex-wrap:wrap;margin:12px 0}
+.image-row img{border-radius:8px;border:1px solid var(--border);max-width:240px;max-height:240px;object-fit:cover}
+.image-row .img-wrap{position:relative}
+.image-row .img-wrap .label{position:absolute;top:6px;left:6px;background:rgba(0,0,0,.7);color:var(--text);padding:2px 8px;border-radius:4px;font-size:10px;letter-spacing:.05em}
+.section{margin-bottom:48px;scroll-margin-top:24px}
+.section-divider{border-top:1px solid var(--border);margin:48px 0 24px}
+.alert{padding:12px 16px;border-radius:8px;margin:10px 0;font-size:13px;border:1px solid var(--border)}
+.alert.warn{background:rgba(251,191,36,.05);border-color:rgba(251,191,36,.3);color:var(--amber)}
+.alert.red{background:rgba(244,63,94,.05);border-color:rgba(244,63,94,.3);color:var(--red)}
+.alert.ok{background:rgba(52,211,153,.05);border-color:rgba(52,211,153,.3);color:var(--green)}
+.timeline{position:relative;padding-left:24px;border-left:2px solid var(--border);margin:16px 0}
+.timeline .tl-item{position:relative;margin-bottom:18px}
+.timeline .tl-item::before{content:'';position:absolute;left:-30px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+.timeline .tl-item .tl-meta{font-size:11px;color:var(--text-muted);margin-bottom:4px}
+table.dt{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+table.dt th{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);color:var(--text-muted);font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:.08em}
+table.dt td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+table.dt tr:last-child td{border-bottom:none}
+table.dt tr:hover{background:var(--surface2)}
+table.dt td .ord{color:var(--text-muted);font-size:12px;font-variant-numeric:tabular-nums}
+.completeness .row{display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid var(--border)}
+.completeness .row:last-child{border-bottom:none}
+.completeness .row .lbl{flex:1;font-size:13px}
+.completeness .row .val{font-variant-numeric:tabular-nums;font-size:13px}
+</style>
+</head>
+<body>
+<nav><div class="logo">Elyne · monad1</div><ul><li><a href="#overview" class="section-link">01 — Обзор</a></li><li><a href="#profile" class="section-link">02 — Профиль персонажа</a></li><li><a href="#onboarding" class="section-link">03 — Онбординг</a></li><li><a href="#spheres" class="section-link">04 — Сферы</a></li><li><a href="#close-people" class="section-link">05 — Близкие</a></li><li><a href="#history" class="section-link">06 — Полная история</a></li><li><a href="#analytics" class="section-link">07 — Аналитика</a></li><li><a href="#completeness" class="section-link">08 — Полнота данных</a></li></ul></nav>
+<main>
+  <header style="margin-bottom:24px">
+    <h1>Полный путь пользователя</h1>
+    <p class="muted">monad1@elyne.online · user #8544 · отчёт на 2026-05-27 17:55</p>
+  </header>
+  
+<section class="section" id="overview">
+  <h2><span class="num">01</span> Обзор пользователя</h2>
+  <div class="card">
+    <div class="meta-grid">
+      <div><label>Email</label><div class="value">monad1@elyne.online</div></div>
+      <div><label>User ID</label><div class="value">8544</div></div>
+      <div><label>Пол</label><div class="value">Мужской</div></div>
+      <div><label>Статус</label><div class="value"><span class="badge green">active</span></div></div>
+      <div><label>Зарегистрирован</label><div class="value">2026-05-23 11:43:07</div></div>
+      <div><label>Онбординг</label><div class="value">43 вопросов</div></div>
+      <div><label>Сфер пройдено</label><div class="value">0</div></div>
+      <div><label>Генераций</label><div class="value">0</div></div>
+      <div><label>Изображений</label><div class="value">0</div></div>
+      <div><label>Q&amp;A в сферах</label><div class="value">0</div></div>
+    </div>
+  </div>
+</section>
+
+  
+<section class="section" id="profile">
+  <h2><span class="num">02</span> Профиль персонажа (meta_prompt)</h2>
+  <div class="card">
+    <p class="muted" style="margin-bottom:12px">Сводный персональный профиль, сформированный системой на основе ответов онбординга. Используется как контекст для всех генераций.</p>
+    <details>
+      <summary>Показать meta_prompt (2086 символов)</summary>
+      <pre>Character Profile: Мужчина, 25 лет. Устойчивое ядро личности строится на созидании и внутреннем масштабе. Его ключевая мотивация — переход от статики к движению, расширение горизонтов и жизнь в ритме между странами. Он проявляет себя через творение, оставляя после себя ощущение тихой, непоколебимой силы и спокойствия, не требующего словесных подтверждений. Эмоциональный вектор направлен на вдохновение, простор и реализацию потенциала. Визуальная идентичность: Доминирующий вектор — «Relaxed Global Sophistication» (Расслабленная глобальная утонченность). Это синтез естественности Boho и мягкой чувственности Romantic, очищенный от театральности и этнических клише. Образ транслирует свободную творческую зрелость и теплую открытость. Силуэт характеризуется мягкими линиями, использованием натуральных фактур (лен, мягкая шерсть, замша) и светлой, природной палитрой (песочный, кремовый, теплый серый, оливковый). Стиль поведения в одежде — сдержанная природность: один выразительный фактурный элемент вместо многослойного костюма странника. В разных контекстах образ адаптируется: в движении и путешествиях — больше воздуха и свободы; в моменты реализации — чище и современнее, с акцентом на качество материалов; в intimate-сценах — максимально тактильный и теплый. Избегать: фестивального хиппи-стиля, рыхлости, чрезмерной нежности без стержня, логотипов и демонстративной роскоши. Key Answer Locks для первой сцены: 1. Главный приоритет: Ощущение масштаба, возможностей и движения вперед. 2. Желаемая среда: Жизнь между разными странами (атмосфера путешествия/транзита/новой локации). 3. Способ проявления: Через акт создания/творения. 4. Социальный сигнал: Уверенность без лишних слов, спокойствие, внутренняя сила. 5. Визуальный образ: Светлые, мягкие ткани, свободный но собранный силуэт, эстетика открытости и тепла. 6. Эмоциональный фон: Вдохновение, простор, жизнь, наполненная возможностями. Сцена должна транслировать состояние человека, который уже живет той жизнью, к которой стремится: свободный, творческий, находящийся в пути, но при этом глубоко укорененный в себе.</pre>
+    </details>
+  </div>
+</section>
+
+  
+<section class="section" id="onboarding">
+  <h2><span class="num">03</span> Онбординг — вопросы и ответы</h2>
+  <div class="alert warn">⚠ Варианты ответа (полный набор опций) недоступны без отдельного экспорта <code>/admin/onboarding-pages</code> + <code>/admin/spheres/*</code>. Показаны вопросы, тип и финальный выбор пользователя.</div>
+  <div class="card">
+    <table class="dt">
+      <thead><tr><th>№</th><th>Вопрос</th><th>Ответ пользователя</th><th>Тип</th></tr></thead>
+      <tbody>
+<tr><td class="ord">1</td>
+<td>Как ты существуешь в потоке трендов?</td>
+<td style="color:var(--green);font-style:italic">делюсь и объясняю другим</td>
+<td><span class="badge blue">Сфера</span></td></tr><tr><td class="ord">2</td>
+<td>Какое ощущение тебе хочется оставлять после себя? (Первое впечатление — Ядро личности)</td>
+<td style="color:var(--green);font-style:italic">уверенности без лишних слов, спокойствия и внутренней силы</td>
+<td><span class="badge accent">Онбординг</span></td></tr><tr><td class="ord">3</td>
+<td>Что для тебя значит продолжение рода? Сф.6</td>
+<td style="color:var(--green);font-style:italic">быть опорой для близких, быть примером для своих детей</td>
+<td><span class="badge blue">Сфера</span></td></tr><tr><td class="ord">4</td>
+<td>Какой образ тебе ближе всего? (Визуальный образ — Визуал)</td>
+<td style="color:var(--green);font-style:italic">Romantic / Feminine, Boho</td>
+<td><span class="badge accent">Онбординг</span></td></tr><tr><td class="ord">5</td>
+<td>В чём тебе нравится проявлять себя? (Способ проявления — Ядро личности)</td>
+<td style="color:var(--green);font-style:italic">в том, что я создаю</td>
+<td><span class="badge accent">Онбординг</span></td></tr><tr><td class="ord">6</td>
+<td>Какое окружение тебе хочется видеть вокруг себя? Сф.10</td>
+<td style="color:var(--green);font-style:italic">сильных и амбициозных людей, живое и насыщенное общение</td>
+<td><span class="badge blue">Сфера</span></td></tr><tr><td class="ord">7</td>
+<td>Какими тебе хочется видеть сцены дальше? (Режим генерации — Визуал)</td>
+<td style="color:var(--green);font-style:italic">масштабными и наполненными</td>
+<td><span class="badge accent">Онбординг</span></td></tr><tr><td class="ord">8</td>
+<td>Как для тебя проявляются ресурсы и богатство? Сф.2</td>
+<td style="color:var(--green);font-style:italic">финансовая свобода и отсутствие ограничений, красивые и дорогие вещи вокруг, доступ к местам и возможностям</td>
+<td><span class="badge blue">Сфера</span></td></tr><tr><td class="ord">9</td>
+<td>Где тебе хочется жить? Сф.5</td>
+<td style="color:var(--green);font-style:italic">Современный коттедж-шале</td>
+<td><span class="badge blue">Сфера</span></td></tr><tr><td class="ord">10</td>
+<td>В чём тебе хочется реализовываться в этой жизни? Сф.3</td>
+<td style="color:var(--green);font-style:italic">в творчестве и создании, в инвестициях и больших проектах</td>
+<td><span class="badge blue">Сфера</span></td></tr><tr><td class="ord">11</td>
+<td>Что в этой сцене ощущается твоим?</td>
+<td style="color:var(--green);font-style:italic">мой ритм и состояние</td>
+<td><span class="badge muted">Сцена</span></td></tr><tr><td class="ord">12</td>
+<td>Каким тебе хочется ощущать себя в своём теле и состоянии? Сф.1</td>
+<td style="color:var(--green);font-style:italic">лёгким и энергичным, сильным и собранным</td>
+<td><span class="badge blue">Сфера</span></td></tr><tr><td class="ord">13</td>
+<td>Какой мир трендов тебе ближе?</td>
+<td style="color:var(--green);font-style:italic">цифровые технологии и AI</td>
+<td><span class="badge blue">Сфера</span></td></tr><tr><td class="ord">14</td>
+<td>Каким тебе хочется увидеть себя?</td>
+<td style="color:var(--green);font-style:italic">почувствовать жизнь, в которую хочется войти</td>
+<td><span class="badge muted">Сцена</span></td></tr><tr><td class="ord">15</td>
+<td>Что тебе сейчас хочется почувствовать в своей жизни? (Приоритеты — Ядро личности)</td>
+<td style="color:var(--green);font-style:italic">больше масштаба и возможностей, вдохновение и движение вперёд</td>
+<td><span class="badge accent">Онбординг</span></td></tr><tr><td class="ord">16</td>
+<td>Как выглядит свобода в твоей жизни? Сф.9</td>
+<td style="color:var(--green);font-style:italic">легко менять окружение и образ жизни</td>
+<td><span class="badge blue">Сфера</span></td></tr><tr><td class="ord">17</td>
+<td>Где именно вы сейчас чувствуете самый сильный сдвиг: в конкретном инструменте, чате или месте?</td>
+<td style="color:var(--green);font-style:italic">Я освоил агентов ии</td>
+<td><span class="badge muted">AI-углубление</span></td></tr><tr><td class="ord">18</td>
+<td>Что для тебя значит настоящая близость и партнёрство? Сф.4</td>
+<td style="color:var(--green);font-style:italic">ощущение «мы», партнёрство и движение вместе</td>
+<td><span class="badge blue">Сфера</span></td></tr><tr><td class="ord">19</td>
+<td>Что для тебя сейчас развитие? Сф.8</td>
+<td style="color:var(--green);font-style:italic">глубже понимать себя и жизнь, учиться у сильных людей</td>
+<td><span class="badge blue">Сфера</span></td></tr><tr><td class="ord">20</td>
+<td>Что для тебя значит создавать новое? Сф.7</td>
+<td style="color:var(--green);font-style:italic">сделать что-то своими руками, создать новый мир вокруг себя</td>
+<td><span class="badge blue">Сфера</span></td></tr><tr><td class="ord">21</td>
+<td>Как тебе хочется жить в этом пространстве? Сф.5</td>
+<td style="color:var(--green);font-style:italic">в тёплой семейной жизни, в живой атмосфере с друзьями и гостями</td>
+<td><span class="badge blue">Сфера</span></td></tr><tr><td class="ord">22</td>
+<td>В какой атмосфере тебе хочется жить? (Среда жизни — Контекст жизни)</td>
+<td style="color:var(--green);font-style:italic">жизнь между разными странами</td>
+<td><span class="badge accent">Онбординг</span></td></tr><tr><td class="ord">23</td>
+<td>Через что тебе хочется приходить к этому состоянию? Сф.1</td>
+<td style="color:var(--green);font-style:italic">спорт и движение, забота о теле и здоровье, активный и насыщенный образ жизни</td>
+<td><span class="badge blue">Сфера</span></td></tr><tr><td class="ord">24</td>
+<td>Где именно вы находитесь в самый обычный день своей работы и что вас окружает?</td>
+<td style="color:var(--green);font-style:italic">В теплой стране, солнечная погода. Я на приеме по случаю презентации моего приложения</td>
+<td><span class="badge muted">AI-углубление</span></td></tr><tr><td class="ord">25</td>
+<td>Как тебе хочется ощущать свою жизнь? (Уровень проявления — Контекст жизни)</td>
+<td style="color:var(--green);font-style:italic">просторной и полной возможностей</td>
+<td><span class="badge accent">Онбординг</span></td></tr><tr><td class="ord">26</td>
+<td>Через что ты бы хотел видеть это в своей жизни?</td>
+<td style="color:var(--green);font-style:italic">создание продукта или идеи</td>
+<td><span class="badge blue">Сфера</span></td></tr><tr><td class="ord">27</td>
+<td>Опишите один конкретный момент вашего обычного дня, когда вы чувствуете себя максимально живым и наполненным: где вы находитесь, что вас окружает и чем вы заняты в эту секунду?</td>
+<td style="color:var(--green);font-style:italic">Когда утром я делаю кундалини йогу утром на свежем воздухе</td>
+<td><span class="badge muted">AI-углубление</span></td></tr><tr><td class="ord">28</td>
+<td>Где и с кем вы чаще всего проводите вечера, когда чувствуете себя максимально «в своей тарелке»?</td>
+<td style="color:var(--green);font-style:italic">Когда делюсь с кем то своими откровениями или открытиями</td>
+<td><span class="badge muted">AI-углубление</span></td></tr><tr><td class="ord">29</td>
+<td>Что тебе особенно хочется видеть в этой жизни?</td>
+<td style="color:var(--green);font-style:italic">премиальный уровень повседневной жизни</td>
+<td><span class="badge blue">Сфера</span></td></tr><tr><td class="ord">30</td>
+<td>Через что тебе хочется увидеть свое продолжение? Сф.6</td>
+<td style="color:var(--green);font-style:italic">спокойная повседневная жизнь рядом</td>
+<td><span class="badge blue">Сфера</span></td></tr><tr><td class="ord">31</td>
+<td>Как тебе хочется увидеть эту жизнь?</td>
+<td style="color:var(--green);font-style:italic">Я вижу себя со стороны</td>
+<td><span class="badge muted">Сцена</span></td></tr><tr><td class="ord">32</td>
+<td>Какое маленькое, почти незаметное действие в вашем доме — например, запах завтрака на кухне или свет лампы в углу — сразу даёт вам чувство, что вы дома?</td>
+<td style="color:var(--green);font-style:italic">Я выхожу из просторной кухни в большой зал с панорамными окнами и красивейшим видом на сосны ели и лук и в гостиной на диване сидит моя жена и мои друзья</td>
+<td><span class="badge muted">AI-углубление</span></td></tr><tr><td class="ord">33</td>
+<td>В чем близость особенно ощущается в твоей жизни? Сф.4</td>
+<td style="color:var(--green);font-style:italic">поддержка в важных моментах</td>
+<td><span class="badge blue">Сфера</span></td></tr><tr><td class="ord">34</td>
+<td>Через что это проявляется в твоей жизни? Сф.3</td>
+<td style="color:var(--green);font-style:italic">сильное окружение и обмен опытом</td>
+<td><span class="badge blue">Сфера</span></td></tr><tr><td class="ord">35</td>
+<td>Какой звук слышен в этой тишине?</td>
+<td style="color:var(--green);font-style:italic">Смотря какой тишине</td>
+<td><span class="badge muted">Сцена</span></td></tr><tr><td class="ord">36</td>
+<td>Как тебе хочется увидеть эту жизнь?</td>
+<td style="color:var(--green);font-style:italic">Как кадр из фильма</td>
+<td><span class="badge muted">Сцена</span></td></tr><tr><td class="ord">37</td>
+<td>Что лежит у тебя в руках в этот момент?</td>
+<td style="color:var(--green);font-style:italic">Ничего</td>
+<td><span class="badge muted">Сцена</span></td></tr><tr><td class="ord">38</td>
+<td>Тёплый ветер или прохладный воздух касается лица?</td>
+<td style="color:var(--green);font-style:italic">Нет</td>
+<td><span class="badge muted">Сцена</span></td></tr><tr><td class="ord">39</td>
+<td>Как тебе хочется увидеть эту жизнь?</td>
+<td style="color:var(--green);font-style:italic">Я вижу всё своими глазами</td>
+<td><span class="badge muted">Сцена</span></td></tr><tr><td class="ord">40</td>
+<td>Как тебе хочется увидеть эту жизнь?</td>
+<td style="color:var(--green);font-style:italic">Своими глазами</td>
+<td><span class="badge muted">Сцена</span></td></tr><tr><td class="ord">41</td>
+<td>Какой инструмент лежит у тебя под рукой прямо сейчас?</td>
+<td style="color:var(--green);font-style:italic">—</td>
+<td><span class="badge muted">Сцена</span></td></tr><tr><td class="ord">42</td>
+<td>Что именно стоит на столе прямо сейчас?</td>
+<td style="color:var(--green);font-style:italic">Мы играем в настольную игру с дочкой Ариной на природе</td>
+<td><span class="badge muted">Сцена</span></td></tr><tr><td class="ord">43</td>
+<td>Как тебе хочется увидеть эту жизнь?</td>
+<td style="color:var(--green);font-style:italic">Я вижу всё своими глазами</td>
+<td><span class="badge muted">Сцена</span></td></tr></tbody></table></div></section>
+  
+<section class="section" id="spheres">
+  <h2><span class="num">04</span> Сферы — детальный путь</h2>
+  <p class="muted" style="margin-bottom:16px">Микроопросник, Key Answer Locks, метапромпт (OpenRouter), финальный промпт (FAL), изображения, итерации. Все промпты — raw, без интерпретации.</p>
+
+<div class="alert warn" style="margin-bottom:16px">
+  Детальные данные по сценам (RAW промпты, изображения, итерации) <strong>не получены</strong> 27.05 — Filament Livewire не рендерится в headless-браузере из-за server keep-alive. Ниже — единственный известный фрагмент из вчерашнего draft.
+</div>
+<div class="card subtle">
+  <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+    <h3 style="margin:0">Сцена «Утренний переход в новом городе»</h3>
+    <span class="badge muted">из draft 26.05</span>
+  </div>
+  <div style="margin:10px 0;padding:8px 12px;background:rgba(244,63,94,.05);border-left:2px solid var(--red);border-radius:0 6px 6px 0">
+    <span class="tiny">Комментарий пользователя</span>
+    <div style="font-style:italic;color:#f9a8d4;margin-top:3px">«Слишком я сладкий»</div>
+  </div>
+  <p class="muted" style="margin-top:10px">RAW final prompt, метапромпт, scene_prompt, photos, refinements — недоступны без отдельного захода в админку (см. секцию 08).</p>
+</div>
+</section>
+  
+<section class="section" id="close-people">
+  <h2><span class="num">05</span> Близкие (Close People)</h2>
+  <div class="card">
+    <div class="alert warn">⚠ Раздел Close People не найден в выгрузке модальных окон. Если у пользователя были добавлены близкие, они отображались бы в отдельных relation managers вне Generation modals.</div>
+  </div>
+</section>
+
+  <section class="section" id="history"><h2><span class="num">06</span> Полная история генераций</h2><div class="card"><div class="timeline"></div></div></section>
+  
+<section class="section" id="analytics">
+  <h2><span class="num">07</span> Аналитика — ответы → промпты → изображения</h2>
+  <div class="card">
+    <p class="muted">Карта связей между ответами онбординга / микроопросников и финальными промптами. Best-effort реконструкция: система не хранит явное mapping «ответ-X → строка-Y в prompt», но через Key Answer Locks можно проследить какие ответы зашиты в каждую сцену.</p>
+    <h4 style="margin-top:18px">Сферы, охваченные пользователем</h4>
+    <ul style="margin-left:20px;color:var(--text)">
+</ul></div></section>
+  
+<section class="section" id="completeness">
+  <h2><span class="num">08</span> Полнота данных</h2>
+  <div class="alert red" style="margin-bottom:18px">
+    <strong>⚠ Технический барьер 27.05.2026:</strong> сервер elyne.online держит HTTP keep-alive open ~30 сек после initial chunk → headless-браузер (Playwright/MCP Chrome) ждёт DOMContentLoaded и не рендерит Filament Livewire JS. curl с <code>--compressed</code> достаёт первичные HTML-snapshot'ы, но <strong>lazy Relation Managers</strong> (Generations, Refinements, Close People) грузятся только после клиентского рендера и нам недоступны без сервера Дениса.
+  </div>
+  <div class="card completeness">
+    <div class="row"><div class="lbl">Onboarding — вопросы пользователя и его ответы</div><div class="val" style="color:var(--green)">43 ✓ из draft 26.05</div></div>
+    <div class="row"><div class="lbl">Meta-prompt (профиль персонажа)</div><div class="val" style="color:var(--green)">✓ 2086 символов</div></div>
+    <div class="row"><div class="lbl">user_id подтверждён через /admin/users index</div><div class="val" style="color:var(--green)">✓ 8544 (не 8551 — это Card ID)</div></div>
+    <div class="row"><div class="lbl">View-snapshot user-resource</div><div class="val" style="color:var(--green)">✓ wire:id ThnVS8GmoozAqR9Dz1iv, 71 983 байт</div></div>
+    <div class="row"><div class="lbl">Сцены (Generations) — заголовки, типы, прогресс</div><div class="val" style="color:var(--red)">✗ Не получены — lazy Relation Manager не запускается без JS</div></div>
+    <div class="row"><div class="lbl">RAW финальные промпты в FAL (raw, без сокращений)</div><div class="val" style="color:var(--red)">✗ Только через клик «Детали» на каждой сцене (UI-only)</div></div>
+    <div class="row"><div class="lbl">Метапромпты OpenRouter (полный текст)</div><div class="val" style="color:var(--red)">✗ Тот же блокер</div></div>
+    <div class="row"><div class="lbl">Сгенерированные изображения (inline base64)</div><div class="val" style="color:var(--red)">✗ Тот же блокер; известна 1 сцена «Утренний переход в новом городе»</div></div>
+    <div class="row"><div class="lbl">Углубления / Refinements</div><div class="val" style="color:var(--red)">✗ Только через GenerationsRelationManager</div></div>
+    <div class="row"><div class="lbl">Close People</div><div class="val" style="color:var(--red)">✗ Отдельный Relation Manager — недоступен</div></div>
+    <div class="row"><div class="lbl">Полный набор вариантов ответа онбординга</div><div class="val" style="color:var(--amber)">⚠ нужен экспорт /admin/onboarding-pages — отдельная задача</div></div>
+    <div class="row"><div class="lbl">AI follow-up как отдельные сущности</div><div class="val" style="color:var(--amber)">⚠ Встроены в meta_prompt; отдельной таблицы нет в данной выгрузке</div></div>
+  </div>
+  <div class="alert warn" style="margin-top:18px">
+    <strong>Чтобы закрыть пробелы — варианты:</strong><br>
+    A. Денис предоставляет DB-дамп таблицы <code>generations</code> для user_id=8544 (5 минут) — самый прямой путь.<br>
+    B. Заходишь сам в админку → /admin/users/8544, прокликиваешь каждую сцену, копируешь раздел «Промпт» из модалки — я конвертирую в HTML.<br>
+    C. Денис чинит nginx FastCGI buffer на elyne.online (gzip буфер 16K, fastcgi_buffer_size, proxy_buffer_size) — headless-браузер заработает, можно автоматизировать.
+  </div>
+  <div class="alert ok" style="margin-top:14px">
+    <strong>Что есть и работает:</strong> чистый CSRF-логин в админку через Livewire (без браузера), <code>cookies.txt</code> с валидной сессией, парсинг wire:snapshot, список юзеров с поиском по email — этого хватит на любые дашборды по тем данным, что Filament кладёт в первый snapshot.
+  </div>
+</section>
+
+  
+<div style="margin-top:48px;padding-top:24px;border-top:1px solid var(--border);font-size:11px;color:var(--text-muted);letter-spacing:.05em">
+  Сформировано: 2026-05-27 17:55:57 · monad1@elyne.online (user_id=8544) · Моня для Elyne · источники: <code>elyne.online/admin/users/8544/edit</code>, draft 2026-05-26
+</div>
+
+</main>
+</body>
+</html>
