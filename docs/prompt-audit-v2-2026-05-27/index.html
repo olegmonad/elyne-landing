@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Аудит prompt-системы Elyne v2 — 27.05.2026</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="prompt-elyne-v2">Аудит prompt-системы Elyne v2 — по полному дампу БД</h1>
+<p><strong>Дата:</strong> 2026-05-27
+<strong>Источник:</strong> PostgreSQL dump (49 MB, 45 таблиц), получен напрямую от Дениса
+<strong>Предыдущая итерация:</strong> v1 (2026-05-26) — был ограничен Livewire-таймаутами админки, 11 промтов не вытащились</p>
+<hr>
+<h2 id="tldr-vs-v1">TL;DR — что изменилось vs v1</h2>
+<ul>
+<li><strong>Все 11 недостающих промтов вытащены</strong> — теперь видны полные 34 записи <code>generation_prompts</code></li>
+<li><strong>NOTE-03 СНЯТО</strong> (ложная тревога): <code>three_angles_scene</code> есть и в ENUM, и как запись id=18</li>
+<li><strong>BUG-02 РАСШИРЕНО</strong>: в мини-промте 356 байт найдено <strong>три опечатки</strong>, не одна</li>
+<li><strong>+3 новые находки</strong> (HIGH/MEDIUM): тарифы в БД не совпадают с согласованными; сфера «Тренды» добавлена без явного согласования; slug онбординга с пробелами и опечаткой ломает URL</li>
+<li><strong>BUG-01 (face guard) — остаётся</strong> (код-уровень, дамп не опровергает)</li>
+</ul>
+<hr>
+<h2 id="1-generation_prompts-34-16">1. Полная карта <code>generation_prompts</code> — 34 записи, 16 типов</h2>
+<p>ENUM <code>generation_prompt_type</code>:
+<code>profile_photo, field_scene, scene_system, image_instructions, variation_instructions, relatives_instructions, profile_summary_system, affirmation, sphere_selector, three_angles_scene, scene_affirmation, photo_session, sphere_metaprompt, ai_questionnaire_question, wish_scene, scene_question</code></p>
+<p>Разбивка по типам:</p>
+<table>
+<thead>
+<tr>
+<th>Тип</th>
+<th>Кол-во</th>
+<th>Что это</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>field_scene</code></td>
+<td>11</td>
+<td>Большие промты сцен по сферам (sphere_id 1–11), 13–33 KB каждый</td>
+</tr>
+<tr>
+<td><code>sphere_metaprompt</code></td>
+<td>10</td>
+<td>Короткие 400b метапромты по сферам 1–10</td>
+</tr>
+<tr>
+<td><code>scene_system</code></td>
+<td>1</td>
+<td>Главный системный промт сцен (id=11, 21 KB)</td>
+</tr>
+<tr>
+<td><code>image_instructions</code></td>
+<td>1</td>
+<td>id=12, 5.4 KB — <strong>face guard</strong> (BUG-01 не вызывает его)</td>
+</tr>
+<tr>
+<td><code>relatives_instructions</code></td>
+<td>1</td>
+<td>id=14</td>
+</tr>
+<tr>
+<td><code>profile_summary_system</code></td>
+<td>1</td>
+<td>id=15, 13 KB + refresh 2 KB</td>
+</tr>
+<tr>
+<td><code>affirmation</code></td>
+<td>1</td>
+<td>id=16</td>
+</tr>
+<tr>
+<td><code>sphere_selector</code></td>
+<td>1</td>
+<td>id=17</td>
+</tr>
+<tr>
+<td><code>three_angles_scene</code></td>
+<td>1</td>
+<td><strong>id=18, 7.7 KB</strong> — NOTE-03 снято</td>
+</tr>
+<tr>
+<td><code>scene_affirmation</code></td>
+<td>1</td>
+<td>id=19</td>
+</tr>
+<tr>
+<td><code>photo_session</code></td>
+<td>1</td>
+<td>id=20</td>
+</tr>
+<tr>
+<td><code>ai_questionnaire_question</code></td>
+<td>1</td>
+<td><strong>id=21, 356 b</strong> — BUG-02 (3 опечатки)</td>
+</tr>
+<tr>
+<td><code>wish_scene</code></td>
+<td>1</td>
+<td>id=34, 1 KB</td>
+</tr>
+<tr>
+<td><code>scene_question</code></td>
+<td>1</td>
+<td>id=35</td>
+</tr>
+<tr>
+<td><code>profile_photo</code></td>
+<td>1</td>
+<td>id=1, 6.5 KB + title 884 b</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="2-v1">2. Статус багов из v1</h2>
+<h3 id="bug-01-high-createscenephotoaction-face-guard">BUG-01 (HIGH) — <code>CreateScenePhotoAction</code> пропускает face guard</h3>
+<p><strong>Статус:</strong> подтверждён, дамп не опровергает.</p>
+<p>В БД промт <code>image_instructions</code> (id=12, 5.4 KB) — <strong>существует</strong>. Это и есть face guard, который должен вызываться из <code>getImageInstructions()</code>. Аудит кода 26.05 показал, что <code>CreateScenePhotoAction</code> его не вызывает. Дамп подтверждает: промт лежит, но в pipeline <code>three_angles_scene</code> не подключается → лица могут плыть на trios.</p>
+<p><strong>Что чинить:</strong> Денису — добавить <code>getImageInstructions()</code> в <code>CreateScenePhotoAction</code> (как в обычной single-scene action).</p>
+<h3 id="bug-02-medium-high-ai-">BUG-02 (MEDIUM → HIGH после расширения) — опечатки в мета-промте AI-вопросов</h3>
+<p><strong>В прошлом аудите я назвал это «опечатка изместно в ID=21».</strong> Точный адрес — <code>generation_prompts id=21</code> (тип <code>ai_questionnaire_question</code>), не <code>questionnaire_questions</code>. Промт длиной 356 байт. В нём <strong>три</strong> опечатки, не одна.</p>
+<p>Полный текст:</p>
+<pre><code>Cформулируй ОДИН уточняющий вопрос пользователю для сферы {sphere_title}
+вот что изместно о пользователе: {gender} {profile_summary}
+Вот ответы которые он дал ужн для этой сферы {micro_adjustment_answers}
+Задай один важный уточняющий вопрос чтобы у нас была более персонализированная и детализированная под пользователя сцена его жизни для этой сферы
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Опечатка</th>
+<th>Должно быть</th>
+<th>Где</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>C</strong>формулируй</td>
+<td><strong>С</strong>формулируй</td>
+<td>1-й символ. Латинская C (U+0043) вместо кириллической С (U+0421)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>из<strong>мест</strong>но</td>
+<td>из<strong>вест</strong>но</td>
+<td>строка 2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>у<strong>жн</strong></td>
+<td>у<strong>же</strong></td>
+<td>строка 3</td>
+</tr>
+</tbody>
+</table>
+<p>Этот промт уходит в LLM <strong>каждый раз</strong> при генерации Q3-вопроса (повторяющийся вопрос перед каждой сценой). Псевдо-слова «изместно» и «ужн» могут сбивать LLM: модель пытается интерпретировать как термин и теряет инструкцию.</p>
+<p><strong>Что чинить:</strong> через админку elyne.online/admin перезаписать meta_prompt id=21. Готовый правильный текст:</p>
+<pre><code>Сформулируй ОДИН уточняющий вопрос пользователю для сферы {sphere_title}
+Вот что известно о пользователе: {gender} {profile_summary}
+Вот ответы которые он уже дал для этой сферы {micro_adjustment_answers}
+Задай один важный уточняющий вопрос — чтобы получилась более персонализированная и детализированная сцена его жизни для этой сферы.
+</code></pre>
+<h3 id="note-03-three_angles_scene">NOTE-03 (закрыто) — <code>three_angles_scene</code> не найден в БД</h3>
+<p><strong>Снято.</strong> В v1 я не нашёл этот тип, потому что сервер таймаутил на странице. По дампу:
+- В ENUM <code>generation_prompt_type</code> строка 10 — <code>three_angles_scene</code> есть
+- В таблице — запись id=18, field_name «Три угла», meta_prompt 7.7 KB
+- Промт активен. Но в <code>sphere_selector_configs.three_angles_enabled = false</code> → <strong>на проде выключен</strong>. Промт реализован, но в конфиге не включён. Это не runtime error, это product-decision Дениса/Олега.</p>
+<hr>
+<h2 id="3">3. Новые находки (по полному дампу)</h2>
+<h3 id="new-01-high">NEW-01 (HIGH) — Тарифы в БД не совпадают с согласованными</h3>
+<p><strong>В БД (<code>tariff_plans</code>):</strong></p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>name</th>
+<th>price</th>
+<th>total_gen</th>
+<th>deleted_at</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Базовый</td>
+<td>699 ₽</td>
+<td>18</td>
+<td>удалён 2026-05-25</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Стандарт</td>
+<td>0 ₽</td>
+<td>36</td>
+<td>удалён 2026-05-25</td>
+</tr>
+<tr>
+<td>3</td>
+<td>VIP</td>
+<td>0 ₽</td>
+<td>54</td>
+<td>удалён 2026-05-25</td>
+</tr>
+<tr>
+<td>4</td>
+<td>MVP Тест</td>
+<td>0 ₽</td>
+<td>54</td>
+<td>удалён 2026-05-25</td>
+</tr>
+<tr>
+<td><strong>5</strong></td>
+<td><strong>Ранний доступ</strong></td>
+<td><strong>499 ₽</strong></td>
+<td><strong>10</strong></td>
+<td><strong>АКТИВНЫЙ</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Что одобрил ты (26.05, фикс в L3 + KG):</strong> 990 / 1999 / 3499 ₽ — три тарифа.</p>
+<p><strong>В БД этих тарифов нет.</strong> Активен только «Ранний доступ» 499 ₽. Если сейчас открыть paywall у любого юзера, он увидит этот единственный план. Решение прошло почти неделю назад — Денис не залил.</p>
+<p><strong>Что делать:</strong> написать Денису, чтобы залил три согласованных тарифа. Имена пока без финального выбора (Начало/Всё/Глубина либо Тишина/Голос/Присутствие либо Контур/Объём/Среда), но цифры и лимиты — конкретные.</p>
+<h3 id="new-02-medium-id11-1705">NEW-02 (MEDIUM) — Сфера «Тренды» (id=11) добавлена 17.05</h3>
+<p><strong>В БД 11 сфер</strong>, а ты фиксировал ровно 10 (msg_2002, 29.04).</p>
+<p>11-я сфера:
+- <code>id=11, slug=trends, name=Тренды</code>
+- Создана 2026-05-17 13:05, последнее обновление 25.05
+- <code>excluded_from_selector: false</code> → <strong>юзер её видит в селекторе</strong>
+- <code>is_clone_source: true</code> → используется как шаблон-источник для клонирования
+- <code>sort_order: 11</code>
+- Описание: «Сфера актуального — то, что формирует дух времени: технологии, медиа, культура, стиль жизни, бизнес-паттерны и социальные сдвиги»</p>
+<p>Денис либо ты сам решил добавить — я в логе TG не нашёл явного согласования. Может быть, это служебная для тестов кросс-клонирования (<code>is_clone_source=true</code> намекает), но <code>excluded_from_selector=false</code> делает её видимой на проде.</p>
+<p><strong>Что решить:</strong> оставляем 11-ю сферу как продакшн? Если нет — <code>excluded_from_selector=true</code>. Если служебная — выключить из селектора и переименовать (например, slug <code>_template</code>).</p>
+<h3 id="new-03-medium-slug-url">NEW-03 (MEDIUM) — slug онбординга с пробелами и опечаткой ломает URL</h3>
+<p><strong>Та самая «How%20it%20worrks» из QA 26.05.</strong></p>
+<p><code>onboarding_pages id=41</code>:
+- <code>slug: "How it worrks"</code> ← пробелы + заглавная + опечатка
+- <code>type: editorial_presentation</code>
+- <code>sort_order: 5</code> — пятый экран онбординга</p>
+<p>Три проблемы в одном поле:
+1. <strong>Опечатка</strong> <code>worrks</code> → <code>works</code>
+2. <strong>Пробелы в slug</strong> → URL получает <code>%20</code> → роутер ломается с <code>ERR_ABORTED</code>
+3. <strong>Заглавная буква</strong> — конвенция slug = lowercase kebab-case</p>
+<p><strong>Что чинить:</strong> в админке переименовать slug в <code>how-it-works</code>. Проверить, что нигде в коде нет хардкода <code>How%20it%20worrks</code> (вряд ли — это поле берётся из БД).</p>
+<h3 id="new-04-low-three_angles_enabled-false">NEW-04 (LOW) — <code>three_angles_enabled = false</code> в конфиге селектора</h3>
+<p><code>sphere_selector_configs id=1</code>:
+- <code>three_angles_enabled: false</code> — фича выключена на проде
+- <code>skip_first_micro_questionnaire: true</code> — первый микро-опрос пропускается
+- <code>enabled_question_ids: [2,3,4,5,7,8,9,10,11,12,1,15,16,17,6,13,14,23]</code> — 18 вопросов из 51 в селекторе</p>
+<p><code>three_angles_scene</code> промт (id=18) написан, но не зовётся. Это не баг — это конфиг. Просто чтобы ты помнил: фича готова, ждёт включения.</p>
+<h3 id="new-05-informational-ai_scene_questions">NEW-05 (informational) — <code>ai_scene_questions</code> почти пустая</h3>
+<p>Всего 2 записи (sphere 4 и 8, обе для card_id=8551 от 26.05). Не баг — просто фича генерации Q3 запустилась недавно, статистика накапливается.</p>
+<hr>
+<h2 id="4">4. Что осталось проверить вне дампа</h2>
+<ul>
+<li><strong>BUG-01 fix</strong> — нужен PR Дениса с вызовом <code>getImageInstructions()</code> в <code>CreateScenePhotoAction</code></li>
+<li><strong>Тарифы</strong> — нужно подтверждение от Дениса, что залил 990/1999/3499 и удалил/деактивировал «Ранний доступ»</li>
+<li><strong>Промты в коде</strong> (15 шт, не в БД) — file_path:line_number зафиксированы в v1, дамп их не покрывает</li>
+</ul>
+<hr>
+<h2 id="5">5. Файлы</h2>
+<ul>
+<li>Дамп (PII, не в git): <code>vault/elyne/db/dump-2026-05-27.sql</code></li>
+<li>Парсер: <code>vault/elyne/db/extract_dump.py</code></li>
+<li>Распарсенные таблицы (jsonl): <code>vault/elyne/db/parsed/*.jsonl</code></li>
+<li>v1 отчёт: https://olegmonad.github.io/elyne-landing/docs/prompt-audit-2026-05-26/</li>
+</ul>
+<hr>
+<h2 id="6-action-list">6. Приоритизированный action list для Дениса</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Что</th>
+<th>Где</th>
+<th>Кто</th>
+<th>Срок</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Залить согласованные тарифы 990/1999/3499</td>
+<td>admin → tariff_plans</td>
+<td>Денис</td>
+<td>ASAP — блокирует paywall</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Деактивировать «Ранний доступ» 499 ₽</td>
+<td>admin → tariff_plans id=5</td>
+<td>Денис</td>
+<td>вместе с п.1</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Исправить 3 опечатки в meta_prompt id=21</td>
+<td>admin → generation_prompts</td>
+<td>Денис</td>
+<td>1 день</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Добавить face guard в <code>CreateScenePhotoAction</code></td>
+<td>репо next-me</td>
+<td>Денис</td>
+<td>1–2 дня</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Решить судьбу сферы «Тренды» (id=11)</td>
+<td>продуктовое</td>
+<td>Олег → Денис</td>
+<td>обсуждение</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Переименовать slug <code>How it worrks</code> → <code>how-it-works</code></td>
+<td>admin → onboarding_pages id=41</td>
+<td>Денис</td>
+<td>1 день</td>
+</tr>
+</tbody>
+</table>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
