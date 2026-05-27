@@ -14,49 +14,21 @@
 <title>ELYNE Афиша</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
+  /* Forced dark theme — Elyne premium palette.
+     We intentionally ignore tg.colorScheme / tg-theme-* vars because TG in group context
+     can send pale "light" vars even when user has dark mode, breaking card readability. */
   :root {
-    --bg: var(--tg-theme-bg-color, #0d0d0d);
-    --bg2: var(--tg-theme-secondary-bg-color, #1a1a1a);
-    --text: var(--tg-theme-text-color, #f0f0f0);
-    --hint: var(--tg-theme-hint-color, #888);
-    --link: var(--tg-theme-link-color, #c4a95e);
-    --btn: var(--tg-theme-button-color, #c4a95e);
-    --btn-text: var(--tg-theme-button-text-color, #000);
+    --bg: #0d0d0d;
+    --bg2: #1a1a1a;
+    --text: #f0f0f0;
+    --hint: #9a9aa3;
+    --link: #c4a95e;
+    --btn: #c4a95e;
+    --btn-text: #000;
     --card: #1e1e1e;
-    --border: rgba(255,255,255,0.07);
+    --card-elevated: #25252b;
+    --border: rgba(255,255,255,0.08);
     --green: #4CAF50;
-  }
-
-  /* Light theme overrides — applied when TG colorScheme === 'light' */
-  [data-theme="light"] {
-    --card: #f2f2f7;
-    --border: rgba(0,0,0,0.08);
-  }
-  /* Explicit dark theme — ensures dark vars even if TG sends pale bg vars */
-  [data-theme="dark"] {
-    --card: #1e1e1e;
-    --border: rgba(255,255,255,0.07);
-  }
-  [data-theme="light"] .event-btn:not(.primary) {
-    background: rgba(0,0,0,0.07);
-    color: var(--text);
-  }
-  [data-theme="light"] .attend-btn:not(.attending) {
-    background: rgba(0,0,0,0.05);
-    border-color: rgba(0,0,0,0.12);
-    color: var(--hint);
-  }
-  [data-theme="light"] .cal-btn {
-    background: rgba(0,0,0,0.05);
-    border-color: rgba(0,0,0,0.12);
-  }
-  [data-theme="light"] .my-export-banner {
-    background: rgba(0,0,0,0.04);
-    border-color: rgba(0,0,0,0.09);
-  }
-  [data-theme="light"] .view-btn.active {
-    background: #fff;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -91,7 +63,10 @@
     cursor: pointer; color: var(--hint); transition: all 0.15s;
     white-space: nowrap;
   }
-  .view-btn.active { background: var(--card); color: var(--text); font-weight: 600; }
+  .view-btn.active {
+    background: var(--card-elevated); color: var(--text); font-weight: 600;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,255,255,0.06);
+  }
 
   /* Nav bar */
   .nav-bar {
@@ -395,14 +370,8 @@
 const tg = window.Telegram?.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
 
-function applyTheme() {
-  const scheme = tg?.colorScheme || 'dark';
-  document.documentElement.setAttribute('data-theme', scheme === 'light' ? 'light' : 'dark');
-}
-applyTheme();
-if (tg) {
-  try { tg.onEvent('themeChanged', applyTheme); } catch (e) {}
-}
+// Force dark theme — see :root comment in CSS
+document.documentElement.setAttribute('data-theme', 'dark');
 
 const EVENTS_URL    = 'https://elyne-start.online/community/events.json';
 const COMMUNITY_URL    = 'https://t.me/elyne_community';
