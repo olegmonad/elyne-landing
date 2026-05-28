@@ -1,126 +1,690 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>App Store через Квин — три пути по-человечески</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>App Store через жену-гражданку Вьетнама — research</title>
 <style>
-  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
-  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
-  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
-  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
-  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
-  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
-  p { margin: 8px 0 12px; }
-  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
-  li { margin: 4px 0; }
-  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
-  blockquote p { margin: 4px 0; }
-  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
-  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
-  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
-  pre code { background: transparent; color: inherit; padding: 0; }
-  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
-  a:hover { border-bottom-color: var(--accent); }
-  strong { color: #1f1a14; }
-  em { color: var(--muted); }
-  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+  :root {
+    --bg: #0f0f11;
+    --surface: #1a1a1f;
+    --surface2: #222228;
+    --border: #2e2e38;
+    --text: #e8e8f0;
+    --muted: #888896;
+    --accent: #a78bfa;
+    --accent2: #60a5fa;
+    --accent3: #34d399;
+    --warn: #fbbf24;
+    --rose: #fb7185;
+    --red: #f87171;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    padding: 24px 16px 80px;
+  }
+
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+
+  .chip {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .subtitle {
+    font-size: 15px;
+    color: var(--muted);
+    margin-bottom: 32px;
+    line-height: 1.5;
+  }
+
+  .tldr {
+    background: var(--surface);
+    border: 1px solid rgba(167,139,250,0.25);
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin-bottom: 40px;
+  }
+
+  .tldr-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+
+  .tldr p {
+    color: var(--text);
+    font-size: 15px;
+  }
+
+  h2 {
+    font-size: 19px;
+    font-weight: 600;
+    margin: 48px 0 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  h2 .num {
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  h3 {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin: 24px 0 10px;
+  }
+
+  p { margin: 12px 0; color: var(--text); }
+  p.muted { color: var(--muted); font-size: 14px; }
+
+  ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding: 0;
+    margin: 12px 0;
+  }
+
+  ul li {
+    position: relative;
+    padding-left: 18px;
+    color: var(--text);
+  }
+
+  ul li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  strong { color: var(--text); font-weight: 600; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px 16px;
+    margin: 16px 0;
+  }
+
+  .card-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .quote {
+    margin: 14px 0;
+    padding: 12px 16px;
+    background: var(--surface2);
+    border-left: 2px solid var(--border);
+    border-radius: 0 6px 6px 0;
+    font-size: 14px;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .risk-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 4px 10px;
+    border-radius: 14px;
+    margin: 12px 0;
+  }
+  .risk-low { background: rgba(52,211,153,0.12); color: var(--accent3); border: 1px solid rgba(52,211,153,0.25); }
+  .risk-med { background: rgba(251,191,36,0.10); color: var(--warn); border: 1px solid rgba(251,191,36,0.25); }
+  .risk-medhigh { background: rgba(251,113,133,0.10); color: var(--rose); border: 1px solid rgba(251,113,133,0.25); }
+  .risk-high { background: rgba(248,113,113,0.10); color: var(--red); border: 1px solid rgba(248,113,113,0.30); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    font-size: 14px;
+  }
+
+  table th, table td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  table th {
+    background: var(--surface2);
+    font-weight: 600;
+    color: var(--muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  table tr:last-child td { border-bottom: none; }
+  table td:first-child { color: var(--muted); }
+
+  a {
+    color: var(--accent2);
+    text-decoration: none;
+    border-bottom: 1px dotted rgba(96,165,250,0.4);
+  }
+  a:hover { border-bottom-style: solid; }
+
+  .path-card {
+    background: var(--surface);
+    border-radius: 14px;
+    padding: 22px 24px;
+    margin: 16px 0;
+    border: 1px solid var(--border);
+  }
+  .path-1 { border-left: 4px solid var(--accent3); }
+  .path-2 { border-left: 4px solid var(--warn); }
+  .path-3 { border-left: 4px solid var(--accent); }
+
+  .path-card .label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+  .path-1 .label { color: var(--accent3); }
+  .path-2 .label { color: var(--warn); }
+  .path-3 .label { color: var(--accent); }
+
+  .path-card h4 {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  .path-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .pm-chip {
+    background: var(--surface2);
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .pros, .cons {
+    margin-top: 10px;
+  }
+  .pros .pl { color: var(--accent3); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; }
+  .cons .pl { color: var(--rose); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; }
+
+  .verdict {
+    background: var(--surface);
+    border: 1px solid rgba(52,211,153,0.3);
+    border-radius: 12px;
+    padding: 22px 24px;
+    margin-top: 28px;
+  }
+  .verdict-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent3);
+    margin-bottom: 10px;
+  }
+  .verdict p { color: var(--text); }
+  .verdict strong { color: var(--accent3); }
+
+  .sources {
+    margin-top: 50px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+  .sources h3 { margin-top: 0; }
+  .sources ul li { font-size: 13px; color: var(--muted); }
+  .sources ul li a { color: var(--accent2); border-bottom-color: rgba(96,165,250,0.2); }
 </style>
 </head>
 <body>
-<h1 id="app-store-">App Store через Квин — три пути, по-человечески</h1>
-<p><strong>Дата:</strong> 2026-05-26
-<strong>Версия:</strong> 2 (переписана без англицизмов после msg_4939)</p>
-<hr>
-<h2 id="_1">Что мы вообще обсуждаем</h2>
-<p>У нас Elyne — приложение, которое мы хотим раздавать на айфоне и андроиде. Внутри юзер платит подписку.</p>
-<p>Apple не любит когда платежи идут мимо них:
-- если оплата внутри приложения через айфон — Apple забирает 30% (или 15% после первого года).
-- если оплата на сайте (отдельно от приложения) — Apple ничего не забирает, <strong>но</strong> в магазине Apple США есть отдельное правило: в приложении нельзя писать «оплати на сайте». В других магазинах Apple (русский, вьетнамский) такого запрета нет.</p>
-<p>Россия отключена от Apple-платежей с 2022 года. Значит для русских юзеров оплата всё равно идёт через сайт (СБП). Вопрос — как нам легально попасть в магазин Apple, чтобы юзеры скачали приложение.</p>
-<p>Компания Олега во Вьетнаме закрыта. Жена Олега Квин — гражданка Вьетнама. Можем ли мы зарегистрироваться у Apple через неё?</p>
-<p><strong>Ответ — да, можем.</strong> Дальше три варианта как.</p>
-<hr>
-<h2 id="apple">Путь А. Сейчас, дёшево, без Apple вообще</h2>
-<p><strong>Идея:</strong> не идём в магазин Apple. Делаем сайт-приложение + магазин Android.</p>
-<p><strong>Что такое сайт-приложение</strong> (по-английски называется PWA — но мы это слово не используем): юзер заходит на elyne.online через Safari на айфоне, нажимает кнопку «поделиться» → «на главный экран». На главном экране появляется иконка Elyne как у обычного приложения. Когда юзер нажимает иконку — Elyne открывается на весь экран, без браузерных кнопок сверху. Внешне неотличимо от настоящего приложения из App Store.</p>
-<p><strong>Магазин Android</strong> (Google Play): туда заходим как ИП Дениса. Регистрация — 25$ один раз, неделя на проверку. Оплата у юзера идёт через сайт (СБП), Google это разрешает.</p>
-<p><strong>Сроки:</strong> 1-2 месяца.
-<strong>Стоимость:</strong> ~25$ + дизайн иконок/скриншотов.
-<strong>Плюсы:</strong>
-- быстро.
-- дёшево.
-- никакой Apple → никаких комиссий и проверок.
-- никаких налоговых вопросов с США.</p>
-<p><strong>Минусы:</strong>
-- юзеры iPhone, которые ищут «Elyne» в магазине Apple, нас не найдут.
-- нужно объяснять в рекламе и на лендинге «открой elyne.online → нажми &ldquo;на главный экран&rdquo;». Часть людей не дойдёт.</p>
-<hr>
-<h2 id="apple_1">Путь Б. Аккаунт у Apple на Квин как физлицо</h2>
-<p><strong>Идея:</strong> Квин регистрируется у Apple как разработчик-физлицо. Приложение публикуется на её имя. Оплата идёт через сайт (как у Spotify, GigaChat, Шедеврум — они так живут годами).</p>
-<p><strong>Что нужно от Квин:</strong> её вьетнамский паспорт, селфи с паспортом, банковская карта на её имя (для оплаты 99$ в год Apple), вьетнамский налоговый номер (по запросу).</p>
-<p><strong>Сроки:</strong> 24-48 часов проверка → 1 неделя на загрузку первого приложения → 2-3 дня проверка Apple.
-<strong>Стоимость:</strong> 99$ в год Apple + время на оформление.</p>
-<p><strong>Три больные точки:</strong></p>
-<ol>
-<li>
-<p><strong>Магазин Apple США — отдельное правило.</strong>
-   В американском магазине Apple нельзя писать в приложении «оплата на сайте» или вести юзера на сайт за оплатой. В других магазинах (русский, вьетнамский, европейский) — можно. У нас два варианта:
-   - не делать американский магазин вообще (только Россия + остальные страны),
-   - или делать американский магазин, но без подписки/оплаты внутри — просто как «посмотреть» (это разрешено).</p>
-</li>
-<li>
-<p><strong>30% удерживает американская налоговая.</strong>
-   Когда деньги от Apple идут вьетнамскому физлицу — между Вьетнамом и США нет налогового договора, поэтому <strong>американская налоговая забирает 30% от каждого платежа в США</strong>, прежде чем переслать остаток Квин. С 1$ остаётся 70 центов. <strong>Касается только американского магазина</strong>. В русском/вьетнамском/европейском магазине этого нет.</p>
-</li>
-<li>
-<p><strong>Имя Квин публично в App Store.</strong>
-   У каждого приложения в магазине Apple внизу страницы написано имя разработчика. Будет «Quynh Nguyen» (или как у неё в паспорте). Любой может увидеть.</p>
-</li>
-<li>
-<p><strong>Перевод денег Квин → Олег в России = валютный контроль.</strong>
-   Деньги от Apple придут на её счёт во Вьетнаме. Чтобы Олег ими пользовался, нужно их перевести в Россию. Российский банк может задать вопросы: на каком основании, какой контракт, и т.д. Решается, но требует оформления.</p>
-</li>
-</ol>
-<p><strong>Сроки итого:</strong> 3-4 недели до первой публикации.
-<strong>Серая зона:</strong> да — официально между Олегом и Квин нет договора, что её аккаунт работает на нашу компанию. Если Apple задаст вопросы — отвечаем «семейный проект», как делают многие. Но если у нас вырастут обороты — могут попросить документы.</p>
-<hr>
-<h2 id="_2">Путь В. Компания во Вьетнаме на Квин</h2>
-<p><strong>Идея:</strong> открываем во Вьетнаме компанию (по-вьетнамски «компания с ограниченной ответственностью», аналог нашего ООО) на имя Квин. Аккаунт у Apple регистрируется от лица компании, не от физлица.</p>
-<p><strong>Что меняется по сравнению с путём Б:</strong></p>
-<ul>
-<li>В магазине Apple внизу страницы видно «Elyne LLC» или название компании, не имя Квин. Имя жены не публично.</li>
-<li>Деньги ходят между компаниями (Apple → вьетнамская компания → потом через контракт на российское ИП Дениса). Это нормальный международный оборот, валютный контроль РФ принимает.</li>
-<li>Серая зона уходит: всё легально, есть документы.</li>
-</ul>
-<p><strong>Что не меняется:</strong>
-- 30% американской налоговой по-прежнему удерживается с американского магазина (договор между США и Вьетнамом не зависит от того, физлицо это или компания).
-- Anti-steering правило в США то же самое.</p>
-<p><strong>Сроки открытия:</strong> 2-3 месяца (регистрация компании, банковский счёт, документы).
-<strong>Стоимость:</strong> ~1500-3000$ открытие + ~500$ в год бухгалтерия.</p>
-<hr>
-<h2 id="_3">Моя рекомендация</h2>
-<p><strong>Сейчас</strong>: путь А.
-- быстро.
-- дёшево.
-- ничем не рискуем.
-- юзеры начнут пользоваться, мы поймём что вообще работает.</p>
-<p><strong>Параллельно начать путь В.</strong>
-- открыть компанию во Вьетнаме на Квин (займёт 2-3 месяца).
-- когда будет готова — переходим в магазин Apple под этой компанией.
-- путь Б (физлицо) — пропускаем. Минусы (имя Квин публично, валютный контроль, серая зона) перевешивают плюс «быстрее на месяц».</p>
-<p><strong>Когда переходить на путь В:</strong> когда у нас будет 1000+ платящих юзеров и понятная экономика. До этого магазин Apple нам ничего не даёт — все русские юзеры всё равно платят на сайте через СБП.</p>
-<p><strong>Американский магазин Apple:</strong> обсуждаем отдельно. Не делать его — нормально. Делать без оплаты («только посмотреть») — можно. Делать с оплатой — теряем 30% на американской налоговой и зажаты anti-steering правилом. Скорее не делать в первый год.</p>
-<hr>
-<h2 id="_4">Что нужно от Олега чтобы двинуться</h2>
-<p>Если путь А (моя реко):
-- подтверждение что начинаем сайт-приложение + Google Play.
-- кто делает иконки/скриншоты для Google Play (Сергей или Мария?).</p>
-<p>Если путь В параллельно:
-- разговор с Квин — готова ли она открыть компанию на своё имя.
-- найти юриста во Вьетнаме (могу поискать).</p>
-<hr>
-<p><em>Если что-то ещё непонятно — спрашивай. Без англицизмов, по-человечески.</em></p>
-<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+<div class="container">
+
+  <div class="meta">
+    <span class="chip">26 мая 2026</span>
+    <span class="chip">research</span>
+    <span class="chip">App Store · Google Play · РФ · Вьетнам</span>
+  </div>
+
+  <h1>App Store через Квин</h1>
+  <p class="subtitle">Может ли жена-гражданка Вьетнама зарегистрироваться как Apple Developer Individual и сделать гибридную схему «iOS-клиент + СБП на сайте». Со всеми рисками и налогами.</p>
+
+  <div class="tldr">
+    <div class="tldr-label">Короткий ответ</div>
+    <p>Технически путь рабочий — Apple Individual для гражданки Вьетнама регистрируется без ограничений, гибридная схема (бесплатное iOS-приложение + оплата подписки на сайте) работает у Spotify, GigaChat, Шедеврум уже годами. Юридически — зона серого: имя жены публично висит как разработчик, налоги по US-VN treaty неприятные, валютный контроль РФ требует чистого документооборота. Для $1B-цели это временная схема, не базовая.</p>
+  </div>
+
+
+  <!-- =============================================
+       1. Apple Developer Individual для VN
+  ================================================ -->
+  <h2><span class="num">1</span>Apple Developer Individual для гражданки Вьетнама</h2>
+
+  <p><strong>Может ли зарегистрироваться</strong> — да. Вьетнам входит в 220+ стран, где доступна Individual-регистрация. Никаких ограничений по гражданству со стороны Apple нет.</p>
+
+  <h3>Документы и оплата</h3>
+  <ul>
+    <li>Apple Account с 2FA на её настоящее имя</li>
+    <li>Government ID (вьетнамский CCCD/паспорт) + selfie для KYC через сторонних провайдеров — введено с 2024</li>
+    <li>Адрес во Вьетнаме (P.O. box не принимают), вьетнамский телефон для подтверждения</li>
+    <li>Налоговый номер VN (MST) — нужен позже, на этапе банковских анкет в App Store Connect, не на enrollment</li>
+    <li>Bank account во Вьетнаме на её имя (SWIFT-банк для payouts)</li>
+    <li><strong>$99/год</strong> — оплата с VN-карты Visa/Mastercard (Vietcombank, Techcombank, VPBank, MB проходят штатно). Wise/Revolut/Payoneer как fallback, но Apple иногда блокирует виртуалки</li>
+  </ul>
+
+  <h3>Individual vs Organization</h3>
+
+  <table>
+    <thead>
+      <tr><th>Параметр</th><th>Individual</th><th>Organization</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Имя в App Store</td><td>имя физлица («Quynh Nguyen»)</td><td>название юрлица («Elyne»)</td></tr>
+      <tr><td>Команда</td><td>только владелец</td><td>Admin / Developer / App Manager</td></tr>
+      <tr><td>TestFlight external</td><td>до 10 000</td><td>до 10 000</td></tr>
+      <tr><td>D-U-N-S Number</td><td>не нужен</td><td>обязателен</td></tr>
+      <tr><td>Перевод I → O</td><td>невозможен (только новый аккаунт)</td><td>—</td></tr>
+      <tr><td>Срок регистрации</td><td>24–48 ч</td><td>2–6 недель</td></tr>
+    </tbody>
+  </table>
+
+  <p>Для MVP Individual подходит. Но имя жены публично висит в App Store как «разработчик» — это нужно принять.</p>
+
+  <h3>Дистрибуция в любые регионы</h3>
+  <p>Individual из VN может публиковать в любой App Store storefront: US, EU, Япония, Россия. Гражданство разработчика географию не ограничивает — storefront'ы включаются галочками в App Store Connect.</p>
+
+  <p class="muted"><strong>Россия как storefront</strong> — есть, но с апреля 2026 платежи в App Store RU отключены полностью. Бесплатное приложение в RU storefront выложить можно; любые покупки — нельзя ни через IAP, ни через подписку.</p>
+
+  <span class="risk-badge risk-low">risk: low (для факта регистрации)</span>
+
+
+  <!-- =============================================
+       2. Налоги и выплаты
+  ================================================ -->
+  <h2><span class="num">2</span>Налоги и выплаты — здесь больно</h2>
+
+  <p><strong>Куда платит Apple Individual из VN.</strong> На банковский счёт в VN, обычно в USD (приходит в VND после конвертации банка). Минимум вывода — $150 в US/EU territories, ~$10 в Asia. Apple Distribution International Limited (Ireland) — formal payer.</p>
+
+  <div class="card">
+    <div class="card-label">Tax treaty US ↔ Vietnam — не ратифицирован</div>
+    <p>Договор подписан в 2015, но ни одна сторона не ввела в силу. На практике: Apple удерживает <strong>US withholding tax по дефолту 30%</strong> на royalties от US storefront, даже с поданным W-8BEN. Внутри VN — стандартный 10% FCT/personal tax на полученные роялти.</p>
+    <div class="quote">
+      Это критично: с $1 выручки в US storefront жена получает примерно $0.49.<br>
+      ($1 → −30% Apple commission = $0.70 → −30% US withholding = $0.49)
+    </div>
+    <p>Среди всех «дружественных» юрисдикций — худший сценарий по налогам. <strong>Альтернатива:</strong> VN-юрлицо (LLC), которое попадает в double-tax framework для commercial royalties — удержание может снизиться, но потребуется certificate of tax residency.</p>
+  </div>
+
+  <p><strong>App Store Russia платежи</strong> — мертвы для всех с апреля 2026. Российский пользователь не сможет оплатить ни подписку, ни IAP в App Store. Вьетнамский developer выручку с RU storefront получать не будет. Единственная опция для РФ — публиковать <strong>бесплатное</strong> приложение и собирать оплату на стороне (см. §3).</p>
+
+  <span class="risk-badge risk-med">risk: medium (по налогам — больно, но предсказуемо)</span>
+
+
+  <!-- =============================================
+       3. Гибридная схема read-only + СБП
+  ================================================ -->
+  <h2><span class="num">3</span>App Store как read-only клиент + сайт с СБП</h2>
+
+  <h3>Anti-steering после Epic ruling</h3>
+  <p>В апреле 2025 судья Гонсалес-Роджерс постановила, что Apple умышленно нарушила injunction 2021 года. С 1 мая 2025 Apple обновила Guideline 3.1.1(a): на <strong>US storefront</strong> разработчики могут свободно вставлять внешние ссылки и кнопки на сторонние платежи <strong>без entitlement и без комиссии Apple</strong>. Нейтральное предупреждение от системы — единственное, что Apple может показать.</p>
+
+  <p>Вне US storefront (EU, VN, RU) — старые правила. Можно дать ссылку «manage account» на свой сайт, но нельзя писать «купи дешевле тут», нельзя deep-link на checkout с pre-filled данными. Для EU есть DMA-режим с alternative payments — но там Core Technology Fee €0.50 за установку после 1M.</p>
+
+  <div class="card">
+    <div class="card-label">Реальные кейсы — отработанный паттерн</div>
+    <ul>
+      <li><strong>Spotify (RU и в целом)</strong> — reader app classic: вход через email, аккаунт привязан к web-подписке Spotify.com, IAP отключён полностью. На iOS «купить Premium» — только на сайте. Работает 5+ лет</li>
+      <li><strong>GigaChat (Сбер)</strong> — на App Store RU как бесплатное приложение. Платная подписка GigaChat Pro — через сайт Сбера, в приложении просто авторизация</li>
+      <li><strong>Шедеврум (Яндекс)</strong> — free-tier 30 генераций/день внутри приложения, расширенные функции — через Яндекс.Плюс на web. IAP в iOS-приложении нет</li>
+    </ul>
+  </div>
+
+  <h3>Применимо ли к Elyne</h3>
+  <p>Да, при условии:</p>
+  <ul>
+    <li>iOS-клиент бесплатный; в нём никаких CTA «купи на сайте» вне US storefront</li>
+    <li>На VN/RU storefront внутри приложения подписка не упоминается; пользователь сам приходит на elyne.online</li>
+    <li>Просто sign-in и контент — никаких ссылок «here is cheaper»</li>
+  </ul>
+
+  <div class="card">
+    <div class="card-label">Reader App Entitlement — отдельный flow</div>
+    <p>Подаётся per-bundle-ID через форму; Account Holder (Квин) заполняет заявку, отвечает на вопросы о приложении. Гражданство роли не играет.</p>
+    <p><strong>Но:</strong> если основная функциональность не подпадает под «magazines/newspapers/books/audio/music/video» — Apple откажет. Elyne как «AI-визуализация идентичности» — пограничная категория, скорее lifestyle/wellbeing. По строгой трактовке reader entitlement не дадут.</p>
+    <p class="muted">Реальная картина: 95% reader-кейсов работают без формального entitlement — просто бесплатное приложение, sign-in, контент через сайт. Spotify много лет жил так и без entitlement.</p>
+  </div>
+
+  <h3>Риски бана для нового аккаунта</h3>
+  <ul>
+    <li>Если иконка «Subscribe / Upgrade» ведёт прямо в браузер на checkout — <strong>отклоняют</strong> (вне US)</li>
+    <li>Если в приложении просто sign-in и больше ничего про деньги — <strong>проходят регулярно</strong></li>
+    <li>Новый аккаунт Apple проверяет жёстче (compliance review): identity verification жены, могут запросить дополнительные документы</li>
+  </ul>
+
+  <span class="risk-badge risk-med">risk: medium (проходимо, первый submit нужно делать аккуратно)</span>
+
+
+  <!-- =============================================
+       4. Юр. риски для Олега лично
+  ================================================ -->
+  <h2><span class="num">4</span>Юридические риски для Олега лично</h2>
+
+  <div class="card">
+    <div class="card-label">Apple ToS — Section 3.2(f)</div>
+    <p>Запрещает использовать аккаунт для «dishonest or fraudulent activity». «Номинальный держатель» формально нарушение, потому что Account Holder обязан быть реальным юридическим контактом по developer agreement, подписывать налоговые формы, отвечать на compliance-запросы.</p>
+  </div>
+
+  <h3>Что Apple реально проверяет</h3>
+  <ul>
+    <li><strong>Identity verification</strong> (ID + selfie) — жена должна пройти сама, физически. С Олегом сидя рядом — реально</li>
+    <li><strong>Compliance review</strong> при первом submit — могут запросить proof-of-residence, banking info, контактный телефон. Если Apple позвонит и жена не сможет говорить по-английски о собственном продукте — флаг</li>
+    <li>В штатном режиме Apple не копает. Проблемы начинаются при stuck-аудите или росте revenue до $100k+/мес — тогда enhanced KYC</li>
+  </ul>
+
+  <p><strong>Худший сценарий:</strong> account termination + блокировка всех приложений. Apple так делал с массовыми фрод-схемами из Китая/России в 2020–2022.</p>
+
+  <div class="card" style="border-color: rgba(251,113,133,0.25);">
+    <div class="card-label" style="color: var(--rose);">Валютный контроль РФ — самое тонкое место</div>
+    <p>Олег — резидент РФ. Если Квин получает деньги во Вьетнам и потом переводит Олегу в РФ — операция резидент↔нерезидент, под 173-ФЗ:</p>
+    <ul>
+      <li>Получение из-за рубежа > $10 000 за раз → банк запрашивает обоснование</li>
+      <li>Перевод как <strong>«семейный/подарок»</strong> между супругами — налога нет (ст. 217 НК)</li>
+      <li>Перевод как «оплата за работу/услугу» — НДФЛ 13–15% + валютный контроль с контрактом и актом</li>
+      <li>Получение на зарубежный счёт Олега (если есть) — ежегодное уведомление в ФНС о движении средств</li>
+    </ul>
+    <p class="muted">Чистая схема: Квин → VN-счёт → периодические family transfers Олегу → Олег декларирует как не-облагаемый доход от близкого родственника. На бумаге чисто, но при больших суммах ФНС может задать вопрос «откуда у супруги такие доходы».</p>
+  </div>
+
+  <span class="risk-badge risk-medhigh">risk: medium-high (по налогам — для Олега лично)</span>
+
+
+  <!-- =============================================
+       5. Альтернативы Individual VN
+  ================================================ -->
+  <h2><span class="num">5</span>Альтернативы Individual VN</h2>
+
+  <div class="card">
+    <div class="card-label">A. VN LLC на жену (single-member)</div>
+    <p>Срок 2–4 месяца, базовая стоимость $700–$2 500 регистрация + $1 500–$8 500 за full-service с банком и налогами. Минимальный капитал законом не установлен. С марта 2026 ERC можно получить без IRC — упрощение. Годовой business license fee с 1 января 2026 отменён.</p>
+    <div class="pros">
+      <div class="pl">Плюсы</div>
+      <ul>
+        <li>Apple Organization-аккаунт → Денис, Сергей добавляются как Developer/App Manager</li>
+        <li>Имя в App Store — «Elyne» как бренд, не имя жены</li>
+        <li>Налоги корпоративные (20% CIT) против personal income (progressive до 35%)</li>
+      </ul>
+    </div>
+    <div class="cons">
+      <div class="pl">Минусы</div>
+      <ul>
+        <li>2–4 месяца до live — долго для MVP май-июль 2026</li>
+        <li>Корпоративный счёт в VN-банке: нужно физическое присутствие жены, документы о происхождении капитала</li>
+      </ul>
+    </div>
+    <span class="risk-badge risk-med">risk: medium (долго, но чисто)</span>
+  </div>
+
+  <div class="card">
+    <div class="card-label">B. Сингапур через жену (Pte Ltd)</div>
+    <p>Регистрация за 1–3 дня, $700–$1 500. Гражданство VN не препятствует.</p>
+    <div class="cons">
+      <div class="pl">Минусы</div>
+      <ul>
+        <li>Нужен local resident director (nominee, $1 500–$3 000/год)</li>
+        <li>Corporate bank account открыть тяжело без physical visit</li>
+        <li>Налоги 17% CIT (с скидкой первых S$200k)</li>
+      </ul>
+    </div>
+    <div class="pros">
+      <div class="pl">Плюс</div>
+      <ul>
+        <li>US-Singapore tax treaty: withholding снижается до 5% (vs 30% baseline VN)</li>
+      </ul>
+    </div>
+    <span class="risk-badge risk-high">risk: high (дорого, сложно)</span>
+  </div>
+
+  <div class="card">
+    <div class="card-label">C. PWA через elyne.online (без App Store)</div>
+    <p><strong>Что теряем:</strong></p>
+    <ul>
+      <li>Push-notifications на iOS (PWA с iOS 16.4+ умеет, но через Safari — конверсии хуже)</li>
+      <li>App Store как discovery-канал (поиск Apple, фичеринг, доверие)</li>
+      <li>Платежи через Apple Pay в один тап (на сайте — 2 экрана)</li>
+      <li>Home Screen install rate: ~3–5% vs ~40% App Store</li>
+    </ul>
+    <p><strong>Что выигрываем:</strong></p>
+    <ul>
+      <li>0% комиссии Apple (только эквайринг 2–3% СБП/Stripe)</li>
+      <li>Полная свобода контента (нет review)</li>
+      <li>Запуск за дни, не недели</li>
+      <li>В РФ работает через СБП без приключений</li>
+    </ul>
+    <span class="risk-badge risk-low">risk: low (но теряем discovery)</span>
+  </div>
+
+
+  <!-- =============================================
+       6. Google Play
+  ================================================ -->
+  <h2><span class="num">6</span>Альтернатива через Google Play</h2>
+
+  <h3>VN Individual в Google Play</h3>
+  <ul>
+    <li><strong>Документы:</strong> VN government ID + proof of address. Citizenship проверки нет</li>
+    <li><strong>Регистрационный fee:</strong> $25 единоразово (vs Apple $99/год)</li>
+    <li><strong>Тестовые требования</strong> для новых individual: до publish — 12 testers + 14 дней closed testing (правило 2023, действует и в 2026)</li>
+    <li><strong>Дистрибуция в РФ:</strong> с 26 декабря 2024 Google Play приостановил seller services для разработчиков с банковским счётом в РФ. Если счёт во Вьетнаме — продаёт; российским юзерам платить нечем (санкции); free apps в RU storefront работают</li>
+  </ul>
+
+  <h3>Отличия от Apple</h3>
+  <ul>
+    <li>KYC мягче на старте, но verify требуют доказательства резидентства</li>
+    <li>Payout порог — $1</li>
+    <li>Anti-steering правил у Google официально нет — внешние ссылки разрешены с 2024 после индийского ruling и DMA</li>
+    <li>Можно публиковать sideload-friendly: APK на сайте, RuStore версия, F-Droid — независимо от Google Play. В РФ это норма</li>
+  </ul>
+
+  <span class="risk-badge risk-low">risk: low (Google проще во всех аспектах)</span>
+
+
+  <!-- =============================================
+       3 ПУТИ
+  ================================================ -->
+  <h2>Три пути — выбирай</h2>
+
+  <div class="path-card path-1">
+    <div class="label">Путь 1 — Быстрый запуск</div>
+    <h4>PWA-only сейчас + Google Play в параллель</h4>
+    <div class="path-meta">
+      <span class="pm-chip">1–2 месяца</span>
+      <span class="pm-chip">$25 fee</span>
+      <span class="pm-chip">no Apple</span>
+    </div>
+    <p>MVP через elyne.online как PWA + listing в Google Play через VN Individual жены ($25 fee + 14 дней testing). Apple откладывается до доказательства product-market fit.</p>
+    <div class="pros">
+      <div class="pl">Плюсы</div>
+      <ul>
+        <li>Запуск за недели, 0 рисков с Apple</li>
+        <li>Валютный контроль РФ обходим через СБП на ИП Дениса</li>
+        <li>Полный контроль над feature set</li>
+      </ul>
+    </div>
+    <div class="cons">
+      <div class="pl">Минусы</div>
+      <ul>
+        <li>Теряем 60% iOS-аудитории как «нативное» приложение</li>
+        <li>iPhone-юзеры живут через Safari PWA — конверсия ниже</li>
+      </ul>
+    </div>
+    <p class="muted"><strong>Когда подходит:</strong> приоритет — быстро проверить гипотезы и cashflow от первых клиентов.</p>
+  </div>
+
+  <div class="path-card path-2">
+    <div class="label">Путь 2 — Apple Individual через жену</div>
+    <h4>VN Individual Apple + Google Play</h4>
+    <div class="path-meta">
+      <span class="pm-chip">3–4 недели</span>
+      <span class="pm-chip">$99/год + $25</span>
+      <span class="pm-chip">reader-app pattern</span>
+    </div>
+    <p>Запуск как reader-app (Spotify-стиль): бесплатное приложение в App Store на имя Quynh Nguyen, оплата только через elyne.online, никаких CTA «купи здесь» внутри iOS-клиента вне US storefront.</p>
+    <div class="pros">
+      <div class="pl">Плюсы</div>
+      <ul>
+        <li>Есть App Store presence, полная mobile-витрина</li>
+        <li>~$125 на первый год</li>
+      </ul>
+    </div>
+    <div class="cons">
+      <div class="pl">Минусы</div>
+      <ul>
+        <li>Имя жены публично в App Store</li>
+        <li>Первый submit может застрять на 1–2 итерации review</li>
+        <li>Налоговая схема жена → Олег требует чистого документооборота</li>
+        <li>Если Apple позвонит — жена должна быть готова отвечать на английском</li>
+      </ul>
+    </div>
+    <p class="muted"><strong>Когда подходит:</strong> App Store нужен для credibility перед инвесторами/аудиторией, и готовы принять ToS-серость.</p>
+  </div>
+
+  <div class="path-card path-3">
+    <div class="label">Путь 3 — Чистый долгосрок</div>
+    <h4>VN LLC на жену + Apple Organization</h4>
+    <div class="path-meta">
+      <span class="pm-chip">3–4 месяца</span>
+      <span class="pm-chip">$5–8k upfront</span>
+      <span class="pm-chip">D-U-N-S</span>
+    </div>
+    <p>Зарегистрировать single-member LLC во Вьетнаме, оформить D-U-N-S, Apple Developer Organization на компанию. Параллельно — PWA как мост.</p>
+    <div class="pros">
+      <div class="pl">Плюсы</div>
+      <ul>
+        <li>Юридически чисто, имя «Elyne» в App Store</li>
+        <li>Команда (Денис, Сергей) добавляется официально</li>
+        <li>Налоги по CIT 20%, не до 35% PIT</li>
+        <li>Reader entitlement подаётся proactively</li>
+        <li>Валютный контроль чище через корпоративный B2B</li>
+      </ul>
+    </div>
+    <div class="cons">
+      <div class="pl">Минусы</div>
+      <ul>
+        <li>3–4 месяца до live в App Store</li>
+        <li>$5–8k upfront</li>
+        <li>Нужны визиты жены во Вьетнам или local representative</li>
+      </ul>
+    </div>
+    <p class="muted"><strong>Когда подходит:</strong> Elyne идёт в long-game на $1B-цель — это правильная база, и платить надо сейчас.</p>
+  </div>
+
+
+  <!-- =============================================
+       РЕКОМЕНДАЦИЯ
+  ================================================ -->
+  <div class="verdict">
+    <div class="verdict-label">Мой совет</div>
+    <p><strong>Путь 1 на ближайшие 2 месяца + параллельно подаём документы на VN LLC (Путь 3).</strong> Обе линии сразу: запуск через PWA + Google Play даст revenue и валидацию уже летом, а через 3–4 месяца появится Apple Organization-аккаунт без компромиссов.</p>
+    <p>Путь 2 (Individual на жену) — соблазнителен скоростью, но цена — постоянное юридическое напряжение и риск account-suspension при росте. На цель $1B такая схема не масштабируется.</p>
+    <p>Если Apple нужен <strong>прямо сейчас</strong> — Путь 2, но с трезвой готовностью к перезалогу через 6–9 месяцев на LLC.</p>
+  </div>
+
+
+  <!-- =============================================
+       ИСТОЧНИКИ
+  ================================================ -->
+  <div class="sources">
+    <h3>Источники</h3>
+    <ul>
+      <li><a href="https://developer.apple.com/programs/enroll/">Apple Developer enrollment</a></li>
+      <li><a href="https://developer.apple.com/help/account/membership/identity-verification/">Apple Identity Verification</a></li>
+      <li><a href="https://developer.apple.com/support/terms/apple-developer-program-license-agreement/">Apple Developer Program License Agreement</a></li>
+      <li><a href="https://developer.apple.com/support/reader-apps/">Apple Reader Apps program</a></li>
+      <li><a href="https://developer.apple.com/app-store/review/guidelines/">App Review Guidelines (3.1.1)</a></li>
+      <li><a href="https://9to5mac.com/2026/04/02/apple-pulls-the-plug-on-all-payments-in-russia-following-government-diktat/">Apple stops payments Russia (9to5Mac)</a></li>
+      <li><a href="https://support.apple.com/en-us/126891">Apple Russia billing (official)</a></li>
+      <li><a href="https://developer.apple.com/support/russian-developers-addendum/">Russian Developers Addendum</a></li>
+      <li><a href="https://www.revenuecat.com/blog/growth/apple-anti-steering-ruling-monetization-strategy/">Epic v Apple anti-steering analysis (RevenueCat)</a></li>
+      <li><a href="https://mjtsai.com/blog/2025/05/02/app-review-guidelines-updated-for-epic-anti-steering/">Michael Tsai — guidelines update</a></li>
+      <li><a href="https://taxsummaries.pwc.com/vietnam/corporate/withholding-taxes">PwC Vietnam Withholding Taxes</a></li>
+      <li><a href="https://www.dfdl.com/insights/legal-and-tax-updates/tax-alert-the-income-tax-treaty-between-vietnam/">DFDL — US-Vietnam tax treaty status</a></li>
+      <li><a href="https://www.lockobank.ru/articles/dengi/valyutnyy-kontrol-dlya-tekh-kto-razrabatyvaet-prilozheniya/">Локо-Банк — валютный контроль App Store</a></li>
+      <li><a href="https://support.google.com/googleplay/android-developer/answer/15685001?hl=en">Google Play Russia suspension</a></li>
+      <li><a href="https://support.google.com/googleplay/android-developer/answer/15633622?hl=en&amp;co=GENIE.CountryCode%3DVN">Google Play Vietnam verification docs</a></li>
+      <li><a href="https://emerhub.com/vietnam/cost-company-registration-vietnam/">Emerhub Vietnam company registration</a></li>
+      <li><a href="https://ticatrustlegal.com/setting-up-a-foreign-company-in-vietnam/">Tica Trust — Vietnam company setup 2026</a></li>
+    </ul>
+  </div>
+
+</div>
 </body>
 </html>
