@@ -1,59 +1,6 @@
 {
-  "updated": "2026-06-02",
+  "updated": "2026-06-03",
   "events": [
-    {
-      "id": "mars-ni-v-kakie-ramki-2026-06-01",
-      "title": "Выставка говорящих картин «Ни в какие рамки»",
-      "date": "2026-06-01",
-      "time": "12:00",
-      "place": "Центр современного искусства М'АРС, Пушкарёв пер., 5",
-      "category": "выставки",
-      "emoji": "🖼",
-      "description": "Иммерсивная выставка с интерактивными «говорящими» картинами. До 30 июня.",
-      "url": "https://kudago.com/msk/event/vyistavka-ni-v-kakie-ramki-dekabr-2025/",
-      "price": "от 1050 ₽",
-      "tg_msg_id": 247
-    },
-    {
-      "id": "mamm-biennale-iskusstvo-buduschego-2026-06-01",
-      "title": "II международная биеннале «Искусство будущего» — МАММ",
-      "date": "2026-06-01",
-      "time": "12:00",
-      "place": "МАММ, Остоженка, 16",
-      "category": "выставки",
-      "emoji": "🖼",
-      "description": "Большое событие: 2-я международная биеннале о будущем искусства, технологий и человека. До 6 июня.",
-      "url": "https://afisha.yandex.ru/moscow/art",
-      "price": "от 100 ₽",
-      "tg_msg_id": 248
-    },
-    {
-      "id": "garage-melting-diary-2026-06-01",
-      "title": "«Тающий дневник» в Доме Наркомфина — Музей «Гараж»",
-      "date": "2026-06-01",
-      "time": "14:00",
-      "place": "Дом Наркомфина, Новинский бульвар, 25",
-      "category": "выставки",
-      "emoji": "🖼",
-      "description": "Спецпроект Музея «Гараж» в архитектурном памятнике конструктивизма. Идёт до 14 июня.",
-      "url": "https://garagemca.org/event/melting-diary-at-the-narkomfin-building",
-      "price": "от 1700 ₽",
-      "tg_msg_id": 249
-    },
-    {
-      "id": "parks-kino-leto-2026-06-01",
-      "title": "Кино под открытым небом в парках Москвы",
-      "date": "2026-06-01",
-      "time": "21:00",
-      "place": "Парки Москвы (Горький, Сокольники, Зарядье)",
-      "category": "культура",
-      "emoji": "🎬",
-      "description": "С июня в московских парках — летние кинопоказы под открытым небом. Расписание на mosparks.ru. Вход свободный.",
-      "price": "Бесплатно",
-      "is_free": true,
-      "url": "https://mosparks.ru/events",
-      "tg_msg_id": 250
-    },
     {
       "id": "darwin-nakhlebniki-2026-06-02",
       "title": "«Нахлебники» — история о паразитах в пяти блокбастерах",
@@ -1096,20 +1043,6 @@
       "tg_msg_id": 324
     },
     {
-      "id": "naukfest-zaryadye-2026-06-01",
-      "title": "«Научфест» — День защиты детей, Зарядье",
-      "date": "2026-06-01",
-      "time": "12:00",
-      "place": "Парк «Зарядье», ул. Варварка, 6",
-      "category": "наука",
-      "emoji": "🔬",
-      "description": "День защиты детей в формате науки. Учёные МГУ проводят познавательные шоу, практические занятия и интерактивный квест. Вход свободный.",
-      "price": "бесплатно",
-      "is_free": true,
-      "url": "https://zaryadyepark.ru",
-      "tg_msg_id": 370
-    },
-    {
       "id": "ecstatic-white-mantra-2026-06-12",
       "title": "ECSTATIC WHITE MANTRA 2026 — Сохо Кантри Клаб",
       "date": "2026-06-12",
@@ -1236,20 +1169,6 @@
       "tg_msg_id": 383
     },
     {
-      "id": "morning-secret-party-2026-06-01",
-      "title": "MORNING SECRET PARTY",
-      "date": "2026-06-01",
-      "time": "11:30",
-      "place": "FUTURIONE, ВДНХ",
-      "category": "wellbeing",
-      "emoji": "🌅",
-      "description": "Утренняя тусовка вместо похмелья — танцы с утра, люди в ресурсе.",
-      "price": "",
-      "is_free": false,
-      "url": "https://www.instagram.com/morning_secret_party/",
-      "tg_msg_id": 1023
-    },
-    {
       "id": "knizhniy-festival-krasnaya-ploshchad-2026-06-04",
       "title": "Книжный фестиваль «Красная площадь» 2026",
       "date": "2026-06-04",
@@ -1292,20 +1211,6 @@
       "tg_msg_id": 406
     },
     {
-      "id": "atomnyj-dvizh-vdnh-2026-06-01",
-      "title": "«Атомный движ» — научный фестиваль",
-      "date": "2026-06-01",
-      "time": "10:00",
-      "place": "Музей «АТОМ», ВДНХ",
-      "category": "наука",
-      "emoji": "🧪",
-      "description": "Интерактивный научный фестиваль в День защиты детей. 3D-моделирование, инженерное оригами, разработка мобильного приложения, робототехника, опыты — всё через игровые форматы для детей и подростков.",
-      "price": "бесплатно",
-      "is_free": true,
-      "url": "https://atom.museum/events/all/detskiy-nauchnyy-festival-atomnyy-dvizh-programma/",
-      "tg_msg_id": 417
-    },
-    {
       "id": "brics-quantum-forum-vdnh-2026-06-08",
       "title": "Форум квантовых технологий БРИКС",
       "date": "2026-06-08",
@@ -1346,6 +1251,34 @@
       "is_free": false,
       "url": "https://moscowjazzfest.com/",
       "tg_msg_id": 437
+    },
+    {
+      "id": "russkiy-kot-osterман-2026-06-04",
+      "title": "Фестиваль «Русский КоТ»",
+      "date": "2026-06-04",
+      "time": "12:00",
+      "place": "Сад усадьбы Остермана, ул. Делегатская, 3 (Всероссийский музей декоративного искусства)",
+      "category": "культура",
+      "emoji": "🐱",
+      "description": "Летний фестиваль русской культуры. Гигантский Кот Баюн — главный арт-объект. Хедлайнеры: Zventa Sventana, Otyken, Алексей Архиповский. Еженедельные темы, маркет локальных брендов, фуд-корт. Открытие 4 июня, далее каждые выходные до конца лета.",
+      "price": "бесплатно",
+      "is_free": true,
+      "url": "https://portal-kultura.ru/articles/news/377038-vo-dvore-vserossiyskogo-muzeya-dekorativnogo-iskusstva-otkryvaetsya-festival-russkiy-kot/",
+      "tg_msg_id": 448
+    },
+    {
+      "id": "infradev-meetup-4-2026-06-10",
+      "title": "InfraDev Meetup #4 — AI в SDLC и MLOps",
+      "date": "2026-06-10",
+      "time": "18:00",
+      "place": "Москва (очно + онлайн)",
+      "category": "наука",
+      "emoji": "⚙️",
+      "description": "Митап по инфраструктурной разработке: AI в SDLC, MLOps и платформы для обучения моделей. Как AI меняет процесс разработки, как строить инфраструктурные сервисы с ИИ. Доклады от практиков.",
+      "price": "бесплатно",
+      "is_free": true,
+      "url": "https://infradevs.ru/",
+      "tg_msg_id": 449
     }
   ]
 }
