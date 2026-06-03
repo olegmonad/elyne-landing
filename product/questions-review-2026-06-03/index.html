@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elyne — ревью вопросов онбординга</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f7; color: #1d1d1f; font-size: 14px; }
+
+  /* Header */
+  .header { position: sticky; top: 0; z-index: 100; background: #fff; border-bottom: 1px solid #e5e5e5; padding: 12px 20px; display: flex; align-items: center; gap: 16px; }
+  .header h1 { font-size: 16px; font-weight: 600; flex: 1; }
+  .header .stats { font-size: 12px; color: #888; }
+  .btn { padding: 7px 14px; border-radius: 8px; border: none; cursor: pointer; font-size: 13px; font-weight: 500; }
+  .btn-primary { background: #1d1d1f; color: #fff; }
+  .btn-secondary { background: #f0f0f0; color: #1d1d1f; }
+  .btn:hover { opacity: 0.85; }
+
+  /* Layout */
+  .layout { display: flex; min-height: calc(100vh - 49px); }
+  .sidebar { width: 220px; flex-shrink: 0; background: #fff; border-right: 1px solid #e5e5e5; padding: 16px 0; position: sticky; top: 49px; height: calc(100vh - 49px); overflow-y: auto; }
+  .sidebar-section { padding: 4px 0; }
+  .sidebar-title { font-size: 10px; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 16px 4px; }
+  .sidebar-link { display: block; padding: 6px 16px; color: #444; text-decoration: none; font-size: 13px; border-left: 3px solid transparent; cursor: pointer; }
+  .sidebar-link:hover { background: #f5f5f7; color: #1d1d1f; }
+  .sidebar-link.active { border-left-color: #1d1d1f; background: #f5f5f7; font-weight: 500; }
+  .sidebar-link .badge { float: right; font-size: 10px; padding: 1px 5px; border-radius: 10px; background: #f0f0f0; color: #888; }
+  .sidebar-link .badge.p0 { background: #ffdddd; color: #c00; }
+  .sidebar-link .badge.p1 { background: #fff3dd; color: #a60; }
+
+  /* Main */
+  .main { flex: 1; padding: 24px; max-width: 900px; }
+
+  /* Section */
+  .section { margin-bottom: 40px; }
+  .section-header { margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #e5e5e5; }
+  .section-header h2 { font-size: 18px; font-weight: 600; }
+  .section-header p { font-size: 13px; color: #888; margin-top: 4px; }
+
+  /* Question card */
+  .q-card { background: #fff; border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid #e5e5e5; transition: border-color 0.2s; }
+  .q-card:hover { border-color: #ccc; }
+  .q-card.status-keep { border-left: 4px solid #34c759; }
+  .q-card.status-review { border-left: 4px solid #ff9f0a; }
+  .q-card.status-remove { border-left: 4px solid #ff3b30; }
+  .q-card.status-none { border-left: 4px solid #e5e5e5; }
+
+  .q-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+  .q-num { font-size: 11px; font-weight: 600; color: #999; min-width: 28px; padding-top: 2px; }
+  .q-text { font-size: 15px; font-weight: 500; flex: 1; line-height: 1.4; }
+
+  /* Flags */
+  .flags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+  .flag { font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 500; }
+  .flag-p0 { background: #ffdddd; color: #c00; }
+  .flag-p1 { background: #fff3dd; color: #a60; }
+  .flag-p2 { background: #e8f4fd; color: #0070c9; }
+  .flag-profile { background: #edfaed; color: #28a745; }
+  .flag-clothing { background: #f3e8ff; color: #8b5cf6; }
+  .flag-ai { background: #e8f0fe; color: #4285f4; }
+  .flag-pov { background: #ffeee8; color: #ea580c; }
+  .flag-skip { background: #f5f5f5; color: #999; }
+
+  /* Options */
+  .options { margin: 8px 0 12px; }
+  .options-title { font-size: 11px; color: #999; margin-bottom: 5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+  .option-list { display: flex; flex-wrap: wrap; gap: 5px; }
+  .option-tag { font-size: 12px; background: #f5f5f7; padding: 3px 8px; border-radius: 6px; color: #444; }
+  .max-sel { font-size: 11px; color: #999; margin-top: 4px; }
+
+  /* Влияет на */
+  .affects { margin: 8px 0 12px; }
+  .affects-title { font-size: 11px; color: #999; margin-bottom: 5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+  .affects-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .affect-item { font-size: 12px; color: #444; background: #f0f8f0; padding: 3px 9px; border-radius: 6px; }
+
+  /* Status control */
+  .q-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .status-group { display: flex; gap: 4px; }
+  .status-btn { padding: 5px 10px; border-radius: 6px; border: 1px solid #e5e5e5; background: #fff; font-size: 12px; cursor: pointer; transition: all 0.15s; color: #666; }
+  .status-btn:hover { border-color: #aaa; }
+  .status-btn.active-keep { background: #34c759; color: #fff; border-color: #34c759; }
+  .status-btn.active-review { background: #ff9f0a; color: #fff; border-color: #ff9f0a; }
+  .status-btn.active-remove { background: #ff3b30; color: #fff; border-color: #ff3b30; }
+
+  .comment-field { flex: 1; min-width: 200px; }
+  .comment-field input { width: 100%; padding: 6px 10px; border: 1px solid #e5e5e5; border-radius: 6px; font-size: 12px; font-family: inherit; outline: none; }
+  .comment-field input:focus { border-color: #1d1d1f; }
+
+  /* Progress */
+  .progress-bar { height: 4px; background: #e5e5e5; border-radius: 2px; margin: 4px 0; overflow: hidden; }
+  .progress-fill { height: 100%; background: #34c759; border-radius: 2px; transition: width 0.3s; }
+
+  /* Review note */
+  .review-note { font-size: 12px; color: #666; font-style: italic; margin: 6px 0 0; padding: 6px 10px; background: #fffbeb; border-radius: 6px; border-left: 3px solid #ff9f0a; }
+  .review-note.p0 { background: #fff5f5; border-left-color: #ff3b30; }
+
+  /* Collapsible */
+  .options-toggle { font-size: 11px; color: #0070c9; cursor: pointer; user-select: none; margin-bottom: 6px; }
+  .options-toggle:hover { text-decoration: underline; }
+  .options-content { display: none; }
+  .options-content.open { display: block; }
+
+  /* Step badge */
+  .step-badge { display: inline-block; font-size: 10px; background: #1d1d1f; color: #fff; padding: 2px 6px; border-radius: 4px; margin-left: 8px; vertical-align: middle; }
+
+  @media print {
+    .sidebar { display: none; }
+    .header .btn { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Elyne — ревью вопросов онбординга</h1>
+  <span class="stats" id="stats">0 / 51 проверено</span>
+  <div class="progress-bar" style="width:140px"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+  <button class="btn btn-secondary" onclick="exportJSON()">Экспорт JSON</button>
+  <button class="btn btn-primary" onclick="clearAll()">Сброс</button>
+</div>
+
+<div class="layout">
+<nav class="sidebar">
+  <div class="sidebar-section">
+    <div class="sidebar-title">Основной флоу</div>
+    <a class="sidebar-link" onclick="scrollTo('onboarding')">Онбординг <span class="badge">10</span></a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Сферы (микроопросники)</div>
+    <a class="sidebar-link" onclick="scrollTo('s1')">1. Состояние <span class="badge p1">P1</span></a>
+    <a class="sidebar-link" onclick="scrollTo('s2')">2. Ресурсы</a>
+    <a class="sidebar-link" onclick="scrollTo('s3')">3. Реализация <span class="badge p1">P1</span></a>
+    <a class="sidebar-link" onclick="scrollTo('s4')">4. Партнёрство</a>
+    <a class="sidebar-link" onclick="scrollTo('s5')">5. Дом</a>
+    <a class="sidebar-link" onclick="scrollTo('s6')">6. Дети и род</a>
+    <a class="sidebar-link" onclick="scrollTo('s7')">7. Творчество</a>
+    <a class="sidebar-link" onclick="scrollTo('s8')">8. Развитие</a>
+    <a class="sidebar-link" onclick="scrollTo('s9')">9. Свобода <span class="badge p1">P1</span></a>
+    <a class="sidebar-link" onclick="scrollTo('s10')">10. Окружение</a>
+    <a class="sidebar-link" onclick="scrollTo('s11')">11. Тренды</a>
+  </div>
+</nav>
+
+<div class="main">
+
+<!-- ============= ОНБОРДИНГ ============= -->
+<div class="section" id="onboarding">
+  <div class="section-header">
+    <h2>Основной онбординг</h2>
+    <p>Вопросы в порядке показа пользователю. Шаг = номер экрана в флоу (всего 28 экранов).</p>
+  </div>
+
+  <!-- Q: to feel -->
+  <div class="q-card status-none" id="card-30">
+    <div class="q-header">
+      <span class="q-num">01</span>
+      <span class="q-text">Что тебе сейчас хочется почувствовать в своей жизни? <span class="step-badge">Шаг 7</span></span>
+    </div>
+    <div class="flags">
+      <span class="flag flag-profile">→ Profile Summary</span>
+      <span class="flag flag-p1">P1: «хочется» = коучинговый паттерн</span>
+    </div>
+    <div class="options">
+      <div class="options-toggle" onclick="toggleOptions(this)">▶ Показать варианты (6)</div>
+      <div class="options-content">
+        <div class="option-list">
+          <span class="option-tag">свободу и лёгкость</span>
+          <span class="option-tag">спокойствие и устойчивость</span>
+          <span class="option-tag">ощущение нового этапа</span>
+          <span class="option-tag">вдохновение и движение вперёд</span>
+          <span class="option-tag">больше масштаба и возможностей</span>
+          <span class="option-tag">ощущение «это моя жизнь»</span>
+        </div>
+        <div class="max-sel">Выбор: до 2 вариантов</div>
+      </div>
+    </div>
+    <div class="affects">
+      <div class="affects-title">Влияет на</div>
+      <div class="affects-list">
+        <span class="affect-item">Эмоциональный регистр сцены</span>
+        <span class="affect-item">Общий тон и настроение генерации</span>
+      </div>
+    </div>
+    <div class="q-controls">
+      <div class="status-group">
+        <button class="status-btn" onclick="setStatus('30','keep',this)">✅ Оставить</button>
+        <button class="status-btn" onclick="setStatus('30','review',this)">✏️ Пересмотреть</button>
+        <button class="status-btn" onclick="setStatus('30','remove',this)">❌ Убрать</button>
+      </div>
+      <div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-30" oninput="saveComment('30',this.value)"></div>
+    </div>
+  </div>
+
+  <!-- Q: Environment -->
+  <div class="q-card status-none" id="card-3">
+    <div class="q-header">
+      <span class="q-num">02</span>
+      <span class="q-text">В какой атмосфере тебе хочется жить? <span class="step-badge">Шаг 8</span></span>
+    </div>
+    <div class="flags">
+      <span class="flag flag-profile">→ Profile Summary</span>
+      <span class="flag flag-p1">P1: «хочется» = коучинговый паттерн</span>
+    </div>
+    <div class="options">
+      <div class="options-toggle" onclick="toggleOptions(this)">▶ Показать варианты (5)</div>
+      <div class="options-content">
+        <div class="option-list">
+          <span class="option-tag">современный мегаполис</span>
+          <span class="option-tag">спокойная загородная жизнь</span>
+          <span class="option-tag">природа</span>
+          <span class="option-tag">тёплая жизнь у моря</span>
+          <span class="option-tag">жизнь между разными странами</span>
+        </div>
+        <div class="max-sel">Выбор: 1 вариант</div>
+      </div>
+    </div>
+    <div class="affects">
+      <div class="affects-title">Влияет на</div>
+      <div class="affects-list">
+        <span class="affect-item">Локация и сеттинг сцены</span>
+        <span class="affect-item">Природа или урбан-среда</span>
+        <span class="affect-item">Profile Summary</span>
+      </div>
+    </div>
+    <div class="q-controls">
+      <div class="status-group">
+        <button class="status-btn" onclick="setStatus('3','keep',this)">✅ Оставить</button>
+        <button class="status-btn" onclick="setStatus('3','review',this)">✏️ Пересмотреть</button>
+        <button class="status-btn" onclick="setStatus('3','remove',this)">❌ Убрать</button>
+      </div>
+      <div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-3" oninput="saveComment('3',this.value)"></div>
+    </div>
+  </div>
+
+  <!-- Q: yourself -->
+  <div class="q-card status-none" id="card-31">
+    <div class="q-header">
+      <span class="q-num">03</span>
+      <span class="q-text">Каким тебе хочется увидеть себя? <span class="step-badge">Шаг 9</span></span>
+    </div>
+    <div class="flags">
+      <span class="flag flag-profile">→ Profile Summary</span>
+      <span class="flag flag-p1">P1: «хочется» = коучинговый паттерн</span>
+    </div>
+    <div class="options">
+      <div class="options-toggle" onclick="toggleOptions(this)">▶ Показать варианты (4)</div>
+      <div class="options-content">
+        <div class="option-list">
+          <span class="option-tag">узнать в этом себя</span>
+          <span class="option-tag">увидеть свою более сильную версию</span>
+          <span class="option-tag">почувствовать жизнь, в которую хочется войти</span>
+          <span class="option-tag">увидеть жизнь шире, чем сейчас</span>
+        </div>
+        <div class="max-sel">Выбор: до 2 вариантов</div>
+      </div>
+    </div>
+    <div class="affects">
+      <div class="affects-title">Влияет на</div>
+      <div class="affects-list">
+        <span class="affect-item">Образ себя в сцене (реалистичный vs вдохновляющий)</span>
+        <span class="affect-item">Profile Summary</span>
+      </div>
+    </div>
+    <div class="q-controls">
+      <div class="status-group">
+        <button class="status-btn" onclick="setStatus('31','keep',this)">✅ Оставить</button>
+        <button class="status-btn" onclick="setStatus('31','review',this)">✏️ Пересмотреть</button>
+        <button class="status-btn" onclick="setStatus('31','remove',this)">❌ Убрать</button>
+      </div>
+      <div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-31" oninput="saveComment('31',this.value)"></div>
+    </div>
+  </div>
+
+  <!-- Q: Стиль одежды -->
+  <div class="q-card status-none" id="card-18">
+    <div class="q-header">
+      <span class="q-num">04</span>
+      <span class="q-text">Какой образ тебе ближе всего? <span class="step-badge">Шаг 10 · Одежда</span></span>
+    </div>
+    <div class="flags">
+      <span class="flag flag-clothing">→ Стиль одежды в сцене</span>
+      <span class="flag flag-profile">→ Profile Summary</span>
+    </div>
+    <div class="options">
+      <div class="options-toggle" onclick="toggleOptions(this)">▶ Показать варианты (10)</div>
+      <div class="options-content">
+        <div class="option-list">
+          <span class="option-tag">Old money</span>
+          <span class="option-tag">Y2K</span>
+          <span class="option-tag">Boho</span>
+          <span class="option-tag">Sport casual</span>
+          <span class="option-tag">Streetwear</span>
+          <span class="option-tag">Casual</span>
+          <span class="option-tag">Classic</span>
+          <span class="option-tag">Business style</span>
+          <span class="option-tag">Glam</span>
+          <span class="option-tag">Romantic / Feminine</span>
+        </div>
+        <div class="max-sel">Выбор: до 3 вариантов</div>
+      </div>
+    </div>
+    <div class="affects">
+      <div class="affects-title">Влияет на</div>
+      <div class="affects-list">
+        <span class="affect-item">Одежда героя в сцене</span>
+        <span class="affect-item">Визуальная эстетика (fashion code)</span>
+      </div>
+    </div>
+    <div class="review-note">Варианты на английском — создаёт разрыв в русском интерфейсе. Возможно нужно перевести или добавить описание.</div>
+    <div class="q-controls">
+      <div class="status-group">
+        <button class="status-btn" onclick="setStatus('18','keep',this)">✅ Оставить</button>
+        <button class="status-btn" onclick="setStatus('18','review',this)">✏️ Пересмотреть</button>
+        <button class="status-btn" onclick="setStatus('18','remove',this)">❌ Убрать</button>
+      </div>
+      <div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-18" oninput="saveComment('18',this.value)"></div>
+    </div>
+  </div>
+
+  <!-- Q: Что в сцене про тебя — POST-WOW -->
+  <div class="q-card status-none" id="card-29">
+    <div class="q-header">
+      <span class="q-num">05</span>
+      <span class="q-text">Что в этой сцене ощущается твоим? <span class="step-badge">Шаг 13 · После WOW</span></span>
+    </div>
+    <div class="flags">
+      <span class="flag flag-profile">→ Profile Summary</span>
+      <span class="flag flag-p2">P2: C2 — лучше «Это похоже на тебя?»</span>
+    </div>
+    <div class="options">
+      <div class="options-toggle" onclick="toggleOptions(this)">▶ Показать варианты (4)</div>
+      <div class="options-content">
+        <div class="option-list">
+          <span class="option-tag">атмосфера и ощущение жизни</span>
+          <span class="option-tag">то, каким я вижу себя</span>
+          <span class="option-tag">мой ритм и состояние</span>
+          <span class="option-tag">пространство и стиль жизни</span>
+        </div>
+        <div class="max-sel">Выбор: до 2 вариантов</div>
+      </div>
+    </div>
+    <div class="affects">
+      <div class="affects-title">Влияет на</div>
+      <div class="affects-list">
+        <span class="affect-item">Обратная связь для следующих генераций</span>
+        <span class="affect-item">Уточнение что именно резонирует</span>
+        <span class="affect-item">Profile Summary</span>
+      </div>
+    </div>
+    <div class="q-controls">
+      <div class="status-group">
+        <button class="status-btn" onclick="setStatus('29','keep',this)">✅ Оставить</button>
+        <button class="status-btn" onclick="setStatus('29','review',this)">✏️ Пересмотреть</button>
+        <button class="status-btn" onclick="setStatus('29','remove',this)">❌ Убрать</button>
+      </div>
+      <div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-29" oninput="saveComment('29',this.value)"></div>
+    </div>
+  </div>
+
+  <!-- Q: Deal -->
+  <div class="q-card status-none" id="card-14">
+    <div class="q-header">
+      <span class="q-num">06</span>
+      <span class="q-text">В чём тебе нравится проявлять себя? <span class="step-badge">Шаг 15 · После WOW</span></span>
+    </div>
+    <div class="flags">
+      <span class="flag flag-profile">→ Profile Summary</span>
+    </div>
+    <div class="options">
+      <div class="options-toggle" onclick="toggleOptions(this)">▶ Показать варианты (6)</div>
+      <div class="options-content">
+        <div class="option-list">
+          <span class="option-tag">в том, что я создаю</span>
+          <span class="option-tag">в свободе и движении</span>
+          <span class="option-tag">в образе и стиле жизни</span>
+          <span class="option-tag">в общении с людьми</span>
+          <span class="option-tag">в росте и новых возможностях</span>
+          <span class="option-tag">в спокойствии и внутренней собранности</span>
+        </div>
+        <div class="max-sel">Выбор: до 3 вариантов</div>
+      </div>
+    </div>
+    <div class="affects">
+      <div class="affects-title">Влияет на</div>
+      <div class="affects-list">
+        <span class="affect-item">Контекст идентичности и роль в сцене</span>
+        <span class="affect-item">Profile Summary (что в фокусе)</span>
+      </div>
+    </div>
+    <div class="q-controls">
+      <div class="status-group">
+        <button class="status-btn" onclick="setStatus('14','keep',this)">✅ Оставить</button>
+        <button class="status-btn" onclick="setStatus('14','review',this)">✏️ Пересмотреть</button>
+        <button class="status-btn" onclick="setStatus('14','remove',this)">❌ Убрать</button>
+      </div>
+      <div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-14" oninput="saveComment('14',this.value)"></div>
+    </div>
+  </div>
+
+  <!-- Q: Impact -->
+  <div class="q-card status-none" id="card-6">
+    <div class="q-header">
+      <span class="q-num">07</span>
+      <span class="q-text">Как тебе хочется ощущать свою жизнь? <span class="step-badge">Шаг 16 · После WOW</span></span>
+    </div>
+    <div class="flags">
+      <span class="flag flag-profile">→ Profile Summary</span>
+      <span class="flag flag-p1">P1: «хочется» = коучинговый паттерн</span>
+    </div>
+    <div class="options">
+      <div class="options-toggle" onclick="toggleOptions(this)">▶ Показать варианты (6)</div>
+      <div class="options-content">
+        <div class="option-list">
+          <span class="option-tag">спокойной и устойчивой</span>
+          <span class="option-tag">свободной и наполненной движением</span>
+          <span class="option-tag">красивой и вдохновляющей</span>
+          <span class="option-tag">просторной и полной возможностей</span>
+          <span class="option-tag">глубокой и осмысленной</span>
+          <span class="option-tag">сильной и собранной</span>
+        </div>
+        <div class="max-sel">Выбор: до 3 вариантов</div>
+      </div>
+    </div>
+    <div class="affects">
+      <div class="affects-title">Влияет на</div>
+      <div class="affects-list">
+        <span class="affect-item">Эмоциональный регистр сцены</span>
+        <span class="affect-item">Динамика и энергия кадра</span>
+        <span class="affect-item">Profile Summary</span>
+      </div>
+    </div>
+    <div class="q-controls">
+      <div class="status-group">
+        <button class="status-btn" onclick="setStatus('6','keep',this)">✅ Оставить</button>
+        <button class="status-btn" onclick="setStatus('6','review',this)">✏️ Пересмотреть</button>
+        <button class="status-btn" onclick="setStatus('6','remove',this)">❌ Убрать</button>
+      </div>
+      <div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-6" oninput="saveComment('6',this.value)"></div>
+    </div>
+  </div>
+
+  <!-- Q: what-you-need -->
+  <div class="q-card status-none" id="card-16">
+    <div class="q-header">
+      <span class="q-num">08</span>
+      <span class="q-text">Какими тебе хочется видеть сцены дальше? <span class="step-badge">Шаг 21 · После оплаты</span></span>
+    </div>
+    <div class="flags">
+      <span class="flag flag-profile">→ Profile Summary</span>
+      <span class="flag flag-p1">P1: «хочется» = коучинговый паттерн</span>
+    </div>
+    <div class="options">
+      <div class="options-toggle" onclick="toggleOptions(this)">▶ Показать варианты (6)</div>
+      <div class="options-content">
+        <div class="option-list">
+          <span class="option-tag">чтобы это было максимально похоже на меня</span>
+          <span class="option-tag">более смелыми и вдохновляющими</span>
+          <span class="option-tag">атмосферно и кинематографично</span>
+          <span class="option-tag">живыми и эмоциональными</span>
+          <span class="option-tag">красивыми и премиальными</span>
+          <span class="option-tag">масштабными и наполненными</span>
+        </div>
+        <div class="max-sel">Выбор: до 3 вариантов</div>
+      </div>
+    </div>
+    <div class="affects">
+      <div class="affects-title">Влияет на</div>
+      <div class="affects-list">
+        <span class="affect-item">Стиль визуализации (реализм vs кинематограф)</span>
+        <span class="affect-item">Масштаб и смелость сцен</span>
+      </div>
+    </div>
+    <div class="q-controls">
+      <div class="status-group">
+        <button class="status-btn" onclick="setStatus('16','keep',this)">✅ Оставить</button>
+        <button class="status-btn" onclick="setStatus('16','review',this)">✏️ Пересмотреть</button>
+        <button class="status-btn" onclick="setStatus('16','remove',this)">❌ Убрать</button>
+      </div>
+      <div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-16" oninput="saveComment('16',this.value)"></div>
+    </div>
+  </div>
+
+  <!-- Q: first-impression -->
+  <div class="q-card status-none" id="card-15">
+    <div class="q-header">
+      <span class="q-num">09</span>
+      <span class="q-text">Какое ощущение тебе хочется оставлять после себя? <span class="step-badge">Шаг 22 · После оплаты</span></span>
+    </div>
+    <div class="flags">
+      <span class="flag flag-profile">→ Profile Summary</span>
+      <span class="flag flag-p1">P1: «хочется» = коучинговый паттерн</span>
+    </div>
+    <div class="options">
+      <div class="options-toggle" onclick="toggleOptions(this)">▶ Показать варианты (6)</div>
+      <div class="options-content">
+        <div class="option-list">
+          <span class="option-tag">восхищения и восторга</span>
+          <span class="option-tag">спокойствия и внутренней силы</span>
+          <span class="option-tag">лёгкости и свободы</span>
+          <span class="option-tag">глубины и присутствия</span>
+          <span class="option-tag">уверенности без лишних слов</span>
+          <span class="option-tag">движения и энергии</span>
+        </div>
+        <div class="max-sel">Выбор: до 3 вариантов</div>
+      </div>
+    </div>
+    <div class="affects">
+      <div class="affects-title">Влияет на</div>
+      <div class="affects-list">
+        <span class="affect-item">Presence и aura пользователя в сцене</span>
+        <span class="affect-item">Profile Summary</span>
+      </div>
+    </div>
+    <div class="q-controls">
+      <div class="status-group">
+        <button class="status-btn" onclick="setStatus('15','keep',this)">✅ Оставить</button>
+        <button class="status-btn" onclick="setStatus('15','review',this)">✏️ Пересмотреть</button>
+        <button class="status-btn" onclick="setStatus('15','remove',this)">❌ Убрать</button>
+      </div>
+      <div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-15" oninput="saveComment('15',this.value)"></div>
+    </div>
+  </div>
+
+  <!-- Q: what-want-enhance -->
+  <div class="q-card status-none" id="card-17">
+    <div class="q-header">
+      <span class="q-num">10</span>
+      <span class="q-text">Что ты хочешь усилить в своей жизни? <span class="step-badge">Шаг 26 · После оплаты</span></span>
+    </div>
+    <div class="flags">
+      <span class="flag flag-profile">→ Profile Summary</span>
+    </div>
+    <div class="options">
+      <div class="options-toggle" onclick="toggleOptions(this)">▶ Показать варианты (7)</div>
+      <div class="options-content">
+        <div class="option-list">
+          <span class="option-tag">деньги</span>
+          <span class="option-tag">здоровье</span>
+          <span class="option-tag">отношения</span>
+          <span class="option-tag">свободу</span>
+          <span class="option-tag">влияние</span>
+          <span class="option-tag">спокойствие</span>
+          <span class="option-tag">реализация</span>
+        </div>
+        <div class="max-sel">Выбор: 1 вариант</div>
+      </div>
+    </div>
+    <div class="affects">
+      <div class="affects-title">Влияет на</div>
+      <div class="affects-list">
+        <span class="affect-item">Приоритетная сфера на дашборде</span>
+        <span class="affect-item">Profile Summary (главный фокус)</span>
+      </div>
+    </div>
+    <div class="review-note">«реализация» — не согласовано по грамматике с остальными (они существительные в В.п., это И.п.). Проверить.</div>
+    <div class="q-controls">
+      <div class="status-group">
+        <button class="status-btn" onclick="setStatus('17','keep',this)">✅ Оставить</button>
+        <button class="status-btn" onclick="setStatus('17','review',this)">✏️ Пересмотреть</button>
+        <button class="status-btn" onclick="setStatus('17','remove',this)">❌ Убрать</button>
+      </div>
+      <div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-17" oninput="saveComment('17',this.value)"></div>
+    </div>
+  </div>
+
+  <!-- Неиспользуемые вопросы -->
+  <div style="margin-top:20px; padding:12px 16px; background:#fff8e1; border-radius:10px; border:1px solid #ffd54f;">
+    <strong style="font-size:13px;">⚠️ В базе есть вопросы, которые не показаны в онбординге (нет в onboarding_pages):</strong>
+    <ul style="margin-top:8px; font-size:13px; color:#555; list-style:inside disc; line-height:1.8;">
+      <li><strong>Recognition</strong> — «Что для тебя сейчас важно?» (8 вариантов, max 3) — <em>формально есть в шаге 24, но после paywall+payment</em></li>
+      <li><strong>Sphere</strong> — «Что для тебя важнее в результате?» (6 вариантов, max 2) — шаг 25</li>
+      <li><strong>Like Dislike</strong> — «Тебе понравился результат?» (Да/Нет) — <em>НЕТ в onboarding_pages совсем</em></li>
+      <li><strong>Life Scale</strong> — «На какой уровень жизни ты хочешь выйти?» — <em>НЕТ в onboarding_pages совсем</em></li>
+      <li><strong>Scene Atmosphere</strong> — «Какую атмосферу ты хочешь видеть в своих сценах?» — <em>НЕТ в onboarding_pages совсем</em></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============= СФЕРЫ ============= -->
+
+<!-- Сфера 1 -->
+<div class="section" id="s1">
+  <div class="section-header">
+    <h2>Сфера 1 — Состояние</h2>
+    <p>Микроопросник показывается при первом входе в сферу. Q1+Q2 один раз, AI и POV повторяются при каждой генерации.</p>
+  </div>
+
+  <div class="q-card status-none" id="card-s1q1">
+    <div class="q-header">
+      <span class="q-num">Q1</span>
+      <span class="q-text">Каким тебе хочется ощущать себя в своём теле и состоянии?</span>
+    </div>
+    <div class="flags">
+      <span class="flag flag-profile">→ Profile Summary</span>
+      <span class="flag flag-p1">P1: «хочется» = коучинговый паттерн</span>
+      <span class="flag flag-p1">P1: multi-select до 6 — слишком много</span>
+    </div>
+    <div class="options">
+      <div class="options-toggle" onclick="toggleOptions(this)">▶ Показать варианты (6)</div>
+      <div class="options-content">
+        <div class="option-list">
+          <span class="option-tag">спокойным и устойчивым</span>
+          <span class="option-tag">лёгким и энергичным</span>
+          <span class="option-tag">сильным и собранным</span>
+          <span class="option-tag">здоровым и в контакте со своим телом</span>
+          <span class="option-tag">уверенным в себе и своём теле</span>
+          <span class="option-tag">в своём ритме</span>
+        </div>
+        <div class="max-sel">Выбор: до 6 вариантов</div>
+      </div>
+    </div>
+    <div class="affects">
+      <div class="affects-title">Влияет на</div>
+      <div class="affects-list">
+        <span class="affect-item">Образ тела и присутствия в сцене сферы</span>
+        <span class="affect-item">Энергия и динамика кадра</span>
+      </div>
+    </div>
+    <div class="review-note">«здоровым и в контакте со своим телом» — соматотерапевтический язык, не совпадает с тоном бренда. Предложение: «здоровым и живым».</div>
+    <div class="q-controls">
+      <div class="status-group">
+        <button class="status-btn" onclick="setStatus('s1q1','keep',this)">✅ Оставить</button>
+        <button class="status-btn" onclick="setStatus('s1q1','review',this)">✏️ Пересмотреть</button>
+        <button class="status-btn" onclick="setStatus('s1q1','remove',this)">❌ Убрать</button>
+      </div>
+      <div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s1q1" oninput="saveComment('s1q1',this.value)"></div>
+    </div>
+  </div>
+
+  <div class="q-card status-none" id="card-s1q2">
+    <div class="q-header">
+      <span class="q-num">Q2</span>
+      <span class="q-text">Через что тебе хочется приходить к этому состоянию?</span>
+    </div>
+    <div class="flags">
+      <span class="flag flag-profile">→ Profile Summary</span>
+      <span class="flag flag-p1">P1: «хочется» + «приходить к состоянию» = self-help</span>
+    </div>
+    <div class="options">
+      <div class="options-toggle" onclick="toggleOptions(this)">▶ Показать варианты (6)</div>
+      <div class="options-content">
+        <div class="option-list">
+          <span class="option-tag">спорт и движение</span>
+          <span class="option-tag">забота о теле и здоровье</span>
+          <span class="option-tag">спокойный и размеренный ритм жизни</span>
+          <span class="option-tag">природа и смена обстановки</span>
+          <span class="option-tag">практики, тишина и время для себя</span>
+          <span class="option-tag">активный и насыщенный образ жизни</span>
+        </div>
+        <div class="max-sel">Выбор: до 6 вариантов</div>
+      </div>
+    </div>
+    <div class="affects">
+      <div class="affects-title">Влияет на</div>
+      <div class="affects-list">
+        <span class="affect-item">Активность и декорации сцены (спорт / природа / тишина)</span>
+        <span class="affect-item">Profile Summary</span>
+      </div>
+    </div>
+    <div class="review-note">«активный и насыщенный образ жизни» ≈ «спорт и движение» — дубль. «практики, тишина и время для себя» — три объекта в одном. Предложение: «тишина и практики».</div>
+    <div class="q-controls">
+      <div class="status-group">
+        <button class="status-btn" onclick="setStatus('s1q2','keep',this)">✅ Оставить</button>
+        <button class="status-btn" onclick="setStatus('s1q2','review',this)">✏️ Пересмотреть</button>
+        <button class="status-btn" onclick="setStatus('s1q2','remove',this)">❌ Убрать</button>
+      </div>
+      <div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s1q2" oninput="saveComment('s1q2',this.value)"></div>
+    </div>
+  </div>
+
+  <div class="q-card status-none" id="card-s1ai">
+    <div class="q-header">
+      <span class="q-num">AI</span>
+      <span class="q-text">ИИ-уточнение по сцене</span>
+    </div>
+    <div class="flags">
+      <span class="flag flag-ai">AI-вопрос (генерируется)</span>
+      <span class="flag flag-p0">P0: нет fallback при ошибке</span>
+    </div>
+    <div class="affects">
+      <div class="affects-title">Влияет на</div>
+      <div class="affects-list">
+        <span class="affect-item">Детали сцены (уточняющий контекст)</span>
+        <span class="affect-item">НЕ используется в Profile Summary</span>
+      </div>
+    </div>
+    <div class="review-note p0">P0 — если AI-запрос упал, пользователь видит пустой экран. Нужен fallback: таймаут → запасной фиксированный вопрос или пропуск.</div>
+    <div class="q-controls">
+      <div class="status-group">
+        <button class="status-btn" onclick="setStatus('s1ai','keep',this)">✅ Оставить</button>
+        <button class="status-btn" onclick="setStatus('s1ai','review',this)">✏️ Пересмотреть</button>
+        <button class="status-btn" onclick="setStatus('s1ai','remove',this)">❌ Убрать</button>
+      </div>
+      <div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s1ai" oninput="saveComment('s1ai',this.value)"></div>
+    </div>
+  </div>
+
+  <div class="q-card status-none" id="card-s1pov">
+    <div class="q-header">
+      <span class="q-num">POV</span>
+      <span class="q-text">Как тебе хочется увидеть эту жизнь? <span class="step-badge">skip_on_repeat</span></span>
+    </div>
+    <div class="flags">
+      <span class="flag flag-pov">→ Точка зрения камеры</span>
+      <span class="flag flag-skip">Пропускается при повторе</span>
+      <span class="flag flag-p1">P1: дублируется в каждой сфере</span>
+    </div>
+    <div class="options">
+      <div class="options-toggle" onclick="toggleOptions(this)">▶ Показать варианты (3)</div>
+      <div class="options-content">
+        <div class="option-list">
+          <span class="option-tag">Я вижу себя со стороны</span>
+          <span class="option-tag">Я вижу всё своими глазами</span>
+          <span class="option-tag">Как кадр из фильма</span>
+        </div>
+        <div class="max-sel">Выбор: 1 вариант</div>
+      </div>
+    </div>
+    <div class="affects">
+      <div class="affects-title">Влияет на</div>
+      <div class="affects-list">
+        <span class="affect-item">Угол камеры сцены (3rd person / 1st person / cinematic)</span>
+      </div>
+    </div>
+    <div class="review-note">«Я вижу себя со стороны» и «Как кадр из фильма» — оба вид от третьего лица, неотличимы. Нужны подписи или иконки. Архитектурный вопрос: задавать один раз на весь онбординг или в каждой сфере?</div>
+    <div class="q-controls">
+      <div class="status-group">
+        <button class="status-btn" onclick="setStatus('s1pov','keep',this)">✅ Оставить</button>
+        <button class="status-btn" onclick="setStatus('s1pov','review',this)">✏️ Пересмотреть</button>
+        <button class="status-btn" onclick="setStatus('s1pov','remove',this)">❌ Убрать</button>
+      </div>
+      <div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s1pov" oninput="saveComment('s1pov',this.value)"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Сфера 2 -->
+<div class="section" id="s2">
+  <div class="section-header"><h2>Сфера 2 — Ресурсы</h2></div>
+
+  <div class="q-card status-none" id="card-s2q1">
+    <div class="q-header"><span class="q-num">Q1</span><span class="q-text">Как для тебя проявляются ресурсы и богатство?</span></div>
+    <div class="flags"><span class="flag flag-clothing">→ Стиль одежды в сцене</span></div>
+    <div class="options"><div class="options-toggle" onclick="toggleOptions(this)">▶ Показать варианты (6)</div><div class="options-content"><div class="option-list"><span class="option-tag">финансовая свобода и отсутствие ограничений</span><span class="option-tag">высокий уровень и качество жизни</span><span class="option-tag">красивые и дорогие вещи вокруг</span><span class="option-tag">эстетичная и статусная повседневность</span><span class="option-tag">возможность легко выбирать лучшее</span><span class="option-tag">доступ к местам и возможностям</span></div><div class="max-sel">Выбор: до 6 вариантов</div></div></div>
+    <div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Статусность и эстетика сцены</span><span class="affect-item">Детали интерьера / машин / одежды</span></div></div>
+    <div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s2q1','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s2q1','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s2q1','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s2q1" oninput="saveComment('s2q1',this.value)"></div></div>
+  </div>
+
+  <div class="q-card status-none" id="card-s2q2">
+    <div class="q-header"><span class="q-num">Q2</span><span class="q-text">Что тебе особенно хочется видеть в этой жизни?</span></div>
+    <div class="flags"><span class="flag flag-p1">P1: «хочется» паттерн</span></div>
+    <div class="options"><div class="options-toggle" onclick="toggleOptions(this)">▶ Показать варианты (6)</div><div class="options-content"><div class="option-list"><span class="option-tag">красивые автомобили</span><span class="option-tag">дорогие и эстетичные пространства</span><span class="option-tag">аксессуары и атрибуты уровня жизни</span><span class="option-tag">премиальный уровень повседневной жизни</span><span class="option-tag">доступ к лучшим местам и сервису</span><span class="option-tag">ощущение большого масштаба жизни</span></div><div class="max-sel">Выбор: до 6 вариантов</div></div></div>
+    <div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Конкретные объекты и детали в сцене</span></div></div>
+    <div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s2q2','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s2q2','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s2q2','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s2q2" oninput="saveComment('s2q2',this.value)"></div></div>
+  </div>
+
+  <div class="q-card status-none" id="card-s2ai">
+    <div class="q-header"><span class="q-num">AI</span><span class="q-text">ИИ-уточнение по сцене</span></div>
+    <div class="flags"><span class="flag flag-ai">AI-вопрос</span><span class="flag flag-p0">P0: нет fallback</span></div>
+    <div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Детали сцены</span></div></div>
+    <div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s2ai','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s2ai','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s2ai','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s2ai" oninput="saveComment('s2ai',this.value)"></div></div>
+  </div>
+
+  <div class="q-card status-none" id="card-s2pov">
+    <div class="q-header"><span class="q-num">POV</span><span class="q-text">Как тебе хочется увидеть эту жизнь? <span class="step-badge">НЕ skip_on_repeat</span></span></div>
+    <div class="flags"><span class="flag flag-pov">→ Камера</span><span class="flag flag-p1">P1: здесь НЕ пропускается при повторе — несогласованность с другими сферами</span></div>
+    <div class="options"><div class="options-toggle" onclick="toggleOptions(this)">▶ Показать варианты (3)</div><div class="options-content"><div class="option-list"><span class="option-tag">Я вижу себя со стороны</span><span class="option-tag">Я вижу всё своими глазами</span><span class="option-tag">Как кадр из фильма</span></div></div></div>
+    <div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s2pov','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s2pov','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s2pov','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s2pov" oninput="saveComment('s2pov',this.value)"></div></div>
+  </div>
+</div>
+
+<!-- Сфера 3 -->
+<div class="section" id="s3">
+  <div class="section-header"><h2>Сфера 3 — Реализация</h2></div>
+  <div class="q-card status-none" id="card-s3q1">
+    <div class="q-header"><span class="q-num">Q1</span><span class="q-text">В чём тебе хочется реализовываться в этой жизни?</span></div>
+    <div class="flags"><span class="flag flag-profile">→ Profile Summary</span><span class="flag flag-p1">P1: «в этой жизни» — патетика</span></div>
+    <div class="options"><div class="options-toggle" onclick="toggleOptions(this)">▶ Показать варианты (6)</div><div class="options-content"><div class="option-list"><span class="option-tag">в собственном бизнесе</span><span class="option-tag">в творчестве и создании</span><span class="option-tag">в профессии и экспертности</span><span class="option-tag">в управлении и лидерстве</span><span class="option-tag">в инвестициях и больших проектах</span><span class="option-tag">в своём деле</span></div><div class="max-sel">Выбор: до 6 вариантов</div></div></div>
+    <div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Роль и деятельность в сцене</span><span class="affect-item">Profile Summary (профессиональная идентичность)</span></div></div>
+    <div class="review-note">«в управлении и лидерстве» = инфобиз-язык. Предложение: «в управлении и влиянии». «В чём тебе хочется реализовываться?» — убрать «в этой жизни».</div>
+    <div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s3q1','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s3q1','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s3q1','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s3q1" oninput="saveComment('s3q1',this.value)"></div></div>
+  </div>
+
+  <div class="q-card status-none" id="card-s3ai">
+    <div class="q-header"><span class="q-num">AI</span><span class="q-text">ИИ-уточнение по сцене</span></div>
+    <div class="flags"><span class="flag flag-ai">AI-вопрос</span><span class="flag flag-p0">P0: нет fallback</span></div>
+    <div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Детали рабочей сцены</span></div></div>
+    <div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s3ai','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s3ai','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s3ai','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s3ai" oninput="saveComment('s3ai',this.value)"></div></div>
+  </div>
+
+  <div class="q-card status-none" id="card-s3pov">
+    <div class="q-header"><span class="q-num">POV</span><span class="q-text">Как тебе хочется увидеть эту жизнь? <span class="step-badge">skip_on_repeat</span></span></div>
+    <div class="flags"><span class="flag flag-pov">→ Камера</span><span class="flag flag-skip">Пропускается при повторе</span></div>
+    <div class="options"><div class="options-toggle" onclick="toggleOptions(this)">▶ Варианты (3)</div><div class="options-content"><div class="option-list"><span class="option-tag">Я вижу себя со стороны</span><span class="option-tag">Я вижу всё своими глазами</span><span class="option-tag">Как кадр из фильма</span></div></div></div>
+    <div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s3pov','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s3pov','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s3pov','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s3pov" oninput="saveComment('s3pov',this.value)"></div></div>
+  </div>
+</div>
+
+<!-- Сфера 4 -->
+<div class="section" id="s4">
+  <div class="section-header"><h2>Сфера 4 — Партнёрство</h2></div>
+  <div class="q-card status-none" id="card-s4q1">
+    <div class="q-header"><span class="q-num">Q1</span><span class="q-text">Что для тебя значит настоящая близость и партнёрство?</span></div>
+    <div class="flags"><span class="flag flag-p2">P2: 8 вариантов — много для single-select</span></div>
+    <div class="options"><div class="options-toggle" onclick="toggleOptions(this)">▶ Варианты (8)</div><div class="options-content"><div class="option-list"><span class="option-tag">безопасность и опора</span><span class="option-tag">спокойствие и доверие</span><span class="option-tag">быть принятым настоящим</span><span class="option-tag">партнёрство и движение вместе</span><span class="option-tag">глубина и честность</span><span class="option-tag">страсть и притяжение</span><span class="option-tag">вдохновлять друг друга</span><span class="option-tag">ощущение «мы»</span></div><div class="max-sel">Выбор: до 2 вариантов</div></div></div>
+    <div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Тип взаимодействия в сцене (близость / движение / страсть)</span></div></div>
+    <div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s4q1','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s4q1','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s4q1','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s4q1" oninput="saveComment('s4q1',this.value)"></div></div>
+  </div>
+  <div class="q-card status-none" id="card-s4q2">
+    <div class="q-header"><span class="q-num">Q2</span><span class="q-text">В чем близость особенно ощущается в твоей жизни?</span></div>
+    <div class="options"><div class="options-toggle" onclick="toggleOptions(this)">▶ Варианты (7)</div><div class="options-content"><div class="option-list"><span class="option-tag">совместное пространство и дом</span><span class="option-tag">свобода быть собой рядом</span><span class="option-tag">повседневная жизнь вместе</span><span class="option-tag">поддержка в важных моментах</span><span class="option-tag">общие планы и движение вперёд</span><span class="option-tag">путешествия и новые впечатления</span><span class="option-tag">спокойное присутствие рядом</span></div><div class="max-sel">Выбор: 1 вариант</div></div></div>
+    <div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Декорации и активность пары в сцене</span></div></div>
+    <div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s4q2','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s4q2','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s4q2','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s4q2" oninput="saveComment('s4q2',this.value)"></div></div>
+  </div>
+  <div class="q-card status-none" id="card-s4ai">
+    <div class="q-header"><span class="q-num">AI</span><span class="q-text">ИИ-уточнение по сцене</span></div>
+    <div class="flags"><span class="flag flag-ai">AI-вопрос</span><span class="flag flag-p0">P0: нет fallback</span></div>
+    <div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Детали романтической сцены</span></div></div>
+    <div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s4ai','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s4ai','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s4ai','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s4ai" oninput="saveComment('s4ai',this.value)"></div></div>
+  </div>
+</div>
+
+<!-- Сфера 5 -->
+<div class="section" id="s5">
+  <div class="section-header"><h2>Сфера 5 — Дом</h2></div>
+  <div class="q-card status-none" id="card-s5q1">
+    <div class="q-header"><span class="q-num">Q1</span><span class="q-text">Где тебе хочется жить?</span></div>
+    <div class="flags"><span class="flag flag-profile">→ Profile Summary</span></div>
+    <div class="options"><div class="options-toggle" onclick="toggleOptions(this)">▶ Варианты (4)</div><div class="options-content"><div class="option-list"><span class="option-tag">Квартира в уютном городе</span><span class="option-tag">Дом на природе</span><span class="option-tag">Современный коттедж-шале</span><span class="option-tag">Вилла у воды</span></div><div class="max-sel">Выбор: до 2 вариантов</div></div></div>
+    <div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Тип жилья и локация в сцене</span><span class="affect-item">Profile Summary</span></div></div>
+    <div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s5q1','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s5q1','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s5q1','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s5q1" oninput="saveComment('s5q1',this.value)"></div></div>
+  </div>
+  <div class="q-card status-none" id="card-s5q2">
+    <div class="q-header"><span class="q-num">Q2</span><span class="q-text">Как тебе хочется жить в этом пространстве?</span></div>
+    <div class="flags"><span class="flag flag-profile">→ Profile Summary</span></div>
+    <div class="options"><div class="options-toggle" onclick="toggleOptions(this)">▶ Варианты (5)</div><div class="options-content"><div class="option-list"><span class="option-tag">спокойно и только для себя</span><span class="option-tag">рядом с любимым человеком</span><span class="option-tag">в тёплой семейной жизни</span><span class="option-tag">в доме, где часто собираются близкие</span><span class="option-tag">в живой атмосфере с друзьями и гостями</span></div><div class="max-sel">Выбор: до 2 вариантов</div></div></div>
+    <div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Люди в доме: один / пара / семья / гости</span><span class="affect-item">Атмосфера домашней сцены</span></div></div>
+    <div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s5q2','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s5q2','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s5q2','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s5q2" oninput="saveComment('s5q2',this.value)"></div></div>
+  </div>
+  <div class="q-card status-none" id="card-s5ai"><div class="q-header"><span class="q-num">AI</span><span class="q-text">ИИ-уточнение по сцене</span></div><div class="flags"><span class="flag flag-ai">AI-вопрос</span><span class="flag flag-p0">P0: нет fallback</span></div><div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Детали домашней сцены</span></div></div><div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s5ai','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s5ai','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s5ai','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s5ai" oninput="saveComment('s5ai',this.value)"></div></div></div>
+  <div class="q-card status-none" id="card-s5pov"><div class="q-header"><span class="q-num">POV</span><span class="q-text">Как тебе хочется увидеть эту жизнь?</span></div><div class="flags"><span class="flag flag-pov">→ Камера</span><span class="flag flag-profile">→ Profile Summary</span></div><div class="options"><div class="options-toggle" onclick="toggleOptions(this)">▶ Варианты (2)</div><div class="options-content"><div class="option-list"><span class="option-tag">Своими глазами</span><span class="option-tag">Как кадр из фильма</span></div></div></div><div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Камера (FPV vs cinematic)</span></div></div><div class="review-note">У этой сферы только 2 варианта вместо 3 в других — нет «вижу себя со стороны». Несогласованность.</div><div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s5pov','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s5pov','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s5pov','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s5pov" oninput="saveComment('s5pov',this.value)"></div></div></div>
+</div>
+
+<!-- Сфера 6 -->
+<div class="section" id="s6">
+  <div class="section-header"><h2>Сфера 6 — Дети и наследие (Род)</h2></div>
+  <div class="q-card status-none" id="card-s6q1"><div class="q-header"><span class="q-num">Q1</span><span class="q-text">Что для тебя значит продолжение рода?</span></div><div class="flags"><span class="flag flag-p2">P2: формулировка «рода» — архаично для части аудитории</span></div><div class="options"><div class="options-toggle" onclick="toggleOptions(this)">▶ Варианты (7)</div><div class="options-content"><div class="option-list"><span class="option-tag">создать крепкую семью</span><span class="option-tag">быть примером для своих детей</span><span class="option-tag">дать детям больше возможностей</span><span class="option-tag">сохранять семейные традиции</span><span class="option-tag">быть опорой для близких</span><span class="option-tag">видеть, как растут дети</span><span class="option-tag">дом, в который хочется возвращаться</span></div><div class="max-sel">Выбор: до 2 вариантов</div></div></div><div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Тип семейной сцены</span><span class="affect-item">Наличие детей в кадре</span></div></div><div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s6q1','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s6q1','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s6q1','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s6q1" oninput="saveComment('s6q1',this.value)"></div></div></div>
+  <div class="q-card status-none" id="card-s6q2"><div class="q-header"><span class="q-num">Q2</span><span class="q-text">Через что тебе хочется увидеть своё продолжение?</span></div><div class="options"><div class="options-toggle" onclick="toggleOptions(this)">▶ Варианты (8)</div><div class="options-content"><div class="option-list"><span class="option-tag">воспитание и развитие детей</span><span class="option-tag">семейные традиции и праздники</span><span class="option-tag">большие события и новые этапы</span><span class="option-tag">спокойная повседневная жизнь рядом</span><span class="option-tag">совместные поездки и воспоминания</span><span class="option-tag">дом и семейное пространство</span><span class="option-tag">забота и поддержка близких</span><span class="option-tag">совместное время с семьёй</span></div><div class="max-sel">Выбор: 1 вариант · 8 вариантов = когнитивная перегрузка</div></div></div><div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Активность и момент в семейной сцене</span></div></div><div class="review-note p0">8 вариантов при single-select — P2 проблема: когнитивная перегрузка. Рекомендуется сократить до 4-5.</div><div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s6q2','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s6q2','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s6q2','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s6q2" oninput="saveComment('s6q2',this.value)"></div></div></div>
+  <div class="q-card status-none" id="card-s6ai"><div class="q-header"><span class="q-num">AI</span><span class="q-text">ИИ-уточнение по сцене</span></div><div class="flags"><span class="flag flag-ai">AI-вопрос</span><span class="flag flag-p0">P0: нет fallback</span></div><div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Детали семейной сцены</span></div></div><div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s6ai','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s6ai','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s6ai','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s6ai" oninput="saveComment('s6ai',this.value)"></div></div></div>
+</div>
+
+<!-- Сфера 7 -->
+<div class="section" id="s7">
+  <div class="section-header"><h2>Сфера 7 — Творчество</h2></div>
+  <div class="q-card status-none" id="card-s7q1"><div class="q-header"><span class="q-num">Q1</span><span class="q-text">Что для тебя значит создавать новое?</span></div><div class="options"><div class="options-toggle" onclick="toggleOptions(this)">▶ Варианты (8)</div><div class="options-content"><div class="option-list"><span class="option-tag">дать жизнь новому проекту</span><span class="option-tag">начать новый этап жизни</span><span class="option-tag">раскрыть новые стороны себя</span><span class="option-tag">сделать что-то своими руками</span><span class="option-tag">создать что-то по-настоящему своё</span><span class="option-tag">выразить себя через творчество</span><span class="option-tag">вдохновить и повести за собой</span><span class="option-tag">создать новый мир вокруг себя</span></div><div class="max-sel">Выбор: до 2 вариантов</div></div></div><div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Тип творческой деятельности в сцене</span></div></div><div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s7q1','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s7q1','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s7q1','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s7q1" oninput="saveComment('s7q1',this.value)"></div></div></div>
+  <div class="q-card status-none" id="card-s7q2"><div class="q-header"><span class="q-num">Q2</span><span class="q-text">Через что ты бы хотел видеть это в своей жизни?</span></div><div class="options"><div class="options-toggle" onclick="toggleOptions(this)">▶ Варианты (8)</div><div class="options-content"><div class="option-list"><span class="option-tag">творчество и самовыражение</span><span class="option-tag">собственный проект или дело</span><span class="option-tag">создание продукта или идеи</span><span class="option-tag">новое пространство жизни</span><span class="option-tag">запуск чего-то нового</span><span class="option-tag">живой процесс создания</span><span class="option-tag">люди и энергия вокруг меня</span><span class="option-tag">движение, изменения и новые этапы</span></div><div class="max-sel">Выбор: 1 вариант</div></div></div><div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Конкретный формат творческого процесса в сцене</span></div></div><div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s7q2','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s7q2','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s7q2','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s7q2" oninput="saveComment('s7q2',this.value)"></div></div></div>
+  <div class="q-card status-none" id="card-s7ai"><div class="q-header"><span class="q-num">AI</span><span class="q-text">ИИ-уточнение по сцене</span></div><div class="flags"><span class="flag flag-ai">AI-вопрос</span><span class="flag flag-p0">P0: нет fallback</span></div><div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Детали творческой сцены</span></div></div><div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s7ai','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s7ai','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s7ai','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s7ai" oninput="saveComment('s7ai',this.value)"></div></div></div>
+</div>
+
+<!-- Сфера 8 -->
+<div class="section" id="s8">
+  <div class="section-header"><h2>Сфера 8 — Развитие</h2></div>
+  <div class="q-card status-none" id="card-s8q1"><div class="q-header"><span class="q-num">Q1</span><span class="q-text">Что для тебя сейчас развитие?</span></div><div class="options"><div class="options-toggle" onclick="toggleOptions(this)">▶ Варианты (8)</div><div class="options-content"><div class="option-list"><span class="option-tag">глубже понимать себя и жизнь</span><span class="option-tag">расти интеллектуально</span><span class="option-tag">расширять границы мышления</span><span class="option-tag">становиться мудрее и спокойнее</span><span class="option-tag">находить новые смыслы</span><span class="option-tag">учиться у сильных людей</span><span class="option-tag">соединять знания и практику</span><span class="option-tag">видеть мир шире и глубже</span></div><div class="max-sel">Выбор: до 2 вариантов</div></div></div><div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Сеттинг и инструменты в сцене (книга / люди / природа)</span></div></div><div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s8q1','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s8q1','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s8q1','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s8q1" oninput="saveComment('s8q1',this.value)"></div></div></div>
+  <div class="q-card status-none" id="card-s8q2"><div class="q-header"><span class="q-num">Q2</span><span class="q-text">Через что это проявляется в твоей жизни?</span></div><div class="options"><div class="options-toggle" onclick="toggleOptions(this)">▶ Варианты (8)</div><div class="options-content"><div class="option-list"><span class="option-tag">книги, знания и новые идеи</span><span class="option-tag">путешествия и изучение мира</span><span class="option-tag">глубокие разговоры с людьми</span><span class="option-tag">обучение и новый опыт</span><span class="option-tag">личные практики и осознанность</span><span class="option-tag">сильное окружение и обмен опытом</span><span class="option-tag">время на размышление и тишину</span><span class="option-tag">исследование жизни и самого себя</span></div><div class="max-sel">Выбор: 1 вариант</div></div></div><div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Инструменты и пространство в сцене роста</span></div></div><div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s8q2','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s8q2','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s8q2','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s8q2" oninput="saveComment('s8q2',this.value)"></div></div></div>
+  <div class="q-card status-none" id="card-s8ai"><div class="q-header"><span class="q-num">AI</span><span class="q-text">ИИ-уточнение по сцене</span></div><div class="flags"><span class="flag flag-ai">AI-вопрос</span><span class="flag flag-p0">P0: нет fallback</span></div><div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Детали сцены развития</span></div></div><div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s8ai','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s8ai','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s8ai','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s8ai" oninput="saveComment('s8ai',this.value)"></div></div></div>
+</div>
+
+<!-- Сфера 9 -->
+<div class="section" id="s9">
+  <div class="section-header"><h2>Сфера 9 — Свобода <span style="color:#ff3b30;font-size:13px;">⚠️ P1: только географическая мобильность</span></h2></div>
+  <div class="q-card status-none" id="card-s9q1">
+    <div class="q-header"><span class="q-num">Q1</span><span class="q-text">Как выглядит свобода в твоей жизни?</span></div>
+    <div class="flags"><span class="flag flag-p1">P1: все варианты = путешествия и перемещение</span><span class="flag flag-p2">P2: «жить без привязанностей» ≈ «легко менять места» — дубль</span></div>
+    <div class="options"><div class="options-toggle" onclick="toggleOptions(this)">▶ Варианты (7)</div><div class="options-content"><div class="option-list"><span class="option-tag">путешествовать и легко менять места</span><span class="option-tag">жить в нескольких странах или городах</span><span class="option-tag">работать из любой точки мира</span><span class="option-tag">жить без привязанностей</span><span class="option-tag">жить в своём ритме и графике</span><span class="option-tag">легко менять окружение и образ жизни</span><span class="option-tag">сам принимать решения о своей жизни</span></div><div class="max-sel">Выбор: до 7 вариантов (!)</div></div></div>
+    <div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Локация и тип свободы в сцене</span></div></div>
+    <div class="review-note p0">КРИТИЧНО: свобода = только перемещение и страны. Для предпринимателя свобода = автономия решений, время, своё дело. Нужно добавить: «сам принимать решения», «своё время и свой ритм», «финансовая независимость». Последний вариант «сам принимать решения о своей жизни» уже есть — но его мало.</div>
+    <div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s9q1','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s9q1','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s9q1','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s9q1" oninput="saveComment('s9q1',this.value)"></div></div>
+  </div>
+  <div class="q-card status-none" id="card-s9q2"><div class="q-header"><span class="q-num">Q2</span><span class="q-text">Через что это видно?</span></div><div class="flags"><span class="flag flag-p2">P2: 8 вариантов при single-select — перегрузка</span></div><div class="options"><div class="options-toggle" onclick="toggleOptions(this)">▶ Варианты (8)</div><div class="options-content"><div class="option-list"><span class="option-tag">путешествия и новые места</span><span class="option-tag">возможность жить в разных странах</span><span class="option-tag">свободный график и свой ритм</span><span class="option-tag">своё дело или независимый доход</span><span class="option-tag">постоянное движение и новые впечатления</span><span class="option-tag">окружение, которое расширяет жизнь</span><span class="option-tag">спонтанность и свобода выбора</span><span class="option-tag">красивые пространства и ощущение воздуха</span></div><div class="max-sel">Выбор: 1 вариант</div></div></div><div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Конкретный образ свободы в сцене</span></div></div><div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s9q2','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s9q2','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s9q2','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s9q2" oninput="saveComment('s9q2',this.value)"></div></div></div>
+  <div class="q-card status-none" id="card-s9ai"><div class="q-header"><span class="q-num">AI</span><span class="q-text">ИИ-уточнение по сцене</span></div><div class="flags"><span class="flag flag-ai">AI-вопрос</span><span class="flag flag-p0">P0: нет fallback</span></div><div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Детали сцены свободы</span></div></div><div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s9ai','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s9ai','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s9ai','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s9ai" oninput="saveComment('s9ai',this.value)"></div></div></div>
+</div>
+
+<!-- Сфера 10 -->
+<div class="section" id="s10">
+  <div class="section-header"><h2>Сфера 10 — Окружение</h2></div>
+  <div class="q-card status-none" id="card-s10q1"><div class="q-header"><span class="q-num">Q1</span><span class="q-text">Какое окружение тебе хочется видеть вокруг себя?</span></div><div class="flags"><span class="flag flag-p1">P1: «хочется» паттерн</span></div><div class="options"><div class="options-toggle" onclick="toggleOptions(this)">▶ Варианты (6)</div><div class="options-content"><div class="option-list"><span class="option-tag">сильных и амбициозных людей</span><span class="option-tag">спокойное и тёплое окружение</span><span class="option-tag">творческих и вдохновляющих людей</span><span class="option-tag">людей с похожими ценностями</span><span class="option-tag">красивую и эстетичную социальную среду</span><span class="option-tag">живое и насыщенное общение</span></div><div class="max-sel">Выбор: до 6 вариантов</div></div></div><div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Тип людей и атмосфера в социальной сцене</span></div></div><div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s10q1','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s10q1','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s10q1','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s10q1" oninput="saveComment('s10q1',this.value)"></div></div></div>
+  <div class="q-card status-none" id="card-s10ai"><div class="q-header"><span class="q-num">AI</span><span class="q-text">AI-вопрос: окружение и люди</span></div><div class="flags"><span class="flag flag-ai">AI-вопрос</span><span class="flag flag-p0">P0: нет fallback</span></div><div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Детали окружения в сцене</span></div></div><div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s10ai','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s10ai','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s10ai','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s10ai" oninput="saveComment('s10ai',this.value)"></div></div></div>
+  <div class="q-card status-none" id="card-s10pov"><div class="q-header"><span class="q-num">POV</span><span class="q-text">Как тебе хочется увидеть эту жизнь?</span></div><div class="flags"><span class="flag flag-pov">→ Камера</span></div><div class="options"><div class="options-toggle" onclick="toggleOptions(this)">▶ Варианты (3)</div><div class="options-content"><div class="option-list"><span class="option-tag">Я вижу себя со стороны</span><span class="option-tag">Я вижу всё своими глазами</span><span class="option-tag">Как кадр из фильма</span></div></div></div><div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s10pov','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s10pov','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s10pov','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s10pov" oninput="saveComment('s10pov',this.value)"></div></div></div>
+</div>
+
+<!-- Сфера 11 -->
+<div class="section" id="s11">
+  <div class="section-header"><h2>Сфера 11 — Тренды <span style="color:#888;font-size:13px;">(дополнительная)</span></h2></div>
+  <div class="q-card status-none" id="card-s11q1"><div class="q-header"><span class="q-num">Q1</span><span class="q-text">Какой мир трендов тебе ближе? <span class="step-badge">skip_on_repeat</span></span></div><div class="flags"><span class="flag flag-profile">→ Profile Summary</span><span class="flag flag-skip">Пропускается при повторе</span></div><div class="options"><div class="options-toggle" onclick="toggleOptions(this)">▶ Варианты (8)</div><div class="options-content"><div class="option-list"><span class="option-tag">цифровые технологии и AI</span><span class="option-tag">культура и социальные движения</span><span class="option-tag">медиа, контент и форматы</span><span class="option-tag">стиль жизни и эстетика</span><span class="option-tag">бизнес и рынки будущего</span><span class="option-tag">творчество и новые языки</span><span class="option-tag">городская среда и архитектура</span><span class="option-tag">наука и осознанность</span></div><div class="max-sel">Выбор: до 2 вариантов</div></div></div><div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Актуальность визуального языка сцены</span><span class="affect-item">Profile Summary</span></div></div><div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s11q1','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s11q1','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s11q1','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s11q1" oninput="saveComment('s11q1',this.value)"></div></div></div>
+  <div class="q-card status-none" id="card-s11q2"><div class="q-header"><span class="q-num">Q2</span><span class="q-text">Как ты существуешь в потоке трендов? <span class="step-badge">skip_on_repeat</span></span></div><div class="flags"><span class="flag flag-profile">→ Profile Summary</span><span class="flag flag-skip">Пропускается при повторе</span></div><div class="options"><div class="options-toggle" onclick="toggleOptions(this)">▶ Варианты (6)</div><div class="options-content"><div class="option-list"><span class="option-tag">нахожу первым и пробую раньше других</span><span class="option-tag">осмысляю и понимаю глубже</span><span class="option-tag">отслеживаю и отбираю важное</span><span class="option-tag">создаю и задаю направление</span><span class="option-tag">делюсь и объясняю другим</span><span class="option-tag">живу в ритме и остаюсь в потоке</span></div><div class="max-sel">Выбор: 1 вариант</div></div></div><div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Роль и позиция в социальной сцене</span></div></div><div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s11q2','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s11q2','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s11q2','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s11q2" oninput="saveComment('s11q2',this.value)"></div></div></div>
+  <div class="q-card status-none" id="card-s11ai"><div class="q-header"><span class="q-num">AI</span><span class="q-text">ИИ-уточнение по трендам</span></div><div class="flags"><span class="flag flag-ai">AI-вопрос</span><span class="flag flag-p0">P0: нет fallback</span></div><div class="affects"><div class="affects-title">Влияет на</div><div class="affects-list"><span class="affect-item">Детали трендовой сцены</span></div></div><div class="q-controls"><div class="status-group"><button class="status-btn" onclick="setStatus('s11ai','keep',this)">✅ Оставить</button><button class="status-btn" onclick="setStatus('s11ai','review',this)">✏️ Пересмотреть</button><button class="status-btn" onclick="setStatus('s11ai','remove',this)">❌ Убрать</button></div><div class="comment-field"><input type="text" placeholder="Комментарий..." id="comment-s11ai" oninput="saveComment('s11ai',this.value)"></div></div></div>
+</div>
+
+</div><!-- end main -->
+</div><!-- end layout -->
+
+<script>
+const STORAGE_KEY = 'elyne-questions-review-v1';
+
+function getState() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
+}
+function saveState(state) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function setStatus(id, status, btn) {
+  const card = document.getElementById('card-' + id);
+  const btns = btn.parentElement.querySelectorAll('.status-btn');
+  btns.forEach(b => b.className = 'status-btn');
+  card.className = 'q-card status-' + (status === 'keep' ? 'keep' : status === 'review' ? 'review' : 'remove');
+  btn.className = 'status-btn active-' + status;
+  const state = getState();
+  state[id] = state[id] || {};
+  state[id].status = status;
+  saveState(state);
+  updateStats();
+}
+
+function saveComment(id, val) {
+  const state = getState();
+  state[id] = state[id] || {};
+  state[id].comment = val;
+  saveState(state);
+}
+
+function loadState() {
+  const state = getState();
+  Object.entries(state).forEach(([id, data]) => {
+    if (data.status) {
+      const card = document.getElementById('card-' + id);
+      if (!card) return;
+      card.className = 'q-card status-' + (data.status === 'keep' ? 'keep' : data.status === 'review' ? 'review' : 'remove');
+      const btns = card.querySelectorAll('.status-btn');
+      btns.forEach(b => {
+        if (b.onclick && b.onclick.toString().includes("'" + data.status + "'")) {
+          b.className = 'status-btn active-' + data.status;
+        }
+      });
+    }
+    if (data.comment) {
+      const input = document.getElementById('comment-' + id);
+      if (input) input.value = data.comment;
+    }
+  });
+  updateStats();
+}
+
+function updateStats() {
+  const state = getState();
+  const total = document.querySelectorAll('.q-card').length;
+  const done = Object.values(state).filter(d => d.status).length;
+  document.getElementById('stats').textContent = done + ' / ' + total + ' проверено';
+  document.getElementById('progress').style.width = Math.round(done/total*100) + '%';
+}
+
+function toggleOptions(el) {
+  const content = el.nextElementSibling;
+  if (content.classList.contains('open')) {
+    content.classList.remove('open');
+    el.textContent = el.textContent.replace('▼', '▶');
+  } else {
+    content.classList.add('open');
+    el.textContent = el.textContent.replace('▶', '▼');
+  }
+}
+
+function exportJSON() {
+  const state = getState();
+  const data = JSON.stringify(state, null, 2);
+  const blob = new Blob([data], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'elyne-questions-review-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+}
+
+function scrollTo(id) {
+  document.getElementById(id).scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function clearAll() {
+  if (confirm('Сбросить все оценки и комментарии?')) {
+    localStorage.removeItem(STORAGE_KEY);
+    document.querySelectorAll('.q-card').forEach(c => c.className = 'q-card status-none');
+    document.querySelectorAll('.status-btn').forEach(b => b.className = 'status-btn');
+    document.querySelectorAll('input[type=text]').forEach(i => i.value = '');
+    updateStats();
+  }
+}
+
+// Init
+loadState();
+updateStats();
+</script>
+</body>
+</html>
