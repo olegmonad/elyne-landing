@@ -847,7 +847,7 @@ function shareEvent(evId) {
   const ev = allEvents.find(e => e.id === evId);
   if (!ev) return;
   const shareUrl = ev.tg_msg_id
-    ? `https://t.me/elyne_community/${AFISHA_THREAD_ID}/${ev.tg_msg_id}`
+    ? `https://t.me/elyne_community/${ev.tg_msg_id}`
     : 'https://olegmonad.github.io/elyne-landing/community/afisha/';
   const text = ev.title;
   const tgShareUrl = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(text)}`;
@@ -869,10 +869,10 @@ function shareEvent(evId) {
 
 function eventCardHtml(ev) {
   const attending = attendedIds.has(ev.id);
-  // «Подробнее» → конкретный пост если есть tg_msg_id, иначе → вся группа
+  // «Подробнее» → конкретный пост если есть tg_msg_id, иначе → сайт мероприятия
   const tgUrl = ev.tg_msg_id
-    ? `https://t.me/elyne_community/${AFISHA_THREAD_ID}/${ev.tg_msg_id}`
-    : COMMUNITY_URL;
+    ? `https://t.me/elyne_community/${ev.tg_msg_id}`
+    : (ev.url || COMMUNITY_URL);
   const sourceBtn = `<button class="event-btn primary" onclick="openTgDetails('${tgUrl}')">Подробнее</button>`;
 
   return `<div class="event-card" data-cat="${ev.category}">
