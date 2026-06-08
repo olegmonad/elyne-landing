@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Подключение агентов друзьям — playbook провижининга</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="provisioningmd-playbook">PROVISIONING.md — Playbook провижининга агента Монад для нового клиента</h1>
+<p><strong>Owner:</strong> monad-tech-architect
+<strong>Версия:</strong> 1.0, 2026-06-08
+<strong>Цель:</strong> пошаговое руководство, как поднять копию нашего стека (Монад/Monada) на независимом VPS клиента — от нуля до работающего TG-бота.</p>
+<p><strong>Ключевой принцип:</strong> клиент владеет всем сам — своим VPS, своими аккаунтами, своими секретами. Мы только конфигурируем. Это и есть «независимость», которую он платит.</p>
+<hr>
+<h2 id="1-kyc-">1. Что друг делает сам (KYC-привязанное, автоматизировать нельзя)</h2>
+<p>Всё что ниже — клиент делает лично, своими руками, на свою настоящую личность. Это не баг и не лень с нашей стороны — это стена ToS и KYC, которую легально не перепрыгнуть.</p>
+<h3 id="11-anthropic">1.1. Аккаунт Anthropic + способ оплаты</h3>
+<p>Клиент регистрируется на <a href="https://claude.ai">claude.ai</a> на своё имя и телефон. Это необходимо — иначе аккаунт может быть заблокирован по ToS (раздел о третьих лицах, обновление февраль-апрель 2026).</p>
+<p>Три варианта оплаты — пусть клиент выбирает по ситуации:</p>
+<p><strong>Вариант А: Claude Max-подписка ($100/мес)</strong>
+Это то, что использует Олег. Max даёт 1M-контекст бесплатно (Opus включён), Sonnet для 1M-контекста платный. Клиент платит сам, напрямую claude.ai. Проблема: с РФ-карты не проходит. Решение: Heleket-карта (виртуальная, пополняется USDT через P2P) или попросить платёж через знакомых за рубежом. Подходит для клиентов, которым хочется максимум без счётчика.</p>
+<p><strong>Вариант Б: Anthropic API-ключ (pay-per-use)</strong>
+Клиент создаёт API-ключ в <a href="https://console.anthropic.com">console.anthropic.com</a>. Тот же барьер с картой. Решение — та же Heleket-карта. Подходит, если использование умеренное.</p>
+<p><strong>Вариант В: Российский шлюз (ProxyAPI или AITUNNEL) — рекомендуем для старта</strong>
+Клиент регистрируется на <a href="https://proxyapi.ru">proxyapi.ru</a> или <a href="https://aitunnel.ru">aitunnel.ru</a> своим email, пополняет баланс рублями с любой РФ-карты. Получает API-ключ. Этот ключ мы вставляем в конфиг вместо anthropic-ключа. Переключается одной строкой: <code>ANTHROPIC_BASE_URL=https://api.proxyapi.ru/v1</code>. Наценка 2-4x к прямому Anthropic, зато полностью без боли для клиента. Подходит для первых запусков.</p>
+<p><strong>Почему нельзя автоматизировать:</strong> Anthropic явно запрещает регистрацию аккаунтов от лица третьих лиц. КЮ-проверка привязана к личности: при регистрации нужен телефон, иногда карта. Если мы регистрируем &ldquo;за клиента&rdquo; — это нарушение ToS; при обнаружении оба аккаунта блокируются.</p>
+<h3 id="12-telegram-botfather">1.2. Telegram-бот через BotFather</h3>
+<p>Клиент:
+1. Открывает <a href="https://t.me/BotFather">@BotFather</a> в своём TG-аккаунте.
+2. Пишет <code>/newbot</code>.
+3. Придумывает имя (например «Монад-Васи») и username (например <code>vasya_monad_bot</code>).
+4. Получает токен вида <code>7491234567:AAE...</code> — это и есть <code>TELEGRAM_BOT_TOKEN</code>.
+5. Передаёт нам этот токен.</p>
+<p><strong>Почему нельзя автоматизировать:</strong> BotFather работает только через живой TG-аккаунт с телефонной верификацией. Автосоздание ботов программно — не предусмотрено и нарушает ToS Telegram.</p>
+<h3 id="13-github-">1.3. GitHub-аккаунт + приватное репо</h3>
+<p>Клиент регистрируется на github.com (достаточно бесплатного плана). Мы создаём там приватное репо (называем например <code>моняbot</code> или что нравится), инвайтим клиента как owner. Репо будет хранить конфиги, vault, скрипты — но не секреты (они шифруются через age).</p>
+<p>Если клиент не хочет возиться с GitHub вообще — можно обойтись без него на первом этапе. Но тогда нет версионирования, rollback при ошибке сложнее.</p>
+<p><strong>Почему нельзя автоматизировать:</strong> GitHub требует верификацию email + телефона для приватных репо. Автоматическая регистрация через скрипты нарушает <a href="https://docs.github.com/en/site-policy/github-terms/github-terms-of-service">GitHub Terms of Service</a> (раздел о массовой регистрации аккаунтов).</p>
+<h3 id="14-google-oauth-google-workspace-mcp">1.4. Google-аккаунт + OAuth (если нужен Google Workspace MCP)</h3>
+<p>Если клиент хочет интеграцию с Gmail/Google Calendar/Drive — он должен сам:
+1. Выдать нам OAuth-согласие через стандартный Google flow (мы присылаем ссылку, он кликает, разрешает).
+2. Результат — <code>refresh_token</code>, который мы кладём в зашифрованный <code>.env.age</code>.</p>
+<p>Без этого Google MCP не подключается. Если клиент не нужен Google Workspace — можно пропустить.</p>
+<h3 id="15-vps">1.5. VPS: клиент берёт сам или мы берём на него</h3>
+<p>Два варианта:
+- Клиент сам регистрируется у провайдера и оплачивает — сервер в его полной собственности.
+- Мы берём под него (на нашу карту), но тогда у нас есть root и клиент зависит от нас — это противоречит концепции «независимости».</p>
+<p><strong>Рекомендация для первых тестов:</strong> клиент оплачивает сам, мы помогаем выбрать тариф. Провайдеры — см. раздел 5.</p>
+<hr>
+<h2 id="2">2. Что поднимаем мы (пошаговый провижининг)</h2>
+<p>Предполагается: VPS получен, Ubuntu 22.04 или 24.04 установлена, есть root-доступ по SSH. Клиент передал нам: TG-токен бота, API-ключ (Anthropic или шлюз), свой TG user_id (его можно узнать через <a href="https://t.me/userinfobot">@userinfobot</a>).</p>
+<h3 id="21">2.1. Базовые зависимости сервера</h3>
+<pre><code>apt update &amp;&amp; apt upgrade -y
+apt install -y git curl wget jq age unzip python3 python3-pip yamllint sqlite3 shred
+</code></pre>
+<p><code>[СКРИПТУЕТСЯ]</code> — войдёт в bootstrap-скрипт.</p>
+<p><strong>Node.js 20.x:</strong></p>
+<pre><code>curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+apt install -y nodejs
+</code></pre>
+<p><code>[СКРИПТУЕТСЯ]</code></p>
+<p><strong>Bun (нужен для ClaudeClaw — это его runtime):</strong></p>
+<pre><code>curl -fsSL https://bun.sh/install | bash
+# После этого bun доступен в ~/.bun/bin/bun
+</code></pre>
+<p><code>[СКРИПТУЕТСЯ]</code></p>
+<p><strong>pipx + Python-пакеты:</strong></p>
+<pre><code>pip3 install pipx
+pipx ensurepath
+pipx install mempalace
+</code></pre>
+<p><code>[СКРИПТУЕТСЯ]</code></p>
+<p><strong>Playwright (для MCP-сервера playwright):</strong></p>
+<pre><code>npx playwright install --with-deps chromium
+</code></pre>
+<p><code>[СКРИПТУЕТСЯ]</code> — долго, ~5 минут, устанавливает браузер.</p>
+<h3 id="22-claude-code-cli">2.2. Установка Claude Code CLI</h3>
+<pre><code>npm install -g @anthropic-ai/claude-code
+</code></pre>
+<p><code>[СКРИПТУЕТСЯ]</code></p>
+<p>После установки — первая авторизация. Здесь есть нюанс:
+- Если клиент использует <strong>Max-подписку</strong>: <code>claude</code> при первом запуске откроет браузерный OAuth — клиент логинится сам в своём браузере. Это единственный ручной шаг авторизации.
+- Если клиент использует <strong>API-ключ</strong>: прописываем <code>ANTHROPIC_API_KEY</code> в <code>.env.age</code> и <code>ANTHROPIC_BASE_URL</code> (если через шлюз) — браузер не нужен.</p>
+<p><code>[РУЧНОЙ]</code> — первая авторизация OAuth для Max, клиент должен быть рядом с браузером.</p>
+<h3 id="23">2.3. Клонирование репозитория</h3>
+<pre><code>git clone git@github.com:USERNAME/REPONAME.git ~/Monada
+cd ~/Monada
+</code></pre>
+<p>Репо — либо форк нашего шаблонного, либо свежий клон с подготовленной структурой. <code>[СКРИПТУЕТСЯ]</code></p>
+<h3 id="24-age-">2.4. Генерация age-ключей (шифрование секретов)</h3>
+<pre><code>mkdir -p ~/.config/age
+age-keygen -o ~/.config/age/key.txt
+# Публичный ключ сохраняем отдельно для шифрования
+grep &quot;^# public key:&quot; ~/.config/age/key.txt | cut -d' ' -f4 &gt; ~/.config/age/recipient.pub
+</code></pre>
+<p><code>[СКРИПТУЕТСЯ]</code></p>
+<p>Приватный ключ <code>~/.config/age/key.txt</code> — нигде не хранится кроме сервера. Если потерян — секреты недоступны. Нужно сделать резервную копию в безопасное место (клиент сам хранит, например в Bitwarden).</p>
+<h3 id="25-add-secretsh">2.5. Заливка секретов через add-secret.sh</h3>
+<p>Для каждого секрета:</p>
+<pre><code>bash ~/Monada/bin/add-secret.sh TELEGRAM_BOT_TOKEN=&lt;токен&gt;
+bash ~/Monada/bin/add-secret.sh ANTHROPIC_API_KEY=&lt;ключ&gt;
+bash ~/Monada/bin/add-secret.sh ANTHROPIC_BASE_URL=&lt;если через шлюз&gt;
+# Опционально:
+bash ~/Monada/bin/add-secret.sh FAL_KEY=&lt;ключ fal.ai&gt;
+bash ~/Monada/bin/add-secret.sh GOOGLE_REFRESH_TOKEN=&lt;токен&gt;
+</code></pre>
+<p><code>[УЖЕ ЕСТЬ СКРИПТ bin/add-secret.sh]</code> — скрипт сам шифрует через age и коммитит в репо.</p>
+<h3 id="26-claudeclaw-settingsjson">2.6. Настройка ClaudeClaw (settings.json)</h3>
+<p>ClaudeClaw — Telegram-демон, который слушает входящие сообщения и спавнит <code>claude -p</code> на каждый. Его конфиг живёт в <code>.claude/claudeclaw/settings.json</code>.</p>
+<p>Что нужно заполнить под клиента:</p>
+<pre><code class="language-json">{
+  &quot;model&quot;: &quot;opus&quot;,
+  &quot;telegram&quot;: {
+    &quot;token&quot;: &quot;&lt;TELEGRAM_BOT_TOKEN&gt;&quot;,
+    &quot;allowedUserIds&quot;: [&lt;TG_USER_ID_клиента&gt;],
+    &quot;listenGroupIds&quot;: []
+  },
+  &quot;security&quot;: {
+    &quot;level&quot;: &quot;unrestricted&quot;
+  },
+  &quot;web&quot;: {
+    &quot;enabled&quot;: true,
+    &quot;host&quot;: &quot;127.0.0.1&quot;,
+    &quot;port&quot;: 3141
+  }
+}
+</code></pre>
+<p><code>[СКРИПТУЕТСЯ]</code> — <code>jq</code>-команда заполняет этот файл из переменных.</p>
+<p><strong>Важно про модель:</strong> если клиент на Max-подписке — ставим <code>"model": "opus"</code> (Opus 4 в Max бесплатен). Если на API-ключе или шлюзе — рекомендуем <code>"model": "sonnet"</code> (Sonnet дешевле в 5 раз, для обычных задач хватает). Подробнее — в <a href="research/tech/2026-04-26-anthropic-reseller-pathways.md">reseller-research</a>.</p>
+<h3 id="27-claudeclaw">2.7. Установка ClaudeClaw как плагина</h3>
+<p>ClaudeClaw устанавливается как Claude Code Plugin:</p>
+<pre><code>claude plugins install claudeclaw
+</code></pre>
+<p>После установки появляется в <code>~/.claude/plugins/cache/claudeclaw/</code>.</p>
+<p><code>[СКРИПТУЕТСЯ]</code> — одна команда.</p>
+<h3 id="28-mcp-mcpjson">2.8. Настройка MCP-серверов (.mcp.json)</h3>
+<p>Файл <code>.mcp.json</code> в корне репо определяет, какие MCP-серверы доступны агенту. Для нового клиента — копируем наш шаблон и правим пути.</p>
+<p>Обязательные пути под нового пользователя (все <code>/home/oleg/</code> → <code>/home/USERNAME/</code>):</p>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;mempalace&quot;: {
+      &quot;type&quot;: &quot;stdio&quot;,
+      &quot;command&quot;: &quot;/home/USERNAME/.local/pipx/venvs/mempalace/bin/python&quot;,
+      &quot;args&quot;: [&quot;-m&quot;, &quot;mempalace.mcp_server&quot;, &quot;--palace&quot;, &quot;/home/USERNAME/Monada/memory&quot;]
+    },
+    &quot;web-search&quot;: {
+      &quot;type&quot;: &quot;stdio&quot;,
+      &quot;command&quot;: &quot;node&quot;,
+      &quot;args&quot;: [&quot;/home/USERNAME/mcp-servers/web-search-mcp/dist/index.js&quot;],
+      &quot;env&quot;: {&quot;BROWSER_HEADLESS&quot;: &quot;true&quot;, &quot;MAX_BROWSERS&quot;: &quot;2&quot;}
+    },
+    &quot;playwright&quot;: {
+      &quot;type&quot;: &quot;stdio&quot;,
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;-y&quot;, &quot;@playwright/mcp@0.0.70&quot;]
+    },
+    &quot;telegram-mcp&quot;: {
+      &quot;type&quot;: &quot;stdio&quot;,
+      &quot;command&quot;: &quot;/home/USERNAME/Monada/bin/telegram-mcp-wrapper.sh&quot;
+    }
+  }
+}
+</code></pre>
+<p><code>[СКРИПТУЕТСЯ]</code> — <code>sed -i</code> заменяет <code>/home/oleg/</code> на <code>/home/USERNAME/</code> по всем файлам.</p>
+<h3 id="29-personas-claudemd">2.9. Настройка personas и CLAUDE.md</h3>
+<p>Создаём персональный файл агента для клиента. Берём <code>.claude/personas/boris.md</code> как шаблон, меняем:
+- Имя агента (например «Максим», «Иван» — как клиент хочет называть своего бота)
+- Имя владельца («Олег» → «Вася»)
+- Часовой пояс в <code>config.yaml</code></p>
+<p><code>[РУЧНОЙ]</code> — выбор имени и деталей персонажа лучше обсудить с клиентом. Занимает 10-15 минут.</p>
+<h3 id="210-systemd-">2.10. Настройка systemd-сервисов</h3>
+<p>Создаём юнит для автозапуска:</p>
+<pre><code class="language-ini"># ~/.config/systemd/user/claude-code.service
+[Unit]
+Description=ClaudeClaw daemon for &lt;NAME&gt;-bot
+After=network-online.target
+Wants=network-online.target
+StartLimitBurst=5
+StartLimitIntervalSec=600
+
+[Service]
+Type=simple
+ExecStart=/home/USERNAME/Monada/bin/start.sh
+Restart=on-failure
+RestartSec=10
+KillMode=mixed
+TimeoutStopSec=15
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target
+</code></pre>
+<pre><code>systemctl --user daemon-reload
+systemctl --user enable claude-code.service
+systemctl --user start claude-code.service
+# Чтобы user-сервисы стартовали без входа:
+loginctl enable-linger USERNAME
+</code></pre>
+<p><code>[СКРИПТУЕТСЯ]</code></p>
+<h3 id="211-crontab-watchdog">2.11. Настройка crontab (мониторинг и watchdog)</h3>
+<pre><code class="language-crontab"># Heartbeat — трогаем файл каждые 15 мин (watchdog следит за ним)
+*/15 * * * * /home/USERNAME/Monada/bin/heartbeat-touch.sh &gt;/dev/null 2&gt;&amp;1
+# Мониторинг размера jsonl-файла сессии (защита от bloat и OOM)
+*/10 * * * * /home/USERNAME/Monada/bin/jsonl-size-monitor.sh &gt;&gt; /home/USERNAME/Monada/.claude/claudeclaw/logs/jsonl-monitor.log 2&gt;&amp;1
+# Архивирование jsonl раз в сутки в 4:15
+15 4 * * * /home/USERNAME/Monada/bin/jsonl-archive.sh &gt;&gt; /home/USERNAME/Monada/.claude/claudeclaw/logs/jsonl-archive.log 2&gt;&amp;1
+# Watchdog: если агент завис больше 45 мин — авторестарт
+* * * * * /home/USERNAME/Monada/bin/claude-hang-watchdog.sh &gt;/dev/null 2&gt;&amp;1
+# Мониторинг диска 4 раза в сутки
+23 0,6,12,18 * * * /home/USERNAME/Monada/bin/disk-monitor.sh &gt;&gt; /home/USERNAME/Monada/.claude/claudeclaw/logs/disk-monitor.log 2&gt;&amp;1
+</code></pre>
+<p><code>[СКРИПТУЕТСЯ]</code> — добавляется через <code>crontab -l | cat - new_lines | crontab -</code>.</p>
+<h3 id="212-canary-">2.12. Проверка живости (canary-тест)</h3>
+<p>После старта:
+1. Агент при первом запуске присылает сообщение в TG с кодом <code>CANARY-XXXXXXXX</code>.
+2. Клиент видит сообщение — агент жив.
+3. Отправляем тестовый вопрос боту: «Привет, ты кто?» — должен ответить по персоне.</p>
+<p><code>[РУЧНОЙ]</code> — нельзя автоматизировать, нужен живой человек с TG.</p>
+<hr>
+<h2 id="3-bootstrap-">3. Bootstrap-скрипт: концепция</h2>
+<p>Единый <code>bootstrap-agent.sh</code> — запускается на свежем VPS от root, делает шаги 2.1–2.11 в одну команду.</p>
+<h3 id="_1">Что принимает на вход (флаги или интерактивный ввод):</h3>
+<pre><code>bash bootstrap-agent.sh \
+  --username vasya \
+  --agent-name &quot;Монад-Васи&quot; \
+  --tg-token &quot;7491234567:AAE...&quot; \
+  --tg-user-id &quot;123456789&quot; \
+  --anthropic-key &quot;sk-ant-...&quot; \
+  --anthropic-base-url &quot;https://api.proxyapi.ru/v1&quot; \
+  --repo-url &quot;git@github.com:vasya/monadbot.git&quot; \
+  --timezone &quot;Europe/Moscow&quot;
+</code></pre>
+<p>Опциональные параметры (могут добавляться позже через <code>add-secret.sh</code>):
+- <code>--fal-key</code> — для генерации изображений
+- <code>--google-refresh-token</code> — для Google Workspace MCP</p>
+<h3 id="_2">Структура скрипта (псевдокод):</h3>
+<pre><code class="language-bash">#!/bin/bash
+# bootstrap-agent.sh
+set -euo pipefail
+
+# 0. Парсинг аргументов (или интерактивный ввод если не переданы)
+parse_args &quot;$@&quot;
+confirm_summary           # Показать сводку: &quot;Создаю агента X для @Y, шлюз Z. OK?&quot;
+
+# 1. Создание пользователя (если нужен отдельный unix-user)
+create_unix_user &quot;$USERNAME&quot;
+loginctl enable-linger &quot;$USERNAME&quot;
+
+# 2. Установка системных пакетов
+install_system_deps       # apt: git curl wget jq age sqlite3 yamllint ...
+
+# 3. Node.js 20 + Bun
+install_nodejs
+install_bun
+
+# 4. Python + pipx + mempalace
+install_python_deps
+
+# 5. Playwright браузер
+install_playwright
+
+# 6. Claude Code CLI
+npm install -g @anthropic-ai/claude-code
+
+# 7. Клонирование шаблонного репо
+clone_repo &quot;$REPO_URL&quot; &quot;/home/$USERNAME/Monada&quot;
+
+# 8. Генерация age-ключей
+generate_age_keys &quot;/home/$USERNAME&quot;
+
+# 9. Заливка секретов
+add_secret TELEGRAM_BOT_TOKEN &quot;$TG_TOKEN&quot;
+add_secret ANTHROPIC_API_KEY &quot;$ANTHROPIC_KEY&quot;
+[[ -n &quot;$ANTHROPIC_BASE_URL&quot; ]] &amp;&amp; add_secret ANTHROPIC_BASE_URL &quot;$ANTHROPIC_BASE_URL&quot;
+
+# 10. Настройка ClaudeClaw settings.json
+patch_claudeclaw_settings &quot;$TG_TOKEN&quot; &quot;$TG_USER_ID&quot;
+
+# 11. Настройка .mcp.json (замена путей)
+patch_mcp_paths &quot;$USERNAME&quot;
+
+# 12. Настройка config.yaml (timezone, agent name)
+patch_config &quot;$TIMEZONE&quot; &quot;$AGENT_NAME&quot;
+
+# 13. Установка ClaudeClaw плагина
+su -c &quot;claude plugins install claudeclaw&quot; &quot;$USERNAME&quot;
+
+# 14. Установка MCP web-search сервера
+install_web_search_mcp &quot;/home/$USERNAME&quot;
+
+# 15. systemd-юнит
+install_systemd_unit &quot;$USERNAME&quot;
+
+# 16. Crontab
+install_crontab &quot;$USERNAME&quot;
+
+# 17. Первый старт
+systemctl --user start claude-code.service
+
+echo &quot;==========================================&quot;
+echo &quot;Bootstrap завершён. Проверь TG — бот должен написать CANARY-код.&quot;
+echo &quot;Если не написал в течение 60 секунд — смотри логи:&quot;
+echo &quot;  journalctl --user -u claude-code.service -n 50&quot;
+echo &quot;==========================================&quot;
+</code></pre>
+<h3 id="_3">Что скрипт НЕ может сделать:</h3>
+<ul>
+<li>Войти в claude.ai OAuth (нужен браузер клиента для Max-подписки).</li>
+<li>Создать TG-бота в BotFather.</li>
+<li>Зарегистрировать аккаунт в Anthropic/ProxyAPI/GitHub от имени клиента.</li>
+<li>Выдать Google OAuth-согласие.</li>
+</ul>
+<p>Эти 4 шага всегда остаются ручными — <strong>это жёсткая стена KYC/ToS</strong>.</p>
+<hr>
+<h2 id="4">4. Инвентарь стека: что переносить другу</h2>
+<h3 id="mcp-">MCP-серверы</h3>
+<table>
+<thead>
+<tr>
+<th>Сервер</th>
+<th>Обязательно</th>
+<th>Что даёт</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mempalace</td>
+<td>Да</td>
+<td>Долгосрочная память агента (дневник, KG)</td>
+</tr>
+<tr>
+<td>telegram-mcp</td>
+<td>Да</td>
+<td>Отправка сообщений в TG из агента</td>
+</tr>
+<tr>
+<td>web-search</td>
+<td>Да</td>
+<td>Поиск в интернете</td>
+</tr>
+<tr>
+<td>playwright</td>
+<td>Опционально</td>
+<td>Управление браузером, парсинг сайтов</td>
+</tr>
+<tr>
+<td>fal-ai</td>
+<td>Опционально</td>
+<td>Генерация изображений (нужен FAL API-ключ)</td>
+</tr>
+<tr>
+<td>google-workspace</td>
+<td>Опционально</td>
+<td>Gmail, Calendar, Drive (нужен Google OAuth)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="claudeclaw-jobs-cron-">ClaudeClaw jobs (cron-задачи агента)</h3>
+<table>
+<thead>
+<tr>
+<th>Job</th>
+<th>Обязательно</th>
+<th>Что делает</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>morning-digest.md</td>
+<td>Рекомендуется</td>
+<td>Утренний дайджест погода+новости в 9:00 МСК</td>
+</tr>
+<tr>
+<td>mempalace-snapshot.md</td>
+<td>Да</td>
+<td>Бэкап памяти каждую ночь в 3:17</td>
+</tr>
+<tr>
+<td>deep-dream.md</td>
+<td>Опционально</td>
+<td>Периодический анализ и синтез опыта</td>
+</tr>
+<tr>
+<td>weekly-self-review.md</td>
+<td>Опционально</td>
+<td>Еженедельный обзор</td>
+</tr>
+<tr>
+<td>disk-monitor.md</td>
+<td>Да</td>
+<td>Алерт при заполнении диска</td>
+</tr>
+</tbody>
+</table>
+<p>Специфичные для Elyne (elyne-community-*, cleanup-past-afisha-events и др.) — не переносить, они привязаны к продукту Олега.</p>
+<h3 id="systemd-">Systemd-сервисы</h3>
+<table>
+<thead>
+<tr>
+<th>Сервис</th>
+<th>Обязательно</th>
+<th>Что делает</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>claude-code.service</td>
+<td>Да</td>
+<td>Основной демон ClaudeClaw</td>
+</tr>
+<tr>
+<td>monada-watchdog.service + .timer</td>
+<td>Да</td>
+<td>Внешний watchdog (авторестарт при зависании)</td>
+</tr>
+<tr>
+<td>tg-api-logger.service</td>
+<td>Нет</td>
+<td>Логирование TG API через mitmproxy (дебаг)</td>
+</tr>
+<tr>
+<td>ya-zdes-*</td>
+<td>Нет</td>
+<td>Специфичные напоминалки Олега</td>
+</tr>
+</tbody>
+</table>
+<h3 id="crontab-">Crontab-задачи</h3>
+<table>
+<thead>
+<tr>
+<th>Задача</th>
+<th>Обязательно</th>
+<th>Интервал</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>heartbeat-touch.sh</td>
+<td>Да</td>
+<td>Каждые 15 мин</td>
+</tr>
+<tr>
+<td>jsonl-size-monitor.sh</td>
+<td>Да</td>
+<td>Каждые 10 мин</td>
+</tr>
+<tr>
+<td>jsonl-archive.sh</td>
+<td>Да</td>
+<td>Раз в сутки в 4:15</td>
+</tr>
+<tr>
+<td>claude-hang-watchdog.sh</td>
+<td>Да</td>
+<td>Каждую минуту</td>
+</tr>
+<tr>
+<td>disk-monitor.sh</td>
+<td>Да</td>
+<td>4 раза в сутки</td>
+</tr>
+</tbody>
+</table>
+<h3 id="claude-code-claudesettingsjson-hooks">Хуки Claude Code (.claude/settings.json → hooks)</h3>
+<table>
+<thead>
+<tr>
+<th>Хук</th>
+<th>Обязательно</th>
+<th>Что делает</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SessionStart: session-start-gitpull.sh</td>
+<td>Да</td>
+<td>git pull при старте (актуальный код)</td>
+</tr>
+<tr>
+<td>SessionStart: session-start-loadlogs.sh</td>
+<td>Да</td>
+<td>Загрузка дневника MemPalace в контекст</td>
+</tr>
+<tr>
+<td>SessionStart: session-start.sh</td>
+<td>Да</td>
+<td>TG-уведомление о старте с canary</td>
+</tr>
+<tr>
+<td>PostToolUse: post-write.sh</td>
+<td>Да</td>
+<td>Автокоммит после правки файлов</td>
+</tr>
+<tr>
+<td>PreToolUse: pre-write-sensitive.py</td>
+<td>Да</td>
+<td>Защита от записи секретов в репо</td>
+</tr>
+<tr>
+<td>Stop: stop-ensure-text.py</td>
+<td>Да</td>
+<td>Гарантия текстового ответа (иначе TG получает пустой ответ)</td>
+</tr>
+<tr>
+<td>UserPromptSubmit: telegram-reply-context.py</td>
+<td>Опционально</td>
+<td>Добавляет контекст reply/forward из TG</td>
+</tr>
+<tr>
+<td>SessionStart: session-start-oi-brief.sh</td>
+<td>Опционально</td>
+<td>Загрузка OI-паттернов (нужен vault/oi/)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_4">Файлы конфигурации</h3>
+<table>
+<thead>
+<tr>
+<th>Файл</th>
+<th>Что настраивается</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>config.yaml</td>
+<td>Часовой пояс, время дайджеста, фильтры новостей</td>
+</tr>
+<tr>
+<td>.claude/claudeclaw/settings.json</td>
+<td>Модель, TG-токен, allowedUserIds, порт</td>
+</tr>
+<tr>
+<td>.mcp.json</td>
+<td>Пути к MCP-серверам</td>
+</tr>
+<tr>
+<td>.claude/settings.json</td>
+<td>Хуки, permissions, plugins</td>
+</tr>
+<tr>
+<td>.claude/personas/<name>.md</td>
+<td>Персона агента (имя, тон, правила)</td>
+</tr>
+<tr>
+<td>.claude/CLAUDE.md</td>
+<td>Основной контекстный файл</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="5-vps">5. Хостинг: требования к VPS</h2>
+<h3 id="_5">Минимальные требования</h3>
+<table>
+<thead>
+<tr>
+<th>Ресурс</th>
+<th>Минимум</th>
+<th>Рекомендуется</th>
+<th>Почему</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RAM</td>
+<td>2 GB</td>
+<td>4 GB</td>
+<td>Claude Code + Bun + MCP-серверы в сумме потребляют ~800 MB в покое. При обработке больших контекстов (1M токенов) может уходить до 1.5-2 GB. На 2 GB будет swap, на 4 GB — свободно.</td>
+</tr>
+<tr>
+<td>CPU</td>
+<td>1 vCPU</td>
+<td>2 vCPU</td>
+<td>Агент не CPU-интенсивен. 1 vCPU достаточно, но при параллельных задачах (несколько MCP одновременно) — 2 лучше.</td>
+</tr>
+<tr>
+<td>Диск</td>
+<td>20 GB SSD</td>
+<td>40 GB SSD</td>
+<td>MemPalace база растёт, Playwright браузер занимает ~500 MB, vault/logs — ещё накапливается. У Олега на 30 GB уже 97% занято.</td>
+</tr>
+<tr>
+<td>ОС</td>
+<td>Ubuntu 22.04</td>
+<td>Ubuntu 22.04 LTS</td>
+<td>Проверено. 24.04 должна работать, не тестировалось. Никаких контейнеров типа OpenVZ — нужен полноценный Linux (systemd, loginctl).</td>
+</tr>
+<tr>
+<td>Сеть</td>
+<td>Без РФ-блокировок</td>
+<td>Без РФ-блокировок</td>
+<td>Агент обращается к api.anthropic.com (или шлюзу), api.telegram.org, github.com. Провайдеры внутри РФ иногда блокируют Telegram-API на уровне DPI. Лучше брать VPS за рубежом или у провайдера без этих проблем.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="-">Важная заметка про «веб-хостинг»</h3>
+<p>Обычный «веб-хостинг» (типа того что Олег называет «изхостинг» или «timeweb-подобный») для этого <strong>не подойдёт</strong>. Причины:
+- Нет доступа по SSH как root.
+- Нет systemd (только Apache/Nginx для сайтов).
+- Нет возможности запустить фоновые демоны.
+- Нет полного Linux-окружения.</p>
+<p>Нужен именно <strong>VPS (виртуальный частный сервер)</strong> с KVM-виртуализацией и полным Ubuntu. Это другая категория услуги — обычно от 300-600 руб/мес за минимальный тариф.</p>
+<h3 id="_6">Варианты провайдеров (требования, не реклама)</h3>
+<p>Ориентиры по критериям — <strong>хорошая сеть за рубежом без блокировок + принимают РФ-карты</strong>:</p>
+<ol>
+<li>
+<p><strong>Timeweb Cloud VPS</strong> — российский провайдер, принимает рублёвые карты, есть KVM, Ubuntu 22.04. Вопрос — нет ли ограничений на исходящие к Telegram/Anthropic. Нужно проверить перед покупкой.</p>
+</li>
+<li>
+<p><strong>Selectel VPS</strong> — ещё один российский с KVM, хорошая репутация среди разработчиков. Аналогичный вопрос про блокировки.</p>
+</li>
+<li>
+<p><strong>Hetzner (Германия) / DigitalOcean / Vultr</strong> — зарубежные провайдеры, никаких блокировок, отличная сеть. Не принимают РФ-карты напрямую, но через Heleket-карту (USDT) или карту родственников за рубежом — работают. Цена стартует от ~€5/мес (3-4 GB RAM, 40 GB диск).</p>
+</li>
+</ol>
+<p><strong>Итоговая рекомендация:</strong> если есть возможность оплатить зарубежный VPS (Hetzner CX22 или аналог, €5-7/мес) — берём его. Если только рублёвая карта — Timeweb Cloud или Selectel, но сначала убедиться что Telegram API доступен.</p>
+<hr>
+<h2 id="6">6. Дорожная карта автоматизации</h2>
+<h3 id="1-manual">Этап 1: Manual (сейчас, первый друг)</h3>
+<p>Режим: Олег сидит рядом и делает по этому чеклисту.</p>
+<p>Что ручное:
+- Все KYC-шаги клиента (TG-бот, аккаунты, OAuth)
+- Настройка персоны и имени агента
+- Первая авторизация <code>claude</code> OAuth
+- Canary-проверка</p>
+<p>Что автоматизировано уже сейчас:
+- <code>add-secret.sh</code> — шифрует и коммитит секреты
+- <code>apply-config.sh</code>, <code>apply-settings.sh</code> — патчат конфиг с рестартом и канарейкой
+- session-start хуки, watchdog, cron — из коробки после настройки</p>
+<p>Примерное время провижининга вручную: <strong>2-4 часа</strong> (основное время — ожидание установок и разбор непоняток).</p>
+<h3 id="2-semi-auto">Этап 2: Semi-auto (после первого друга)</h3>
+<p>Цель: написан bootstrap-agent.sh (см. раздел 3), проверен на реальном VPS.</p>
+<p>Что остаётся ручным (KYC-стена):
+- Все 4 пункта раздела 1 — клиент делает сам, никак не автоматизируется.</p>
+<p>Что переходит в автомат:
+- Установка всех зависимостей одной командой.
+- Клонирование + патч путей + заливка секретов.
+- systemd + crontab.</p>
+<p>Примерное время: <strong>30-40 минут</strong> (из них 20 мин — ожидание установки Playwright).</p>
+<h3 id="3-near-auto">Этап 3: Near-auto (горизонт)</h3>
+<p>Технически реализуемо дополнительно:
+- Веб-форма (или TG-бот для нас) куда клиент вводит TG-токен, API-ключ, TG user_id — и мы запускаем bootstrap по SSH автоматически.
+- Шаблонное репо с GitHub Template Repository — один клик, клиент получает свой форк.
+- Автопровижининг VPS через API провайдера (Hetzner/DO API) — если клиент оплачивает у них по карте, мы деплоим к ним скриптом.</p>
+<p><strong>Жёсткая стена, которую не перейти:</strong>
+- Авторизация <code>claude</code> OAuth для Max-подписки — браузер клиента, обойти нельзя.
+- Создание TG-бота — только через BotFather лично.
+- Регистрация аккаунтов Anthropic/GitHub/Google от лица клиента — прямо запрещено ToS всех трёх сервисов.
+- Настройка персоны — технически можно автоматизировать, но результат будет хуже чем 15 минут живого разговора с клиентом.</p>
+<p><strong>Честный предел автоматизации:</strong> ~85-90% работы автоматизируется. Оставшиеся 10-15% — это KYC и первый контакт с клиентом, и это правильно: именно эти шаги дают клиенту ощущение что это ЕГО ассистент, не наш.</p>
+<hr>
+<h2 id="7-tos-kyc-">7. ToS и KYC-риски</h2>
+<p>Кратко — подробности в <a href="research/tech/2026-04-26-anthropic-reseller-pathways.md">research/tech/2026-04-26-anthropic-reseller-pathways.md</a>.</p>
+<p><strong>Главное правило:</strong> каждый клиент владеет своими аккаунтами и платит своей картой. Мы — инсталляторы и технические помощники, не посредники в перепродаже API.</p>
+<p><strong>Конкретные риски:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Риск</th>
+<th>Статус</th>
+<th>Митигейшн</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Anthropic: регистрация аккаунтов от лица третьих лиц</td>
+<td>Прямо запрещено ToS (раздел о третьих лицах)</td>
+<td>Не делаем. Клиент регистрируется сам.</td>
+</tr>
+<tr>
+<td>Anthropic: один master-key для нескольких клиентов</td>
+<td>Серая зона (wrapper-SaaS)</td>
+<td>Каждый клиент = свой API-ключ в своём аккаунте</td>
+</tr>
+<tr>
+<td>GitHub: массовая автоматическая регистрация</td>
+<td>Запрещено ToS</td>
+<td>Не делаем.</td>
+</tr>
+<tr>
+<td>Google: OAuth от чужого имени</td>
+<td>Технически невозможно без фишинга, запрещено</td>
+<td>Стандартный OAuth-flow, клиент сам кликает согласие</td>
+</tr>
+<tr>
+<td>Telegram: автосоздание ботов</td>
+<td>Не поддерживается API BotFather</td>
+<td>Клиент сам создаёт через @BotFather</td>
+</tr>
+<tr>
+<td>VPS-провайдер (зарубежный): санкции РФ</td>
+<td>Реальный риск (Hetzner, DO)</td>
+<td>Клиент оплачивает сам, данные на его аккаунте; при риске — переезд на другой VPS за 1-2 дня</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="_7">Открытые вопросы к Олегу</h2>
+<p>Перед первым провижинингом нужны ответы:</p>
+<ol>
+<li>
+<p><strong>Имя агента для друга.</strong> Это будет «Монад-Коля» / «персональный Монад» / что-то своё? Это влияет на то, что мы пишем в persona-файл. Лучше обсудить с другом лично — это его ассистент.</p>
+</li>
+<li>
+<p><strong>Модель: Max-подписка или шлюз?</strong> Если друг готов разобраться с Heleket-картой и USDT — Max ($100/мес, без счётчика) удобнее. Если хочет минимальный порог входа — ProxyAPI (рубли, но дороже на токен). Это нужно решить до провижининга, потому что меняет шаг авторизации.</p>
+</li>
+<li>
+<p><strong>Нужен ли Google Workspace MCP?</strong> Если да — другу придётся выдавать OAuth-согласие во время провижининга. Если нет (не пользуется Google Calendar/Gmail) — пропускаем, добавим позже.</p>
+</li>
+<li>
+<p><strong>Хостинг: кто берёт VPS?</strong> Друг сам регистрируется у провайдера и оплачивает, или Олег оплачивает за него? Первый вариант правильнее для концепции «независимости» и чище по ответственности. Но надо понять, готов ли друг разобраться с провайдером сам (там 10-15 минут, не сложно).</p>
+</li>
+<li>
+<p><strong>Какие фичи из опциональных реально нужны на старте?</strong> fal-ai (генерация картинок), playwright (браузер), Google Workspace — каждый добавляет +5-10 минут к провижинингу и требует отдельного API-ключа. Рекомендую на первом запуске ограничиться core-набором: TG-бот + память + веб-поиск. Остальное — по запросу.</p>
+</li>
+</ol>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
