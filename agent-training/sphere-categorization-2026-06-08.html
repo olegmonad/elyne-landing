@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Система категоризации диалога по сферам</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="_1">Задача</h1>
+<p>Диалог течёт естественно: начался про «Состояние» — ушёл в «Реализацию». Сейчас весь текст падает в формальный раздел (<code>messages.sphere_id</code>), где физически идёт разговор. Смысл оседает не там → данные грязные.</p>
+<p><strong>Нужно:</strong> агент в фоне разбирает поток на смысловые фрагменты и относит каждый в ту сферу, о которой он <em>по сути</em> — не мешая течению диалога. Чтобы данные упорядочивались по смыслу.</p>
+<hr>
+<h1 id="0">0. КАНОН СФЕР (открытый пункт — решить с Олегом)</h1>
+<p>Агенты вскрыли расхождение в номенклатуре. Три разных набора 10 сфер ходят по проекту:
+- <code>bot.py</code> SYSTEM_PROMPT: …Знание и мудрость, Проявленность
+- пайплайн-черновик: …razvitie, rod (другие slug)
+- админка прода: «Дети и наследие», «Развитие и мудрость»</p>
+<p><strong>Классификатор обязан выдавать ровно те id, что лежат в <code>messages.sphere_id</code> и в продукте.</strong> Пока за канон беру набор из живого <code>bot.py</code> (его использует Ядро-бот сейчас), slug — ниже. <strong>До внедрения Олег фиксирует финальный ID-набор</strong>, иначе разметка ляжет в несуществующие сферы.</p>
+<table>
+<thead>
+<tr>
+<th>id (slug)</th>
+<th>Сфера</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sostoyanie</code></td>
+<td>Я и состояние</td>
+</tr>
+<tr>
+<td><code>resursy</code></td>
+<td>Ресурсы и уровень жизни</td>
+</tr>
+<tr>
+<td><code>realizatsiya</code></td>
+<td>Реализация и влияние</td>
+</tr>
+<tr>
+<td><code>dom_semya</code></td>
+<td>Дом и семья</td>
+</tr>
+<tr>
+<td><code>lyubov</code></td>
+<td>Любовь и партнёрство</td>
+</tr>
+<tr>
+<td><code>tvorchestvo</code></td>
+<td>Творчество и начинания</td>
+</tr>
+<tr>
+<td><code>znanie</code></td>
+<td>Знание и мудрость</td>
+</tr>
+<tr>
+<td><code>svoboda</code></td>
+<td>Свобода и масштаб</td>
+</tr>
+<tr>
+<td><code>okruzhenie</code></td>
+<td>Окружение</td>
+</tr>
+<tr>
+<td><code>proyavlennost</code></td>
+<td>Проявленность</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h1 id="1">1. ЧТО ИЗВЛЕКАЕМ — единицы смысла (из реплик ЮЗЕРА)</h1>
+<p>Работа на уровне <strong>фрагмента</strong>, не реплики целиком. Одна реплика = 1–4 единицы.</p>
+<table>
+<thead>
+<tr>
+<th>Тип (slug)</th>
+<th>Что это</th>
+<th>В промпт сцены / модель</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tsennost</code></td>
+<td>устойчивый принцип, по которому человек оценивает</td>
+<td>Ориентиры — отбор «своих» деталей сцены</td>
+</tr>
+<tr>
+<td><code>zhelanie</code></td>
+<td>конкретное намерение / образ желаемого</td>
+<td>Вектор — сюжет сцены</td>
+</tr>
+<tr>
+<td><code>sostoyanie_tek</code></td>
+<td>как чувствует себя сейчас</td>
+<td>контекст восприятия</td>
+</tr>
+<tr>
+<td><code>sostoyanie_zhel</code></td>
+<td>как хочет себя чувствовать</td>
+<td>эмоциональный тон сцены</td>
+</tr>
+<tr>
+<td><code>fakt</code></td>
+<td>обстоятельство жизни (кто/где/с кем)</td>
+<td>реализм, узнаваемость</td>
+</tr>
+<tr>
+<td><code>obraz</code></td>
+<td>метафора / визуальный образ (<strong>беречь дословно</strong>)</td>
+<td>прямой материал генерации</td>
+</tr>
+<tr>
+<td><code>napryazhenie</code></td>
+<td>конфликт / боль / сопротивление</td>
+<td>точка разрешения в сцене</td>
+</tr>
+<tr>
+<td><code>resurs</code></td>
+<td>на что опирается (сила, навык, поддержка)</td>
+<td>элементы опоры в сцене</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-">4-слойная модель личности (куда копятся единицы)</h2>
+<pre><code>Слой 1 КОНТЕКСТ   ← fakt                         (медленный, реализм)
+Слой 2 СОСТОЯНИЯ  ← sostoyanie_tek/_zhel         (динамичный, тон сцены)
+Слой 3 ОРИЕНТИРЫ  ← tsennost, resurs             (накопительный, «своё»)
+Слой 4 ВЕКТОР     ← zhelanie, napryazhenie, obraz (живой, Life Vector + сюжет)
+</code></pre>
+<h2 id="_2">Что НЕ извлекать</h2>
+<p>Вежливость («ок/спасибо»), реакции на бота («интересный вопрос»), мета-вопросы, «не знаю» без содержания, слишком общее («хочу всего побольше»), чужие слова («мама говорила…» → метка «чужой голос», не в модель). Повтор уже извлечённого → поднять confidence, не плодить дубль.</p>
+<hr>
+<h1 id="2-">2. МУЛЬТИ-ЛЕЙБЛ + лестница разрешения</h1>
+<ul>
+<li>Одна единица → <strong>1 сфера primary, максимум 2</strong> (primary+secondary). Три = фрагмент не разбит.</li>
+<li>secondary ставить только если у обеих сфер уверенность ≥ medium. <code>low</code>-secondary не ставим.</li>
+<li>primary = где <strong>субъект желания/действия</strong>; secondary = контекст/причина.</li>
+<li>Пример: «хочу запустить дело, чтобы наконец чувствовать себя живым» → primary <code>realizatsiya</code> + secondary <code>sostoyanie</code>.</li>
+</ul>
+<p><strong>Лестница, когда тянет в две сферы:</strong>
+1. Адресат желания: внутрь себя → Состояние/Знание · к одному → Любовь · к родне/дому → Дом · к кругу → Окружение · к миру/публике → Проявленность/Реализация.
+2. Природа денег/благ: опора и достаток → Ресурсы · рычаг независимости → Свобода · мерило дела → Реализация.
+3. Стадия дела: создать/начать → Творчество · достичь/повлиять/след → Реализация.
+4. Чувство vs процесс: ясность-как-ощущение → Состояние · понимание-как-путь → Знание.
+5. 50/50 → клади в сферу, <strong>названную словом человека</strong>, не выводи логически. («спокойствие за будущее» = Ресурсы по слову «будущее», хотя «спокойствие» звучит как Состояние.)</p>
+<p><strong>Самые частые ошибки классификатора</strong> (собрать тест из 10–15 реальных фраз ДО доверия разметке): пары <code>sostoyanie ↔ resursy</code> и <code>sostoyanie ↔ svoboda</code>.</p>
+<hr>
+<h1 id="3">3. ТАКСОНОМИЯ МАРКЕРОВ (ядро + как отличать соседей)</h1>
+<p>Полная версия с маркерами по каждой сфере и всеми границами — в этом же файле ниже (раздел «Приложение А»). Принцип классификатора: <strong>спрашивай не «про что слова», а «про какой запрос человека».</strong> Деньги могут быть про Ресурсы, Свободу или Реализацию — зависит от того, что человек хочет.</p>
+<p>Ключевые разводки соседей:
+- <strong>Состояние vs Свобода</strong>: покой <em>внутри</em> vs покой <em>от внешних условий</em>. Убрать обстоятельства — желание осталось? → Состояние.
+- <strong>Ресурсы vs Свобода</strong>: «иметь и не бояться» → Ресурсы · «мочь и не зависеть» → Свобода.
+- <strong>Реализация vs Творчество</strong>: создать/процесс → Творчество · влияние/след/признание → Реализация.
+- <strong>Дом vs Любовь</strong>: множество и корни → Дом · двое и близость → Любовь.
+- <strong>Состояние vs Знание</strong>: ясность-чувство → Состояние · понимание-путь → Знание.
+- <strong>Реализация vs Проявленность</strong>: «что я меняю» → Реализация · «каким меня видят» → Проявленность.</p>
+<hr>
+<h1 id="4">4. ПРОМПТ КЛАССИФИКАТОРА (готов к вставке)</h1>
+<pre><code>Ты — аналитик диалогов Elyne. Разбери сообщения ПОЛЬЗОВАТЕЛЯ на смысловые
+единицы и отнеси каждую к сфере жизни ПО СМЫСЛУ (не по разделу разговора).
+
+# Сферы (строго эти id):
+sostoyanie | resursy | realizatsiya | dom_semya | lyubov |
+tvorchestvo | znanie | svoboda | okruzhenie | proyavlennost
+
+# Типы единиц:
+tsennost | zhelanie | sostoyanie_tek | sostoyanie_zhel |
+fakt | obraz | napryazhenie | resurs
+
+# Правила:
+- Уровень ФРАГМЕНТА, не реплики. Одна реплика = 1–4 единицы.
+- Одна единица → 1 сфера (primary), максимум 2 (primary+secondary).
+  secondary только если у обеих уверенность ≥ medium.
+- Пропускай шум: вежливость, реакции на бота, мета-вопросы, «не знаю» без сути.
+- Уважай слово человека: клади в сферу из его формулировки, не переумничивай.
+- При споре: адресат желания → природа денег → стадия дела →
+  чувство vs процесс → слово человека.
+- excerpt: дословно или сжатие ≤120 символов. obraz беречь дословно.
+- confidence: high (названо прямо) | medium (устойчивый вывод) | low (косвенно).
+
+Верни ТОЛЬКО JSON-массив, без текста вокруг. Ничего значимого → [].
+Элемент:
+{&quot;assigned_sphere&quot;: &quot;...&quot;, &quot;secondary_sphere&quot;: &quot;...&quot;|null,
+ &quot;unit_type&quot;: &quot;...&quot;, &quot;excerpt&quot;: &quot;...&quot;, &quot;confidence&quot;: &quot;high|medium|low&quot;}
+
+Сфера диалога (формальная): {formal_sphere}
+Сообщения пользователя:
+{messages_block}
+</code></pre>
+<p>confidence → число при записи: high=0.9, medium=0.6, low=0.3. Порог хранения ≥0.4 (low отсекается).</p>
+<hr>
+<h1 id="5">5. АРХИТЕКТУРА ФОНОВОГО ПАЙПЛАЙНА</h1>
+<h2 id="_3">Таблицы (расширяют, не ломают существующие)</h2>
+<pre><code class="language-sql">CREATE TABLE IF NOT EXISTS semantic_insights (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tg_user_id INTEGER NOT NULL,
+    source_message_id INTEGER NOT NULL REFERENCES messages(id),
+    formal_sphere TEXT NOT NULL,      -- где шёл диалог
+    assigned_sphere TEXT NOT NULL,    -- по смыслу
+    secondary_sphere TEXT,
+    unit_type TEXT NOT NULL,
+    excerpt TEXT NOT NULL,
+    confidence REAL NOT NULL,         -- 0.0–1.0, порог ≥0.4
+    model_version TEXT,
+    created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_si_user_assigned ON semantic_insights(tg_user_id, assigned_sphere);
+CREATE INDEX IF NOT EXISTS idx_si_source_msg ON semantic_insights(source_message_id);
+
+CREATE TABLE IF NOT EXISTS semantic_sphere_profiles (
+    tg_user_id INTEGER NOT NULL,
+    sphere_id TEXT NOT NULL,          -- смысловая сфера
+    summary TEXT, insight_count INTEGER DEFAULT 0,
+    last_insight_at TEXT, updated_at TEXT,
+    PRIMARY KEY (tg_user_id, sphere_id)
+);
+
+CREATE TABLE IF NOT EXISTS classification_log (   -- идемпотентность
+    message_id INTEGER PRIMARY KEY REFERENCES messages(id),
+    status TEXT NOT NULL,             -- pending|done|failed|skipped
+    attempts INTEGER DEFAULT 0, error TEXT, processed_at TEXT
+);
+</code></pre>
+<h2 id="_4">Триггер</h2>
+<p>Батч по 3–5 необработанных реплик юзера, в фоне (asyncio.Queue + один воркер), не блокируя ответ. Дозапуск, если прошло &gt;10 мин с последней необработанной реплики (чтобы не терять концы брошенного диалога). Перед работой смотрим <code>classification_log</code> — <code>done</code> не трогаем (нет дублей при рестарте).</p>
+<h2 id="_5">Модель</h2>
+<p><code>claude-haiku-4-5</code> через тот же <code>claude -p</code> (Max-подписка → классификация по сути бесплатна; один воркер = без параллельных вызовов → не упираемся в rate limit). Retry ×3 с backoff, JSON вырезаем регуляркой даже если модель добавила текст. Падение → пропуск, не роняем поток.</p>
+<h2 id="_6">Агрегация в профиль</h2>
+<p>Инсайты по <code>assigned_sphere</code> (смысловой!) группируем по типу → краткая сводка в <code>semantic_sphere_profiles</code>. Старая <code>sphere_profiles</code> (формальный путь) остаётся — дашборд показывает оба слоя.</p>
+<h2 id="chats-cross_sphere_leaks">Дашборд /chats — <code>cross_sphere_leaks</code></h2>
+<p>Запрос <code>WHERE formal_sphere != assigned_sphere GROUP BY formal_sphere, assigned_sphere</code> показывает <strong>куда и сколько раз утекает разговор</strong> — это прямой ответ на запрос Сергея, видно глазами в админке.</p>
+<h2 id="_7">Точки интеграции</h2>
+<ul>
+<li><code>api/main.py</code>: 3 таблицы в <code>init_db()</code>, глобальная <code>classify_queue</code>, <code>classify_messages_batch()</code> + <code>process_pending_messages()</code>, запуск воркера в <code>startup()</code>, 1 строка <code>queue.put(...)</code> после записи сообщения, эндпоинт <code>/user/{id}/profile</code>.</li>
+<li><code>bot.py</code>: <strong>не трогаем</strong> (классификация живёт в FastAPI, где хранятся messages).</li>
+<li>Существующие таблицы: не изменяются.</li>
+</ul>
+<h2 id="_8">Стоимость</h2>
+<p>~$0.002 на диалог из 25 реплик (Haiku). На Max через CLI — фактически в подписке. 100 юзеров/день ≈ $6/мес при прямом API.</p>
+<hr>
+<h1 id="6">6. РИСКИ / ПЛАН ПРОВЕРКИ</h1>
+<ol>
+<li><strong>ID сфер</strong> (раздел 0) — финал с Олегом ДО внедрения.</li>
+<li><strong>Тест классификатора</strong> — 10–15 реальных фраз из elyne.db на парах Состояние↔Ресурсы и Состояние↔Свобода, сверить разметку вручную до доверия.</li>
+<li>Привязка insight→конкретный message_id: в MVP вешаем на первое сообщение батча; для точности — попросить модель возвращать source_msg_id (расширить промпт).</li>
+<li>Очередь: <code>maxsize=50</code> + лог переполнения; при массовом онбординге — второй воркер.</li>
+</ol>
+<h1 id="_9">Приложение А — полная таксономия маркеров</h1>
+<p>→ <a href="sphere-taxonomy-markers.md">sphere-taxonomy-markers.md</a> — 10 сфер × ядро/маркеры/что-ложится/границы. Источник лексики: <code>vault/elyne/sphere-questions-export-2026-05-19/sphere_questions_report.md</code>.</p>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
