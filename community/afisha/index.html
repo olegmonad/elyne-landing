@@ -47,7 +47,8 @@
     display: flex; align-items: flex-start; justify-content: space-between;
   }
   .header-title { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
-  .header-subtitle { font-size: 13px; color: var(--hint); margin-top: 2px; }
+  .header-tagline { font-size: 13px; color: var(--text); opacity: 0.82; margin-top: 3px; letter-spacing: -0.1px; }
+  .header-subtitle { font-size: 11.5px; color: var(--hint); margin-top: 1px; }
   .updated-dot { width: 7px; height: 7px; border-radius: 50%; background: #888; flex-shrink: 0; margin-top: 6px; }
 
   /* View switcher — 5 tabs */
@@ -315,7 +316,8 @@
 
 <div class="header">
   <div>
-    <div class="header-title">📅 Афиша</div>
+    <div class="header-title">Афиша</div>
+    <div class="header-tagline">События Москвы, выбранные вручную</div>
     <div class="header-subtitle" id="updated-label">Загружаю…</div>
   </div>
   <div class="updated-dot" id="status-dot"></div>
@@ -326,7 +328,6 @@
   <div class="view-btn active" id="btn-today" onclick="setView('today')">Сегодня</div>
   <div class="view-btn"        id="btn-week"  onclick="setView('week')">Неделя</div>
   <div class="view-btn"        id="btn-month" onclick="setView('month')">Месяц</div>
-  <div class="view-btn"        id="btn-year"  onclick="setView('year')">Год</div>
 </div>
 
 <div class="nav-bar" id="nav-bar">
@@ -849,7 +850,7 @@ function shareEvent(evId) {
   const shareUrl = ev.tg_msg_id
     ? `https://t.me/elyne_community/${ev.tg_msg_id}`
     : 'https://olegmonad.github.io/elyne-landing/community/afisha/';
-  const text = ev.title;
+  const text = `Идём вместе? ${ev.title}`;
   const tgShareUrl = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(text)}`;
   try {
     if (navigator.share) {
@@ -927,7 +928,7 @@ function buildIcs(events) {
       `DTSTAMP:${start}`,
       `DTSTART:${start}`,
       `DTEND:${end}`,
-      `SUMMARY:${esc(ev.title)}`,
+      `SUMMARY:ELYNE · ${esc(ev.title)}`,
       ev.place ? `LOCATION:${esc(ev.place)}` : '',
       ev.description ? `DESCRIPTION:${esc(ev.description)}${ev.url?'\\n\\n'+esc(ev.url):''}` : (ev.url?`DESCRIPTION:${esc(ev.url)}`:''),
       ev.url ? `URL:${ev.url}` : '',
