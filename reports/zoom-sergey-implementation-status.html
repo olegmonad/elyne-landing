@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Разбор Сергея — что реализовано · план · идеи</title>
+<style>
+  :root{
+    --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc;
+    --accent:#c4a95e; --card:#ffffff;
+    --done:#3f9d6b; --done-bg:#e7f4ec;
+    --part:#c79a2e; --part-bg:#faf3df;
+    --work:#3f7bc4; --work-bg:#e8f0fa;
+    --todo:#8a8276; --todo-bg:#efeee9;
+    --later:#a89b86; --later-bg:#f1efe9;
+  }
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,"Inter",system-ui,sans-serif;max-width:900px;margin:0 auto;
+    padding:32px 18px 80px;color:var(--ink);line-height:1.6;background:var(--bg);-webkit-text-size-adjust:100%}
+  h1{font-size:27px;font-weight:600;margin:0 0 6px;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:14.5px;margin:0 0 24px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:0 0 22px}
+  .legend{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
+  .badge{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;
+    padding:3px 10px;border-radius:999px;white-space:nowrap}
+  .b-done{color:var(--done);background:var(--done-bg)}
+  .b-part{color:var(--part);background:var(--part-bg)}
+  .b-work{color:var(--work);background:var(--work-bg)}
+  .b-todo{color:var(--todo);background:var(--todo-bg)}
+  .b-later{color:var(--later);background:var(--later-bg)}
+  .stats{display:flex;flex-wrap:wrap;gap:14px;margin:14px 0 0;font-size:13px;color:var(--muted)}
+  .stats b{color:var(--ink)}
+  .filters{display:flex;flex-wrap:wrap;gap:7px;margin:16px 0 22px}
+  .filt{font-size:12.5px;font-weight:600;padding:5px 12px;border-radius:999px;border:1px solid var(--line);
+    background:#fff;color:var(--muted);cursor:pointer;user-select:none}
+  .filt.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+  h2{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);
+    margin:34px 0 12px;padding-top:8px}
+  .queue-note{font-size:13px;color:var(--muted);font-style:italic;margin:-6px 0 14px}
+  .item{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:0 0 14px;
+    transition:opacity .15s}
+  .item.hide{display:none}
+  .item-head{display:flex;align-items:flex-start;gap:12px}
+  .chk{flex:0 0 auto;margin-top:3px}
+  .chk input{width:19px;height:19px;accent-color:var(--accent);cursor:pointer}
+  .item-title{flex:1 1 auto;font-size:16px;font-weight:600;color:#1f1a14;line-height:1.4}
+  .item.checked .item-title{text-decoration:line-through;opacity:.5}
+  .desc{font-size:14px;color:#3a342b;margin:9px 0 0;padding-left:31px}
+  .desc .ev{display:block;font-size:13px;color:var(--muted);margin-top:5px}
+  .desc .ev b{color:#5a5145}
+  .cmt{margin:11px 0 0 31px}
+  .cmt textarea{width:100%;min-height:0;height:38px;border:1px solid var(--line);border-radius:9px;
+    padding:8px 11px;font-family:inherit;font-size:13.5px;color:var(--ink);background:#fdfdfb;resize:vertical;
+    line-height:1.5;transition:height .1s}
+  .cmt textarea:focus{outline:none;border-color:var(--accent);height:74px;background:#fff}
+  .cmt textarea.filled{height:auto;min-height:54px;background:#fffdf5;border-color:#e8d9a8}
+  .toolbar{position:sticky;top:0;z-index:5;background:rgba(250,250,247,.93);backdrop-filter:blur(8px);
+    margin:0 -18px;padding:10px 18px;border-bottom:1px solid var(--line);display:flex;gap:9px;flex-wrap:wrap}
+  .btn{font-size:13px;font-weight:600;padding:7px 14px;border-radius:9px;border:1px solid var(--line);
+    background:#fff;color:var(--ink);cursor:pointer}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#2a230f}
+  .btn:active{transform:translateY(1px)}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);opacity:0;
+    background:#1f1a14;color:#fff;padding:10px 18px;border-radius:10px;font-size:13.5px;pointer-events:none;
+    transition:.2s}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .foot{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);
+    font-style:italic}
+  details.src{margin:8px 0 0 31px;font-size:13px;color:var(--muted)}
+  details.src summary{cursor:pointer;color:var(--accent)}
+  details.src p{margin:7px 0 0;color:#4a443b;font-style:normal}
+  a{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <button class="btn primary" onclick="shareLink()">🔗 Скопировать ссылку с пометками</button>
+  <button class="btn" onclick="copyNotes()">📋 Выгрузить все пометки текстом</button>
+  <button class="btn" onclick="resetAll()">Сбросить</button>
+</div>
+
+<h1>Разбор Сергея → что реализовано, что нет</h1>
+<p class="sub">Спутник к <a href="https://elyne-start.online/reports/zoom-sergey-2026-06-08-razbor.html" target="_blank">разбору зума 08.06</a>. Каждый пункт плана сверен с реальным состоянием стенда (@Elyne1bot) и основного приложения. Отмечайте галочками, что берём, пишите комментарии прямо в карточках.</p>
+
+<div class="panel">
+  <div style="font-size:13.5px;color:var(--muted);margin-bottom:4px">Легенда статусов</div>
+  <div class="legend">
+    <span class="badge b-done">● Готово</span>
+    <span class="badge b-part">● Частично</span>
+    <span class="badge b-work">● В работе</span>
+    <span class="badge b-todo">● Не начато</span>
+    <span class="badge b-later">● Не сейчас</span>
+  </div>
+  <div class="stats" id="stats"></div>
+  <div style="font-size:12.5px;color:var(--muted);margin-top:12px;line-height:1.5">
+    Пометки и галочки сохраняются <b>в твоём браузере</b>. Чтобы поделиться с Сергеем —
+    жми «🔗 Скопировать ссылку с пометками»: всё состояние зашьётся в ссылку, он откроет и увидит твои отметки.
+  </div>
+</div>
+
+<div class="filters" id="filters">
+  <span class="filt active" data-f="all">Все</span>
+  <span class="filt" data-f="todo">Не начато</span>
+  <span class="filt" data-f="part">Частично</span>
+  <span class="filt" data-f="done">Готово</span>
+  <span class="filt" data-f="work">В работе</span>
+  <span class="filt" data-f="later">Не сейчас</span>
+  <span class="filt" data-f="checked">☑ Отмеченные</span>
+</div>
+
+<div id="list"></div>
+
+<p class="foot">Срез на 10.06.2026. Статусы — честная оценка Мони по коду стенда и проду; если где-то занизил/завысил — поправь в комментарии к пункту. Канон разбора лежит в приватном репо Monada.</p>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const ITEMS = [
+  // ── Что уже сделано ──
+  {sec:"Что уже сделано (из этого же разговора)", note:"", id:"d1", st:"done",
+   t:"Кнопка «Пройти заново» с архивацией прежних ответов",
+   d:"Тестировали при Сергее на зуме.",
+   ev:"Стенд: сброс диалога + онбординг заново есть (<b>bot.py</b>, диалог «Сбросить весь диалог и начать онбординг заново?»). В проде — подтверждено на зуме."},
+  {sec:"Что уже сделано (из этого же разговора)", id:"d2", st:"done",
+   t:"Выбор диалогов на /chats (галочки, копирование текстом / ссылкой / набором)",
+   d:"Инфраструктура под ритуал калибровки.",
+   ev:"Готово — <b>elyne-afisha.online/chats</b>, доступ есть."},
+  {sec:"Что уже сделано (из этого же разговора)", id:"d3", st:"done",
+   t:"Агент переведён на более умную модель (больше контекста)",
+   d:"", ev:"Сделано."},
+
+  // ── Очередь 1 ──
+  {sec:"Очередь 1 — Фундамент (на стенде)", note:"Базовый каркас на стенде есть, но точную схему воронки из разбора ещё не зашили.",
+   id:"q1_1", st:"part",
+   t:"1. Онбординг-вектор в системный промт: 4 категории (состояние / ценности / будущее / план), Линия 1 как дефолт + Линия 2 как углубление внутри",
+   d:"Дефолт = Линия 1 (диагностика запроса), механику Линии 2 (состояние/ценности/будущее) подключать внутри разговора, когда человек завис.",
+   ev:"Стенд уже несёт каркас: онбординг → <b>Life Vector</b>, Reflection Engine каждые 4–6 сообщений, лимит 7–12 обменов, запрет интерпретаций. <b>Но:</b> явных «4 категорий» как структуры нет; Линия 1 («где сейчас больше внимания») как дефолт не прописана; «углубление» Линии 2 — только через рефлексию. Каркас есть — точная воронка нет."},
+  {sec:"Очередь 1 — Фундамент (на стенде)", id:"q1_2", st:"part",
+   t:"2. 10 опорных вопросов + правило вариации (не 100 заранее)",
+   d:"Право агента адаптировать формулировку под лексику человека.",
+   ev:"Стенд: есть q1/q2/q3 по сферам (фиксированные опции) + право на кастомный ответ. <b>Но:</b> отдельного слоя «10 опорных вопросов самоопределения + правило вариации» нет."},
+  {sec:"Очередь 1 — Фундамент (на стенде)", id:"q1_3", st:"todo",
+   t:"3. Протокол вывода из низкого состояния (сценарный шаблон в промте)",
+   d:"состояние → ресурсное воспоминание → ценности → будущее → визуализация ресурса → микродействие.",
+   ev:"В промте такого протокола нет. Агент импровизирует каждый раз по-разному — ровно та проблема, что описана в разборе."},
+  {sec:"Очередь 1 — Фундамент (на стенде)", id:"q1_4", st:"part",
+   t:"4. Правило безопасности «клиника → специалист» как постоянный фон",
+   d:"При сигналах риска честно предлагаем психолога/терапевта, не лечим сами.",
+   ev:"Стенд: есть запреты «не психолог», «не ставить диагнозы». <b>Но:</b> явного правила «диагностируем клинику → мягко направляем к специалисту» как постоянного фона нет."},
+  {sec:"Очередь 1 — Фундамент (на стенде)", id:"q1_5", st:"work",
+   t:"5. Ритуал калибровки: Сергей метит золотые куски на /chats → перенос в системный промт → проверка на следующем юзере",
+   d:"Дисциплина, а не магия: отметили → выгрузили → перенёс → проверили.",
+   ev:"Инфра /chats готова, папка <b>vault/elyne/agent-training/</b> заведена, калибровка SYSTEM_PROMPT идёт с 08.06. Сам ритуал «метит → переношу» — в процессе, не закреплён как регулярный."},
+  {sec:"Очередь 1 — Фундамент (на стенде)", id:"q1_6", st:"todo",
+   t:"6. Задать агенту задачу автокатегоризации по сферам",
+   d:"Если в сфере «Состояние» заговорили про «Реализацию» — агент сам категоризирует; для юзера один сплошной диалог, разнесение внутри.",
+   ev:"Не реализовано. Сейчас сферы проходятся по очереди фиксированно, авторазнесения «на лету» нет."},
+
+  // ── Очередь 2 ──
+  {sec:"Очередь 2 — Продуктовое ядро", note:"Сердце нового позиционирования. Здесь почти ничего не реализовано — это главный фронт работ.",
+   id:"q2_7", st:"todo",
+   t:"7. Механика «состояние → действие» без трения",
+   d:"Агент сам подбирает видео/класс под человека, просит маленькое согласие вместо большого действия, первые шаги ≤24 ч.",
+   ev:"Не реализовано. Это, по разбору, сильнейшая механика — то, что делает продукт продуктом, а не генератором картинок."},
+  {sec:"Очередь 2 — Продуктовое ядро", id:"q2_8", st:"todo",
+   t:"8. Непрерывная дорожка без пауз (не дать откатиться в промежутке)",
+   d:"Поднимаем состояние «вторым-третьим шагом», не сразу из минуса в плюс.",
+   ev:"Не реализовано."},
+  {sec:"Очередь 2 — Продуктовое ядро", id:"q2_9", st:"todo",
+   t:"9. Сдвиг позиционирования: визуализация = инструмент, реализация = продукт — в копирайте и логике флоу",
+   d:"Главный сдвиг сути всего разговора.",
+   ev:"Концептуально зафиксирован, но в продукте/копирайте флоу пока строится вокруг картинки. Сдвиг не отражён."},
+
+  // ── Очередь 3 ──
+  {sec:"Очередь 3 — Вовлечение", note:"",
+   id:"q3_10", st:"todo",
+   t:"10. Подтверждение действия: фото / геолокация → визуальная отметка прогресса",
+   d:"Без полноценной валюты пока — символическое подтверждение.",
+   ev:"Не реализовано. Камеру/гео технически умеем, но механики пруфа + отметки прогресса нет."},
+  {sec:"Очередь 3 — Вовлечение", id:"q3_11", st:"todo",
+   t:"11. Музыка под сферу как усилитель (для тех, кто в наушниках)",
+   d:"Мягкая подсказка «надень наушники», не обязательный слой.",
+   ev:"Не реализовано."},
+  {sec:"Очередь 3 — Вовлечение", id:"q3_12", st:"todo",
+   t:"12. Видео/аудио-генерация как опциональный апгрейд",
+   d:"Дорого по токенам и медленно — не онбординг, а апгрейд.",
+   ev:"Не реализовано. Сейчас генерим только изображения."},
+
+  // ── Очередь 4 ──
+  {sec:"Очередь 4 — Экономика и масштаб", note:"",
+   id:"q4_13", st:"part",
+   t:"13. Монетизация: подписка-основа + токены/пакеты для тяжёлых модальностей",
+   d:"Посчитать рентабельность на цифрах перед выбором. Спор: токенный счётчик наружу убивает премиум-поток.",
+   ev:"В проде есть подписка и пакеты (нижний тариф 999 ₽). <b>Но:</b> архитектура «подписка-основа + токены только для видео» как решённая — нет, A/B на цифрах не делали."},
+  {sec:"Очередь 4 — Экономика и масштаб", id:"q4_14", st:"todo",
+   t:"14. Шлюзы к подрядчикам (прямой проход запроса, не нагружая нашу систему)",
+   d:"Между нашей системой и подрядчиками — шлюзы; юзер работает с подрядчиком напрямую, тратит токены.",
+   ev:"Не реализовано. Сейчас прямые вызовы (напр. FAL) изнутри, «шлюзовой» архитектуры нет."},
+  {sec:"Очередь 4 — Экономика и масштаб", id:"q4_15", st:"later",
+   t:"15. Community / внутренняя валюта / биржа труда",
+   d:"Только после того, как ядро (Оч. 1–2) живёт и удерживает. Олег сам сказал про риск распыления.",
+   ev:"Решено: не сейчас. Записано как видение, не трогаем до живого ядра."},
+
+  // ── Параллельно ──
+  {sec:"Параллельно / открыто", note:"",
+   id:"p1", st:"work",
+   t:"Название (ребрендинг) + разделение «имя продукта ≠ имя ассистента»",
+   d:"Ничего не подаём (ни ТЗ, ни домен), пока Олег не скажет «это финал».",
+   ev:"Ребрендинг идёт (~300 вариантов, фавориты менялись), финал не выбран. Разделение имени продукта и ассистента в архитектуру пока не заложено."},
+  {sec:"Параллельно / открыто", id:"p2", st:"work",
+   t:"Перенос стенд → основное приложение (только проверенного на людях)",
+   d:"Стенд = песочница, прод = боевое, переносим только подтверждённое.",
+   ev:"Принцип действует, стенд @Elyne1bot живёт отдельно. Регулярного процесса переноса ещё нет — переносить пока нечего (ядро не подтверждено)."},
+
+  // ── Бонус: вне разбора, но в работе ──
+  {sec:"Сверх разбора — уже в работе", note:"Не пункт зума, но прямо про «понимать вкус юзера» (боль с 10 пресетами стилей).",
+   id:"x1", st:"work",
+   t:"Доска вкуса (taste board): референсы → vision-модель → персональный visual code вместо текстового пресета",
+   d:"Спроектировано ночью 09.06 (3 агента → синтез). Пресеты не удаляем — fallback/seed. Точка интеграции — PromptPlaceholderService, 2 новые таблицы. ~12–15 ч разработчику.",
+   ev:"Текущая ветка <b>feature/taste-board-stend</b>. Проектирование готово, внедрение не начато. Шаг 0 (пресеты картинками, не текстом) Сергей может сделать сразу."},
+];
+
+const ST = {
+  done:{cls:"b-done",label:"Готово"}, part:{cls:"b-part",label:"Частично"},
+  work:{cls:"b-work",label:"В работе"}, todo:{cls:"b-todo",label:"Не начато"},
+  later:{cls:"b-later",label:"Не сейчас"}
+};
+const LSKEY = "elyne-sergey-impl-v1";
+let state = load();
+
+function load(){
+  // url hash wins (shared link), else localStorage
+  try{
+    if(location.hash.length>1){
+      const s = JSON.parse(decodeURIComponent(escape(atob(location.hash.slice(1)))));
+      localStorage.setItem(LSKEY, JSON.stringify(s));
+      return s;
+    }
+  }catch(e){}
+  try{ return JSON.parse(localStorage.getItem(LSKEY))||{} }catch(e){ return {} }
+}
+function save(){ localStorage.setItem(LSKEY, JSON.stringify(state)); }
+
+function render(){
+  const list = document.getElementById("list");
+  let html=""; let lastSec=null;
+  for(const it of ITEMS){
+    if(it.sec!==lastSec){
+      html += `<h2>${it.sec}</h2>`;
+      const sec = ITEMS.find(x=>x.sec===it.sec);
+      if(sec.note) html += `<div class="queue-note">${sec.note}</div>`;
+      lastSec = it.sec;
+    }
+    const s = state[it.id]||{};
+    const checked = s.chk?"checked":"";
+    const cmt = s.cmt||"";
+    const b = ST[it.st];
+    html += `
+    <div class="item ${checked?'checked':''}" data-id="${it.id}" data-st="${it.st}" data-chk="${s.chk?1:0}">
+      <div class="item-head">
+        <label class="chk"><input type="checkbox" ${checked} onchange="toggle('${it.id}',this.checked)"></label>
+        <div class="item-title">${it.t}</div>
+        <span class="badge ${b.cls}">● ${b.label}</span>
+      </div>
+      ${it.d?`<div class="desc">${it.d}<span class="ev"><b>Статус:</b> ${it.ev}</span></div>`:`<div class="desc"><span class="ev"><b>Статус:</b> ${it.ev}</span></div>`}
+      <div class="cmt"><textarea placeholder="Комментарий / решение…" class="${cmt?'filled':''}"
+        oninput="note('${it.id}',this.value);autg(this)">${cmt.replace(/</g,'&lt;')}</textarea></div>
+    </div>`;
+  }
+  list.innerHTML = html;
+  document.querySelectorAll('.cmt textarea.filled').forEach(autg);
+  stats();
+}
+function autg(el){ el.style.height='auto'; el.style.height=Math.max(38,el.scrollHeight+2)+'px'; }
+function toggle(id,v){ state[id]=state[id]||{}; state[id].chk=v; save();
+  const el=document.querySelector(`.item[data-id="${id}"]`);
+  el.classList.toggle('checked',v); el.dataset.chk=v?1:0; applyFilter(); stats(); }
+function note(id,v){ state[id]=state[id]||{}; state[id].cmt=v; save();
+  const el=document.querySelector(`.item[data-id="${id}"] textarea`); el.classList.toggle('filled',!!v); }
+
+function stats(){
+  const c={done:0,part:0,work:0,todo:0,later:0,chk:0};
+  for(const it of ITEMS){ c[it.st]++; if((state[it.id]||{}).chk) c.chk++; }
+  document.getElementById("stats").innerHTML =
+    `<span><b>${c.done}</b> готово</span><span><b>${c.part}</b> частично</span>`+
+    `<span><b>${c.work}</b> в работе</span><span><b>${c.todo}</b> не начато</span>`+
+    `<span><b>${c.later}</b> не сейчас</span><span>·</span><span>☑ <b>${c.chk}</b> отмечено</span>`;
+}
+
+let curF="all";
+document.getElementById("filters").addEventListener("click",e=>{
+  if(!e.target.classList.contains("filt"))return;
+  document.querySelectorAll(".filt").forEach(f=>f.classList.remove("active"));
+  e.target.classList.add("active"); curF=e.target.dataset.f; applyFilter();
+});
+function applyFilter(){
+  document.querySelectorAll(".item").forEach(el=>{
+    let show=true;
+    if(curF==="checked") show=el.dataset.chk==="1";
+    else if(curF!=="all") show=el.dataset.st===curF;
+    el.classList.toggle("hide",!show);
+  });
+  document.querySelectorAll("h2,.queue-note").forEach(h=>h.style.display="");
+}
+
+function shareLink(){
+  const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(state))));
+  const url = location.origin+location.pathname+"#"+b64;
+  navigator.clipboard.writeText(url).then(()=>toast("Ссылка с пометками скопирована — кидай Сергею"));
+}
+function copyNotes(){
+  let out="РАЗБОР СЕРГЕЯ — пометки\n\n";
+  for(const it of ITEMS){
+    const s=state[it.id]||{}; if(!s.chk&&!s.cmt)continue;
+    out+=`${s.chk?'☑':'☐'} [${ST[it.st].label}] ${it.t}\n`;
+    if(s.cmt) out+=`   → ${s.cmt}\n`;
+    out+="\n";
+  }
+  if(out.indexOf("☑")<0&&out.indexOf("→")<0)out+="(пока ничего не отмечено)";
+  navigator.clipboard.writeText(out).then(()=>toast("Все пометки скопированы текстом"));
+}
+function resetAll(){
+  if(!confirm("Сбросить все галочки и комментарии?"))return;
+  state={}; save(); location.hash=""; render(); applyFilter(); toast("Сброшено");
+}
+let tt;
+function toast(m){ const t=document.getElementById("toast"); t.textContent=m; t.classList.add("show");
+  clearTimeout(tt); tt=setTimeout(()=>t.classList.remove("show"),2200); }
+
+render();
+</script>
+</body>
+</html>
