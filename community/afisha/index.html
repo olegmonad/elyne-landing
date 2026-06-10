@@ -298,6 +298,18 @@
 
   .footer { padding: 8px 16px 4px; font-size: 11px; color: var(--hint); text-align: center; }
 
+  /* Bridge toast → community after «Я пойду» */
+  .toast {
+    position: fixed; left: 50%; transform: translateX(-50%) translateY(18px);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 80px);
+    max-width: 90%; padding: 11px 16px; border-radius: 12px;
+    background: var(--card-elevated); color: var(--text);
+    font-size: 13.5px; font-weight: 500; line-height: 1.3; white-space: nowrap;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(196,169,94,0.25);
+    opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; z-index: 150;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+
   /* Feedback modal */
   .feedback-overlay {
     display: none; position: fixed; inset: 0; z-index: 200;
@@ -372,8 +384,9 @@
 <div class="bottom-bar">
   <div class="homescreen-btn-sm" onclick="shareAfisha()" title="Поделиться афишей">🔗</div>
   <div class="homescreen-btn-sm" onclick="openFeedback()" title="Напиши нам">✉️</div>
-  <div class="join-btn" onclick="openCommunity()">Войти в ELYNE Community</div>
+  <div class="join-btn" onclick="openCommunity()">Кто идёт и как было →</div>
 </div>
+<div class="toast" id="toast" onclick="toastTap()"></div>
 
 <!-- Feedback modal -->
 <div class="feedback-overlay" id="feedback-overlay" onclick="closeFeedbackIfBg(event)">
@@ -483,6 +496,7 @@ async function toggleAttend(evId, btn) {
       btn.classList.add('pulse'); setTimeout(() => btn.classList.remove('pulse'), 300);
     }
     try { tg?.HapticFeedback?.impactOccurred('light'); } catch(e){}
+    showToast('Кто ещё идёт — в группе ›');
   }
   await csSet(CS_KEY, JSON.stringify([...attendedIds]));
   updateMyTabCount();
@@ -519,6 +533,20 @@ function matchCat(e) {
 function openCommunity() {
   if (tg) tg.openTelegramLink(COMMUNITY_URL);
   else window.open(COMMUNITY_URL, '_blank');
+}
+
+let toastTimer = null;
+function showToast(text) {
+  const t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = text;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3800);
+}
+function toastTap() {
+  document.getElementById('toast')?.classList.remove('show');
+  openCommunity();
 }
 
 function openOnlineSource() {
