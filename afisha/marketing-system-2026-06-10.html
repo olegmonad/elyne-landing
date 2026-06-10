@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Цифровой маркетолог Афиши — спецификация</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="_1">Цифровой маркетолог Афиши — спецификация системы</h1>
+<p><strong>Дата:</strong> 2026-06-10 · <strong>Автор:</strong> Моня (синтез CMO + tech-архитектор)
+<strong>Запрос Олега:</strong> построить «цифрового представителя» Афиши — постоянную систему, которая ведёт контент, раскидывает события, собирает лидов и приводит людей. Первый маркетинг-контур компании.</p>
+<hr>
+<h2 id="tldr">TL;DR</h2>
+<ul>
+<li><strong>Это не один бот, а контур из 5 ролей</strong>, где я (Моня) — оператор и оркестратор, а Олег/Квин подключаются на ~30 минут в неделю (одобрить пакет событий + отправить пакеты партнёрам).</li>
+<li><strong>Жёсткая граница безопасности.</strong> Всё, что автоматизируем, — внутри правил Telegram. Автопостинг в чужие группы, авто-приглашения, рассылка в ЛС незнакомым, userbot-персона, скрейпинг участников — <strong>бан за часы-дни</strong>. Этого не делаем никогда. Рост — только через opt-in, deep-link из своего контента и inline-шеринг.</li>
+<li><strong>Нужен лёгкий бэкенд</strong> (на нашем VPS 38.180.98.36, SQLite) — без него лидов и аналитику не собрать: GitHub Pages статичен, CloudStorage клиентский.</li>
+<li><strong>Отдельный бот <code>@elyne_afisha_bot</code></strong> для дистрибуции и лидов (рядом с @elyne_moscow_bot, один сервис, два токена). Userbot-«персона» — <strong>нет</strong>, это прямой бан реального аккаунта.</li>
+<li><strong>MVP за ~неделю-полторы</strong> даёт первые данные и работающий контент-ритм, ничем не рискуя.</li>
+</ul>
+<hr>
+<h2 id="1-5">1. Контур: 5 ролей</h2>
+<table>
+<thead>
+<tr>
+<th>Роль</th>
+<th>Что делает</th>
+<th>Кто</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Куратор-редактор</strong></td>
+<td>сырые события → карточка в тоне Elyne (описание, категория, тег сферы, вес)</td>
+<td>Моня пишет, Олег/Квин одобряют пакет 1×/нед (~15 мин)</td>
+</tr>
+<tr>
+<td><strong>Контент-движок</strong></td>
+<td>посты, «Момент недели», share-карточки, смысловые посты-мосты</td>
+<td>Моня (+FAL на визуал); Квин — опционально на approve</td>
+</tr>
+<tr>
+<td><strong>Дистрибьютор</strong></td>
+<td>публикация в свои каналы (авто) + подготовка пакета под партнёра</td>
+<td>Моня готовит; в чужой канал публикует партнёр</td>
+</tr>
+<tr>
+<td><strong>Лид-машина</strong></td>
+<td>ловит и тегирует людей через бота (deep-link → opt-in → тег → дайджест)</td>
+<td>бот @elyne_afisha_bot, Моня смотрит сводку</td>
+</tr>
+<tr>
+<td><strong>Аналитик</strong></td>
+<td>еженедельная сводка цифр, что работает</td>
+<td>Моня, авто</td>
+</tr>
+</tbody>
+</table>
+<p>Принцип: <strong>время Олега и Квин дорого</strong> — максимум 30 мин/нед. Всё остальное крутится само.</p>
+<hr>
+<h2 id="2-">2. Контент-движок и ритм</h2>
+<table>
+<thead>
+<tr>
+<th>Тип</th>
+<th>Частота</th>
+<th>Кто</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Событийный (карточка: 2-3 живых предложения «зачем идти», тег сферы)</td>
+<td>каждый день / через день</td>
+<td>Моня, очередь на неделю вперёд</td>
+</tr>
+<tr>
+<td><strong>«Момент недели»</strong> (редакционная интерпретация, не анонс)</td>
+<td>1×/нед, четверг</td>
+<td>Моня пишет, Олег читает 2 мин</td>
+</tr>
+<tr>
+<td>Смысловой пост-мост (мысль, ведущая к app без рекламы)</td>
+<td>раз в 2-3 недели</td>
+<td>Моня предлагает тему, Олег да/нет</td>
+</tr>
+<tr>
+<td>Share-карточка / «сходил»</td>
+<td>реактивно, по действию юзера</td>
+<td>авто</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Недельный календарь:</strong> Пн 2 события · Вт 1 · Ср 1-2 · <strong>Чт «Момент недели» + 1-2</strong> (пик планирования выходных) · Пт 1 + напоминание «Я пойду» · выходные — тишина или лёгкий «сходил». Итого 7-9 публикаций/нед. Больше — перегруз, падает вовлечённость.</p>
+<hr>
+<h2 id="3">3. Дистрибуция (только безопасная)</h2>
+<ul>
+<li><strong>Свои каналы</strong> — @elyne_community (тред 174), авто по расписанию.</li>
+<li><strong>Партнёрские каналы</strong> — Моня готовит «пакет под канал» (готовый текст под аудиторию + 1-2 визуала + ссылка + строка ERID), Олег отправляет партнёру одним сообщением, <strong>публикует партнёр</strong>. Снимаем с партнёра всю работу — ему один клик.</li>
+<li><strong>Реестр партнёров</strong> — <code>docs/elyne/marketing/partner-channels.md</code> (канал, подписчики, тема, контакт, статус, последняя публикация, результат). Критерий: Москва, 1-30К, тема культура/досуг/осознанность, тон без инфоцыганщины. Признак «марафоны желаний» → не берём.</li>
+<li><strong>Нано-блогеры</strong> — отбор по тону, не по цифрам. Brief + что НЕ говорить (manifestation-язык) + deep-link + ERID. Публикует своими словами, не скрипт. Pre-approval черновика обязателен.</li>
+</ul>
+<hr>
+<h2 id="4-telegram">4. Границы Telegram — что можно, что бан</h2>
+<h3 id="-">❌ НИКОГДА (бан за часы-дни)</h3>
+<table>
+<thead>
+<tr>
+<th>Действие</th>
+<th>Что страдает</th>
+<th>Скорость</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Рассылка в ЛС незнакомым</td>
+<td>бот-токен + аккаунт-создатель</td>
+<td>часы-дни</td>
+</tr>
+<tr>
+<td>Mass-invite / добавление людей в группу</td>
+<td>пользовательский аккаунт</td>
+<td>минуты-часы (бан на 50-100 инвайтах)</td>
+</tr>
+<tr>
+<td>Автопостинг в чужие группы</td>
+<td>бот-токен</td>
+<td>по жалобам, дни</td>
+</tr>
+<tr>
+<td>Скрейпинг участников чужих групп</td>
+<td>аккаунт</td>
+<td>часы</td>
+</tr>
+<tr>
+<td>Userbot-«персона» (автоматизация реального аккаунта)</td>
+<td>аккаунт + номер телефона</td>
+<td>детект по поведению</td>
+</tr>
+<tr>
+<td>Накрутка, обход лимитов через прокси</td>
+<td>бот/канал</td>
+<td>авто</td>
+</tr>
+</tbody>
+</table>
+<p>Telegram смотрит на 3 вещи: <strong>consent</strong> (юзер сам написал боту?), <strong>паттерн</strong> (ровные интервалы без реакций = автоматизация), <strong>жалобы</strong> (3-5 «Spam» → проверка). После 2024-2025 модерация ужесточена.</p>
+<h3 id="tos">✅ МОЖНО (чисто по ToS)</h3>
+<ul>
+<li>Постинг в <strong>свои</strong> каналы/группы (бот = админ). Лимит: 20 сообщений/мин на группу.</li>
+<li><strong>Broadcast подписчикам, которые сами нажали /start</strong> (= consent). Лимит 30 msg/сек глобально → очередь 25 msg/сек с backoff на 429. <em>Важно: 429 кладёт бота для ВСЕХ на retry_after.</em></li>
+<li><strong>Deep-link</strong> <code>t.me/elyne_afisha_bot?start=SOURCE</code> — официальный механизм атрибуции.</li>
+<li><strong>Inline-режим</strong> — юзеры сами шарят карточки событий в любые чаты (органический охват, не бот постит).</li>
+<li>Mini app, аналитика через свой бэкенд, scheduled-генерация контента.</li>
+</ul>
+<hr>
+<h2 id="5-">5. Лид-машина — архитектура</h2>
+<p><strong>Что считаем лидом (пока app нет):</strong>
+- холодный — подписчик @elyne_community;
+- тёплый — открыл mini app + нажал «Я пойду»;
+- горячий — вернулся через 4+ дней, сохранил 3+ события (первый кандидат на конверсию при запуске app).</p>
+<p><strong>Поток:</strong></p>
+<pre><code>источник (пост / QR / партнёрский канал)
+  → t.me/elyne_afisha_bot?start=src_xxx
+  → бот пишет в БД: user_id, source, time
+  → &quot;Подписаться на афишу недели?&quot; [Да]  (opt-in)
+  → тег по поведению (категории «Я пойду»)
+  → еженедельный дайджест (пятница, только если не заходил 5 дней)
+</code></pre>
+<p><strong>Технический минимум (на VPS 38.180.98.36, рядом со мной):</strong>
+- бэкенд: Python (aiogram 3) + FastAPI, БД <strong>SQLite</strong> (хватит до ~10К), systemd-сервис;
+- таблицы: <code>users(user_id, username, source, opted_in, created_at)</code>, <code>analytics(user_id, event_type, payload, ts)</code>;
+- mini app шлёт <code>fetch('/api/track', {initData, event})</code> при открытии и тапе «Я пойду» — <strong>единственный способ</strong> получить серверные события из mini app (без бэкенда аналитики нет);
+- альтернатива «не писать самим»: SDK <strong>Telemetree</strong> (бесплатный, для TG mini apps, dashboard за 10 мин).</p>
+<p><strong>Подготовка базы к запуску app:</strong> за неделю до MVP — одно тихое сообщение горячим лидам: «Elyne, что стоит за Афишей, скоро открывается. Ты первый». Без «успей»/«ограниченный доступ» — не наш тон.</p>
+<hr>
+<h2 id="6-userbot">6. Отдельный бот — да; userbot — нет</h2>
+<ul>
+<li><strong>Да:</strong> новый <code>@elyne_afisha_bot</code> (или <code>@elyne_events_bot</code>) для дистрибуции/лидов/дайджестов — отдельный брендинг и база, но <strong>один сервис на VPS с двумя токенами</strong> (рядом с @elyne_moscow_bot). Если что-то пойдёт не так — страдает только этот токен.</li>
+<li><strong>Нет:</strong> userbot-аккаунт-«представитель» (Telethon/Pyrogram на реальном номере) — Telegram детектит автоматизацию по поведению, бан аккаунта + потеря номера. Единственный легальный userbot — личный ассистент для своих чатов (как я), не для публичной дистрибуции.</li>
+</ul>
+<hr>
+<h2 id="7">7. Метрики и ритуалы</h2>
+<p><strong>Мерим еженедельно:</strong> новые подписчики группы · открытия mini app · тапы «Я пойду»/уник · шеринги · возврат через 7 дней · переходы с партнёрских каналов (deep-link) · CTR → app (когда появится).</p>
+<p><strong>Ритуалы:</strong>
+- <strong>Пн 09:30</strong> — Моня шлёт «Неделя в цифрах»: 7 строк, метрика + дельта + 1 строка «на что смотреть». Таблицы — ссылкой на HTML.
+- <strong>Пн/Вт 15 мин</strong> — Олег/Квин одобряют пакет событий на неделю.
+- <strong>Раз в 2 недели 20 мин</strong> — обзор партнёрств, Олег решает кого растить.</p>
+<hr>
+<h2 id="8-mvp-">8. MVP — порядок сборки (~неделя-полторы)</h2>
+<p><strong>Контентный контур (можно включить сразу, без кода):</strong>
+1. День 1-2 — установить ритм публикаций в @elyne_community (1-2 события/день в тоне Elyne), Моня готовит первую очередь, Олег одобряет.
+2. День 2-3 — собрать реестр 10-15 партнёрских каналов.
+3. День 3-4 — написать первым 3-5 партнёрам (конкретно: «есть событие X, готов пакет под ваш канал»).
+4. День 4-5 — первый «Момент недели», публикуем в четверг.
+5. День 7 — первая сводка цифр (даже маленьких — это точка отсчёта).</p>
+<p><strong>Технический контур (параллельно, код):</strong>
+1. Бэкенд на VPS: FastAPI + SQLite, эндпоинт <code>/api/track</code> (1-2 дня).
+2. Бот <code>@elyne_afisha_bot</code>: <code>/start SOURCE</code> → запись + opt-in, команда <code>/digest</code> (2-3 дня).
+3. Deep-link генератор ссылок на источники (1 день).
+4. Scheduled broadcast подписчикам — очередь 25 msg/сек + backoff (1-2 дня).
+5. Аналитика mini app: 3-4 строки JS → <code>/api/track</code> (или Telemetree SDK) (1-2 дня).
+6. Inline-шеринг событий — <code>inline_mode</code> (1 день).</p>
+<p><strong>Откладываем до MVP app:</strong> тег сферы → переход в app, «горячая» рассылка базы при запуске, полная лид-квалификация.</p>
+<hr>
+<h2 id="_2">Что нужно от Олега, чтобы стартовать</h2>
+<ol>
+<li>Одобрить контур (или скорректировать).</li>
+<li>15 минут в начале недели — одобрить первый пакет событий.</li>
+<li>Есть ли среди партнёрских каналов те, чьих админов Олег знает лично? Ускорит первые договорённости в разы.</li>
+<li>Решение: заводить <code>@elyne_afisha_bot</code> сейчас или сперва обкатать контентный контур на @elyne_moscow_bot.</li>
+</ol>
+<p><em>Источники: Telegram Bot ToS / Bot API / grammY flood limits / Telemetree (проверено tech-архитектором). Синтез CMO + monad-tech-architect, 2026-06-10.</em></p>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
