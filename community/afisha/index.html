@@ -11,6 +11,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Афиша">
 <link rel="manifest" href="/community/afisha/manifest.json">
+<link rel="icon" href="data:,">
 <title>ELYNE Афиша</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
@@ -880,7 +881,7 @@ function shareEvent(evId) {
   if (!ev) return;
   const shareUrl = ev.tg_msg_id
     ? `https://t.me/elyne_community/${ev.tg_msg_id}`
-    : 'https://olegmonad.github.io/elyne-landing/community/afisha/';
+    : 'https://elyne-start.online/community/afisha/';
   const text = `Идём вместе? ${ev.title}`;
   const tgShareUrl = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(text)}`;
   try {
