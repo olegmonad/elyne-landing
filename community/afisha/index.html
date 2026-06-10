@@ -163,12 +163,27 @@
     transition: all 0.15s; white-space: nowrap;
   }
   .cat-pill.active { background: var(--btn); color: var(--btn-text); font-weight: 600; }
+  /* Quick filter chips (Бесплатно / Выходные) */
+  .cat-pill.quick { border: 1px solid rgba(255,255,255,0.12); }
+  .cat-pill.quick.active { background: var(--btn); color: var(--btn-text); border-color: transparent; }
+  .cat-pill.quick.free.active { background: var(--green); color: #08210d; }
+  .cat-sep { flex-shrink:0; width:1px; align-self:stretch; margin:2px 4px; background: rgba(255,255,255,0.10); }
+
+  /* «Бесплатно» badge on card */
+  .free-badge {
+    display:inline-block; font-size:11px; font-weight:700; letter-spacing:0.2px;
+    color:#08210d; background:var(--green); padding:2px 8px; border-radius:8px;
+  }
+
+  /* «Я пойду» pulse */
+  @keyframes attendPulse { 0%{transform:scale(1)} 40%{transform:scale(1.12)} 100%{transform:scale(1)} }
+  .attend-btn.pulse { animation: attendPulse 0.28s ease; }
 
   /* Events list */
   .events-section { padding: 16px 16px 0; }
   .section-label {
-    font-size: 12px; color: var(--hint); text-transform: uppercase;
-    letter-spacing: 0.8px; margin-bottom: 10px; font-weight: 600;
+    font-size: 13px; color: var(--hint); text-transform: none;
+    letter-spacing: 0.2px; margin-bottom: 10px; font-weight: 600;
   }
 
   .event-card {
@@ -203,7 +218,7 @@
 
   .event-actions { margin-top: 10px; padding-left: 32px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
   .event-btn {
-    padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600;
+    padding: 6px 12px; border-radius: 10px; font-size: 12px; font-weight: 600;
     background: rgba(255,255,255,0.08); color: var(--text);
     text-decoration: none; display: inline-block; border: none; cursor: pointer;
   }
@@ -211,7 +226,7 @@
 
   /* «Я пойду» button */
   .attend-btn {
-    padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
+    padding: 6px 14px; border-radius: 10px; font-size: 12px; font-weight: 600;
     background: rgba(255,255,255,0.06); color: var(--hint);
     border: 1px solid rgba(255,255,255,0.1); cursor: pointer;
     transition: all 0.2s; white-space: nowrap;
@@ -350,24 +365,22 @@
   <div class="month-days"     id="month-days"></div>
 </div>
 <div class="year-grid"   id="year-grid"></div>
-<div class="cat-toggle"  id="cat-toggle" onclick="toggleCatFilter()">Категории ▾</div>
 <div class="cat-strip"   id="cat-strip" style="display:none"></div>
 <div class="events-section" id="events-section"></div>
 <div class="footer"      id="footer"></div>
 
 <div class="bottom-bar">
-  <div class="homescreen-btn-sm" id="homescreen-btn" onclick="addToHomeScreen()" title="На рабочий стол">📲</div>
   <div class="homescreen-btn-sm" onclick="shareAfisha()" title="Поделиться афишей">🔗</div>
-  <div class="homescreen-btn-sm" onclick="openFeedback()" title="Обратная связь">✉️</div>
-  <div class="join-btn" onclick="openCommunity()">💬 Вступить в сообщество</div>
+  <div class="homescreen-btn-sm" onclick="openFeedback()" title="Напиши нам">✉️</div>
+  <div class="join-btn" onclick="openCommunity()">Войти в ELYNE Community</div>
 </div>
 
 <!-- Feedback modal -->
 <div class="feedback-overlay" id="feedback-overlay" onclick="closeFeedbackIfBg(event)">
   <div class="feedback-sheet">
-    <div class="feedback-title">✉️ Обратная связь</div>
-    <div class="feedback-hint">Отзыв об афише, пожелание или ссылка на интересный ресурс с мероприятиями — всё сюда</div>
-    <textarea class="feedback-textarea" id="feedback-text" placeholder="Напишите здесь..." maxlength="2000"></textarea>
+    <div class="feedback-title">Напиши нам</div>
+    <div class="feedback-hint">Что добавить в афишу, что поправить — или просто мысль</div>
+    <textarea class="feedback-textarea" id="feedback-text" placeholder="Что добавить в афишу, что исправить, или просто мысль" maxlength="2000"></textarea>
     <div class="feedback-status" id="feedback-status"></div>
     <div class="feedback-actions">
       <button class="feedback-cancel" onclick="closeFeedback()">Отмена</button>
@@ -404,27 +417,14 @@ let selectedDate = null;
 let selectedCats = new Set(['все']);
 let navMonth     = null;
 let navYear      = null;
-let catOpen      = false;
+let freeOnly     = false;
+let weekendOnly  = false;
 
 function viewAllowsCats(v) { return v === 'week' || v === 'month'; }
-function catFilterActive() { return !selectedCats.has('все'); }
+function isWeekendIso(iso) { const d = isoToDate(iso).getDay(); return d === 0 || d === 6; }
 function updateCatUI() {
-  const allow = viewAllowsCats(currentView);
-  const toggle = document.getElementById('cat-toggle');
-  const strip  = document.getElementById('cat-strip');
-  if (!toggle || !strip) return;
-  toggle.style.display = allow ? 'inline-block' : 'none';
-  strip.style.display  = (allow && catOpen) ? 'flex' : 'none';
-  const active = catFilterActive();
-  toggle.classList.toggle('has-filter', active);
-  const arrow = catOpen ? '▴' : '▾';
-  toggle.textContent = active && !catOpen
-    ? `Категории · ${selectedCats.size} ${arrow}`
-    : `Категории ${arrow}`;
-}
-function toggleCatFilter() {
-  catOpen = !catOpen;
-  updateCatUI();
+  const strip = document.getElementById('cat-strip');
+  if (strip) strip.style.display = viewAllowsCats(currentView) ? 'flex' : 'none';
 }
 
 // ─── CloudStorage helpers ──────────────────────────────────────────────────
@@ -478,7 +478,10 @@ async function toggleAttend(evId, btn) {
     if (btn) { btn.textContent = '★ Я пойду'; btn.classList.remove('attending'); }
   } else {
     attendedIds.add(evId);
-    if (btn) { btn.textContent = '★ Иду'; btn.classList.add('attending'); }
+    if (btn) {
+      btn.textContent = '★ Иду'; btn.classList.add('attending');
+      btn.classList.add('pulse'); setTimeout(() => btn.classList.remove('pulse'), 300);
+    }
     try { tg?.HapticFeedback?.impactOccurred('light'); } catch(e){}
   }
   await csSet(CS_KEY, JSON.stringify([...attendedIds]));
@@ -506,7 +509,12 @@ function isoToDate(iso) { const [y,m,d]=iso.split('-').map(Number); return new D
 function dateToIso(d)   { return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
 function addDays(iso,n) { const d=isoToDate(iso); d.setDate(d.getDate()+n); return dateToIso(d); }
 function formatDateFull(iso) { const d=isoToDate(iso); return `${d.getDate()} ${MONTHS_FULL[d.getMonth()]}`; }
-function matchCat(e) { return selectedCats.has('все') || selectedCats.has(e.category); }
+function matchCat(e) {
+  if (!(selectedCats.has('все') || selectedCats.has(e.category))) return false;
+  if (freeOnly && !e.is_free) return false;
+  if (weekendOnly && !isWeekendIso(e.date)) return false;
+  return true;
+}
 
 function openCommunity() {
   if (tg) tg.openTelegramLink(COMMUNITY_URL);
@@ -689,7 +697,7 @@ function setView(v, keepDate) {
   } else if (v==='today') {
     renderTodayEvents();
   } else if (v==='week') {
-    if (!selectedDate) selectedDate = todayIso();
+    // default: no day selected → feed shows today + upcoming; pills narrow to a day
     renderWeekStrip(); renderEvents();
   } else if (v==='month') {
     if (!navMonth) { const t=isoToDate(todayIso()); navMonth={year:t.getFullYear(),month:t.getMonth()}; }
@@ -813,7 +821,7 @@ function renderMyEvents() {
   if (!myEvts.length) {
     section.innerHTML = `<div class="empty">
       <div class="empty-emoji">★</div>
-      <div class="empty-text">Нажми «★ Я пойду» на событии — и оно появится здесь</div>
+      <div class="empty-text">Здесь будут события, на которые ты собираешься</div>
     </div>`;
     return;
   }
@@ -836,9 +844,35 @@ function renderMyEvents() {
 
 // ─── Category strip ────────────────────────────────────────────────────────
 
+function applyFilterChange() {
+  renderCatStrip();
+  if (currentView==='today') renderTodayEvents();
+  if (currentView==='week')  { renderWeekStrip(); renderEvents(); }
+  if (currentView==='month') { renderMonthView(); renderEvents(); }
+}
+
 function renderCatStrip() {
   const strip = document.getElementById('cat-strip');
   strip.innerHTML = '';
+
+  // Quick filters: Бесплатно / Выходные
+  const free = document.createElement('div');
+  free.className = 'cat-pill quick free'+(freeOnly?' active':'');
+  free.textContent = 'Бесплатно';
+  free.onclick = () => { freeOnly = !freeOnly; applyFilterChange(); };
+  strip.appendChild(free);
+
+  const wknd = document.createElement('div');
+  wknd.className = 'cat-pill quick'+(weekendOnly?' active':'');
+  wknd.textContent = 'Выходные';
+  wknd.onclick = () => { weekendOnly = !weekendOnly; applyFilterChange(); };
+  strip.appendChild(wknd);
+
+  const sep = document.createElement('div');
+  sep.className = 'cat-sep';
+  strip.appendChild(sep);
+
+  // Category pills
   CATS.forEach((label,i) => {
     const key = CAT_KEYS[i];
     const pill = document.createElement('div');
@@ -849,19 +883,11 @@ function renderCatStrip() {
         selectedCats = new Set(['все']);
       } else {
         selectedCats.delete('все');
-        if (selectedCats.has(key)) {
-          selectedCats.delete(key);
-        } else {
-          selectedCats.add(key);
-        }
+        if (selectedCats.has(key)) selectedCats.delete(key);
+        else selectedCats.add(key);
         if (selectedCats.size === 0) selectedCats.add('все');
       }
-      renderCatStrip();
-      updateCatUI();
-      if (currentView==='today') renderTodayEvents();
-      if (currentView==='week')  { renderWeekStrip(); renderEvents(); }
-      if (currentView==='month') { renderMonthView(); renderEvents(); }
-      if (currentView==='year')  renderYearView();
+      applyFilterChange();
     };
     strip.appendChild(pill);
   });
@@ -906,7 +932,7 @@ function eventCardHtml(ev) {
   const tgUrl = ev.tg_msg_id
     ? `https://t.me/elyne_community/${ev.tg_msg_id}`
     : (ev.url || COMMUNITY_URL);
-  const sourceBtn = `<button class="event-btn primary" onclick="openTgDetails('${tgUrl}')">Подробнее</button>`;
+  const sourceBtn = `<button class="event-btn primary" onclick="openTgDetails('${tgUrl}')">Открыть</button>`;
 
   return `<div class="event-card" data-cat="${ev.category}">
     <div class="event-header">
@@ -916,7 +942,7 @@ function eventCardHtml(ev) {
     <div class="event-meta">
       ${ev.category==='онлайн'?`<span class="online-badge">🌐 Онлайн</span>`:(ev.place?`<span class="meta-tag">📍 ${ev.place}</span>`:'')}
       ${ev.time ?`<span class="meta-tag">🕐 ${ev.time}</span>` :''}
-      <span class="event-price">${ev.is_free?'Бесплатно':(ev.price||'')}</span>
+      ${ev.is_free?'<span class="free-badge">Бесплатно</span>':(ev.price?`<span class="event-price">${ev.price}</span>`:'')}
     </div>
     ${ev.description?`<div class="event-desc">${ev.description}</div>`:''}
     <div class="event-actions">
@@ -1056,7 +1082,7 @@ function renderEvents() {
   const sortedDates = Object.keys(groups).sort();
 
   if (!sortedDates.length) {
-    section.innerHTML = `<div class="empty"><div class="empty-emoji">🌿</div><div class="empty-text">Событий не найдено</div></div>`;
+    section.innerHTML = `<div class="empty"><div class="empty-emoji">🌿</div><div class="empty-text">${(freeOnly||weekendOnly||!selectedCats.has('все'))?'По этому фильтру пока тихо':'Событий не найдено'}</div></div>`;
     return;
   }
 
