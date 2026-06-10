@@ -145,6 +145,14 @@
   .cat-бизнес    { background: #FFB74D !important; }
   .cat-праздник  { background: #F06292 !important; }
 
+  /* Category filter toggle */
+  .cat-toggle {
+    display: inline-block; margin: 12px 16px 0; padding: 6px 14px; border-radius: 14px;
+    font-size: 13px; font-weight: 500; background: var(--bg2); color: var(--hint);
+    cursor: pointer; user-select: none; transition: all 0.15s; white-space: nowrap;
+  }
+  .cat-toggle.has-filter { background: var(--btn); color: var(--btn-text); font-weight: 600; }
+
   /* Category filter */
   .cat-strip { padding: 12px 16px 0; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
   .cat-strip::-webkit-scrollbar { display: none; }
@@ -325,8 +333,7 @@
 
 <div class="view-switcher">
   <div class="view-btn"        id="btn-my"    onclick="setView('my')">Мои ★<span id="my-count" class="my-count" style="display:none">0</span></div>
-  <div class="view-btn active" id="btn-today" onclick="setView('today')">Сегодня</div>
-  <div class="view-btn"        id="btn-week"  onclick="setView('week')">Неделя</div>
+  <div class="view-btn active" id="btn-week"  onclick="setView('week')">Афиша</div>
   <div class="view-btn"        id="btn-month" onclick="setView('month')">Месяц</div>
 </div>
 
@@ -342,7 +349,8 @@
   <div class="month-days"     id="month-days"></div>
 </div>
 <div class="year-grid"   id="year-grid"></div>
-<div class="cat-strip"   id="cat-strip"></div>
+<div class="cat-toggle"  id="cat-toggle" onclick="toggleCatFilter()">Категории ▾</div>
+<div class="cat-strip"   id="cat-strip" style="display:none"></div>
 <div class="events-section" id="events-section"></div>
 <div class="footer"      id="footer"></div>
 
@@ -395,6 +403,28 @@ let selectedDate = null;
 let selectedCats = new Set(['все']);
 let navMonth     = null;
 let navYear      = null;
+let catOpen      = false;
+
+function viewAllowsCats(v) { return v === 'week' || v === 'month'; }
+function catFilterActive() { return !selectedCats.has('все'); }
+function updateCatUI() {
+  const allow = viewAllowsCats(currentView);
+  const toggle = document.getElementById('cat-toggle');
+  const strip  = document.getElementById('cat-strip');
+  if (!toggle || !strip) return;
+  toggle.style.display = allow ? 'inline-block' : 'none';
+  strip.style.display  = (allow && catOpen) ? 'flex' : 'none';
+  const active = catFilterActive();
+  toggle.classList.toggle('has-filter', active);
+  const arrow = catOpen ? '▴' : '▾';
+  toggle.textContent = active && !catOpen
+    ? `Категории · ${selectedCats.size} ${arrow}`
+    : `Категории ${arrow}`;
+}
+function toggleCatFilter() {
+  catOpen = !catOpen;
+  updateCatUI();
+}
 
 // ─── CloudStorage helpers ──────────────────────────────────────────────────
 
@@ -650,7 +680,7 @@ function setView(v, keepDate) {
   document.getElementById('month-grid').classList.toggle('visible', v==='month');
   document.getElementById('year-grid').classList.toggle('visible',  v==='year');
   document.getElementById('nav-bar').classList.toggle('visible', v==='month'||v==='year');
-  document.getElementById('cat-strip').style.display     = (v==='year'||v==='my') ? 'none' : 'flex';
+  updateCatUI();
   document.getElementById('events-section').style.display = v==='year' ? 'none' : 'block';
 
   if (v==='my') {
@@ -826,6 +856,7 @@ function renderCatStrip() {
         if (selectedCats.size === 0) selectedCats.add('все');
       }
       renderCatStrip();
+      updateCatUI();
       if (currentView==='today') renderTodayEvents();
       if (currentView==='week')  { renderWeekStrip(); renderEvents(); }
       if (currentView==='month') { renderMonthView(); renderEvents(); }
@@ -1061,8 +1092,8 @@ async function loadEvents() {
 
     renderCatStrip();
     updateMyTabCount();
-    // Start on "Мои" if user has saved events, otherwise show "Сегодня"
-    setView(attendedIds.size > 0 ? 'my' : 'today');
+    // Start on "Мои" if user has saved events, otherwise the "Афиша" feed
+    setView(attendedIds.size > 0 ? 'my' : 'week');
     footer.textContent = `${allEvents.length} событий · ELYNE Community`;
   } catch(e) {
     label.textContent    = 'Ошибка загрузки';
