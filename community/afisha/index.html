@@ -263,6 +263,34 @@
     text-align: center; vertical-align: 1px;
   }
 
+  /* Search */
+  .search-icon {
+    width: 30px; height: 30px; border-radius: 50%; background: var(--bg2);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 14px; flex-shrink: 0; user-select: none;
+  }
+  .search-bar { display: none; padding: 10px 16px 0; gap: 8px; align-items: center; }
+  .search-bar.open { display: flex; }
+  .search-input {
+    flex: 1; background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 9px 12px; color: var(--text);
+    font-size: 14px; outline: none; font-family: inherit;
+  }
+  .search-input:focus { border-color: rgba(196,169,94,0.5); }
+  .search-clear {
+    width: 30px; height: 30px; border-radius: 50%; background: var(--bg2);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 13px; color: var(--hint); flex-shrink: 0;
+  }
+
+  /* Skeleton loading */
+  .skel-card {
+    background: var(--card); border-radius: 14px; padding: 14px 16px;
+    margin-bottom: 10px; border: 1px solid var(--border);
+  }
+  .skel-line { height: 12px; border-radius: 6px; background: linear-gradient(90deg,#222 25%,#2c2c2c 37%,#222 63%); background-size: 400% 100%; animation: skelShimmer 1.3s ease infinite; }
+  @keyframes skelShimmer { 0%{background-position:100% 0} 100%{background-position:-100% 0} }
+
   /* Empty state */
   .empty { text-align: center; padding: 48px 24px; color: var(--hint); }
   .empty-emoji { font-size: 40px; margin-bottom: 12px; }
@@ -356,7 +384,15 @@
     <div class="header-tagline">События Москвы, выбранные вручную</div>
     <div class="header-subtitle" id="updated-label">Загружаю…</div>
   </div>
-  <div class="updated-dot" id="status-dot"></div>
+  <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
+    <div class="search-icon" onclick="toggleSearch()" title="Поиск">🔍</div>
+    <div class="updated-dot" id="status-dot"></div>
+  </div>
+</div>
+
+<div class="search-bar" id="search-bar">
+  <input id="search-input" class="search-input" type="text" placeholder="Поиск: название, место…" oninput="onSearchInput()">
+  <div class="search-clear" onclick="clearSearch()">✕</div>
 </div>
 
 <div class="view-switcher">
@@ -432,6 +468,30 @@ let navMonth     = null;
 let navYear      = null;
 let freeOnly     = false;
 let weekendOnly  = false;
+let searchQuery  = '';
+
+function toggleSearch() {
+  const bar = document.getElementById('search-bar');
+  const open = bar.classList.toggle('open');
+  if (open) { setTimeout(() => document.getElementById('search-input')?.focus(), 60); }
+  else { clearSearch(); }
+}
+function onSearchInput() {
+  searchQuery = (document.getElementById('search-input').value || '').trim().toLowerCase();
+  rerenderCurrentView();
+}
+function clearSearch() {
+  searchQuery = '';
+  const inp = document.getElementById('search-input');
+  if (inp) inp.value = '';
+  rerenderCurrentView();
+}
+function rerenderCurrentView() {
+  if (currentView==='my')    renderMyEvents();
+  if (currentView==='today') renderTodayEvents();
+  if (currentView==='week')  { renderWeekStrip(); renderEvents(); }
+  if (currentView==='month') { renderMonthView(); renderEvents(); }
+}
 
 function viewAllowsCats(v) { return v === 'week' || v === 'month'; }
 function isWeekendIso(iso) { const d = isoToDate(iso).getDay(); return d === 0 || d === 6; }
@@ -527,6 +587,10 @@ function matchCat(e) {
   if (!(selectedCats.has('все') || selectedCats.has(e.category))) return false;
   if (freeOnly && !e.is_free) return false;
   if (weekendOnly && !isWeekendIso(e.date)) return false;
+  if (searchQuery) {
+    const hay = (e.title+' '+(e.place||'')+' '+(e.description||'')+' '+(e.category||'')).toLowerCase();
+    if (!hay.includes(searchQuery)) return false;
+  }
   return true;
 }
 
@@ -1095,7 +1159,9 @@ function renderEvents() {
   const today   = todayIso();
 
   let filtered = allEvents.filter(matchCat);
-  if (selectedDate) {
+  if (searchQuery) {
+    filtered = filtered.filter(e=>e.date>=today);          // поиск — по всем будущим датам
+  } else if (selectedDate) {
     filtered = filtered.filter(e=>e.date===selectedDate);
   } else if (currentView==='week') {
     const end = addDays(today,7);
@@ -1110,7 +1176,8 @@ function renderEvents() {
   const sortedDates = Object.keys(groups).sort();
 
   if (!sortedDates.length) {
-    section.innerHTML = `<div class="empty"><div class="empty-emoji">🌿</div><div class="empty-text">${(freeOnly||weekendOnly||!selectedCats.has('все'))?'По этому фильтру пока тихо':'Событий не найдено'}</div></div>`;
+    const filtering = freeOnly||weekendOnly||searchQuery||!selectedCats.has('все');
+    section.innerHTML = `<div class="empty"><div class="empty-emoji">🌿</div><div class="empty-text">${searchQuery?'Ничего не нашлось':(filtering?'По этому фильтру пока тихо':'Событий не найдено')}</div></div>`;
     return;
   }
 
@@ -1125,10 +1192,25 @@ function renderEvents() {
 
 // ─── Load ──────────────────────────────────────────────────────────────────
 
+function renderSkeletons() {
+  const section = document.getElementById('events-section');
+  if (!section) return;
+  let html = '<div class="skel-line" style="width:120px;height:13px;margin:6px 0 14px"></div>';
+  for (let i=0;i<4;i++) {
+    html += `<div class="skel-card">
+      <div class="skel-line" style="width:72%;height:15px;margin-bottom:11px"></div>
+      <div class="skel-line" style="width:45%;height:11px;margin-bottom:9px"></div>
+      <div class="skel-line" style="width:88%;height:10px"></div>
+    </div>`;
+  }
+  section.innerHTML = html;
+}
+
 async function loadEvents() {
   const label  = document.getElementById('updated-label');
   const dot    = document.getElementById('status-dot');
   const footer = document.getElementById('footer');
+  renderSkeletons();
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 8000);
