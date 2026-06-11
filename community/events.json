@@ -1,19 +1,6 @@
 {
-  "updated": "2026-06-10",
+  "updated": "2026-06-11",
   "events": [
-    {
-      "id": "teatr-naciy-dyadya-vanya-2026-06-09",
-      "title": "«Дядя Ваня» — Театр Наций (Миронов, Пересильд, Боярская)",
-      "date": "2026-06-09",
-      "time": "19:00",
-      "place": "Театр Наций, Основная сцена, Петровский пер., 3",
-      "category": "театр",
-      "emoji": "🎭",
-      "description": "Чехов в постановке Стефана Брауншвейга. Звёздный состав: Миронов, Пересильд, Боярская, Добронравов, Александрова.",
-      "url": "https://theatre-of-nations.ru/events",
-      "price": "от 2900 ₽",
-      "tg_msg_id": 266
-    },
     {
       "id": "kremlin-chingiskhan-2026-06-10",
       "title": "«Потомки Чингисхана. Русь и мир» — Музеи Кремля",
@@ -224,20 +211,6 @@
       "url": "https://zaryadyehall.ru/events/",
       "price": "от 3900 ₽",
       "tg_msg_id": 283
-    },
-    {
-      "id": "tech-week-2026-06-17",
-      "title": "Moscow Tech Week 2026",
-      "date": "2026-06-17",
-      "time": "10:00",
-      "place": "Digital October, Москва",
-      "category": "it",
-      "emoji": "💻",
-      "description": "AI-продукты, deep tech, продуктовые команды, инвестиции в tech. 50+ спикеров, хакатон, нетворкинг.",
-      "price": "от 3000 ₽",
-      "is_free": false,
-      "url": "https://www.afisha.ru/msk/events/",
-      "tg_msg_id": 192
     },
     {
       "id": "kosmos-bespl-vhod-2026-06-18",
@@ -846,20 +819,6 @@
       "tg_msg_id": 968
     },
     {
-      "id": "techweek-moscow-2026-06-17",
-      "title": "TECH WEEK 2026",
-      "date": "2026-06-17",
-      "time": "09:00",
-      "place": "Техноград, павильон 38, Москва",
-      "category": "it",
-      "emoji": "⚡",
-      "description": "Главная бизнес-конференция по технологиям: ИИ, блокчейн, Web3, цифровизация. 17–18 июня, Москва. Нетворкинг с фаундерами и топ-менеджерами рынка.",
-      "price": "от 10 000 ₽",
-      "is_free": false,
-      "url": "https://techweek.moscow/",
-      "tg_msg_id": 992
-    },
-    {
       "id": "infradev-meetup-4-2026-06-10",
       "title": "InfraDev Meetup #4 — AI в SDLC и MLOps",
       "date": "2026-06-10",
@@ -970,6 +929,20 @@
       "is_free": false,
       "url": "https://futurione.ru/announces/evolution-muzyikalnyij-performans-budushhego",
       "tg_msg_id": 526
+    },
+    {
+      "id": "tradicii-i-sovremennost-2026-06-11",
+      "title": "Фестиваль «Традиции и современность»",
+      "date": "2026-06-11",
+      "time": "11:00",
+      "place": "Гостиный двор, ул. Ильинка, 4",
+      "category": "культура",
+      "emoji": "🎨",
+      "description": "Московский международный фестиваль искусств. 80+ галерей и художников из России, Азии, Европы и Африки. Восемь направлений: живопись, скульптура, фотография, цифровое, прикладное, инсталляция, музейное дело, ювелирное искусство. 11–14 июня.",
+      "price": "750–1500 ₽",
+      "is_free": false,
+      "url": "https://www.kp.ru/afisha/msk/festivali/festival-tradiczii-i-sovremennost-v-moskve/",
+      "tg_msg_id": 533
     }
   ]
 }
