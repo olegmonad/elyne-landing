@@ -192,6 +192,12 @@
     transition: opacity 0.1s; position: relative; overflow: hidden;
   }
   .event-card:active { opacity: 0.8; }
+  .event-card.focus-pulse { animation: cardFocus 2.6s ease-out; border-color: var(--btn); }
+  @keyframes cardFocus {
+    0%   { background: rgba(224,168,90,0.18); }
+    70%  { background: rgba(224,168,90,0.06); }
+    100% { background: var(--card); }
+  }
   .event-card::before {
     content: ''; position: absolute; left: 0; top: 0; bottom: 0;
     width: 3px; background: var(--btn); border-radius: 3px 0 0 3px;
@@ -1026,7 +1032,7 @@ function eventCardHtml(ev) {
     : (ev.url || COMMUNITY_URL);
   const sourceBtn = `<button class="event-btn primary" onclick="openTgDetails('${tgUrl}')">Открыть</button>`;
 
-  return `<div class="event-card" data-cat="${ev.category}">
+  return `<div class="event-card" id="ev-${ev.id}" data-cat="${ev.category}">
     <div class="event-header">
       <div class="event-emoji">${ev.emoji||'📌'}</div>
       <div class="event-title">${ev.title}</div>
@@ -1190,6 +1196,26 @@ function renderEvents() {
   }).join('');
 }
 
+// Открыть конкретное событие по deep-link (?startapp=<event_id>): показать его день, прокрутить, подсветить
+function focusEvent(id) {
+  const ev = allEvents.find(e=>e.id===id);
+  if (!ev) { setView('week'); return; }
+  selectedCats = new Set(['все']);
+  freeOnly = false; weekendOnly = false; searchQuery = '';
+  const si = document.getElementById('search-input'); if (si) si.value = '';
+  selectedDate = ev.date;
+  renderCatStrip();
+  setView('week', true);   // keepDate=true → selectedDate сохраняется, лента сворачивается на этот день
+  setTimeout(()=>{
+    const el = document.getElementById('ev-'+id);
+    if (el) {
+      el.scrollIntoView({behavior:'smooth', block:'center'});
+      el.classList.add('focus-pulse');
+      setTimeout(()=>el.classList.remove('focus-pulse'), 2700);
+    }
+  }, 200);
+}
+
 // ─── Load ──────────────────────────────────────────────────────────────────
 
 function renderSkeletons() {
@@ -1229,8 +1255,14 @@ async function loadEvents() {
 
     renderCatStrip();
     updateMyTabCount();
-    // Start on "Мои" if user has saved events, otherwise the "Афиша" feed
-    setView(attendedIds.size > 0 ? 'my' : 'week');
+    // Deep-link на событие (?startapp=<event_id>) имеет приоритет над дефолтным экраном
+    const startParam = (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) ? tg.initDataUnsafe.start_param : '';
+    if (startParam && allEvents.some(e=>e.id===startParam)) {
+      focusEvent(startParam);
+    } else {
+      // Start on "Мои" if user has saved events, otherwise the "Афиша" feed
+      setView(attendedIds.size > 0 ? 'my' : 'week');
+    }
     footer.textContent = `${allEvents.length} событий · ELYNE Community`;
   } catch(e) {
     label.textContent    = 'Ошибка загрузки';
