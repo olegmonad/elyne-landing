@@ -693,7 +693,8 @@
       "description": "Структурированный нетворкинг для фаундеров и предпринимателей. 80 участников, спикеры, питч-сессии. Формат живых знакомств без случайных людей.",
       "price": "3 490 ₽",
       "is_free": false,
-      "url": "https://all-events.ru/events/calendar/city-is-moskva/tags-is-networking/"
+      "url": "https://all-events.ru/events/calendar/city-is-moskva/tags-is-networking/",
+      "tg_msg_id": 565
     },
     {
       "id": "project-management-forum-2026-06-24",
@@ -706,7 +707,8 @@
       "description": "VI Ежегодный Всероссийский форум по проектному управлению. Лучшие практики, методологии, кейсы от руководителей крупных компаний. 3 дня, 24-26 июня.",
       "price": "уточнить на сайте",
       "is_free": false,
-      "url": "https://interforums.ru/pm26/home"
+      "url": "https://interforums.ru/pm26/home",
+      "tg_msg_id": 566
     },
     {
       "id": "tech-week-2026-06-17",
