@@ -80,14 +80,37 @@
   .dot .n{font-size:10px;color:var(--ink-dim);letter-spacing:.04em;white-space:nowrap}
 
   .hint{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom) + 8px);text-align:center;font-size:10.5px;color:var(--muted);letter-spacing:.04em;z-index:30}
-  /* пустой старт (нет образов) — глубокий зелёный + тёплый амбер-рассвет, без лица */
-  .greenbg{position:absolute;inset:0;background:
-    radial-gradient(130% 70% at 50% 84%, rgba(205,163,94,.26), rgba(205,163,94,0) 56%),
-    radial-gradient(120% 95% at 50% 36%, #2b3f30 0%, #1c2b21 50%, #0f1711 100%)}
-  .greenbg::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 120% at 50% 50%, transparent 58%, rgba(0,0,0,.45));pointer-events:none}
-  .firstwrap{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 44px;z-index:5}
-  .softline{font-family:var(--serif);font-style:italic;font-size:44px;line-height:1.05;color:#f4efe7;text-shadow:0 0 26px rgba(205,163,94,.42)}
-  .softsub{margin-top:16px;font-size:14px;color:var(--ink-dim);font-weight:300;letter-spacing:.03em;line-height:1.5;max-width:300px}
+  /* ── ХОЛОДНЫЙ ВХОД (нет образов) — кремовый разворот, плёночное зерно, без лица, без glow ── */
+  .cold{position:absolute;inset:0;background:#efe9df}
+  .grain{position:absolute;inset:-20px;pointer-events:none;opacity:.55;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='180' height='180' filter='url(%23n)'/></svg>");
+    animation:grainmove 1.1s steps(2) infinite}
+  @keyframes grainmove{0%{transform:translate(0,0)}50%{transform:translate(-4px,3px)}100%{transform:translate(3px,-3px)}}
+  .vign{position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 110% at 50% 46%, transparent 60%, rgba(42,36,29,.16))}
+
+  /* концепт 1 — непроявленный кадр */
+  .frame{position:absolute;left:50%;top:43%;transform:translate(-50%,-50%);width:148px;height:200px;
+    border:1px solid rgba(42,36,29,.5);box-shadow:inset 0 0 60px rgba(42,36,29,.08)}
+  .frame i{position:absolute;width:13px;height:13px;border:1.5px solid rgba(42,36,29,.55)}
+  .frame i.tl{top:-1px;left:-1px;border-right:0;border-bottom:0}
+  .frame i.tr{top:-1px;right:-1px;border-left:0;border-bottom:0}
+  .frame i.bl{bottom:-1px;left:-1px;border-right:0;border-top:0}
+  .frame i.br{bottom:-1px;right:-1px;border-left:0;border-top:0}
+
+  /* концепт 2 — кремень (тяжёлая порода) */
+  .stone{position:absolute;left:50%;top:43%;transform:translate(-52%,-50%);width:230px;height:230px;animation:stonefloat 9s ease-in-out infinite}
+  @keyframes stonefloat{0%,100%{transform:translate(-52%,-50%)}50%{transform:translate(-52%,-47%)}}
+
+  .coldtext{position:absolute;left:0;right:0;bottom:168px;text-align:center;padding:0 46px;z-index:6}
+  .coldtext .t{font-family:var(--serif);font-weight:500;font-size:31px;line-height:1.14;color:#2a241d}
+  .coldtext .s{font-size:13.5px;color:#6f655a;margin-top:11px;font-weight:300;line-height:1.5}
+  .coldcta{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom) + 46px);display:flex;justify-content:center;z-index:6}
+  .coldcta button{font-family:var(--sans);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#efe9df;
+    background:#2a241d;border:none;border-radius:26px;padding:15px 38px;cursor:pointer;position:relative}
+  .coldcta button::after{content:"";position:absolute;inset:-1px;border-radius:26px;border:1px solid rgba(42,36,29,.4);animation:breathe 3.6s ease-in-out infinite}
+  .ctoggle{position:absolute;top:calc(env(safe-area-inset-top) + 60px);left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:25}
+  .ctoggle button{font-size:11px;letter-spacing:.04em;padding:7px 14px;border-radius:16px;border:1px solid rgba(42,36,29,.25);background:transparent;color:#6f655a;cursor:pointer}
+  .ctoggle button.on{background:#2a241d;color:#efe9df;border-color:#2a241d}
   .startcta{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom) + 56px);display:flex;flex-direction:column;align-items:center;gap:14px}
   .startbtn{width:64px;height:64px;border-radius:50%;border:1px solid var(--line);background:rgba(244,239,231,.1);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer}
   .startbtn::after{content:"";position:absolute;inset:-1px;border-radius:50%;border:1px solid rgba(205,163,94,.5);animation:breathe 3.4s ease-in-out infinite}
@@ -197,24 +220,44 @@
     </div>
   </section>
 
-  <!-- ПУСТОЙ СТАРТ (образов ещё нет) -->
+  <!-- ХОЛОДНЫЙ ВХОД (образов ещё нет) -->
   <section class="screen" id="s-first">
-    <div class="greenbg"></div>
-    <div class="scrim" style="background:linear-gradient(to bottom,rgba(19,29,22,.3),rgba(19,29,22,0) 30%,rgba(19,29,22,0) 60%,rgba(19,29,22,.7))"></div>
+    <div class="cold"></div>
+    <div class="grain"></div>
+
+    <!-- концепт 1: непроявленный кадр -->
+    <div id="cFrame">
+      <div class="frame"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+    </div>
+    <!-- концепт 2: кремень -->
+    <div id="cStone" style="display:none">
+      <svg class="stone" viewBox="0 0 200 200">
+        <defs>
+          <radialGradient id="rock" cx="38%" cy="34%" r="78%">
+            <stop offset="0%" stop-color="#5a5249"/><stop offset="48%" stop-color="#3a342c"/><stop offset="100%" stop-color="#211d17"/>
+          </radialGradient>
+        </defs>
+        <path fill="url(#rock)" d="M64 26c26-10 70-8 92 18s24 60 8 86-58 40-92 30S20 150 22 110 38 36 64 26Z"/>
+      </svg>
+    </div>
+
+    <div class="vign"></div>
+
     <div class="top">
-      <div class="wordmark" onclick="go('home')">ELYNE</div>
-      <div class="profile" onclick="go('profile')"><svg width="19" height="19" viewBox="0 0 24 24"><circle class="stroke" cx="12" cy="8" r="3.4"/><path class="stroke" d="M5.5 20c.7-3.6 3.3-5.5 6.5-5.5s5.8 1.9 6.5 5.5"/></svg></div>
+      <div class="wordmark" onclick="go('home')" style="color:#2a241d">ELYNE</div>
+      <div class="profile" onclick="go('profile')" style="background:transparent"><svg width="19" height="19" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.4" fill="none" stroke="#2a241d" stroke-width="1.5"/><path d="M5.5 20c.7-3.6 3.3-5.5 6.5-5.5s5.8 1.9 6.5 5.5" fill="none" stroke="#2a241d" stroke-width="1.5"/></svg></div>
     </div>
-    <div class="firstwrap">
-      <div class="softline">жизнь хороша</div>
-      <div class="softsub">давай покажу, какой именно — твою</div>
+
+    <div class="ctoggle">
+      <button id="kFrame" class="on" onclick="setConcept('frame')">непроявленный кадр</button>
+      <button id="kStone" onclick="setConcept('stone')">кремень</button>
     </div>
-    <div class="startcta">
-      <div class="startbtn" onclick="go('dialog')">
-        <svg width="26" height="26" viewBox="0 0 24 24"><path class="stroke" d="M20 11.5a7.5 7.5 0 0 1-10.9 6.7L4 19.5l1.4-4.2A7.5 7.5 0 1 1 20 11.5Z"/></svg>
-      </div>
-      <div class="cap">начать разговор</div>
+
+    <div class="coldtext">
+      <div class="t">Картина есть.<br>Ты её не видел.</div>
+      <div class="s">Расскажи о себе — Элайн покажет остальное.</div>
     </div>
+    <div class="coldcta"><button onclick="go('dialog')">рассказать</button></div>
   </section>
 
   <div class="hint">макет · тапай «карту», «диалог», человечка и ELYNE · <span onclick="go('first')" style="text-decoration:underline;cursor:pointer">пустой старт</span></div>
@@ -231,11 +274,11 @@
     document.getElementById('s-'+name).classList.add('active');
     if(navigator.vibrate) navigator.vibrate(8);
   }
-  function setVariant(v){
-    document.getElementById('firstA').style.display = v==='A'?'block':'none';
-    document.getElementById('firstB').style.display = v==='B'?'block':'none';
-    document.getElementById('vA').classList.toggle('on', v==='A');
-    document.getElementById('vB').classList.toggle('on', v==='B');
+  function setConcept(c){
+    document.getElementById('cFrame').style.display = c==='frame'?'block':'none';
+    document.getElementById('cStone').style.display = c==='stone'?'block':'none';
+    document.getElementById('kFrame').classList.toggle('on', c==='frame');
+    document.getElementById('kStone').classList.toggle('on', c==='stone');
   }
   // расставляем 10 сфер по кольцу
   var SPH = ["Состояние","Ресурсы","Реализация","Партнёрство","Дом","Род","Творение","Развитие","Свобода","Окружение"];
