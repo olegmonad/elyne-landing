@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>Elyne · новая главная — макет</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#f4efe7; --ink-dim:#cfc6b8; --muted:#9a9182;
+    --amber:#cda35e; --line:rgba(244,239,231,.18);
+    --glass:rgba(20,17,13,.42);
+    --serif:"Cormorant Garamond",Georgia,serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%;background:#0d0b08;font-family:var(--sans);color:var(--ink);overflow:hidden}
+  #app{position:fixed;inset:0;overflow:hidden}
+
+  /* фон — образ человека, всегда; на не-главных размыт сильнее */
+  .bg{position:absolute;inset:0;background-size:cover;background-position:center 32%;transition:filter .6s ease, transform .6s ease}
+  .bg.blur{filter:blur(18px) brightness(.62) saturate(.9);transform:scale(1.1)}
+  .scrim{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(13,11,8,.55) 0%,rgba(13,11,8,0) 26%,rgba(13,11,8,0) 50%,rgba(13,11,8,.82) 100%)}
+
+  .screen{position:absolute;inset:0;display:none;flex-direction:column}
+  .screen.active{display:flex;animation:fade .45s ease}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+
+  /* верх — wordmark по центру + профиль справа (на всех экранах) */
+  .top{position:absolute;top:calc(env(safe-area-inset-top) + 16px);left:0;right:0;display:flex;align-items:center;justify-content:center;z-index:20}
+  .wordmark{font-family:var(--serif);font-size:21px;letter-spacing:.16em;color:var(--ink);opacity:.96;cursor:pointer}
+  .profile{position:absolute;right:18px;top:0;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);
+    background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    display:flex;align-items:center;justify-content:center;cursor:pointer}
+
+  /* центр-низ: имя образа + лайк/дизлайк (главная). Ничего не наезжает. */
+  .caption{position:absolute;left:0;right:0;bottom:148px;text-align:center;padding:0 40px;z-index:15}
+  .caption .label{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--amber);opacity:.9;margin-bottom:8px}
+  .caption .title{font-family:var(--serif);font-size:30px;line-height:1.12;color:var(--ink)}
+  .caption .sub{font-size:13px;color:var(--ink-dim);margin-top:7px;font-weight:300}
+  .react{display:flex;gap:12px;justify-content:center;margin-top:18px}
+  .react .rb{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--glass);
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .react .rb.on{background:var(--ink);border-color:var(--ink)}
+
+  /* нижняя навигация: слева — карта (поменьше), справа — диалог (крупнее, дышит) */
+  .nav{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom) + 30px);display:flex;align-items:center;justify-content:space-between;padding:0 30px;z-index:20}
+  .navbtn{border-radius:50%;border:1px solid var(--line);background:var(--glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;position:relative}
+  .navbtn.map{width:56px;height:56px}
+  .navbtn.dialog{width:68px;height:68px}
+  .navbtn .nlabel{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim)}
+  /* дыхание у диалога — мягкое кольцо, без свечения */
+  .navbtn.dialog::after{content:"";position:absolute;inset:-1px;border-radius:50%;border:1px solid rgba(205,163,94,.5);animation:breathe 3.4s ease-in-out infinite}
+  @keyframes breathe{0%{transform:scale(1);opacity:.55}70%{transform:scale(1.28);opacity:0}100%{transform:scale(1.28);opacity:0}}
+
+  svg{display:block}
+  .stroke{fill:none;stroke:var(--ink);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+
+  /* экран диалога */
+  .chat{flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding:0 22px 132px;gap:12px;overflow:hidden}
+  .msg{max-width:82%;padding:12px 16px;border-radius:18px;font-size:15px;line-height:1.45;font-weight:300}
+  .msg.a{align-self:flex-start;background:rgba(20,17,13,.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--line);color:var(--ink)}
+  .msg.u{align-self:flex-end;background:#f4efe7;color:#2a241d}
+  .inputbar{position:absolute;left:16px;right:16px;bottom:calc(env(safe-area-inset-bottom) + 108px);height:46px;border-radius:23px;border:1px solid var(--line);
+    background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:flex;align-items:center;padding:0 18px;color:var(--muted);font-size:14px;font-weight:300}
+
+  /* экран карты */
+  .maptitle{position:absolute;top:calc(env(safe-area-inset-top) + 72px);left:0;right:0;text-align:center}
+  .maptitle .t{font-family:var(--serif);font-size:26px}
+  .maptitle .s{font-size:12px;color:var(--ink-dim);margin-top:4px;font-weight:300}
+  .orbit{flex:1;display:flex;align-items:center;justify-content:center;position:relative}
+  .sphere-wrap{position:relative;width:300px;height:300px}
+  .core{position:absolute;left:50%;top:50%;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;
+    background:radial-gradient(circle at 38% 34%,rgba(244,239,231,.95),rgba(205,163,94,.5) 70%,transparent);}
+  .dot{position:absolute;display:flex;flex-direction:column;align-items:center;gap:5px;transform:translate(-50%,-50%);cursor:pointer}
+  .dot .c{width:13px;height:13px;border-radius:50%;background:var(--ink);opacity:.85;box-shadow:0 0 0 4px rgba(244,239,231,.06)}
+  .dot .c.dim{background:transparent;border:1px solid var(--line);opacity:.7}
+  .dot .n{font-size:10px;color:var(--ink-dim);letter-spacing:.04em;white-space:nowrap}
+
+  .hint{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom) + 8px);text-align:center;font-size:10.5px;color:var(--muted);letter-spacing:.04em;z-index:30}
+  .pf{padding:84px 26px;overflow-y:auto}
+  .pf h2{font-family:var(--serif);font-weight:500;font-size:24px;margin:0 0 14px}
+  .pf .tab{display:flex;align-items:center;gap:12px;padding:15px 16px;border:1px solid var(--line);border-radius:14px;margin-bottom:10px;background:rgba(20,17,13,.4);font-size:15px;font-weight:300}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ГЛАВНАЯ -->
+  <section class="screen active" id="s-home">
+    <div class="bg" id="homebg"></div>
+    <div class="scrim"></div>
+    <div class="top">
+      <div class="wordmark">ELYNE</div>
+      <div class="profile" onclick="go('profile')" aria-label="профиль">
+        <svg width="19" height="19" viewBox="0 0 24 24"><circle class="stroke" cx="12" cy="8" r="3.4"/><path class="stroke" d="M5.5 20c.7-3.6 3.3-5.5 6.5-5.5s5.8 1.9 6.5 5.5"/></svg>
+      </div>
+    </div>
+
+    <div class="caption">
+      <div class="label">Состояние</div>
+      <div class="title">утро, которое принадлежит мне</div>
+      <div class="sub">лёгкий, в просторе, природа за окном</div>
+      <div class="react">
+        <div class="rb on" aria-label="нравится">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.49 4.04 3 5.5l7 7Z" fill="#f4efe7" stroke="#f4efe7" stroke-width="1.4"/></svg>
+        </div>
+        <div class="rb" aria-label="не моё">
+          <svg width="16" height="16" viewBox="0 0 24 24"><path class="stroke" d="M18 6 6 18M6 6l12 12"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav">
+      <div class="navbtn map" onclick="go('map')" aria-label="карта">
+        <svg width="22" height="22" viewBox="0 0 24 24"><circle class="stroke" cx="12" cy="12" r="8.2"/><ellipse class="stroke" cx="12" cy="12" rx="8.2" ry="3.4"/><path class="stroke" d="M12 3.8v16.4"/></svg>
+        <span class="nlabel">карта</span>
+      </div>
+      <div class="navbtn dialog" onclick="go('dialog')" aria-label="диалог">
+        <svg width="26" height="26" viewBox="0 0 24 24"><path class="stroke" d="M20 11.5a7.5 7.5 0 0 1-10.9 6.7L4 19.5l1.4-4.2A7.5 7.5 0 1 1 20 11.5Z"/></svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ДИАЛОГ -->
+  <section class="screen" id="s-dialog">
+    <div class="bg blur" id="dialbg"></div>
+    <div class="scrim"></div>
+    <div class="top">
+      <div class="wordmark" onclick="go('home')">ELYNE</div>
+      <div class="profile" onclick="go('profile')"><svg width="19" height="19" viewBox="0 0 24 24"><circle class="stroke" cx="12" cy="8" r="3.4"/><path class="stroke" d="M5.5 20c.7-3.6 3.3-5.5 6.5-5.5s5.8 1.9 6.5 5.5"/></svg></div>
+    </div>
+    <div class="chat">
+      <div class="msg a">С возвращением. В прошлый раз ты был про то, как взять честную цену за рождённое внутри — без чувства долга. Как с этим сейчас?</div>
+      <div class="msg u">кажется, отпустило. впервые спокойно.</div>
+      <div class="msg a">Это и есть тот разворот. Хочешь, покажу, как выглядит день, где ты берёшь спокойно?</div>
+    </div>
+    <div class="inputbar">Напиши…</div>
+    <div class="nav">
+      <div class="navbtn map" onclick="go('map')"><svg width="22" height="22" viewBox="0 0 24 24"><circle class="stroke" cx="12" cy="12" r="8.2"/><ellipse class="stroke" cx="12" cy="12" rx="8.2" ry="3.4"/><path class="stroke" d="M12 3.8v16.4"/></svg><span class="nlabel">карта</span></div>
+      <div class="navbtn dialog" onclick="go('home')"><svg width="22" height="22" viewBox="0 0 24 24"><path class="stroke" d="M6 6l12 12M6 18 18 6"/></svg></div>
+    </div>
+  </section>
+
+  <!-- КАРТА / СФЕРЫ -->
+  <section class="screen" id="s-map">
+    <div class="bg blur" id="mapbg"></div>
+    <div class="scrim"></div>
+    <div class="top">
+      <div class="wordmark" onclick="go('home')">ELYNE</div>
+      <div class="profile" onclick="go('profile')"><svg width="19" height="19" viewBox="0 0 24 24"><circle class="stroke" cx="12" cy="8" r="3.4"/><path class="stroke" d="M5.5 20c.7-3.6 3.3-5.5 6.5-5.5s5.8 1.9 6.5 5.5"/></svg></div>
+    </div>
+    <div class="maptitle"><div class="t">Карта жизни</div><div class="s">10 сфер · крути, заходи внутрь</div></div>
+    <div class="orbit">
+      <div class="sphere-wrap" id="spheres"><div class="core"></div></div>
+    </div>
+    <div class="nav">
+      <div class="navbtn map" onclick="go('home')"><svg width="22" height="22" viewBox="0 0 24 24"><path class="stroke" d="M6 6l12 12M6 18 18 6"/></svg><span class="nlabel">закрыть</span></div>
+      <div class="navbtn dialog" onclick="go('dialog')"><svg width="26" height="26" viewBox="0 0 24 24"><path class="stroke" d="M20 11.5a7.5 7.5 0 0 1-10.9 6.7L4 19.5l1.4-4.2A7.5 7.5 0 1 1 20 11.5Z"/></svg></div>
+    </div>
+  </section>
+
+  <!-- ПРОФИЛЬ -->
+  <section class="screen" id="s-profile">
+    <div class="bg blur" id="pfbg"></div>
+    <div class="scrim"></div>
+    <div class="top"><div class="wordmark" onclick="go('home')">ELYNE</div></div>
+    <div class="pf">
+      <h2>Профиль</h2>
+      <div class="tab">🖼 &nbsp;Образы</div>
+      <div class="tab">✦ &nbsp;Стиль</div>
+      <div class="tab">📷 &nbsp;Фото</div>
+      <div class="tab">🗄 &nbsp;Архив</div>
+      <div style="margin-top:18px;font-size:13px;color:var(--muted);font-weight:300;line-height:1.5">
+        Профиль открывается иконкой-человечком справа сверху — она есть на всех экранах.
+        Карта сфер отсюда уехала на главную.
+      </div>
+    </div>
+    <div class="nav">
+      <div class="navbtn map" onclick="go('map')"><svg width="22" height="22" viewBox="0 0 24 24"><circle class="stroke" cx="12" cy="12" r="8.2"/><ellipse class="stroke" cx="12" cy="12" rx="8.2" ry="3.4"/><path class="stroke" d="M12 3.8v16.4"/></svg><span class="nlabel">карта</span></div>
+      <div class="navbtn dialog" onclick="go('dialog')"><svg width="26" height="26" viewBox="0 0 24 24"><path class="stroke" d="M20 11.5a7.5 7.5 0 0 1-10.9 6.7L4 19.5l1.4-4.2A7.5 7.5 0 1 1 20 11.5Z"/></svg></div>
+    </div>
+  </section>
+
+  <div class="hint">макет · тапай «карту», «диалог», человечка и ELYNE — переключают экраны</div>
+</div>
+
+<script>
+  // тёплый атмосферный образ-заглушка (на проде здесь твой любимый образ)
+  var HERO = "https://picsum.photos/seed/elyne-morning/1000/1700";
+  ["homebg","dialbg","mapbg","pfbg"].forEach(function(id){
+    document.getElementById(id).style.backgroundImage = "url('"+HERO+"')";
+  });
+  function go(name){
+    document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});
+    document.getElementById('s-'+name).classList.add('active');
+    if(navigator.vibrate) navigator.vibrate(8);
+  }
+  // расставляем 10 сфер по кольцу
+  var SPH = ["Состояние","Ресурсы","Реализация","Партнёрство","Дом","Род","Творение","Развитие","Свобода","Окружение"];
+  var open = {0:1,4:1,2:1,8:1}; // часть «раскрыта»
+  var wrap = document.getElementById('spheres'); var R=130, cx=150, cy=150;
+  SPH.forEach(function(name,i){
+    var a = (-90 + i*36) * Math.PI/180;
+    var x = cx + R*Math.cos(a), y = cy + R*Math.sin(a);
+    var d = document.createElement('div'); d.className='dot'; d.style.left=x+'px'; d.style.top=y+'px';
+    d.innerHTML = '<div class="c'+(open[i]?'':' dim')+'"></div><div class="n">'+name+'</div>';
+    d.onclick = function(){ go('dialog'); };
+    wrap.appendChild(d);
+  });
+</script>
+</body>
+</html>
