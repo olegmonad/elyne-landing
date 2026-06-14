@@ -80,18 +80,14 @@
   .dot .n{font-size:10px;color:var(--ink-dim);letter-spacing:.04em;white-space:nowrap}
 
   .hint{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom) + 8px);text-align:center;font-size:10.5px;color:var(--muted);letter-spacing:.04em;z-index:30}
-  /* пустой старт (нет образов) — глубокий зелёный, живое тепло */
-  .greenbg{position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 42%,#2c4031 0%,#1d2c22 55%,#131d16 100%)}
-  .firstwrap{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 36px}
-  .neon{font-family:"Dancing Script",cursive;font-weight:700;line-height:.92}
-  .neon .l1{font-size:60px;color:#dfe9ff;text-shadow:0 0 5px #6ea8ff,0 0 16px #3f74e0,0 0 30px #2552b0}
-  .neon .l2{font-size:78px;color:#ff8fd6;text-shadow:0 0 5px #ff7ccd,0 0 16px #e23ba5,0 0 34px #a8267e;margin-top:-6px}
-  /* Elyne-адаптация: тот же зелёный, тёплое тихое свечение, сериф-курсив */
-  .softline{font-family:var(--serif);font-style:italic;font-size:42px;color:#f4efe7;text-shadow:0 0 22px rgba(205,163,94,.5)}
-  .softsub{margin-top:14px;font-size:13px;color:var(--ink-dim);font-weight:300;letter-spacing:.04em}
-  .variant-toggle{position:absolute;top:calc(env(safe-area-inset-top) + 64px);left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:25}
-  .variant-toggle button{font-size:11px;letter-spacing:.04em;padding:7px 14px;border-radius:16px;border:1px solid var(--line);background:var(--glass);color:var(--ink-dim);cursor:pointer}
-  .variant-toggle button.on{background:var(--ink);color:#14110d;border-color:var(--ink)}
+  /* пустой старт (нет образов) — глубокий зелёный + тёплый амбер-рассвет, без лица */
+  .greenbg{position:absolute;inset:0;background:
+    radial-gradient(130% 70% at 50% 84%, rgba(205,163,94,.26), rgba(205,163,94,0) 56%),
+    radial-gradient(120% 95% at 50% 36%, #2b3f30 0%, #1c2b21 50%, #0f1711 100%)}
+  .greenbg::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 120% at 50% 50%, transparent 58%, rgba(0,0,0,.45));pointer-events:none}
+  .firstwrap{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 44px;z-index:5}
+  .softline{font-family:var(--serif);font-style:italic;font-size:44px;line-height:1.05;color:#f4efe7;text-shadow:0 0 26px rgba(205,163,94,.42)}
+  .softsub{margin-top:16px;font-size:14px;color:var(--ink-dim);font-weight:300;letter-spacing:.03em;line-height:1.5;max-width:300px}
   .startcta{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom) + 56px);display:flex;flex-direction:column;align-items:center;gap:14px}
   .startbtn{width:64px;height:64px;border-radius:50%;border:1px solid var(--line);background:rgba(244,239,231,.1);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer}
   .startbtn::after{content:"";position:absolute;inset:-1px;border-radius:50%;border:1px solid rgba(205,163,94,.5);animation:breathe 3.4s ease-in-out infinite}
@@ -209,16 +205,9 @@
       <div class="wordmark" onclick="go('home')">ELYNE</div>
       <div class="profile" onclick="go('profile')"><svg width="19" height="19" viewBox="0 0 24 24"><circle class="stroke" cx="12" cy="8" r="3.4"/><path class="stroke" d="M5.5 20c.7-3.6 3.3-5.5 6.5-5.5s5.8 1.9 6.5 5.5"/></svg></div>
     </div>
-    <div class="variant-toggle">
-      <button id="vA" class="on" onclick="setVariant('A')">неон · твой реф</button>
-      <button id="vB" onclick="setVariant('B')">по-Elyne</button>
-    </div>
     <div class="firstwrap">
-      <div id="firstA" class="neon"><div class="l1">Life is</div><div class="l2">Good</div></div>
-      <div id="firstB" style="display:none">
-        <div class="softline">жизнь хороша</div>
-        <div class="softsub">давай покажу, какой именно — твою</div>
-      </div>
+      <div class="softline">жизнь хороша</div>
+      <div class="softsub">давай покажу, какой именно — твою</div>
     </div>
     <div class="startcta">
       <div class="startbtn" onclick="go('dialog')">
