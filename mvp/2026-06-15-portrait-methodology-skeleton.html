@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Каркас портрета — методология (для Сергея)</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="_1">Каркас «понимания человека» — для доводки методологом</h1>
+<p>Инженерия (слои, таблицы, маркеры) — решена. Здесь — <strong>содержание</strong>: что считать пониманием человека. Три вопроса, по каждому — мой черновик-скелет + где твоя зона.</p>
+<hr>
+<h2 id="1">1. Грани портрета — какие держим</h2>
+<p>Черновик полей (то, что агент дистиллирует в <code>sphere_profiles</code>/<code>threads</code>/<code>calibration</code>, обращаясь на «ты», как отражение, не досье):</p>
+<table>
+<thead>
+<tr>
+<th>Грань</th>
+<th>Что внутри</th>
+<th>Маркер/слой</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Ценности / опора</strong></td>
+<td>что свято, незыблемо, ради чего</td>
+<td>portrait</td>
+</tr>
+<tr>
+<td><strong>Желаемое «я» / вектор</strong></td>
+<td>кем становится, куда тянется (образ, не цель)</td>
+<td>portrait</td>
+</tr>
+<tr>
+<td><strong>Состояние / ресурс</strong></td>
+<td>как сейчас, что наполняет/истощает</td>
+<td>portrait</td>
+</tr>
+<tr>
+<td><strong>Язык / регистр</strong></td>
+<td>как с ним говорить, его метафоры, его слова</td>
+<td>calibration</td>
+</tr>
+<tr>
+<td><strong>Сквозные нити</strong></td>
+<td>повторяющиеся мотивы через сферы</td>
+<td>[THREAD]</td>
+</tr>
+<tr>
+<td><strong>Опоры / суперсилы</strong></td>
+<td>что работает, на что встать</td>
+<td>portrait</td>
+</tr>
+<tr>
+<td><strong>Тени / страхи / блоки</strong></td>
+<td>чего избегает, что держит (осторожно — не диагноз)</td>
+<td>portrait</td>
+</tr>
+<tr>
+<td><strong>Близкие / окружение</strong></td>
+<td>кто рядом, лица</td>
+<td>user_people</td>
+</tr>
+<tr>
+<td><strong>Открытые петли</strong></td>
+<td>намерения/задачи в движении</td>
+<td>[LOOP] (строю)</td>
+</tr>
+<tr>
+<td><strong>Эстетика / вкус</strong></td>
+<td>визуальный код</td>
+<td>user_taste</td>
+</tr>
+</tbody>
+</table>
+<p>← <strong>твой ход:</strong> какие грани ОБЯЗАТЕЛЬНЫ, какие опциональны? Что я упустил (напр. телесность, отношение к времени, способ принятия решений)? И тонко — как держать «тени/страхи», чтобы это было отражением, а не диагнозом?</p>
+<hr>
+<h2 id="2">2. Что делает образ ощущением «это я»</h2>
+<p>Черновик: что из портрета ОБЯЗАНО лечь в сцену, чтобы было «это я», а не красивая картинка:
+- желаемое направление (не текущее);
+- ≥2–3 конкретные детали <strong>из его слов</strong> (место, предмет, действие) — узнаваемость;
+- его эмоциональный регистр желаемого (тихо / азартно / умиротворённо);
+- только он сам в кадре (не толпа), если других сам не назвал;
+- сквозная нить, если она есть (повтор = ядро личности);
+- без стоковых «успех»-пропсов, которые не его.</p>
+<p>← <strong>твой ход:</strong> что здесь <strong>неснижаемый минимум</strong> — без чего «это я» не срабатывает? И наоборот — что лишнее/опасное (когда деталь из портрета в кадре, наоборот, отчуждает)? Это твоя экспертиза узнавания.</p>
+<hr>
+<h2 id="3-vs">3. Петля «хочу» vs «надо» — и как система различает</h2>
+<p>Черновик сигналов:</p>
+<p><strong>Хочу (живая):</strong> говорит из интереса/азарта · тело включается · сам возвращается к теме · заряд растёт · конкретика льётся сама · «не могу не».
+<strong>Надо (зависла):</strong> «должен / надо / правильно» · рационализирует пользу · плоский тон · откладывает · тело не отзывается · делает ради образа себя или чужого ожидания.</p>
+<p><strong>Как различает система (черновик механики):</strong>
+- лексика (надо/должен/правильно ↔ хочу/тянет/интересно);
+- динамика заряда (растёт ↔ плоско/гаснет);
+- поведение (не сделал предложенный шаг = сигнал «надо»);
+- телесность (отзывается ↔ нет).</p>
+<p><strong>Что делает агент:</strong> живая петля → можно мягко к шагу (линия энергии +); зависшая → НЕ толкать, вернуть «а ты этого правда хочешь?» / поднять состояние.</p>
+<p>← <strong>твой ход:</strong> это твоя глубокая территория (самоопределение, Цалкин). Уточни различение: где грань, и нет ли третьего состояния (напр. «надо, которое перерастает в хочу» — обязательство, что становится своим)? Как агенту не ошибиться и не обесценить настоящее «надо» (есть же здоровые обязательства)?</p>
+<hr>
+<h2 id="_2">Как это вернётся в продукт</h2>
+<p>Твои дополнения по 1–3 → я зашиваю в: (а) инструкцию маркеров <code>[PORTRAIT]/[THREAD]/[CALIBRATION]/[LOOP]</code> (что и как дистиллировать), (б) промт сцены (что нести в образ), (в) логику навигатора (как различать петли). Каркас твой — провода мои.</p>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
