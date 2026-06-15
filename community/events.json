@@ -780,6 +780,32 @@
       "is_free": true,
       "url": "https://www.mskagency.ru/materials/3551826",
       "tg_msg_id": 577
+    },
+    {
+      "id": "agentic-dev-conf-2026-07-03",
+      "title": "Agentic Dev Conf — будущее ИТ в эпоху AI-агентов",
+      "date": "2026-07-03",
+      "time": "",
+      "place": "Loft Hall #4, 2-й Кожуховский пр., 29к6 · м. ЗИЛ",
+      "category": "it",
+      "emoji": "🤖",
+      "description": "Первая большая конференция об агентной архитектуре и будущем ИТ. Три потока — Разработка, Инфраструктура, Управление: кодогенерация в Enterprise, автономный DevOps, паттерны агентов, феномен Tiny Teams, форсайт-сессии. 500 участников.",
+      "price": "",
+      "is_free": false,
+      "url": "https://agenticdevconf.ru/"
+    },
+    {
+      "id": "ai-weekends-2026-07-04",
+      "title": "AI Weekends — практикумы по AI-агентам",
+      "date": "2026-07-04",
+      "time": "",
+      "place": "Loft Hall #4, 2-й Кожуховский пр., 29к6 · м. ЗИЛ",
+      "category": "it",
+      "emoji": "🛠",
+      "description": "Два дня очной практики (4–5 июля): камерные воркшопы на 30–70 человек. Инженерам — Кирилл Мокевнин, команды Алексея Жирякова и Алексея Рыбака: надёжные агенты, evals, harness. Управленцам — Василь Закиев: автоматизация процессов (Cursor/Iskra). Уносишь рабочий прототип.",
+      "price": "",
+      "is_free": false,
+      "url": "https://agenticdevconf.ru/"
     }
   ]
 }
