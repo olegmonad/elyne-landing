@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Память Elyne — архитектура</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="elyne">Память Elyne — архитектура</h1>
+<p><strong>Суть в одной строке:</strong> понимание человека живёт не в сыром логе разговора, а в <strong>живом структурном портрете</strong>. Разговор — это то, что портрет наполняет; в контекст модели каждый ход едет портрет + недавнее окно, а не вся простыня.</p>
+<hr>
+<h2 id="70">Что у нас УЖЕ есть (мы на ~70% пути)</h2>
+<p>Персистентный слой понимания уже построен и собирается навигатором каждый ход:</p>
+<ul>
+<li><strong><code>sphere_profiles</code></strong> — портрет по каждой из 10 сфер + общий онбординг-портрет. На «ты», «суть человека в этой территории» (не досье от третьего лица). Обновляется маркером <code>[PORTRAIT: sphere=…]</code>.</li>
+<li><strong><code>user_threads</code></strong> — мотивы/нити человека (<code>[THREAD: …]</code>).</li>
+<li><strong><code>taste_calibration</code></strong> — как именно с ним говорить: регистр, глубина, что заходит, что мимо (<code>[CALIBRATION: …]</code>).</li>
+<li><strong><code>user_taste</code> / <code>user_people</code> / <code>scenes</code> / <code>saved_lines</code></strong> — вкус, лица близких, образы, закреплённые реплики.</li>
+</ul>
+<p>→ <strong>Это и есть долгая память.</strong> И она структурирована вокруг 10 сфер — это наш ров. Обычный чат-бот хранит плоские факты; мы храним <strong>образ человека</strong>.</p>
+<h2 id="_1">В чём проблема (что чиним)</h2>
+<p>Поверх портрета мы <strong>всё ещё шлём модели всю сырую историю</strong> (400 реплик за ход). Отсюда:
+- цена хода растёт квадратично с длиной нити (две длинные нити съели 99% токенов);
+- баг «argument too long» (уже частично закрыт переводом промпта на stdin);
+- портрет фактически дублируется сырым логом — лишняя работа и расход.</p>
+<hr>
+<h2 id="_2">Целевая архитектура — три слоя</h2>
+<p><strong>L1 — Портрет (долгое понимание).</strong> Компактный, всегда в контексте. = <code>sphere_profiles</code> + <code>threads</code> + <code>calibration</code> + <strong>[новое] открытые петли/задачи</strong>. Обновляется маркерами после каждого значимого хода. Виден и редактируем в Профиле — человек сам поправит, если съехало.</p>
+<p><strong>L2 — Окно (поток).</strong> Последние ~30–40 реплик (или по объёму) — чтобы разговор шёл живо здесь и сейчас. Всё, что раньше, — сырым <strong>не шлём</strong>.</p>
+<p><strong>L3 — Архив + точечный возврат (глубина).</strong> Полная история <strong>навсегда</strong> в <code>messages</code> (ничего не удаляем). Когда всплывает старая тема — достаём именно нужный кусок (поиск по ключам → позже по смыслу/эмбеддингам), а не весь лог.</p>
+<hr>
+<h2 id="_3">Что построить (инженерия — задача решённая)</h2>
+<ol>
+<li><strong>Окно истории</strong> — в <code>_call_claude</code> (стенд) и в боте слать последние N реплик, а не всю нить. Заодно окончательно снимает баг длины.</li>
+<li><strong>Открытые петли/задачи</strong> — новый маркер <code>[LOOP: …]</code> → таблица <code>user_loops</code>; навигатор подмешивает активные петли. (Это прямой ответ на «как учитывать задачи и историю».)</li>
+<li><strong>Точечный возврат</strong> — поиск по архиву при необходимости (сначала ключевые слова, позже эмбеддинги).</li>
+<li><strong>Портрет виден/редактируем</strong> — основа в Профиле уже есть, дошлифовать.</li>
+<li><strong>Периодическая ре-дистилляция</strong> — раз в N ходов пересобирать портрет из архива (чтобы нюансы не терялись со временем).</li>
+</ol>
+<h2 id="_4">Подстраховки от «забыли нюанс»</h2>
+<ul>
+<li>Полный архив навсегда + точечный возврат достаёт старое.</li>
+<li>Портрет виден человеку → он сам поправит.</li>
+<li>Ре-дистилляция периодически освежает образ.</li>
+</ul>
+<hr>
+<h2 id="_5">Развилка для Сергея (методология, НЕ инженерия)</h2>
+<p>Слои — наша зона. <strong>Содержание портрета — зона методолога.</strong> Вопрос: <em>что именно дистиллировать = что считать «пониманием человека»?</em></p>
+<ul>
+<li>Какие грани личности держим в портрете (ценности, желаемое «я», страхи, язык, петли)?</li>
+<li>Что в сцене делает образ ощущением «это я» — что обязательно нести из портрета?</li>
+<li>Когда петля «живая» (<strong>хочу</strong>) против «зависла» (<strong>надо</strong>) — и как система это различает?</li>
+</ul>
+<hr>
+<h2 id="_6">Стоимость / эффект</h2>
+<ul>
+<li>Цена хода <strong>перестаёт расти</strong> с длиной нити (было квадратично → станет плоско).</li>
+<li><strong>Масштабируется</strong> на 10 000+ юзеров — полный транскрипт на каждый ход слать физически нельзя.</li>
+<li>Понимание не падает, а <strong>растёт</strong>: модель не передоказывает «кто ты» с нуля каждый раз — у неё готов твой образ.</li>
+</ul>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
