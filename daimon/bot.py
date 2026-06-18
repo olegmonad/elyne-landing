@@ -154,10 +154,10 @@ def llm_call(messages, provider):
     return post_json(cfg["url"], headers, payload)["choices"][0]["message"]
 
 
-def agent_answer(chat_id, user_text, is_group, provider):
+def agent_answer(chat_id, is_group, provider):
+    # последний user уже сохранён в history вызывающим кодом
     sys_prompt = SYSTEM_PROMPT + facts_block() + (GROUP_NOTE if is_group else "")
-    messages = [{"role": "system", "content": sys_prompt}] + history(chat_id) + [{"role": "user", "content": user_text}]
-    save(chat_id, "user", user_text)
+    messages = [{"role": "system", "content": sys_prompt}] + history(chat_id)
     for _ in range(MAX_TOOL_ITERS):
         m = llm_call(messages, provider)
         tool_calls = m.get("tool_calls")
@@ -278,8 +278,13 @@ def handle(msg):
     if not raw:
         return
 
-    if is_group and not is_addressed(msg, raw):
-        return
+    # в группе видим и запоминаем ВЕСЬ поток (для контекста), даже если не к нам;
+    # отвечаем только когда обращаются — чтобы не строчить на каждое сообщение
+    if is_group:
+        author = msg.get("from", {}).get("first_name", "кто-то")
+        save(chat_id, "user", f"[{author}]: {raw}")
+        if not is_addressed(msg, raw):
+            return
 
     reply_to = msg.get("message_id") if is_group else None
     t = clean(raw) if is_group else raw.strip()
@@ -294,9 +299,11 @@ def handle(msg):
     if t == "/model" or t.startswith("/model "):
         return cmd_model(chat_id, t[len("/model"):], reply_to)
 
+    if not is_group:
+        save(chat_id, "user", t)  # в группе уже сохранили выше (с именем автора)
     provider = get_provider(chat_id)
     try:
-        reply = agent_answer(chat_id, t, is_group, provider)
+        reply = agent_answer(chat_id, is_group, provider)
     except Exception as e:
         return tg_send(chat_id, f"Ой, мозг ({provider}) споткнулся: {e}. Переспроси или /model.", reply_to)
     tg_send(chat_id, reply, reply_to)
