@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
-"""Daimon — личный Telegram-ассистент Сергея. Несколько мозгов с переключением /model.
+"""Daimon — личный Telegram-ассистент Сергея. Мультимозг (/model) + работа в группах.
 Чистый stdlib (urllib + sqlite3), без внешних зависимостей."""
 import os, json, time, sqlite3, urllib.request
 
 BOT_TOKEN = os.environ["BOT_TOKEN"]
+BOT_USERNAME = "daim8n_bot"
 TG_API = f"https://api.telegram.org/bot{BOT_TOKEN}"
 DB = "/root/daimon/memory.db"
 HISTORY_LIMIT = 24
 DEFAULT_PROVIDER = "deepseek"
 
-# Каждый "мозг" — это адрес API, модель и переменная окружения с ключом.
-# Формат у всех одинаковый (OpenAI-совместимый), поэтому код общий.
+# Каждый "мозг" — адрес API, модель и переменная окружения с ключом.
+# Формат у всех OpenAI-совместимый, поэтому код общий.
 PROVIDERS = {
     "deepseek": {
         "label": "DeepSeek (deepseek-chat)",
@@ -42,15 +43,17 @@ SYSTEM_PROMPT = (
     "разбираться в вопросах, писать тексты. Если чего-то не знаешь — честно говоришь. "
     "Отвечай по делу и живым языком. Не подлизывай, имей своё мнение."
 )
+GROUP_NOTE = (
+    " Сейчас ты в групповом рабочем чате (Олег — создатель ассистента Моня, Сергей — твой "
+    "хозяин, и сам Моня обсуждают твою прокачку). Отвечай кратко и по делу, когда обращаются к тебе."
+)
 
 
 def db():
     conn = sqlite3.connect(DB)
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS msgs (id INTEGER PRIMARY KEY AUTOINCREMENT,"
-        " chat_id INTEGER, role TEXT, content TEXT, ts INTEGER)")
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS settings (chat_id INTEGER PRIMARY KEY, provider TEXT)")
+    conn.execute("CREATE TABLE IF NOT EXISTS msgs (id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                 " chat_id INTEGER, role TEXT, content TEXT, ts INTEGER)")
+    conn.execute("CREATE TABLE IF NOT EXISTS settings (chat_id INTEGER PRIMARY KEY, provider TEXT)")
     return conn
 
 
@@ -58,16 +61,13 @@ def get_provider(chat_id):
     c = db()
     row = c.execute("SELECT provider FROM settings WHERE chat_id=?", (chat_id,)).fetchone()
     c.close()
-    if row and row[0] in PROVIDERS:
-        return row[0]
-    return DEFAULT_PROVIDER
+    return row[0] if row and row[0] in PROVIDERS else DEFAULT_PROVIDER
 
 
 def set_provider(chat_id, provider):
     c = db()
     c.execute("INSERT INTO settings(chat_id,provider) VALUES(?,?) "
-              "ON CONFLICT(chat_id) DO UPDATE SET provider=excluded.provider",
-              (chat_id, provider))
+              "ON CONFLICT(chat_id) DO UPDATE SET provider=excluded.provider", (chat_id, provider))
     c.commit(); c.close()
 
 
@@ -97,7 +97,7 @@ def llm(messages, provider):
     cfg = PROVIDERS[provider]
     key = os.environ.get(cfg["key_env"], "")
     if not key:
-        raise RuntimeError(f"нет ключа для {provider} (переменная {cfg['key_env']} пустая)")
+        raise RuntimeError(f"нет ключа для {provider} ({cfg['key_env']} пустая)")
     payload = {"model": cfg["model"], "messages": messages,
                "temperature": 0.7, "max_tokens": 2000, "stream": False}
     headers = {"Content-Type": "application/json", "Authorization": f"Bearer {key}"}
@@ -105,13 +105,15 @@ def llm(messages, provider):
     return d["choices"][0]["message"]["content"]
 
 
-def tg_send(chat_id, text):
+def tg_send(chat_id, text, reply_to=None):
     if not text:
         text = "(пусто)"
     for i in range(0, len(text), 4000):
+        body = {"chat_id": chat_id, "text": text[i:i + 4000]}
+        if reply_to and i == 0:
+            body["reply_to_message_id"] = reply_to
         try:
-            post_json(f"{TG_API}/sendMessage", {"Content-Type": "application/json"},
-                      {"chat_id": chat_id, "text": text[i:i + 4000]}, timeout=30)
+            post_json(f"{TG_API}/sendMessage", {"Content-Type": "application/json"}, body, timeout=30)
         except Exception as e:
             print("send err:", e)
 
@@ -127,60 +129,78 @@ def get_updates(offset):
         return {"result": []}
 
 
-def cmd_model(chat_id, arg):
+def cmd_model(chat_id, arg, reply_to=None):
     cur = get_provider(chat_id)
-    if not arg:
+    if not arg.strip():
         lines = ["Текущий мозг: " + PROVIDERS[cur]["label"], "", "Доступные:"]
         for name, cfg in PROVIDERS.items():
-            mark = "✅" if name == cur else "▫️"
-            lines.append(f"{mark} {name} — {cfg['label']}")
-        lines.append("")
-        lines.append("Переключить: /model <имя>  (напр. /model openai)")
-        tg_send(chat_id, "\n".join(lines))
+            lines.append(f"{'✅' if name == cur else '▫️'} {name} — {cfg['label']}")
+        lines += ["", "Переключить: /model <имя>  (напр. /model openai)"]
+        tg_send(chat_id, "\n".join(lines), reply_to)
         return
     arg = arg.strip().lower()
     if arg not in PROVIDERS:
-        tg_send(chat_id, f"Не знаю мозг «{arg}». Доступные: {', '.join(PROVIDERS)}")
+        tg_send(chat_id, f"Не знаю мозг «{arg}». Доступные: {', '.join(PROVIDERS)}", reply_to)
         return
-    key = os.environ.get(PROVIDERS[arg]["key_env"], "")
-    if not key:
-        tg_send(chat_id, f"Для «{arg}» не задан ключ ({PROVIDERS[arg]['key_env']} в .env). "
-                         "Добавь ключ и перезапусти бота.")
+    if not os.environ.get(PROVIDERS[arg]["key_env"], ""):
+        tg_send(chat_id, f"Для «{arg}» не задан ключ ({PROVIDERS[arg]['key_env']} в .env).", reply_to)
         return
     set_provider(chat_id, arg)
-    tg_send(chat_id, f"Готово. Теперь думаю через: {PROVIDERS[arg]['label']} 🧠")
+    tg_send(chat_id, f"Готово. Теперь думаю через: {PROVIDERS[arg]['label']} 🧠", reply_to)
+
+
+def is_addressed(msg, text):
+    """В группе бот реагирует только если к нему обратились: reply на него, @упоминание или команда."""
+    rt = msg.get("reply_to_message")
+    if rt and rt.get("from", {}).get("username", "").lower() == BOT_USERNAME.lower():
+        return True
+    if f"@{BOT_USERNAME}".lower() in text.lower():
+        return True
+    return text.lstrip().startswith("/")
+
+
+def clean(text):
+    """Убрать @упоминание бота и @username из команд."""
+    return text.replace(f"@{BOT_USERNAME}", "").replace(f"@{BOT_USERNAME.lower()}", "").strip()
 
 
 def handle(msg):
-    chat_id = msg["chat"]["id"]
-    text = msg.get("text", "")
-    if not text:
+    chat = msg["chat"]
+    chat_id = chat["id"]
+    is_group = chat.get("type", "private") in ("group", "supergroup")
+    raw = msg.get("text", "")
+    if not raw:
         return
-    t = text.strip()
+    if is_group and not is_addressed(msg, raw):
+        return  # в группе молчим, пока не позвали
+    msg_id = msg.get("message_id")
+    reply_to = msg_id if is_group else None  # в группе отвечаем reply'ем на конкретное сообщение
+    t = clean(raw) if is_group else raw.strip()
+
     if t == "/start":
-        tg_send(chat_id, "Привет! Я Даймон — твой личный ассистент. "
-                         "Помню наш разговор.\n\n/model — выбрать мозг (DeepSeek / OpenAI)\n"
-                         "/reset — стереть память")
+        tg_send(chat_id, "Привет! Я Даймон — твой личный ассистент. Помню наш разговор.\n\n"
+                         "/model — выбрать мозг (DeepSeek / OpenAI)\n/reset — стереть память", reply_to)
         return
     if t == "/reset":
-        c = db(); c.execute("DELETE FROM msgs WHERE chat_id=?", (chat_id,))
-        c.commit(); c.close()
-        tg_send(chat_id, "Память очищена. Начнём с чистого листа.")
+        c = db(); c.execute("DELETE FROM msgs WHERE chat_id=?", (chat_id,)); c.commit(); c.close()
+        tg_send(chat_id, "Память очищена. Начнём с чистого листа.", reply_to)
         return
     if t == "/model" or t.startswith("/model "):
-        cmd_model(chat_id, t[len("/model"):])
+        cmd_model(chat_id, t[len("/model"):], reply_to)
         return
+
     provider = get_provider(chat_id)
-    save(chat_id, "user", text)
-    messages = [{"role": "system", "content": SYSTEM_PROMPT}] + history(chat_id)
+    save(chat_id, "user", t)
+    sys_prompt = SYSTEM_PROMPT + (GROUP_NOTE if is_group else "")
+    messages = [{"role": "system", "content": sys_prompt}] + history(chat_id)
     try:
         reply = llm(messages, provider)
     except Exception as e:
         tg_send(chat_id, f"Ой, мозг ({provider}) сейчас недоступен: {e}. "
-                         "Попробуй ещё раз или переключи /model.")
+                         "Попробуй ещё раз или переключи /model.", reply_to)
         return
     save(chat_id, "assistant", reply)
-    tg_send(chat_id, reply)
+    tg_send(chat_id, reply, reply_to)
 
 
 def main():
@@ -189,7 +209,7 @@ def main():
         urllib.request.urlopen(f"{TG_API}/deleteWebhook", timeout=10).read()
     except Exception:
         pass
-    print("Daimon started (multi-model)", flush=True)
+    print("Daimon started (multi-model + groups)", flush=True)
     offset = 0
     while True:
         upd = get_updates(offset)
