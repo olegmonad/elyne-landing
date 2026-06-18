@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-17",
+  "updated": "2026-06-18",
   "events": [
     {
       "id": "kosmos-bespl-vhod-2026-06-18",
@@ -718,6 +718,20 @@
       "is_free": true,
       "url": "https://artplay.ru/events/yuna-fest.html",
       "tg_msg_id": 600
+    },
+    {
+      "id": "traditsiya-fest-moskino-2026-06-20",
+      "title": "Фестиваль «Традиция» — Кинопарк Москино",
+      "date": "2026-06-20",
+      "time": "11:00",
+      "place": "Кинопарк «Москино», ул. Лиозновой, Троицкий округ",
+      "category": "culture",
+      "emoji": "🎭",
+      "description": "XI семейный фестиваль под открытым небом — 9 площадок, 100+ событий за 2 дня. Концерты Пелагеи, «Любэ», Ay Yola и «Калинова моста», литературные выступления, спектакли и мастер-классы.",
+      "price": "Билеты от 400 до 1 000 ₽",
+      "is_free": false,
+      "url": "https://traditionfestival.ru/",
+      "tg_msg_id": 610
     }
   ]
 }
