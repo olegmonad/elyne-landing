@@ -2,20 +2,6 @@
   "updated": "2026-06-18",
   "events": [
     {
-      "id": "tech-week-2026-06-17",
-      "title": "TECH WEEK 2026 — конференция по AI и технологиям",
-      "date": "2026-06-17",
-      "time": "09:00",
-      "place": "ВДНХ, Техноград, павильон №38",
-      "category": "наука",
-      "emoji": "🤖",
-      "description": "XV Юбилейная конференция по технологиям и ИИ в бизнесе. 2500 участников, 280 спикеров, 11 потоков: AI, HR, Tech, MarTech, Fintech, кибербезопасность. 17–18 июня.",
-      "price": "от 500 ₽",
-      "is_free": false,
-      "url": "https://techweek.moscow/",
-      "tg_msg_id": 491
-    },
-    {
       "id": "kosmos-bespl-vhod-2026-06-18",
       "title": "Бесплатный день в Музее космонавтики",
       "date": "2026-06-18",
@@ -534,7 +520,8 @@
       "description": "Спортивно-музыкальный фестиваль для айтишников: забеги на 5, 10 и 21.1 км, зоны нетворкинга, фудкорты и концерт. Редкий случай, когда IT-сообщество выходит из офисов на природу.",
       "price": "",
       "is_free": false,
-      "url": "https://runit.digital/"
+      "url": "https://runit.digital/",
+      "tg_msg_id": 617
     },
     {
       "id": "teatr-naciy-kabare-2026-07-09",
@@ -638,7 +625,8 @@
       "description": "Фестиваль кибербезопасности на свежем воздухе — доклады экспертов ИБ вперемешку с воркшопами, играми и отдыхом у воды. Неформальный дресс-код, заканчивается DJ-сетом.",
       "price": "от 500 ₽",
       "is_free": false,
-      "url": "https://cybercamp.su/"
+      "url": "https://cybercamp.su/",
+      "tg_msg_id": 618
     },
     {
       "id": "vk-fest-vdnh-2026-07-18",
@@ -651,7 +639,8 @@
       "description": "Главный летний опен-эйр переезжает на ВДНХ: несколько сцен, десятки артистов, лекторий и огромный фудкорт. Два дня музыки под открытым небом — приходишь на день или зависаешь на оба.",
       "price": "от 5200 ₽",
       "is_free": false,
-      "url": "https://vkfest.ru/"
+      "url": "https://vkfest.ru/",
+      "tg_msg_id": 619
     },
     {
       "id": "kuskovo-postoyannaya-2026-07-19",
@@ -677,7 +666,8 @@
       "description": "Всё лето по выходным на деревянных террасах у реки идут бесплатные занятия — хатха, кундалини, Айенгара, дживамукти. Берёшь коврик, приходишь к утреннему классу и заряжаешься на день.",
       "price": "",
       "is_free": true,
-      "url": "https://www.park-gorkogo.com/events"
+      "url": "https://www.park-gorkogo.com/events",
+      "tg_msg_id": 620
     },
     {
       "id": "kino-park-gorkogo-2026-07-22",
@@ -690,7 +680,8 @@
       "description": "Бесплатная летняя киноплощадка у пруда: каждый вечер показывают современное зарубежное кино в оригинале с субтитрами. Кинозал под открытым небом и площадка для паблик-токов одновременно.",
       "price": "",
       "is_free": true,
-      "url": "https://www.park-gorkogo.com/"
+      "url": "https://www.park-gorkogo.com/",
+      "tg_msg_id": 621
     },
     {
       "id": "letnee-kino-muzeon-2026-07-24",
@@ -703,7 +694,8 @@
       "description": "Кино под открытым небом в парке скульптур у набережной — авторские ленты, новинки и классика, часто в оригинале с субтитрами. Днём встречи с режиссёрами и лекции, вечером сеанс под звёздами. Работает всю вторую половину июля.",
       "price": "от 690 ₽",
       "is_free": false,
-      "url": "https://mos-kino.ru/"
+      "url": "https://mos-kino.ru/",
+      "tg_msg_id": 622
     },
     {
       "id": "pycon-russia-2026-07-24",
@@ -716,7 +708,8 @@
       "description": "Самая большая Python-конференция страны: два дня, два трека (Python и Data), мастер-классы и lightning talks. Сюда едут разработчики уровня middle и выше — прокачаться и пообщаться вживую.",
       "price": "от 28 000 ₽",
       "is_free": false,
-      "url": "https://pycon.ru/"
+      "url": "https://pycon.ru/",
+      "tg_msg_id": 623
     },
     {
       "id": "organ-soundtrack-sobor-2026-07-25",
@@ -729,7 +722,8 @@
       "description": "Музыка из «Пиратов Карибского моря», «Гладиатора», «Интерстеллара» и «Титаника» для органа и оркестра под сводами лютеранского собора. Знакомые мелодии звучат огромно в живой соборной акустике.",
       "price": "от 1000 ₽",
       "is_free": false,
-      "url": "https://afisha.yandex.ru/moscow/concert/places/kafedralnyi-sobor-sviatykh-petra-i-pavla"
+      "url": "https://afisha.yandex.ru/moscow/concert/places/kafedralnyi-sobor-sviatykh-petra-i-pavla",
+      "tg_msg_id": 624
     },
     {
       "id": "outline-fest-2026-07-25",
@@ -742,7 +736,8 @@
       "description": "Электронная музыка и современное искусство на нескольких сценах под открытым небом среди бруталистской архитектуры. Инсталляции, йога на берегу, новая городская культура. Едут за город с ночёвкой в кемпинге.",
       "price": "от 7000 ₽",
       "is_free": false,
-      "url": "https://outlinefestival.org/"
+      "url": "https://outlinefestival.org/",
+      "tg_msg_id": 625
     },
     {
       "id": "vkus-leta-depo-2026-07-25",
@@ -755,7 +750,8 @@
       "description": "Семейный гастрофестиваль на весь день в одном из самых атмосферных депо Москвы. Кулинарные мастер-классы, музыка, маркет брендов, детская зона — бесплатно по онлайн-регистрации.",
       "price": "",
       "is_free": true,
-      "url": "https://vkusletafest.polpit.ru/"
+      "url": "https://vkusletafest.polpit.ru/",
+      "tg_msg_id": 626
     },
     {
       "id": "organ-duel-svechi-sobor-2026-07-31",
@@ -768,7 +764,8 @@
       "description": "Орган и рояль соревнуются весь вечер, а зал освещён только свечами. Камерно, красиво и чуть театрально — хороший способ закрыть июль вечерним концертом в центре.",
       "price": "от 1000 ₽",
       "is_free": false,
-      "url": "https://afisha.yandex.ru/moscow/concert/places/kafedralnyi-sobor-sviatykh-petra-i-pavla"
+      "url": "https://afisha.yandex.ru/moscow/concert/places/kafedralnyi-sobor-sviatykh-petra-i-pavla",
+      "tg_msg_id": 627
     },
     {
       "id": "ostankino-letniy-vhod-2026-08-09",
