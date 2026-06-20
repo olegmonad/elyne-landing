@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ELYNE · Авторские календари — реализация</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="elyne">Авторские календари ELYNE — как реализовать</h1>
+<blockquote>
+<p>Документ сшивает концепт Олега (TG 20.06) с вердиктом совета. Главный сдвиг рамки: <strong>не вторая афиша, а движок-матч.</strong> Публичная механика — не «подписка на автора», а «ELYNE знает тебя → подбирает событие и проводника под того, кем ты становишься». Это единственный ров; всё остальное — Timepad.</p>
+</blockquote>
+<hr>
+<h2 id="1">1. Принцип, на котором всё держится</h2>
+<p>Уникальный объект ELYNE — не календарь, а <strong>портрет-узнавание по 10 сферам</strong>. Значит и авторский слой строим вокруг него:</p>
+<ul>
+<li>событие хранит не только категорию, но и <strong>сферы</strong>, которые оно закрывает (Свобода, Род, Творение…);</li>
+<li>подписка — вторична; первична <strong>рекомендация под идентичность</strong>: «этот ретрит — для той версии тебя, что хочет Свободу»;</li>
+<li>курируемая Афиша остаётся <strong>чистой</strong>: UGC не льётся в общий поток автоматически (защита от шума, который ненавидит человек в кризисе).</li>
+</ul>
+<p>Из этого — все ответы на вопросы ТЗ ниже.</p>
+<hr>
+<h2 id="2">2. Поэтапный план (фазовый, не строим платформу впрок)</h2>
+<h3 id="0-1">Фаза 0 — Матч-тест. Неделя 1. Ноль кода.</h3>
+<p>Проверяем не «нужен ли календарь», а <strong>работает ли матч по идентичности</strong> и есть ли вообще спрос.</p>
+<ul>
+<li>Берём 3–5 событий, которые <strong>уже лежат в <code>events.json</code></strong>.</li>
+<li>Руками подбираем под конкретных живых тестеров по их сфере.</li>
+<li>Отправляем ботом персонально: «это для той версии тебя, что хочет ___».</li>
+<li><strong>Метрика:</strong> тапнул ссылку? дошёл? Если ноль — весь слой бессмысленен, сэкономили полгода.</li>
+</ul>
+<h3 id="1-supply-23">Фаза 1 — Концьерж supply. Недели 2–3. Минимум кода.</h3>
+<p>Проверяем сторону авторов, не строя админку.</p>
+<ul>
+<li>DM 5–10 реальным проводникам: «кинь событие одним сообщением — опубликую бесплатно».</li>
+<li>Бот собирает карточку через AI-диалог (capability уже есть) → пишет в <code>events.json</code> с новыми полями → деплой существующим скриптом.</li>
+<li>«Подписка на автора» = тег <code>author_id</code> на событии + кнопка follow в мини-аппе.</li>
+<li>Уведомление = сообщение от существующего бота.</li>
+<li><strong>Метрики, которые решают всё:</strong> сколько авторов прислали 2-е событие <strong>без напоминания</strong>; сколько юзеров тапнули «follow author». Ты сам — модератор.</li>
+</ul>
+<h3 id="2-self-serve-lite">Фаза 2 — Self-serve lite. Только когда поток пошёл.</h3>
+<p>Строим, когда проводник сам жалуется, что слать в личку медленно.</p>
+<ul>
+<li>Мини-админка автора <strong>внутри Telegram Mini App</strong> (не отдельный сайт).</li>
+<li>Профиль автора, его публичная ссылка (deep-link), редактирование своих событий.</li>
+<li>Авторизация — через Telegram (уже есть), без отдельных паролей.</li>
+</ul>
+<h3 id="3-product-market-fit">Фаза 3 — Платформа и монетизация. После product-market fit.</h3>
+<ul>
+<li>Полные роли, очередь модерации, система уведомлений.</li>
+<li>Платное/featured попадание в <strong>общую</strong> афишу.</li>
+<li>Монетизация: take-rate с билетов, featured-размещение, верификация «проверено ELYNE».</li>
+</ul>
+<blockquote>
+<p>Правило: каждую следующую фазу открываем, только когда метрика предыдущей зелёная. Роли/модерацию/auth/уведомления строим в ответ на реальную боль, а не впрок.</p>
+</blockquote>
+<hr>
+<h2 id="3">3. Структура данных</h2>
+<p>Расширяем существующий <code>events.json</code>, добавляем две сущности. На Фазе 1 всё ещё может жить в JSON; БД — с Фазы 2.</p>
+<h3 id="event">event (расширение текущей схемы)</h3>
+<pre><code class="language-jsonc">{
+  &quot;id&quot;: &quot;string&quot;,
+  &quot;title&quot;: &quot;string&quot;,
+  &quot;date&quot;: &quot;2026-06-21&quot;,
+  &quot;time&quot;: &quot;19:00&quot;,
+  &quot;place&quot;: &quot;string | онлайн-ссылка&quot;,
+  &quot;category&quot;: &quot;string&quot;,
+  &quot;emoji&quot;: &quot;🎭&quot;,
+  &quot;description&quot;: &quot;string&quot;,
+  &quot;url&quot;: &quot;string (регистрация)&quot;,
+  &quot;price&quot;: &quot;бесплатно | от 1500 ₽ | донейшн&quot;,
+  // --- новое ---
+  &quot;author_id&quot;: &quot;string | null&quot;,   // null = кураторская Афиша
+  &quot;spheres&quot;: [&quot;Свобода&quot;, &quot;Творение&quot;], // матч по идентичности
+  &quot;source&quot;: &quot;curated | author&quot;,
+  &quot;status&quot;: &quot;draft | published | in_afisha&quot;, // in_afisha только после модерации
+  &quot;cover&quot;: &quot;url | null&quot;
+}
+</code></pre>
+<h3 id="author">author</h3>
+<pre><code class="language-jsonc">{
+  &quot;id&quot;: &quot;string&quot;,
+  &quot;name&quot;: &quot;string&quot;,
+  &quot;tg_user_id&quot;: &quot;number&quot;,     // авторизация через Telegram
+  &quot;bio&quot;: &quot;string&quot;,            // кто он, что проводит
+  &quot;city&quot;: &quot;string&quot;,           // события локальны — город обязателен
+  &quot;categories&quot;: [&quot;string&quot;],
+  &quot;spheres&quot;: [&quot;string&quot;],
+  &quot;socials&quot;: { &quot;instagram&quot;: &quot;url&quot;, &quot;telegram&quot;: &quot;url&quot; },
+  &quot;public_slug&quot;: &quot;string&quot;,    // для ссылки /author/&lt;slug&gt;
+  &quot;verified&quot;: false
+}
+</code></pre>
+<h3 id="subscription">subscription</h3>
+<pre><code class="language-jsonc">{
+  &quot;user_id&quot;: &quot;number&quot;,
+  &quot;type&quot;: &quot;author | category | sphere&quot;,
+  &quot;target&quot;: &quot;string&quot;,         // author_id | категория | сфера
+  &quot;created_at&quot;: &quot;ISO8601&quot;
+}
+</code></pre>
+<p>Личная лента юзера — <strong>не отдельная таблица, а выборка</strong>: события, где <code>author_id ∈ подписки</code> ИЛИ <code>category/sphere ∈ подписки</code>, плюс матч-рекомендации движка по его портрету.</p>
+<hr>
+<h2 id="4">4. Роли (вводим постепенно)</h2>
+<table>
+<thead>
+<tr>
+<th>Роль</th>
+<th>Что может</th>
+<th>С какой фазы</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Пользователь</strong></td>
+<td>смотреть, подписываться, личная лента</td>
+<td>Фаза 0</td>
+</tr>
+<tr>
+<td><strong>Автор</strong></td>
+<td>создавать/редактировать свои события, профиль</td>
+<td>Фаза 1 (концьерж) → 2 (сам)</td>
+</tr>
+<tr>
+<td><strong>Модератор</strong></td>
+<td>пускать UGC в <strong>общую</strong> афишу, снимать нарушения</td>
+<td>Фаза 1 = Олег руками, формализуем на 3</td>
+</tr>
+<tr>
+<td><strong>Админ ELYNE</strong></td>
+<td>всё + верификация авторов + монетизация</td>
+<td>Фаза 3</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="5">5. Ответы на конкретные вопросы ТЗ</h2>
+<p><strong>Q5. Как события автора попадают в общий календарь.</strong>
+Гибрид, чтобы защитить кураторский поток:
+- в <strong>личную ленту подписчиков автора</strong> — сразу, автоматически;
+- в <strong>общую Афишу</strong> — только после модерации (или платно/featured на Фазе 3).
+Так UGC не зашумляет курируемое ядро — это прямой риск, который поймал совет.</p>
+<p><strong>Q6. Публичная ссылка автора.</strong>
+- MVP: <strong>deep-link в Telegram Mini App</strong> — <code>t.me/&lt;bot&gt;/app?startapp=author_&lt;slug&gt;</code>. Открывается прямо в ELYNE, без отдельного сайта, авторизация бесплатно.
+- Красивый <code>elyne.community/author/&lt;name&gt;</code> — позже, как редирект на deep-link (для Instagram-био).</p>
+<p><strong>Q7. Максимально простой MVP.</strong>
+Это ровно Фаза 1: автор кидает событие → бот делает карточку → юзер жмёт follow → события автора в его личной ленте. Без ролей, без отдельной админки, без очереди модерации.</p>
+<hr>
+<h2 id="6">6. Сценарии</h2>
+<p><strong>Автор (Фаза 1):</strong> пишет боту «провожу практику в субботу 19:00 на Чистых прудах, донейшн» → бот уточняет недостающее, оформляет в стиле ELYNE, предлагает сферы и категорию → «опубликовать?» → событие в ленте, автор получает свою ссылку для Instagram.</p>
+<p><strong>Пользователь:</strong> открывает ELYNE → видит не дженерик-список, а «события под тебя» (матч по сферам) + возможность подписаться на автора/категорию → будущие события автора падают в личную ленту → уведомление за день.</p>
+<p><strong>Олег-модератор (Фаза 1):</strong> новое авторское событие приходит ему в бота → одобряет/правит/пускает в общую Афишу одним тапом.</p>
+<hr>
+<h2 id="7">7. Риски (из разбора совета)</h2>
+<ul>
+<li><strong>Двойной cold-start</strong> — нельзя запускать маркетплейс до валидации ядра. Поэтому Фаза 0 не про авторов, а про спрос.</li>
+<li><strong>Каннибализация Афиши</strong> — UGC-шум ломает курируемый актив → жёсткая модерация на входе в общий поток.</li>
+<li><strong>Гео-фрагментация</strong> — событие локально; без города юзер уходит. <code>city</code> обязателен.</li>
+<li><strong>Юр-хвост</strong> — как только авторы продают билеты: возвраты/неявки/ответственность (РФ). До Фазы 3 — только бесплатно/донейшн/внешняя регистрация, деньги не трогаем.</li>
+</ul>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
