@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Даймон: добавить GitHub-write инструмент</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="github-write">Как добавить инструмент в Даймона: GitHub-write</h1>
+<h2 id="_1">Где живёт код — два места</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Место</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1</strong></td>
+<td><code>/root/daimon/bot.py</code> на сервере</td>
+<td>Здесь код живёт и запускается. Это твой экземпляр.</td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td><code>github.com/sergeyr8manov/DAIM8N</code></td>
+<td>Резервная копия + история изменений.</td>
+</tr>
+</tbody>
+</table>
+<p>Сервер: <code>178.236.255.254</code>, заходишь по SSH.</p>
+<hr>
+<h2 id="_2">Как работает любой инструмент — паттерн</h2>
+<p>В <code>bot.py</code> каждый инструмент — это <strong>две части</strong>:</p>
+<h3 id="1-tools_spec-150">Часть 1 — описание для ИИ (<code>TOOLS_SPEC</code>, ~строка 150)</h3>
+<p>Это JSON-схема. DeepSeek видит её и знает: «такой инструмент существует, вот что он принимает».</p>
+<pre><code class="language-python">{&quot;type&quot;: &quot;function&quot;, &quot;function&quot;: {&quot;name&quot;: &quot;имя_инструмента&quot;,
+    &quot;description&quot;: &quot;Что делает — ИИ читает именно это&quot;,
+    &quot;parameters&quot;: {&quot;type&quot;: &quot;object&quot;, &quot;properties&quot;: {
+        &quot;параметр&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;description&quot;: &quot;Что это за параметр&quot;}},
+        &quot;required&quot;: [&quot;параметр&quot;]}}},
+</code></pre>
+<h3 id="2-exec_tool-400">Часть 2 — логика (<code>exec_tool</code>, ~строка 400)</h3>
+<p>Здесь Python-код: <strong>что реально происходит</strong> когда ИИ решил вызвать инструмент.</p>
+<pre><code class="language-python">if name == &quot;имя_инструмента&quot;:
+    param = args.get(&quot;параметр&quot;)
+    # ... делаем что-то ...
+    return &quot;результат строкой&quot;
+</code></pre>
+<p>ИИ получает строку обратно и включает её в ответ.</p>
+<hr>
+<h2 id="github_write_file">Шаги: добавить <code>github_write_file</code></h2>
+<h3 id="1">Шаг 1 — Зайти на сервер</h3>
+<pre><code class="language-bash">ssh root@178.236.255.254
+# Спросит пароль — он у тебя есть
+</code></pre>
+<h3 id="2-env">Шаг 2 — Добавить токен в <code>.env</code></h3>
+<pre><code class="language-bash">nano /root/daimon/.env
+</code></pre>
+<p>Добавь строку в конец (токен с правами на запись в нужный репо):</p>
+<pre><code>GITHUB_TOKEN=ghp_ТВОЙ_ТОКЕН_ЗДЕСЬ
+GITHUB_REPO=sergeyr8manov/DAIM8N
+</code></pre>
+<p>Сохрани: <code>Ctrl+O</code>, Enter, <code>Ctrl+X</code>.</p>
+<blockquote>
+<p>Где взять токен: github.com → Settings → Developer settings → Personal access tokens → Fine-grained tokens → New. Дай права Contents: Read &amp; Write на нужный репозиторий.</p>
+</blockquote>
+<h3 id="3-botpy">Шаг 3 — Открыть <code>bot.py</code></h3>
+<pre><code class="language-bash">nano /root/daimon/bot.py
+</code></pre>
+<h3 id="4-tools_spec-ctrlw-nano-delete_event">Шаг 4 — Найти конец <code>TOOLS_SPEC</code> (Ctrl+W в nano → ищи <code>delete_event</code>)</h3>
+<p>Прямо <strong>перед закрывающей <code>]</code></strong> добавь:</p>
+<pre><code class="language-python">    {&quot;type&quot;: &quot;function&quot;, &quot;function&quot;: {&quot;name&quot;: &quot;github_write_file&quot;,
+        &quot;description&quot;: &quot;Сохранить текст как файл в GitHub-репозиторий. Для заметок, конспектов, итогов встреч.&quot;,
+        &quot;parameters&quot;: {&quot;type&quot;: &quot;object&quot;, &quot;properties&quot;: {
+            &quot;path&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;description&quot;: &quot;Путь файла, напр. 'notes/2026-06-23.md'&quot;},
+            &quot;content&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;description&quot;: &quot;Содержимое файла&quot;},
+            &quot;message&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;description&quot;: &quot;Краткое описание (необязательно)&quot;}},
+            &quot;required&quot;: [&quot;path&quot;, &quot;content&quot;]}}},
+</code></pre>
+<h3 id="5-exec_tool-ctrlw">Шаг 5 — Найти конец <code>exec_tool</code> (Ctrl+W → ищи <code>неизвестный инструмент</code>)</h3>
+<p>Прямо <strong>перед строкой</strong> <code>return f"неизвестный инструмент: {name}"</code> добавь:</p>
+<pre><code class="language-python">        if name == &quot;github_write_file&quot;:
+            import base64 as _b64
+            path = (args.get(&quot;path&quot;) or &quot;&quot;).strip()
+            content = args.get(&quot;content&quot;, &quot;&quot;)
+            message = args.get(&quot;message&quot;) or f&quot;update {path}&quot;
+            token = os.environ.get(&quot;GITHUB_TOKEN&quot;, &quot;&quot;)
+            repo = os.environ.get(&quot;GITHUB_REPO&quot;, &quot;sergeyr8manov/DAIM8N&quot;)
+            if not token:
+                return &quot;нет GITHUB_TOKEN в .env&quot;
+            if not path:
+                return &quot;не указан путь файла&quot;
+            b64 = _b64.b64encode(content.encode()).decode()
+            url = f&quot;https://api.github.com/repos/{repo}/contents/{path}&quot;
+            headers = {&quot;Authorization&quot;: f&quot;Bearer {token}&quot;,
+                       &quot;Accept&quot;: &quot;application/vnd.github+json&quot;,
+                       &quot;Content-Type&quot;: &quot;application/json&quot;}
+            req = urllib.request.Request(url, headers=headers)
+            try:
+                with urllib.request.urlopen(req, timeout=10) as r:
+                    sha = json.loads(r.read()).get(&quot;sha&quot;, &quot;&quot;)
+            except Exception:
+                sha = &quot;&quot;
+            payload = {&quot;message&quot;: message, &quot;content&quot;: b64}
+            if sha:
+                payload[&quot;sha&quot;] = sha
+            req2 = urllib.request.Request(url, data=json.dumps(payload).encode(),
+                                          headers=headers, method=&quot;PUT&quot;)
+            try:
+                with urllib.request.urlopen(req2, timeout=15) as r:
+                    json.loads(r.read())
+                return f&quot;файл '{path}' сохранён в {repo}&quot;
+            except Exception as e:
+                return f&quot;ошибка: {e}&quot;
+</code></pre>
+<p>Сохрани: <code>Ctrl+O</code>, Enter, <code>Ctrl+X</code>.</p>
+<h3 id="6">Шаг 6 — Проверить синтаксис и перезапустить</h3>
+<pre><code class="language-bash">python3 -m py_compile /root/daimon/bot.py &amp;&amp; echo &quot;синтаксис OK&quot;
+systemctl restart daimon
+sleep 2
+systemctl is-active daimon
+</code></pre>
+<p>Должно быть <code>active</code>.</p>
+<h3 id="7">Шаг 7 — Проверить что работает</h3>
+<p>Напиши Даймону:</p>
+<blockquote>
+<p>«Сохрани в GitHub файл notes/test.md с текстом &ldquo;привет из Даймона&rdquo;»</p>
+</blockquote>
+<p>Даймон должен вызвать инструмент и ответить: <code>файл 'notes/test.md' сохранён</code>.</p>
+<p>Потом проверь в GitHub: <code>github.com/sergeyr8manov/DAIM8N/blob/main/notes/test.md</code></p>
+<hr>
+<h2 id="-">Если что-то пошло не так</h2>
+<p><strong>Синтаксическая ошибка</strong> — <code>py_compile</code> скажет на какой строке. Смотри отступы (Python чувствителен).</p>
+<p><strong><code>нет GITHUB_TOKEN в .env</code></strong> — токен не сохранился. Проверь: <code>cat /root/daimon/.env | grep GITHUB</code>.</p>
+<p><strong>400 Bad Request от GitHub</strong> — токен без прав на этот репо. Пересоздай с Contents: Read &amp; Write.</p>
+<p><strong><code>active</code></strong> не появилось — смотри логи: <code>journalctl -u daimon -n 20</code>.</p>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
