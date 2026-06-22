@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elyne — слой Реализатора: план реализации</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="elyne">Elyne: Зеркало → Путь → Реализатор</h1>
+<h2 id="_1">Подробный план реализации</h2>
+<blockquote>
+<p>Стержень (сформулировал Олег): <strong>ров Elyne не в агенте, а в том, что он знает твою карту пути.</strong> Агентов будет миллион — агент, который знает карту твоей жизни, один. Всё ниже служит этому.</p>
+</blockquote>
+<hr>
+<h2 id="0">0. Решения, принятые как база (на подтверждение)</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Развилка</th>
+<th>Решение</th>
+<th>Почему</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Р1</td>
+<td>Проводник vs Реализатор</td>
+<td><strong>Один агент, три режима</strong> (зеркалит → ведёт по Пути → воплощает)</td>
+<td>Принцип №1: один агент под капотом, одно лицо. Две сущности = юзер видит «двоих», лишняя сложность.</td>
+</tr>
+<tr>
+<td>Р2</td>
+<td>Имя «Монад» в продукте</td>
+<td>«Монад/Моня» = имя <strong>личного агента Олега</strong> (частный случай). В продукте <strong>юзер сам именует своего агента + задаёт пол</strong>. «Elyne» = пространство/продукт, не агент.</td>
+<td>Убирает путаницу, которую отметил Олег.</td>
+</tr>
+<tr>
+<td>Р3</td>
+<td>Где живёт «Путь»</td>
+<td><strong>Центральная карта-связка</strong> между Зеркалом и Воплощением (схема «Я / Зеркало—Воплощение / Путь снизу»)</td>
+<td>Путь — сердце продукта, не вкладка в ряду.</td>
+</tr>
+<tr>
+<td>Р4</td>
+<td>Переход между слоями</td>
+<td><strong>Slide + scale + затемнение</strong> (не 3D-куб). Главный переход — <strong>смысловой</strong>: агент замечает вектор → предлагает перейти к воплощению</td>
+<td>Плавность &gt; эффект; WebView рвёт 3D.</td>
+</tr>
+<tr>
+<td>Р5</td>
+<td>Объём первой итерации</td>
+<td><strong>Сначала мост (Фаза A) на Олеге</strong>, потом Путь и рост агента</td>
+<td>Фазовость: не расширяемся, пока не закрыт чекпоинт «это работает на одном человеке».</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="1">1. Смысловая модель (три слоя)</h2>
+<pre><code>        Я
+       /  \
+  ЗЕРКАЛО — ВОПЛОЩЕНИЕ
+       \  /
+       ПУТЬ
+</code></pre>
+<ul>
+<li><strong>Зеркало</strong> — «кто я». Диалог-проводник, сцены, портрет. (Уже есть.)</li>
+<li><strong>Путь</strong> — «куда я иду». Карта движения: векторы → этапы → проекты → шаги. Центр, связка. (Новое, ядро рва.)</li>
+<li><strong>Воплощение / Реализатор</strong> — «как я создаю». Агент берёт следующий участок пути и делает. (Новое.)</li>
+</ul>
+<p>Не <code>намерение → задача → агент выполнил</code>, а:
+<code>намерение → агент замечает вектор → рождается маршрут → следующий шаг → агент помогает воплотить</code>.</p>
+<hr>
+<h2 id="2-data-model">2. Data model (новые сущности)</h2>
+<p>Поверх текущих <code>users / messages / scenes / taste</code>:</p>
+<h3 id="21-agent_profile-n">2.1 <code>agent_profile</code> (рост агента — «он знает меня на N%»)</h3>
+<pre><code>agent_id, user_id, name (юзер задаёт), gender (юзер задаёт),
+knows: {ценности, цели, стиль_мышления, проекты, окружение, процессы, инструменты, бизнес} → each 0..1,
+can:   [структурировать, планы, тексты_в_тоне, ...] (активные навыки),
+opens: [документы, сайты, автоматизации, продажи, ...] (доступные к подключению),
+knows_pct (вычисляемый)
+</code></pre>
+<h3 id="22-journey">2.2 <code>journey</code> (Путь) — главная новая сущность</h3>
+<pre><code>journey_id, user_id, name (&quot;Выход в проявленность&quot;),
+current_stage, vector (главный),
+stages: [
+  { stage, name, purpose, why_important, related_spheres[], progress, tasks[] }
+]
+</code></pre>
+<h3 id="23-project">2.3 <code>project</code> (между вектором и задачами)</h3>
+<pre><code>project_id, user_id, journey_id, name,
+vector, status, tasks[]   // задачи живут ВНУТРИ проекта/этапа, не плоским списком
+</code></pre>
+<h3 id="24-agent_job-agent_run-gpt">2.4 <code>agent_job</code> / <code>agent_run</code> (исполнение — из правок GPT)</h3>
+<pre><code>agent_job:  job_id, user_id, project_id, title, sphere, status
+            (предложена|подтверждена|выполняется|готово), result
+agent_run:  run_id, job_id, step, model_used, log, output, ts
+</code></pre>
+<p>Источник правды — <strong>БД</strong>. <code>USER.md</code> / портрет агента = кэш + снапшоты (как договорились по OpenClaw).</p>
+<hr>
+<h2 id="3-ux">3. UX по слоям</h2>
+<h3 id="31">3.1 Зеркало (есть) + триггер перехода</h3>
+<p>В диалоге агент ловит намерение-вектор и предлагает карточку:</p>
+<blockquote>
+<p>«Похоже, здесь появился важный вектор. Хочешь, я разложу это в маршрут?»</p>
+</blockquote>
+<p>Тап → плавный переход на <strong>Путь</strong> (не сразу в задачи).</p>
+<h3 id="32">3.2 Путь (новое, центр)</h3>
+<ul>
+<li>Карта: текущий вектор + этапы с прогрессом (<code>●●●○○ 60%</code>).</li>
+<li>Каждый этап раскрывается: смысл / почему важно / связанные сферы / шаги / прогресс.</li>
+<li>Внизу этапа — кнопка Реализатора: «Хочешь, помогу пройти этот этап?»</li>
+<li>Сферы — <strong>карта</strong>, не список: видно где движение, где застой, что сейчас главное.</li>
+</ul>
+<h3 id="33">3.3 Реализатор / Воплощение (новое)</h3>
+<ul>
+<li>Шапка: имя агента + статус («2 действия · 1 проект · агент учится»).</li>
+<li><strong>Предлагает</strong> (янтарный борт): что сделает пошагово + «Да, делай / Уточнить». Строка: «Я предлагаю — ты решаешь».</li>
+<li><strong>В работе</strong>: карточки со статусом (предложена/подтверждена/выполняется ◌/готово ✓). Метка сферы на каждой — чтобы не Todoist.</li>
+<li><strong>Готово</strong>: результат разворачивается в карточке + «что дальше».</li>
+<li>Задачи сгруппированы по <strong>проектам</strong>, не плоско. Три уровня: простые действия / проектные / системные.</li>
+</ul>
+<h3 id="34">3.4 «Чему меня научить» (рост агента)</h3>
+<p>Не «магазин плагинов», а развитие:
+- «Я уже умею для тебя»: ✓ структурировать, ✓ планы, ✓ тексты в тоне; ○ календарь, ○ сайты, ○ продажи…
+- Карта меня: ✓ ценности, ✓ стиль; ○ окружение, ○ финансы…
+- «Чем лучше я знаю твои цели и проекты — тем точнее воплощаю».</p>
+<hr>
+<h2 id="4-llm">4. Движки (LLM) — «новичку машина, продвинутому капот»</h2>
+<ul>
+<li><strong>Простой слой</strong> (по умолчанию): ⚡ Быстро / 🧠 Глубоко / 🚀 Максимальная мощность. Без имён моделей.</li>
+<li><strong>«Подробнее о движке»</strong> (для продвинутых): какие модели, назначение, возможности, ограничения.</li>
+<li><strong>Будущее — оркестратор</strong>: на задачу «создать проект» Elyne сама берёт модель под стратегию / код / анализ / визуал. Юзер видит результат, при желании — какой двигатель работал.</li>
+<li>Технически: OpenRouter = выбор «мозга»; FAL и пр. = навыки (<code>opens</code>). Оба уже в движке (OpenClaw + OpenRouter).</li>
+</ul>
+<hr>
+<h2 id="5">5. Фазовость (как строим)</h2>
+<h3 id="a">Фаза A — МОСТ (сейчас, только на Олеге) — доказать сквозняк</h3>
+<ol>
+<li><code>/api/handoff</code> Зеркало→агент (на мне, через ClaudeClaw; для юзеров — OpenClaw).</li>
+<li>Портрет <code>elyne.db</code> → контекст агента (+ origin_vector / intent_reason / desired_outcome).</li>
+<li><code>agent_job/agent_run</code> — минимальное состояние.</li>
+<li>Карточка подтверждения (Модель 2): намерение → предложение → confirm → execute.</li>
+<li>Кнопка «в работу» + один сквозной сценарий e2e.
+<strong>KPI:</strong> агент делает то, что обычный backend+очередь не может (автономный шаг, не только «мозг думает»).</li>
+</ol>
+<h3 id="b">Фаза B — ПУТЬ</h3>
+<ol start="6">
+<li><code>journey</code> + <code>project</code> data model.</li>
+<li>Экран Пути (карта этапов), триггер «разложу в маршрут» из диалога.</li>
+<li>Задачи переезжают внутрь проектов/этапов.</li>
+</ol>
+<h3 id="c">Фаза C — РОСТ АГЕНТА + ДВИЖКИ</h3>
+<ol start="9">
+<li><code>agent_profile</code> (knows %, can, opens), экран «Чему меня научить».</li>
+<li>Именование агента + пол при онбординге.</li>
+<li>Слой движков (простой + капот), затем оркестратор.</li>
+</ol>
+<h3 id="d">Фаза D — ПЕРЕПИСЫВАНИЕ ФРОНТА</h3>
+<p>Текущий React-миниапп → серьёзный движок (отдельная оценка), когда модель устаканится.</p>
+<hr>
+<h2 id="6">6. Риски (держим в уме)</h2>
+<ol>
+<li><strong>Todoist-in-disguise</strong> — задачи без Пути/сфер убивают идентификацию. Фикс: задача всегда внутри проекта + метка сферы.</li>
+<li><strong>Агент решает без спроса</strong> — любое внешнее действие только через карточку подтверждения. Это продуктовое обещание, не UX-деталь.</li>
+<li><strong>Техно-пульт</strong> — слова «модель/провайдер/API» в основном интерфейсе запрещены; только язык результата.</li>
+<li><strong>Строим всё сразу</strong> (главный) — Phase 0 ещё не закрыт (Аня: «похоже на обычный чат»). Не идём в Путь/рост, пока мост не доказан на одном человеке.</li>
+</ol>
+<hr>
+<h2 id="7">7. Нейминг (итог)</h2>
+<ul>
+<li><strong>Elyne</strong> — пространство/продукт.</li>
+<li><strong>Личный агент юзера</strong> — имя и пол задаёт юзер при онбординге.</li>
+<li><strong>Монад/Моня</strong> — имя личного агента Олега (частный случай).</li>
+<li>Слои: <strong>Зеркало</strong> (кто я) · <strong>Путь</strong> (куда иду) · <strong>Воплощение/Реализатор</strong> (как создаю). Нейминг последнего слоя — «Воплощение» теплее «Делает».</li>
+</ul>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
