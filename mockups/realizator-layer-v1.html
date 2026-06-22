@@ -1,0 +1,1037 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elyne — слой Реализатора (мокап)</title>
+<style>
+  :root {
+    --bg: #0c0e13;
+    --surface: #11141b;
+    --surface2: #161b24;
+    --surface3: #1c2230;
+    --line: #222a36;
+    --line2: #2c3645;
+    --tx: #eef1f6;
+    --tx-muted: #94a0b0;
+    --tx-dim: #4e5a6a;
+    --amber: #f0a93f;
+    --amber-dim: #7a5a28;
+    --amber-bg: #1f1810;
+    --amber-light: #fbe6c4;
+    --cream: #f7f3ec;
+    --cream-dim: rgba(247,243,236,.62);
+    --glass: rgba(12,11,10,.46);
+    --green: #4caf82;
+    --green-dim: #1e3328;
+    --green-bg: #152b20;
+    --red-dim: #3a1e1e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0 }
+  body {
+    background: var(--bg);
+    color: var(--tx);
+    font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    padding: 32px 16px 60px;
+  }
+  h1 { font-size: 22px; font-weight: 500; color: var(--cream); margin-bottom: 4px }
+  .sub { color: var(--tx-muted); font-size: 14px; margin-bottom: 32px }
+
+  /* ── Сетка телефонов ── */
+  .screens-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    justify-content: center;
+  }
+  .screen-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 340px;
+  }
+  .screen-label {
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--tx-dim);
+    text-align: center;
+  }
+  .phone {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 36px;
+    overflow: hidden;
+    width: 340px;
+    min-height: 680px;
+    box-shadow: 0 24px 72px rgba(0,0,0,.6);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Шапка ── */
+  .hdr {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 18px 14px;
+    border-bottom: 1px solid var(--line);
+    background: #0f1219;
+    flex-shrink: 0;
+  }
+  .hdr-left { display: flex; align-items: center; gap: 10px }
+  .avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #f0c07a, #b9742a);
+    flex-shrink: 0;
+  }
+  .hdr-name { font-weight: 600; font-size: 15px; color: var(--tx) }
+  .hdr-sub { font-size: 11px; color: var(--tx-muted) }
+  .hdr-badge {
+    font-size: 11px; letter-spacing: .08em;
+    padding: 4px 10px; border-radius: 12px;
+    background: var(--amber-bg);
+    border: 1px solid var(--amber-dim);
+    color: var(--amber);
+    display: flex; align-items: center; gap: 5px;
+  }
+  .hdr-badge .dot {
+    width: 5px; height: 5px; border-radius: 50%; background: var(--amber);
+  }
+
+  /* ── Переключатель слоёв ── */
+  .layer-switcher {
+    display: flex;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--line);
+    padding: 12px 16px;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .layer-tab {
+    flex: 1;
+    text-align: center;
+    padding: 9px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: .02em;
+    cursor: pointer;
+    border: none;
+    transition: all .25s ease;
+    color: var(--tx-muted);
+    background: transparent;
+  }
+  .layer-tab.active {
+    background: var(--surface3);
+    color: var(--cream);
+    border: 1px solid var(--line2);
+  }
+  .layer-tab.realizator.active {
+    color: var(--amber-light);
+    border-color: var(--amber-dim);
+    background: var(--amber-bg);
+  }
+  .layer-tab .tab-icon { display: block; font-size: 16px; margin-bottom: 2px }
+
+  /* ── Контент ── */
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* ── Раздел ── */
+  .section-title {
+    font-size: 10px;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--tx-dim);
+    margin: 4px 0 8px;
+  }
+
+  /* ── Карточка подтверждения ── */
+  .confirm-card {
+    background: var(--surface2);
+    border: 1px solid var(--amber-dim);
+    border-radius: 18px;
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .confirm-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--amber), transparent);
+    opacity: .6;
+  }
+  .confirm-from {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+  }
+  .confirm-from .av-sm {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #f0c07a, #b9742a);
+    flex-shrink: 0;
+  }
+  .confirm-from-label { font-size: 12px; color: var(--tx-muted) }
+  .confirm-title {
+    font-size: 16px; font-weight: 500; line-height: 1.3; color: var(--cream);
+    margin-bottom: 6px;
+  }
+  .confirm-desc {
+    font-size: 13px; color: var(--tx-muted); line-height: 1.45; margin-bottom: 14px;
+  }
+  .confirm-actions { display: flex; gap: 8px }
+  .btn-confirm {
+    flex: 1; padding: 11px; border-radius: 14px;
+    background: var(--amber); color: #11141b;
+    font-weight: 700; font-size: 14px; border: none; cursor: pointer;
+  }
+  .btn-change {
+    padding: 11px 16px; border-radius: 14px;
+    background: var(--surface3);
+    border: 1px solid var(--line2);
+    color: var(--tx-muted); font-size: 14px; cursor: pointer;
+  }
+
+  /* ── Задача ── */
+  .job-card {
+    background: var(--surface2);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .job-card:hover { border-color: var(--line2) }
+  .job-top { display: flex; align-items: flex-start; gap: 10px }
+  .job-status-icon {
+    width: 30px; height: 30px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+  .st-proposed { background: var(--surface3); color: var(--tx-muted); border: 1px solid var(--line2) }
+  .st-confirmed { background: #1a2535; color: #6090d0; border: 1px solid #2a3e5e }
+  .st-running { background: var(--amber-bg); border: 1px solid var(--amber-dim); position: relative; overflow: hidden }
+  .st-running::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(240,169,63,.18), transparent);
+    animation: sweep 1.8s ease-in-out infinite;
+  }
+  @keyframes sweep {
+    0% { transform: translateX(-100%) }
+    100% { transform: translateX(200%) }
+  }
+  .st-done { background: var(--green-bg); color: var(--green); border: 1px solid #2a5040 }
+  .job-info { flex: 1 }
+  .job-title { font-size: 14.5px; font-weight: 500; color: var(--tx); line-height: 1.3 }
+  .job-meta { font-size: 11.5px; color: var(--tx-muted); margin-top: 2px }
+  .status-label {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; letter-spacing: .06em;
+    padding: 3px 9px; border-radius: 10px;
+    font-weight: 500;
+  }
+  .sl-proposed { color: var(--tx-dim); background: var(--surface3); border: 1px solid var(--line2) }
+  .sl-confirmed { color: #6090d0; background: #1a2535; border: 1px solid #2a3e5e }
+  .sl-running { color: var(--amber); background: var(--amber-bg); border: 1px solid var(--amber-dim) }
+  .sl-done { color: var(--green); background: var(--green-bg); border: 1px solid #2a5040 }
+
+  /* Прогресс-полоска */
+  .progress-bar {
+    height: 2px; border-radius: 2px;
+    background: var(--line);
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; border-radius: 2px;
+    background: var(--amber);
+    transition: width .6s ease;
+  }
+
+  /* Результат задачи */
+  .result-block {
+    background: var(--green-bg);
+    border: 1px solid #2a5040;
+    border-radius: 12px;
+    padding: 10px 12px;
+    display: flex; gap: 8px; align-items: flex-start;
+  }
+  .result-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px }
+  .result-text { font-size: 13px; color: var(--tx); line-height: 1.4 }
+  .result-link {
+    display: inline-block; margin-top: 5px;
+    font-size: 12px; color: var(--amber); text-decoration: none;
+    border-bottom: 1px solid var(--amber-dim);
+  }
+
+  /* ── Кнопка добавить задачу ── */
+  .add-job-btn {
+    display: flex; align-items: center; gap: 10px;
+    padding: 13px 14px; border-radius: 16px;
+    background: var(--surface2);
+    border: 1px dashed var(--line2);
+    color: var(--tx-muted);
+    font-size: 14px; cursor: pointer;
+  }
+  .add-job-btn .plus {
+    width: 28px; height: 28px; border-radius: 9px;
+    background: var(--surface3); border: 1px solid var(--line2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px; color: var(--tx-muted);
+  }
+
+  /* ── Слой прокачки агента ── */
+  .upgrade-entry {
+    display: flex; align-items: center; gap: 12px;
+    padding: 13px 14px; border-radius: 16px;
+    background: var(--surface2);
+    border: 1px solid var(--line);
+    cursor: pointer;
+  }
+  .upgrade-icon {
+    width: 36px; height: 36px; border-radius: 11px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    background: var(--surface3); border: 1px solid var(--line2);
+    flex-shrink: 0;
+  }
+  .upgrade-info { flex: 1 }
+  .upgrade-title { font-size: 14px; font-weight: 500; color: var(--tx) }
+  .upgrade-sub { font-size: 12px; color: var(--tx-muted) }
+  .upgrade-arrow { color: var(--tx-dim); font-size: 16px }
+
+  /* ── Шторка прокачки (оверлей) ── */
+  .sheet-overlay {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    background: var(--surface);
+    border-top: 1px solid var(--line);
+    border-radius: 24px 24px 0 0;
+    padding: 14px 16px 24px;
+    box-shadow: 0 -20px 60px rgba(0,0,0,.5);
+    z-index: 10;
+  }
+  .sheet-handle {
+    width: 34px; height: 3px; border-radius: 2px;
+    background: var(--line2);
+    margin: 0 auto 16px;
+  }
+  .sheet-title { font-size: 17px; font-weight: 600; color: var(--cream); margin-bottom: 4px }
+  .sheet-desc { font-size: 13px; color: var(--tx-muted); line-height: 1.45; margin-bottom: 18px }
+
+  /* Выбор движка */
+  .engine-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px }
+  .engine-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px; border-radius: 14px;
+    background: var(--surface2);
+    border: 1px solid var(--line);
+    cursor: pointer;
+  }
+  .engine-item.selected {
+    border-color: var(--amber-dim);
+    background: var(--amber-bg);
+  }
+  .engine-dot {
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 2px solid var(--line2); flex-shrink: 0;
+  }
+  .engine-item.selected .engine-dot {
+    border-color: var(--amber);
+    background: var(--amber);
+    box-shadow: 0 0 8px rgba(240,169,63,.4);
+  }
+  .engine-name { font-size: 14px; font-weight: 500; color: var(--tx); flex: 1 }
+  .engine-tag { font-size: 11px; color: var(--tx-muted); background: var(--surface3); padding: 2px 8px; border-radius: 8px }
+  .engine-item.selected .engine-tag { color: var(--amber); background: #2a1e0c; }
+
+  /* Навыки магазина */
+  .skills-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px }
+  .skill-chip {
+    display: flex; align-items: center; gap: 6px;
+    padding: 7px 12px; border-radius: 20px;
+    font-size: 13px;
+    border: 1px solid var(--line2);
+    background: var(--surface2);
+    color: var(--tx-muted); cursor: pointer;
+  }
+  .skill-chip.active {
+    border-color: var(--amber-dim);
+    background: var(--amber-bg);
+    color: var(--amber-light);
+  }
+  .skill-chip .sk-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--line2)
+  }
+  .skill-chip.active .sk-dot { background: var(--amber) }
+  .skill-chip.add-skill { border-style: dashed; color: var(--tx-dim) }
+
+  /* ── Нижний инпут ── */
+  .input-bar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px 14px;
+    background: #0f1219;
+    border-top: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+  .input-field {
+    flex: 1;
+    background: var(--surface2); border: 1px solid var(--line);
+    border-radius: 20px; padding: 9px 14px;
+    color: var(--tx-muted); font-size: 14px;
+  }
+  .input-send {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--amber); border: none;
+    display: flex; align-items: center; justify-content: center;
+    color: #11141b; font-size: 17px; cursor: pointer; flex-shrink: 0;
+  }
+
+  /* ── Аннотации ── */
+  .annotation {
+    max-width: 560px; margin: 0 auto;
+    background: #12161d;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px 18px;
+    font-size: 13.5px; color: #cdd5df; line-height: 1.55;
+  }
+  .annotation b { color: var(--amber) }
+  .annotation ul { margin: 8px 0 0; padding-left: 18px }
+  .annotation li { margin: 6px 0 }
+  .annotation .ann-title { font-size: 12px; text-transform: uppercase; letter-spacing: .1em; color: var(--tx-dim); margin-bottom: 10px }
+
+  /* ── Переход-анимация (диаграмма) ── */
+  .transition-diagram {
+    max-width: 560px; margin: 0 auto;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 20px;
+  }
+  .td-title { font-size: 12px; text-transform: uppercase; letter-spacing: .1em; color: var(--tx-dim); margin-bottom: 16px }
+  .td-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px }
+  .td-box {
+    flex: 1; padding: 12px; border-radius: 14px;
+    text-align: center; font-size: 13px;
+  }
+  .td-mirror { background: #161b2a; border: 1px solid #2a3050; color: #a0b0d0 }
+  .td-realizator { background: var(--amber-bg); border: 1px solid var(--amber-dim); color: var(--amber-light) }
+  .td-arrow {
+    font-size: 22px; color: var(--tx-dim);
+    flex-shrink: 0;
+  }
+  .td-gesture {
+    background: var(--surface2); border: 1px solid var(--line2);
+    border-radius: 12px; padding: 10px 14px;
+    font-size: 13px; color: var(--tx-muted); line-height: 1.45;
+    margin-top: 6px;
+  }
+  .td-gesture b { color: var(--cream) }
+
+  /* ── Заголовки секций ── */
+  h2 {
+    font-size: 16px; font-weight: 500; color: var(--cream);
+    margin: 40px 0 6px; max-width: 700px; margin-left: auto; margin-right: auto;
+  }
+  h2:first-of-type { margin-top: 24px }
+  .section-note {
+    font-size: 13px; color: var(--tx-muted); margin-bottom: 18px;
+    max-width: 700px; margin-left: auto; margin-right: auto;
+  }
+
+  /* Диаграмма flow */
+  .flow-row {
+    display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
+    max-width: 560px; margin: 0 auto 8px;
+  }
+  .flow-step {
+    padding: 7px 12px; border-radius: 10px; font-size: 12.5px;
+    background: var(--surface2); border: 1px solid var(--line2);
+    color: var(--tx-muted);
+  }
+  .flow-step.highlight { background: var(--amber-bg); border-color: var(--amber-dim); color: var(--amber-light) }
+  .flow-sep { color: var(--tx-dim); font-size: 14px }
+</style>
+</head>
+<body>
+
+<h1>Elyne · Слой Реализатора</h1>
+<p class="sub">UX-мокап: переход между слоями, содержимое экрана, карточка подтверждения, результат задачи, прокачка агента.</p>
+
+<!-- ═══════════════════════ ПЕРЕХОД ═══════════════════════ -->
+<h2>Переход между слоями</h2>
+<p class="section-note">Как пользователь переключается из Зеркала в Реализатор — жест и анимация.</p>
+
+<div class="transition-diagram" style="margin-bottom:16px">
+  <div class="td-title">Основной вариант — свайп влево по нижнему переключателю</div>
+  <div class="td-row">
+    <div class="td-box td-mirror">Зеркало<br><span style="font-size:11px;opacity:.7">— кто я</span></div>
+    <div class="td-arrow">→</div>
+    <div class="td-box td-realizator">Реализатор<br><span style="font-size:11px;opacity:.7">— что делаю</span></div>
+  </div>
+  <div class="td-gesture">
+    <b>Жест:</b> горизонтальный свайп по нижней панели-переключателю (не по всему экрану).<br>
+    <b>Анимация:</b> страница уезжает влево, новый слой приезжает справа — как переход между вкладками в iOS Settings или Arc Spaces. Длительность 320 мс, cubic-bezier(.25,.8,.25,1). Никакого 3D-поворота в реальный DOM — слишком тяжело на WebView.<br>
+    <b>Тактильный фидбек:</b> haptic('select') при начале свайпа, haptic('impact') при фиксации.
+  </div>
+</div>
+
+<div class="transition-diagram" style="margin-bottom:16px">
+  <div class="td-title">Запасной вариант А — пиллы-табы без свайпа (если WebApp не держит gesture detection)</div>
+  <div class="td-gesture">
+    Два таба «Зеркало / Реализатор» в верхней части экрана под шапкой. Тап = slide-transition (translateX). Надёжно на любом WebView, без риска конфликта с системным свайпом TG.
+  </div>
+</div>
+
+<div class="transition-diagram" style="margin-bottom:16px">
+  <div class="td-title">Запасной вариант Б — переход из конкретного момента в разговоре</div>
+  <div class="td-gesture">
+    Когда в диалоге-зеркале появляется намерение-действие («хочу позвонить маме», «нужно обновить резюме») — Элайн предлагает карточку <b>«Хочешь, чтобы я взяла это?»</b>. Тап на карточку = анимированный переход в Реализатор с уже добавленной задачей. Семантически сильнее куба: переход происходит по смыслу, не по жесту.
+  </div>
+</div>
+
+<div class="annotation" style="margin-bottom:32px">
+  <div class="ann-title">Почему НЕ 3D-куб в WebApp</div>
+  <ul>
+    <li>TG WebApp = WKWebView (iOS) / Chrome WebView (Android) — perspective 3D работает, но при быстром свайпе с тяжёлым DOM рвётся на 30 fps и ниже.</li>
+    <li>Ощущение «грани куба» можно достичь через translateX + perspectiveZ без реального 3D-поворота: левый экран уходит с scale(.95) + opacity 0, правый приходит с scale(1.02)→1. Читается как объём, весит как flat-переход.</li>
+    <li>Самый семантически точный переход — вариант Б: пользователь не «переключает вкладку», он <b>переходит из замысла в действие</b> — прямо в момент, когда это возникает в разговоре.</li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════ ЭКРАНЫ ═══════════════════════ -->
+<h2>Экраны слоя Реализатора</h2>
+<p class="section-note">Три состояния в одном слое: есть задачи в работе / карточка подтверждения / результат задачи.</p>
+
+<div class="screens-grid">
+
+  <!-- ── ЭКРАН 1: В РАБОТЕ ── -->
+  <div class="screen-wrap">
+    <div class="screen-label">Экран 1 · В работе (основной)</div>
+    <div class="phone">
+      <div class="hdr">
+        <div class="hdr-left">
+          <div class="avatar"></div>
+          <div>
+            <div class="hdr-name">Элайн</div>
+            <div class="hdr-sub">рядом</div>
+          </div>
+        </div>
+        <div class="hdr-badge">
+          <span class="dot"></span> 2 в работе
+        </div>
+      </div>
+
+      <!-- Переключатель слоёв -->
+      <div class="layer-switcher">
+        <button class="layer-tab">
+          <span class="tab-icon">◯</span>
+          Зеркало
+        </button>
+        <button class="layer-tab realizator active">
+          <span class="tab-icon">◈</span>
+          Делает
+        </button>
+      </div>
+
+      <div class="content">
+
+        <!-- Карточка-предложение от агента (ОЖИДАЕТ подтверждения) -->
+        <div class="section-title">Предлагает</div>
+        <div class="confirm-card">
+          <div class="confirm-from">
+            <div class="av-sm"></div>
+            <div class="confirm-from-label">Элайн предлагает действие</div>
+          </div>
+          <div class="confirm-title">Найти три студии йоги рядом с Кутузовской</div>
+          <div class="confirm-desc">Ты говорила, что хочешь вернуться к практике — и что важно, чтобы было близко. Я подберу варианты с расписанием и ценами.</div>
+          <div class="confirm-actions">
+            <button class="btn-confirm">Да, ищи</button>
+            <button class="btn-change">Уточнить</button>
+          </div>
+        </div>
+
+        <!-- Задачи в работе -->
+        <div class="section-title" style="margin-top:6px">В работе</div>
+
+        <!-- Задача: выполняется -->
+        <div class="job-card">
+          <div class="job-top">
+            <div class="job-status-icon st-running" style="color:var(--amber)">
+              ◌
+            </div>
+            <div class="job-info">
+              <div class="job-title">Составить список книг по дизайн-мышлению</div>
+              <div class="job-meta">Запущено сегодня · Развитие</div>
+            </div>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width:60%"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span class="status-label sl-running">в работе</span>
+            <span style="font-size:11px;color:var(--tx-dim)">60%</span>
+          </div>
+        </div>
+
+        <!-- Задача: подтверждена, ждёт запуска -->
+        <div class="job-card">
+          <div class="job-top">
+            <div class="job-status-icon st-confirmed">→</div>
+            <div class="job-info">
+              <div class="job-title">Написать черновик письма для Сергея</div>
+              <div class="job-meta">Запланировано · Реализация</div>
+            </div>
+          </div>
+          <span class="status-label sl-confirmed">подтверждено</span>
+        </div>
+
+        <!-- Задача: выполнена -->
+        <div class="job-card">
+          <div class="job-top">
+            <div class="job-status-icon st-done">✓</div>
+            <div class="job-info">
+              <div class="job-title">Найти рецепт ужина без глютена</div>
+              <div class="job-meta">Сегодня 11:42 · Состояние</div>
+            </div>
+          </div>
+          <span class="status-label sl-done">готово</span>
+          <div class="result-block">
+            <span class="result-icon">✓</span>
+            <div class="result-text">
+              Нашла рецепт тайского карри: 20 минут, без глютена, продукты есть в «Перекрёстке».
+              <a class="result-link" href="#">Открыть рецепт →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Добавить задачу -->
+        <div class="add-job-btn">
+          <div class="plus">+</div>
+          Скажи, что нужно сделать
+        </div>
+
+      </div>
+
+      <div class="input-bar">
+        <div class="input-field" style="color:var(--tx-dim)">Попроси меня о чём угодно...</div>
+        <button class="input-send">↑</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ЭКРАН 2: КАРТОЧКА ПОДТВЕРЖДЕНИЯ (развёрнутая) ── -->
+  <div class="screen-wrap">
+    <div class="screen-label">Экран 2 · Карточка подтверждения (детальная)</div>
+    <div class="phone">
+      <div class="hdr">
+        <div class="hdr-left">
+          <div class="avatar"></div>
+          <div>
+            <div class="hdr-name">Элайн</div>
+            <div class="hdr-sub">предлагает</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="layer-switcher">
+        <button class="layer-tab">
+          <span class="tab-icon">◯</span>Зеркало
+        </button>
+        <button class="layer-tab realizator active">
+          <span class="tab-icon">◈</span>Делает
+        </button>
+      </div>
+
+      <div class="content" style="gap:14px">
+        <div style="font-size:12px;color:var(--tx-dim);letter-spacing:.08em;text-transform:uppercase">Я хочу взяться за это</div>
+
+        <!-- Большая карточка -->
+        <div style="background:var(--surface2);border:1px solid var(--amber-dim);border-radius:20px;padding:20px;position:relative;overflow:hidden">
+          <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--amber),transparent);opacity:.5"></div>
+
+          <div style="font-size:20px;font-weight:600;color:var(--cream);line-height:1.25;margin-bottom:10px">
+            Найти три студии йоги рядом с Кутузовской
+          </div>
+          <div style="font-size:13.5px;color:var(--tx-muted);line-height:1.5;margin-bottom:18px">
+            Ты упомянула, что хочешь вернуться к практике — и что важно близко к дому. Я проверю расписание, стоимость первого занятия, есть ли пробный урок.
+          </div>
+
+          <!-- Что именно сделает агент -->
+          <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-dim);margin-bottom:10px">Что сделаю</div>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:18px">
+            <div style="display:flex;gap:8px;align-items:center;font-size:13px;color:var(--tx-muted)">
+              <span style="color:var(--amber);font-size:14px">◌</span> Найду студии в радиусе 2 км
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;font-size:13px;color:var(--tx-muted)">
+              <span style="color:var(--amber);font-size:14px">◌</span> Сравню расписание и цены
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;font-size:13px;color:var(--tx-muted)">
+              <span style="color:var(--amber);font-size:14px">◌</span> Выдам короткий список с ссылками
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px">
+            <button class="btn-confirm" style="font-size:15px;padding:13px">Да, ищи</button>
+            <button class="btn-change">Уточнить</button>
+          </div>
+        </div>
+
+        <!-- Подсказка: ты всегда автор -->
+        <div style="text-align:center;font-size:12px;color:var(--tx-dim);padding:0 8px">
+          Я предлагаю — ты решаешь. Можешь изменить или остановить в любой момент.
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ЭКРАН 3: РЕЗУЛЬТАТ ЗАДАЧИ ── -->
+  <div class="screen-wrap">
+    <div class="screen-label">Экран 3 · Результат задачи (детальный)</div>
+    <div class="phone">
+      <div class="hdr">
+        <div class="hdr-left">
+          <div class="avatar"></div>
+          <div>
+            <div class="hdr-name">Элайн</div>
+            <div class="hdr-sub">нашла</div>
+          </div>
+        </div>
+        <div class="hdr-badge" style="color:var(--green);border-color:#2a5040;background:var(--green-bg)">
+          <span class="dot" style="background:var(--green)"></span> готово
+        </div>
+      </div>
+
+      <div class="layer-switcher">
+        <button class="layer-tab">
+          <span class="tab-icon">◯</span>Зеркало
+        </button>
+        <button class="layer-tab realizator active">
+          <span class="tab-icon">◈</span>Делает
+        </button>
+      </div>
+
+      <div class="content">
+        <div style="font-size:12px;color:var(--tx-dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">Вот что нашла</div>
+        <div style="font-size:20px;font-weight:600;color:var(--cream);line-height:1.25;margin-bottom:6px">Студии йоги рядом с Кутузовской</div>
+        <div style="font-size:13px;color:var(--tx-muted);margin-bottom:16px">Сегодня · 14:07</div>
+
+        <!-- Результат-блок -->
+        <div style="background:var(--green-bg);border:1px solid #2a5040;border-radius:18px;padding:16px;margin-bottom:12px">
+          <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#4caf82;margin-bottom:12px">Нашла три варианта</div>
+
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="background:var(--surface);border:1px solid var(--line2);border-radius:12px;padding:11px 13px">
+              <div style="font-size:14px;font-weight:500;color:var(--tx)">Studio Zen · 8 мин. пешком</div>
+              <div style="font-size:12.5px;color:var(--tx-muted);margin-top:3px">Первое занятие 500₽ · Пн/Ср/Пт 7:00</div>
+              <a style="display:inline-block;margin-top:6px;font-size:12px;color:var(--amber);border-bottom:1px solid var(--amber-dim);text-decoration:none">Открыть расписание →</a>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--line2);border-radius:12px;padding:11px 13px">
+              <div style="font-size:14px;font-weight:500;color:var(--tx)">Flow Moscow · 12 мин.</div>
+              <div style="font-size:12.5px;color:var(--tx-muted);margin-top:3px">Пробный урок бесплатно · Каждый день 8:00</div>
+              <a style="display:inline-block;margin-top:6px;font-size:12px;color:var(--amber);border-bottom:1px solid var(--amber-dim);text-decoration:none">Открыть расписание →</a>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--line2);border-radius:12px;padding:11px 13px">
+              <div style="font-size:14px;font-weight:500;color:var(--tx)">Асана Клуб · 15 мин.</div>
+              <div style="font-size:12.5px;color:var(--tx-muted);margin-top:3px">Абонемент от 3 200₽/мес · Вт/Чт/Сб</div>
+              <a style="display:inline-block;margin-top:6px;font-size:12px;color:var(--amber);border-bottom:1px solid var(--amber-dim);text-decoration:none">Открыть расписание →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Вопрос Элайн после результата — продолжение разговора -->
+        <div style="background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:13px">
+          <div style="font-size:13.5px;color:var(--tx);line-height:1.45">
+            Какая из трёх ближе к тому, что ты искала? Могу записать тебя на пробный урок — скажи.
+          </div>
+          <div style="margin-top:10px;display:flex;gap:8px">
+            <button style="flex:1;padding:9px;border-radius:11px;background:var(--amber);border:none;color:#11141b;font-size:13px;font-weight:700;cursor:pointer">Записаться</button>
+            <button style="padding:9px 14px;border-radius:11px;background:var(--surface3);border:1px solid var(--line2);color:var(--tx-muted);font-size:13px;cursor:pointer">Ещё вопросы</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="input-bar">
+        <div class="input-field" style="color:var(--tx-dim)">Ответить...</div>
+        <button class="input-send">↑</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ЭКРАН 4: ПРОКАЧКА АГЕНТА ── -->
+  <div class="screen-wrap">
+    <div class="screen-label">Экран 4 · Прокачать агента (точка входа)</div>
+    <div class="phone">
+      <div class="hdr">
+        <div class="hdr-left">
+          <div class="avatar"></div>
+          <div>
+            <div class="hdr-name">Элайн</div>
+            <div class="hdr-sub">настройки</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="layer-switcher">
+        <button class="layer-tab">
+          <span class="tab-icon">◯</span>Зеркало
+        </button>
+        <button class="layer-tab realizator active">
+          <span class="tab-icon">◈</span>Делает
+        </button>
+      </div>
+
+      <div class="content">
+
+        <!-- Вход в прокачку из слоя реализатора -->
+        <div class="section-title">Возможности агента</div>
+        <div style="font-size:13px;color:var(--tx-muted);margin-bottom:14px;line-height:1.45">
+          Чем лучше я знаю твои инструменты — тем точнее действую.
+        </div>
+
+        <!-- Карточки навыков -->
+        <div class="upgrade-entry" style="margin-bottom:8px">
+          <div class="upgrade-icon">🧠</div>
+          <div class="upgrade-info">
+            <div class="upgrade-title">Скорость и глубина мышления</div>
+            <div class="upgrade-sub">Как я думаю над твоими задачами</div>
+          </div>
+          <div class="upgrade-arrow">›</div>
+        </div>
+
+        <div class="upgrade-entry" style="margin-bottom:8px">
+          <div class="upgrade-icon">🖼</div>
+          <div class="upgrade-info">
+            <div class="upgrade-title">Создание образов</div>
+            <div class="upgrade-sub">Генерация визуальных сцен — активно</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="width:9px;height:9px;border-radius:50%;background:var(--green);display:block"></span>
+            <div class="upgrade-arrow">›</div>
+          </div>
+        </div>
+
+        <div class="upgrade-entry" style="margin-bottom:8px">
+          <div class="upgrade-icon">📅</div>
+          <div class="upgrade-info">
+            <div class="upgrade-title">Работа с расписанием</div>
+            <div class="upgrade-sub">Подключить Google Календарь</div>
+          </div>
+          <div class="upgrade-arrow">›</div>
+        </div>
+
+        <div class="upgrade-entry" style="margin-bottom:8px">
+          <div class="upgrade-icon">🌐</div>
+          <div class="upgrade-info">
+            <div class="upgrade-title">Поиск в интернете</div>
+            <div class="upgrade-sub">Нахожу информацию в реальном времени</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="width:9px;height:9px;border-radius:50%;background:var(--green);display:block"></span>
+            <div class="upgrade-arrow">›</div>
+          </div>
+        </div>
+
+        <div class="upgrade-entry" style="opacity:.7;margin-bottom:8px">
+          <div class="upgrade-icon">✉️</div>
+          <div class="upgrade-info">
+            <div class="upgrade-title">Написание и отправка писем</div>
+            <div class="upgrade-sub">Скоро · Подключить Gmail</div>
+          </div>
+          <span style="font-size:11px;color:var(--tx-dim);background:var(--surface3);padding:3px 8px;border-radius:8px;border:1px solid var(--line2)">скоро</span>
+        </div>
+
+        <!-- Открытый слот -->
+        <div class="upgrade-entry" style="border-style:dashed;opacity:.6">
+          <div class="upgrade-icon" style="font-size:22px;color:var(--tx-dim)">+</div>
+          <div class="upgrade-info">
+            <div class="upgrade-title" style="color:var(--tx-muted)">Добавить возможность</div>
+            <div class="upgrade-sub">Что ещё должен уметь твой агент?</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ЭКРАН 5: ШТОРКА — ВЫБОР ДВИЖКА ── -->
+  <div class="screen-wrap">
+    <div class="screen-label">Экран 5 · Шторка — «Скорость и глубина мышления»</div>
+    <div class="phone" style="min-height:640px">
+      <div class="hdr">
+        <div class="hdr-left">
+          <div class="avatar"></div>
+          <div>
+            <div class="hdr-name">Элайн</div>
+            <div class="hdr-sub">настройки</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Фон-список (приглушён) -->
+      <div class="content" style="opacity:.3;pointer-events:none">
+        <div class="upgrade-entry"><div class="upgrade-icon">🧠</div><div class="upgrade-info"><div class="upgrade-title">Скорость и глубина мышления</div></div><div class="upgrade-arrow">›</div></div>
+        <div class="upgrade-entry"><div class="upgrade-icon">🖼</div><div class="upgrade-info"><div class="upgrade-title">Создание образов</div></div><div class="upgrade-arrow">›</div></div>
+        <div class="upgrade-entry"><div class="upgrade-icon">📅</div><div class="upgrade-info"><div class="upgrade-title">Работа с расписанием</div></div><div class="upgrade-arrow">›</div></div>
+      </div>
+
+      <!-- Шторка поверх -->
+      <div class="sheet-overlay">
+        <div class="sheet-handle"></div>
+        <div class="sheet-title">Как я думаю</div>
+        <div class="sheet-desc">
+          Быстрый режим — ответы за секунды, хорошо для простых задач. Глубокий режим — медленнее, но точнее, когда задача сложная.
+        </div>
+
+        <div class="engine-list">
+          <div class="engine-item selected">
+            <div class="engine-dot"></div>
+            <div class="engine-name">Быстро и точно</div>
+            <span class="engine-tag">рекомендуем</span>
+          </div>
+          <div class="engine-item">
+            <div class="engine-dot"></div>
+            <div class="engine-name">Глубоко, не спеша</div>
+            <span class="engine-tag">для сложных</span>
+          </div>
+          <div class="engine-item">
+            <div class="engine-dot"></div>
+            <div class="engine-name">Максимально мощно</div>
+            <span class="engine-tag">beta</span>
+          </div>
+        </div>
+
+        <div style="background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin-bottom:18px">
+          <div style="font-size:12px;color:var(--tx-dim)">Сейчас выбрано: <b style="color:var(--cream)">Быстро и точно</b></div>
+          <div style="font-size:12px;color:var(--tx-dim);margin-top:3px">Ты всегда можешь сменить это здесь</div>
+        </div>
+
+        <button style="width:100%;padding:13px;border-radius:16px;background:var(--amber);border:none;color:#11141b;font-weight:700;font-size:15px;cursor:pointer">
+          Сохранить
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ЭКРАН 6: ШТОРКА — МАГАЗИН НАВЫКОВ ── -->
+  <div class="screen-wrap">
+    <div class="screen-label">Экран 6 · Шторка — «Добавить возможность» (магазин)</div>
+    <div class="phone" style="min-height:640px">
+      <div class="hdr">
+        <div class="hdr-left">
+          <div class="avatar"></div>
+          <div>
+            <div class="hdr-name">Элайн</div>
+            <div class="hdr-sub">новые возможности</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content" style="opacity:.3;pointer-events:none">
+        <div class="upgrade-entry" style="border-style:dashed;opacity:.6">
+          <div class="upgrade-icon" style="font-size:22px;color:var(--tx-dim)">+</div>
+          <div class="upgrade-info"><div class="upgrade-title" style="color:var(--tx-muted)">Добавить возможность</div></div>
+        </div>
+      </div>
+
+      <div class="sheet-overlay">
+        <div class="sheet-handle"></div>
+        <div class="sheet-title">Что ещё могу делать</div>
+        <div class="sheet-desc">
+          Подключи то, что пригодится в твоей жизни. Всё остальное останется спрятанным — не будет мешать.
+        </div>
+
+        <div class="skills-grid">
+          <div class="skill-chip active"><span class="sk-dot"></span>Поиск в сети</div>
+          <div class="skill-chip active"><span class="sk-dot"></span>Образы</div>
+          <div class="skill-chip"><span class="sk-dot"></span>Переводчик</div>
+          <div class="skill-chip"><span class="sk-dot"></span>Рецепты</div>
+          <div class="skill-chip"><span class="sk-dot"></span>Маршруты</div>
+          <div class="skill-chip"><span class="sk-dot"></span>Плейлисты</div>
+          <div class="skill-chip"><span class="sk-dot"></span>Почта</div>
+          <div class="skill-chip"><span class="sk-dot"></span>Таблицы</div>
+          <div class="skill-chip add-skill">+ предложить</div>
+        </div>
+
+        <div style="font-size:12px;color:var(--tx-dim);margin-bottom:16px;line-height:1.5">
+          Чем больше навыков — тем точнее я понимаю, чем помочь. Убрать навык можно в любой момент.
+        </div>
+
+        <button style="width:100%;padding:13px;border-radius:16px;background:var(--amber);border:none;color:#11141b;font-weight:700;font-size:15px;cursor:pointer">
+          Готово
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /screens-grid -->
+
+
+<!-- ═══════════════════════ АННОТАЦИИ ═══════════════════════ -->
+
+<h2>Flow модели взаимодействия</h2>
+<p class="section-note">Намерение → предложение → подтверждение → в работу → результат.</p>
+
+<div style="max-width:560px;margin:0 auto 24px">
+  <div class="flow-row">
+    <div class="flow-step">Разговор в Зеркале</div>
+    <div class="flow-sep">→</div>
+    <div class="flow-step highlight">Намерение возникает</div>
+    <div class="flow-sep">→</div>
+    <div class="flow-step">Агент предлагает</div>
+  </div>
+  <div class="flow-row">
+    <div class="flow-step highlight">Юзер подтверждает</div>
+    <div class="flow-sep">→</div>
+    <div class="flow-step">В работе</div>
+    <div class="flow-sep">→</div>
+    <div class="flow-step highlight">Результат + следующий шаг</div>
+  </div>
+</div>
+
+<div class="annotation" style="margin-bottom:24px">
+  <div class="ann-title">Ключевые решения и принципы</div>
+  <ul>
+    <li><b>Переключатель слоёв</b> — нижний пилл с двумя табами «Зеркало / Делает». «Делает» — не «Реализатор», потому что живой язык важнее архитектурной терминологии.</li>
+    <li><b>Агент невидим</b> — движок нигде не называется (ни «Claude», ни «GPT», ни «DeepSeek»). В настройках — «как я думаю», три режима на человеческом языке.</li>
+    <li><b>Янтарь — только прогресс</b> — статус-лейбл «в работе», sweep-анимация иконки задачи. Нигде не декор.</li>
+    <li><b>Момент подтверждения</b> — полная карточка с объяснением «что именно сделаю». Не всплывающий алерт, а честный экран — потому что юзер берёт авторство.</li>
+    <li><b>Результат = не конец</b> — после выдачи результата Элайн задаёт следующий вопрос. Задача не закрывается точкой, она открывает следующий шаг.</li>
+    <li><b>Прокачка агента</b> — живёт в слое Реализатора, раздел «Возможности». Не в системных настройках — потому что это не техника, это расширение того, что умеет делать агент для тебя лично.</li>
+  </ul>
+</div>
+
+<div class="annotation" style="margin-bottom:24px">
+  <div class="ann-title">Микрокопия — примеры</div>
+  <ul>
+    <li><b>Статус «в работе»:</b> «◌ в работе» (не «Processing...», не «Выполняется»)</li>
+    <li><b>Подтверждение:</b> «Я предлагаю — ты решаешь. Можешь изменить или остановить в любой момент.»</li>
+    <li><b>Выбор движка:</b> «Быстро и точно» / «Глубоко, не спеша» / «Максимально мощно» (не модели LLM)</li>
+    <li><b>Магазин навыков:</b> «Подключи то, что пригодится в твоей жизни. Всё остальное останется спрятанным.»</li>
+    <li><b>После результата:</b> «Какая из трёх ближе к тому, что ты искала? Могу записать тебя — скажи.»</li>
+  </ul>
+</div>
+
+<div class="annotation" style="margin-bottom:24px">
+  <div class="ann-title">3 главных риска / грабли</div>
+  <ul>
+    <li><b>Риск 1: таск-менеджер вместо проводника.</b> Список задач без связи с образом жизни превращает Реализатор в Todoist. Фикс — каждая задача привязана к сфере (Состояние, Реализация, Партнёрство и т.д.) и видна метка сферы в карточке. Смысл действия важнее факта выполнения.</li>
+    <li><b>Риск 2: агент решает без спроса.</b> Нарушает принцип «я автор своей жизни». Фикс — обязательная карточка подтверждения перед любым внешним действием. Предложение, не приказ.</li>
+    <li><b>Риск 3: «прокачка агента» превращается в техно-пульт.</b> Как только появляются слова «модель», «провайдер», «токены» — продукт теряет тон. Фикс — режимы описываются только на языке результата («глубоко / быстро / мощно»), технические названия нигде не светятся.</li>
+  </ul>
+</div>
+
+</body>
+</html>
