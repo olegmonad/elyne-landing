@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ревизия замечаний Сергея — 23.06.2026</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="_1">Ревизия замечаний Сергея за неделю — что внедрено, что нет</h1>
+<p><em>Запрос Сергея (23.06): проверить, какие его правки НЕ интегрированы. Он часто просил план, но не катил без согласования Олега — могло потеряться. Статусы сверены с РЕАЛЬНЫМ кодом (main.py, Companion.tsx, tokens.css) + methodolog_notes, не по памяти.</em></p>
+<hr>
+<h2 id="_2">✅ ВНЕДРЕНО И ПРОВЕРЕНО В КОДЕ</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Замечание</th>
+<th>Где проверено</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Утечка системного промта + ответ на оффтоп (сортировка)</td>
+<td><code>СТОП-ПРАВИЛА</code> в начале PROVODNIK_PROMPT</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Видны <code>**</code> markdown в ответах</td>
+<td><code>_strip_markdown()</code> (def + вызов)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Однострочный ввод неудобен → мультилайн</td>
+<td><code>&lt;textarea&gt;</code> с авто-ресайзом (Companion.tsx:831)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Гипотеза: поднять temperature против пластика</td>
+<td><code>1.1</code> на обоих эндпоинтах (было 0.85)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Оценка имени («хорошее имя») звучит шаблонно</td>
+<td>Запрет в промте (main.py:277)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Элайн не даёт самопрезентацию — что она и зачем (заметка 23:58)</td>
+<td>Новое приветствие: «…помогу не просто понять, но и начать двигаться туда» — с самопрезентацией и уклоном в реализацию</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Фон-фото растягивается, не закреплено (заметка 19:01)</td>
+<td><code>.elyne-chat-bg</code>: <code>background-size:cover; position:fixed</code> + последнее принятое фото (<code>bgLatest</code>)</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Бан X/Y-вопросов, зеркало-vs-попугай</td>
+<td>В промте (main.py:280)</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="_3">❌ НЕ ВНЕДРЕНО (план/обсуждение, висит)</h2>
+<h3 id="ux">Баги (ломают UX сейчас)</h3>
+<ul>
+<li><strong>Галлюцинация имени/фактов</strong> — Элайн назвал Сергея «Михаилом» (17:53); раньше — «два Сергея, жена, паучок из других диалогов» (20.06). Это утечка контекста/портрета (DeepSeek додумывает). В промте есть запрет ОЦЕНИВАТЬ имя, но НЕТ защиты от ВЫДУМЫВАНИЯ имени/фактов. → нужен guard: имя/факты только из БД, иначе никак.</li>
+</ul>
+<h3 id="_4">Гейт генерации (методология «образ → вниз по воронке»)</h3>
+<ul>
+<li><strong>Кнопка «сгенерировать образ» вылезает слишком рано</strong> (19:07) — нет гейта по якорям. В промте сцены есть «faithful content / только из его слов», но решение КОГДА предлагать генерацию не привязано к достаточности якорей.</li>
+<li><strong>Образ как гейтнутый бонус перед реализацией</strong> (19:14) — только дизайн, не в коде.</li>
+<li><strong>Набор из 5 якорей до генерации</strong> (я расписывал msg_456) — не в коде.</li>
+<li><strong>Named insight / «инсайт-удар» модуль</strong> (итог совета) — не в коде.</li>
+</ul>
+<h3 id="ux_1">UX / фичи</h3>
+<ul>
+<li><strong>Кнопка «поделиться сообщением»</strong> (сообщение + приглашение в Элайн) (20:17) — не добавлена.</li>
+<li><strong>Сброс прохождения изнутри диалога</strong> (msg_519) — <code>ResetLink</code> есть только на Welcome и Spheres, в самом диалоге (Companion) недостижим. Поэтому Сергей и не нашёл, как сбросить.</li>
+</ul>
+<h3 id="_5">Методология / стратегия (нужен стратегический ОК Олега)</h3>
+<ul>
+<li><strong>Полный блок ЗАПРЕТНЫХ ПАТТЕРНОВ</strong> (эхо-резюме + аффирмативный буфер, msg_368) — частично: есть зеркало-vs-попугай и запрет оценки имени, но цельного блока нет.</li>
+<li><strong>Анти-фабрикация на пустом материале</strong> (строй сцену из состояния пустоты, не выдумывай окно/плед/кружку) — частично: в промте сцены есть «faithful», но нет fallback «из пустоты» и разговорного гейта.</li>
+<li><strong>Репориоритезация лестницы онбординга</strong> (реализация вперёд, самопонимание в связку, сцена назад) — идея от 23.06, дизайн, не в коде.</li>
+</ul>
+<hr>
+<h2 id="_6">⚠️ ЧАСТИЧНО</h2>
+<ul>
+<li>Запретные паттерны: есть точечные guards, нет цельного блока.</li>
+<li>Анти-фабрикация: есть на уровне промта сцены, нет разговорного гейта + emptiness-fallback.</li>
+</ul>
+<hr>
+<h2 id="_7">Вывод и рекомендация</h2>
+<p>Инстинкт Сергея верный: <strong>быстрые правки промта/UX внедрены, а структурные/методологические — почти все висят</strong> (гейты, named insight, якоря, reset-в-диалоге, share, защита от галлюцинации имени).</p>
+<p>Порядок, что брать (моё):
+1. <strong>Сейчас, дёшево, чинит UX</strong> — guard от галлюцинации имени/фактов (#9), reset внутри диалога (#17), share-кнопка (#12).
+2. <strong>Методология генерации</strong> — гейт «образ только после N якорей» (#10/#11/#15) + emptiness-fallback. Это связный блок, делать вместе.
+3. <strong>Стратегия (после ОК Олега)</strong> — named insight модуль, репориоритезация лестницы, цельный блок запретных паттернов.</p>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
