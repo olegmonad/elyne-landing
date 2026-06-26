@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MIRROR — Public Research Program</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0a0a; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #f0f0f0; }
+
+  .slides { width: 100%; }
+  .slide {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 100px;
+    border-bottom: 1px solid #1a1a1a;
+    position: relative;
+  }
+
+  /* Slide 1 — Cover */
+  .slide-cover {
+    background: #0a0a0a;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 60px;
+  }
+  .mirror-logotype {
+    font-size: 96px;
+    font-weight: 900;
+    letter-spacing: -4px;
+    color: #f0f0f0;
+    line-height: 1;
+  }
+  .mirror-logotype span { color: #f0f0f0; opacity: 0.25; }
+  .cover-tagline {
+    font-size: 22px;
+    color: rgba(240,240,240,0.6);
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .cover-sub {
+    font-size: 15px;
+    color: rgba(240,240,240,0.35);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 120px;
+  }
+
+  /* Slide 2 — Big question */
+  .slide-question {
+    background: #f0f0f0;
+    color: #0a0a0a;
+  }
+  .big-q {
+    font-size: 52px;
+    font-weight: 800;
+    line-height: 1.1;
+    max-width: 800px;
+  }
+  .q-sub {
+    font-size: 16px;
+    color: rgba(10,10,10,0.45);
+    margin-top: 40px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* Slide 3 — Thesis */
+  .slide-thesis { background: #0a0a0a; }
+  .thesis-label {
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(240,240,240,0.3);
+    margin-bottom: 48px;
+  }
+  .thesis-text {
+    font-size: 38px;
+    font-weight: 300;
+    line-height: 1.4;
+    max-width: 860px;
+    color: #f0f0f0;
+  }
+  .thesis-text strong { font-weight: 700; color: #fff; }
+
+  /* Slide 4 — What is MIRROR */
+  .slide-what { background: #111; }
+  .slide-title {
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(240,240,240,0.3);
+    margin-bottom: 60px;
+  }
+  .what-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    max-width: 900px;
+  }
+  .what-item { }
+  .what-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(240,240,240,0.35);
+    margin-bottom: 12px;
+  }
+  .what-value {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: #f0f0f0;
+  }
+  .not-this {
+    font-size: 14px;
+    color: rgba(240,240,240,0.3);
+    text-decoration: line-through;
+  }
+
+  /* Slide 5 — Program */
+  .slide-program { background: #0a0a0a; }
+  .program-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    max-width: 960px;
+    margin-top: 60px;
+  }
+  .program-card {
+    border-top: 1px solid rgba(240,240,240,0.15);
+    padding-top: 24px;
+  }
+  .program-name {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #f0f0f0;
+  }
+  .program-topics {
+    list-style: none;
+  }
+  .program-topics li {
+    font-size: 14px;
+    color: rgba(240,240,240,0.5);
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(240,240,240,0.07);
+    font-weight: 300;
+  }
+
+  /* Slide 6 — Format */
+  .slide-format { background: #f0f0f0; color: #0a0a0a; }
+  .format-row {
+    display: flex;
+    gap: 80px;
+    margin-top: 60px;
+    max-width: 900px;
+  }
+  .format-col { flex: 1; }
+  .format-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(10,10,10,0.35);
+    margin-bottom: 20px;
+  }
+  .format-list {
+    list-style: none;
+  }
+  .format-list li {
+    font-size: 17px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(10,10,10,0.1);
+    color: #0a0a0a;
+    font-weight: 300;
+  }
+
+  /* Slide 7 — Who */
+  .slide-who { background: #0a0a0a; }
+  .bio-block { max-width: 700px; margin-top: 60px; }
+  .bio-name { font-size: 32px; font-weight: 700; color: #f0f0f0; margin-bottom: 8px; }
+  .bio-role { font-size: 14px; color: rgba(240,240,240,0.4); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 32px; }
+  .bio-text { font-size: 18px; line-height: 1.6; color: rgba(240,240,240,0.7); font-weight: 300; }
+  .bio-formula {
+    margin-top: 40px;
+    padding: 28px 32px;
+    border: 1px solid rgba(240,240,240,0.12);
+    font-size: 20px;
+    font-style: italic;
+    color: rgba(240,240,240,0.9);
+    font-weight: 300;
+  }
+
+  /* Slide 8 — CTA */
+  .slide-cta { background: #0a0a0a; }
+  .cta-label { font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(240,240,240,0.25); margin-bottom: 48px; }
+  .cta-line { font-size: 42px; font-weight: 700; color: #f0f0f0; line-height: 1.2; max-width: 800px; margin-bottom: 60px; }
+  .cta-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .cta-row { font-size: 16px; color: rgba(240,240,240,0.5); }
+  .cta-row strong { color: #f0f0f0; font-weight: 400; }
+
+  /* Slide number */
+  .slide-num {
+    position: absolute;
+    bottom: 40px;
+    right: 100px;
+    font-size: 12px;
+    color: rgba(240,240,240,0.15);
+    letter-spacing: 0.1em;
+  }
+  .slide-question .slide-num,
+  .slide-format .slide-num { color: rgba(10,10,10,0.2); }
+
+  @media print {
+    .slide { page-break-after: always; min-height: 100vh; }
+    body { background: #0a0a0a; }
+  }
+
+  @media (max-width: 768px) {
+    .slide { padding: 48px 32px; }
+    .mirror-logotype { font-size: 56px; }
+    .big-q { font-size: 32px; }
+    .thesis-text { font-size: 26px; }
+    .what-grid { grid-template-columns: 1fr; gap: 32px; }
+    .program-grid { grid-template-columns: 1fr; }
+    .format-row { flex-direction: column; gap: 40px; }
+    .slide-num { right: 32px; }
+  }
+</style>
+</head>
+<body>
+<div class="slides">
+
+  <!-- 1. Cover -->
+  <div class="slide slide-cover">
+    <div class="mirror-logotype">MIR<span>|</span>ROR</div>
+    <div class="cover-tagline">Институт исследования человека</div>
+    <div class="cover-sub">Public Research Program · Предложение о партнёрстве</div>
+    <div class="slide-num">01 / 08</div>
+  </div>
+
+  <!-- 2. Big question -->
+  <div class="slide slide-question">
+    <div class="big-q">Если машина может думать — что остаётся нам?</div>
+    <div class="q-sub">MIRROR SESSION 01 · Свобода в эпоху алгоритмов</div>
+    <div class="slide-num" style="color:rgba(10,10,10,0.2)">02 / 08</div>
+  </div>
+
+  <!-- 3. Thesis -->
+  <div class="slide slide-thesis">
+    <div class="thesis-label">Тезис</div>
+    <div class="thesis-text">
+      Мы живём в эпоху, когда алгоритмы предсказывают наши желания раньше, чем мы их осознаём.
+      <br><br>
+      <strong>MIRROR не объясняет мир. MIRROR заставляет увидеть его иначе.</strong>
+    </div>
+    <div class="slide-num">03 / 08</div>
+  </div>
+
+  <!-- 4. What is MIRROR -->
+  <div class="slide slide-what">
+    <div class="slide-title">Что такое MIRROR</div>
+    <div class="what-grid">
+      <div class="what-item">
+        <div class="what-label">Не</div>
+        <div class="not-this">лекции о философии</div><br>
+        <div class="not-this">образовательные курсы</div><br>
+        <div class="not-this">школа мысли</div>
+      </div>
+      <div class="what-item">
+        <div class="what-label">А</div>
+        <div class="what-value">Исследовательская программа о человеке — его сознании, культуре и технологическом будущем</div>
+      </div>
+      <div class="what-item" style="margin-top: 16px;">
+        <div class="what-label">Принцип</div>
+        <div class="what-value">Не давать ответы.<br>Показывать процесс мышления.</div>
+      </div>
+      <div class="what-item" style="margin-top: 16px;">
+        <div class="what-label">Формат</div>
+        <div class="what-value">Серия сессий-исследований. Аудитория не слушает — участвует в исследовании.</div>
+      </div>
+    </div>
+    <div class="slide-num">04 / 08</div>
+  </div>
+
+  <!-- 5. Program -->
+  <div class="slide slide-program">
+    <div class="slide-title">Программа исследований</div>
+    <div class="program-grid">
+      <div class="program-card">
+        <div class="program-name">Season 01<br>Свобода в эпоху алгоритмов</div>
+        <ul class="program-topics">
+          <li>Свобода в эпоху алгоритмов</li>
+          <li>Машины и душа</li>
+          <li>Будущее внимания</li>
+        </ul>
+      </div>
+      <div class="program-card">
+        <div class="program-name">Season 02<br>Сознание</div>
+        <ul class="program-topics">
+          <li>ИИ как зеркало человека</li>
+          <li>Цифровая идентичность</li>
+          <li>Новые формы восприятия</li>
+        </ul>
+      </div>
+      <div class="program-card">
+        <div class="program-name">Season 03<br>Смысл</div>
+        <ul class="program-topics">
+          <li>Любовь и алгоритм</li>
+          <li>Смерть в цифровую эпоху</li>
+          <li>Что остаётся человеческим</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-num">05 / 08</div>
+  </div>
+
+  <!-- 6. Format -->
+  <div class="slide slide-format">
+    <div class="slide-title" style="color:rgba(10,10,10,0.35)">Как устроена сессия</div>
+    <div class="format-row">
+      <div class="format-col">
+        <div class="format-label">Что происходит</div>
+        <ul class="format-list">
+          <li>Один фундаментальный вопрос</li>
+          <li>Философский анализ</li>
+          <li>Современный кейс (технологии)</li>
+          <li>Живой диалог с аудиторией</li>
+          <li>Коллективное исследование</li>
+        </ul>
+      </div>
+      <div class="format-col">
+        <div class="format-label">Параметры</div>
+        <ul class="format-list">
+          <li>50–150 участников</li>
+          <li>Камерная площадка</li>
+          <li>2–3 сессии за сезон</li>
+          <li>Документация: видео + текст</li>
+          <li>Открытый цикл</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-num" style="color:rgba(10,10,10,0.2)">06 / 08</div>
+  </div>
+
+  <!-- 7. Who -->
+  <div class="slide slide-who">
+    <div class="slide-title">Кто за этим стоит</div>
+    <div class="bio-block">
+      <div class="bio-name">Сергей Романов</div>
+      <div class="bio-role">Философ · Методолог · Исследователь субъектности</div>
+      <div class="bio-text">
+        Кандидат наук по философии (субъектность и самоопределение).
+        Преподавал в университете, работал тьютором, методологом, создавал AI-продукты
+        и образовательные программы. Ведёт очные философские встречи.
+        Соавтор Elyne — инструмента самоопределения с AI-агентом.
+      </div>
+      <div class="bio-formula">
+        «Движение к инсайту, который становится вектором»
+      </div>
+    </div>
+    <div class="slide-num">07 / 08</div>
+  </div>
+
+  <!-- 8. CTA -->
+  <div class="slide slide-cta">
+    <div class="cta-label">Предложение</div>
+    <div class="cta-line">
+      Предлагаем исследовательскую резиденцию.<br>Не лекцию — программу.
+    </div>
+    <div class="cta-contact">
+      <div class="cta-row">Формат сотрудничества: <strong>сорезидент / партнёрская программа</strong></div>
+      <div class="cta-row">Первый сезон: <strong>3 сессии, осень 2026</strong></div>
+      <div class="cta-row">Контакт: <strong>@sergeyr8manov</strong></div>
+    </div>
+    <div class="slide-num">08 / 08</div>
+  </div>
+
+</div>
+</body>
+</html>
