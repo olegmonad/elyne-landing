@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-26",
+  "updated": "2026-06-27",
   "events": [
     {
       "id": "laf-analitika-2026-06-27",
@@ -688,6 +688,20 @@
       "is_free": false,
       "url": "https://bilet.mos.ru/event/388295257/",
       "tg_msg_id": 697
+    },
+    {
+      "id": "ariya-fest-park-gorkogo-2026-06-27",
+      "title": "АРИЯ ФЕСТ 2026 — Зелёный театр Парка Горького",
+      "date": "2026-06-27",
+      "time": "16:00",
+      "place": "Зелёный театр Парка Горького, Крымский вал, 9",
+      "category": "culture",
+      "emoji": "🎸",
+      "description": "Единственное московское выступление «Арии» в 2026 году. Гости: CATHARSIS, ВОЛЯ И РАЗУМ, ЧЁРНЫЙ ОБЕЛИСК, ДЖОКОНДА, MARGENTA. Хард-рок под открытым небом.",
+      "price": "Билеты от 3 500 до 15 000 ₽",
+      "is_free": false,
+      "url": "https://allfest.ru/festival-2026/ariya-fest-moskva",
+      "tg_msg_id": 709
     }
   ]
 }
