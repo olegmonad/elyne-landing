@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-27",
+  "updated": "2026-06-28",
   "events": [
     {
       "id": "laf-analitika-2026-06-27",
@@ -578,20 +578,6 @@
       "tg_msg_id": 495
     },
     {
-      "id": "leningrad-concert-2026-06-26",
-      "title": "Концерт группы «Ленинград» — Лукойл Арена",
-      "date": "2026-06-26",
-      "time": "20:00",
-      "place": "Лукойл Арена, Волоколамское шоссе, 69",
-      "category": "culture",
-      "emoji": "🎸",
-      "description": "Большой летний концерт Сергея Шнурова и группы «Ленинград» в Москве. За 20 минут до начала — лотерея: 5 победителей выйдут петь на сцену вместе с группой.",
-      "price": "Билеты от 3 800 ₽",
-      "is_free": false,
-      "url": "https://afisha.yandex.ru/moscow/concert/leningrad-tour",
-      "tg_msg_id": 638
-    },
-    {
       "id": "marafon-trenirovok-luzhniki-2026-06-27",
       "title": "Московский марафон тренировок — Лужники",
       "date": "2026-06-27",
@@ -662,20 +648,6 @@
       "tg_msg_id": 686
     },
     {
-      "id": "legendy-diskotek-luzhniki-2026-06-26",
-      "title": "«Легенды дискотек» — Лужники",
-      "date": "2026-06-26",
-      "time": "19:00",
-      "place": "Большая спортивная арена «Лужники»",
-      "category": "culture",
-      "emoji": "🎤",
-      "description": "Хиты 80-х, 90-х и 2000-х от Boney M. (Liz Mitchell), Ottawan, Arabesque, In-Grid, Dschinghis Khan, Joy, Иванушки, Буланова, Алсу, Варум, Наташи Королёвой. 50 000 зрителей, спецэффекты.",
-      "price": "Билеты от 3 500 до 14 000 ₽",
-      "is_free": false,
-      "url": "https://allfest.ru/festival-2026/legendy-diskotek",
-      "tg_msg_id": 696
-    },
-    {
       "id": "soloma-moskino-2026-06-27",
       "title": "Фестиваль «Солома» — Кинопарк Москино",
       "date": "2026-06-27",
@@ -702,6 +674,34 @@
       "is_free": false,
       "url": "https://allfest.ru/festival-2026/ariya-fest-moskva",
       "tg_msg_id": 709
+    },
+    {
+      "id": "carlton-simfoniya-2026-06-28",
+      "title": "«Симфония уходящего солнца» — крыша The Carlton",
+      "date": "2026-06-28",
+      "time": "19:00",
+      "place": "The Carlton, Moscow (крыша), ул. Охотный Ряд, 3",
+      "category": "culture",
+      "emoji": "🎼",
+      "description": "Единственный мужской камерный оркестр с певицей на крыше отеля с видом на Кремль. Музыка из «Амели», «Великого Гэтсби», «Гладиатора», «Сумерек».",
+      "price": "Билеты от 6 900 ₽",
+      "is_free": false,
+      "url": "https://kudamoscow.ru/event/simfonija-uxodjaschego-solntsa-edinstvennyj-muzhskoj-orkestr-na-kryshe-the-carlton-s-vidom-na-kreml/",
+      "tg_msg_id": 719
+    },
+    {
+      "id": "den-moskovskogo-sporta-luzhniki-2026-07-04",
+      "title": "День Московского спорта — Лужники",
+      "date": "2026-07-04",
+      "time": "11:00",
+      "place": "Олимпийский комплекс «Лужники»",
+      "category": "спорт",
+      "emoji": "🏟",
+      "description": "20+ площадок: мастер-классы, встречи с Плющенко, Ягудиным, Аршавиным, Щербаковой. Воркаут, йога, сайклинг, экстрим-парк. Финал — опен-эйр с Zivert, Елкой и Мари Краймбрери.",
+      "price": "Вход свободный",
+      "is_free": true,
+      "url": "https://allfest.ru/festival-2026/den-moskovskogo-sporta",
+      "tg_msg_id": 720
     }
   ]
 }
