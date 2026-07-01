@@ -1,45 +1,6 @@
 {
-  "updated": "2026-06-29",
+  "updated": "2026-07-01",
   "events": [
-    {
-      "id": "zaryadye-beethoven-9-2026-06-28",
-      "title": "Бетховен. Симфония №9 «Ода к радости»",
-      "date": "2026-06-28",
-      "time": "18:00",
-      "place": "МКЗ «Зарядье», Большой зал, ул. Варварка, 6",
-      "category": "культура",
-      "emoji": "🎻",
-      "description": "Великая Девятая симфония Бетховена — оркестр, хор, четыре солиста. Главное событие классического сезона.",
-      "url": "https://zaryadyehall.ru/events/",
-      "price": "от 8400 ₽",
-      "tg_msg_id": 297
-    },
-    {
-      "id": "mosmuseum-iyulskiy-dozhd-2026-06-28",
-      "title": "Спектакль «Июльский дождь» — Музей Москвы",
-      "date": "2026-06-28",
-      "time": "19:00",
-      "place": "Музей Москвы, Зубовский б-р, 2",
-      "category": "театр",
-      "emoji": "🎭",
-      "description": "Театральное прочтение классического фильма Хуциева. Атмосфера 1960-х в музейных залах.",
-      "url": "https://mosmuseum.ru/",
-      "price": "от 1500 ₽",
-      "tg_msg_id": 298
-    },
-    {
-      "id": "zaryadye-bolshoi-orchestra-gergiev-2026-06-29",
-      "title": "Оркестр Большого театра, дир. Валерий Гергиев",
-      "date": "2026-06-29",
-      "time": "19:00",
-      "place": "МКЗ «Зарядье», Большой зал, ул. Варварка, 6",
-      "category": "культура",
-      "emoji": "🎻",
-      "description": "Главный оркестр страны под управлением Валерия Гергиева. Большая программа русской классики.",
-      "url": "https://zaryadyehall.ru/events/",
-      "price": "от 4900 ₽",
-      "tg_msg_id": 299
-    },
     {
       "id": "teatr-naciy-kto-boitsya-vulf-2026-06-30",
       "title": "«Кто боится Вирджинии Вулф?» — Театр Наций (Миронов)",
@@ -78,6 +39,20 @@
       "url": "https://mosmuseum.ru/",
       "price": "от 1500 ₽",
       "tg_msg_id": 302
+    },
+    {
+      "id": "metel-park-gorkogo-2026-07-01",
+      "title": "Спектакль «Метель» — Парк Горького",
+      "date": "2026-07-01",
+      "time": "19:00",
+      "place": "Сцена на Пушкинской набережной, Парк Горького",
+      "category": "театр",
+      "emoji": "🌿",
+      "description": "Открытый театр прямо в парке. «Метель» на Сцене Пушкинской набережной — летний вечер, зелень, живое исполнение. В рамках программы «Лето в Москве».",
+      "price": "Вход свободный",
+      "is_free": true,
+      "url": "https://leto.mos.ru/",
+      "tg_msg_id": 751
     },
     {
       "id": "ai-conf-2026-07-01",
@@ -198,6 +173,20 @@
       "url": "https://www.darwinmuseum.ru/",
       "price": "от 400 ₽",
       "tg_msg_id": 309
+    },
+    {
+      "id": "beethoven-missa-solemnis-zaryadye-2026-07-05",
+      "title": "Бетховен. «Торжественная месса» — амфитеатр Зарядья",
+      "date": "2026-07-05",
+      "time": "21:00",
+      "place": "Большой амфитеатр парка «Зарядье», ул. Варварка, 6",
+      "category": "культура",
+      "emoji": "🎶",
+      "description": "«Missa Solemnis» — произведение, которое Бетховен считал главным трудом своей жизни. Фестивальный симфонический оркестр «Зарядье», дирижёр Иван Рудин, четыре солиста. Под открытым небом с видом на Кремль.",
+      "price": "Билеты на zaryadyehall.ru",
+      "is_free": false,
+      "url": "https://zaryadyehall.ru/events/",
+      "tg_msg_id": 752
     },
     {
       "id": "runit-agima-2026-07-05",
@@ -562,20 +551,6 @@
       "is_free": false,
       "url": "https://summit.megacampus.ru/dubai26/",
       "tg_msg_id": 495
-    },
-    {
-      "id": "carlton-simfoniya-2026-06-28",
-      "title": "«Симфония уходящего солнца» — крыша The Carlton",
-      "date": "2026-06-28",
-      "time": "19:00",
-      "place": "The Carlton, Moscow (крыша), ул. Охотный Ряд, 3",
-      "category": "culture",
-      "emoji": "🎼",
-      "description": "Единственный мужской камерный оркестр с певицей на крыше отеля с видом на Кремль. Музыка из «Амели», «Великого Гэтсби», «Гладиатора», «Сумерек».",
-      "price": "Билеты от 6 900 ₽",
-      "is_free": false,
-      "url": "https://kudamoscow.ru/event/simfonija-uxodjaschego-solntsa-edinstvennyj-muzhskoj-orkestr-na-kryshe-the-carlton-s-vidom-na-kreml/",
-      "tg_msg_id": 719
     },
     {
       "id": "ile-theleme-zaryadye-2026-07-02",
