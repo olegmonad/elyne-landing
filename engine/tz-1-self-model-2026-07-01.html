@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ТЗ-1 · Ядро Self Model + проводник пишет в него</title>
+<style>
+  :root { --bg:#fafaf7; --ink:#2a241d; --muted:#6b6357; --line:#e5e3dc; --accent:#c4a95e; --card:#ffffff; }
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 820px; margin: 0 auto; padding: 36px 18px 64px; color: var(--ink); line-height: 1.65; background: var(--bg); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; font-weight: 600; margin: 36px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); color: #1f1a14; }
+  h3 { font-size: 17px; font-weight: 600; margin: 22px 0 6px; color: #2f2820; }
+  h4 { font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  p { margin: 8px 0 12px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  blockquote { margin: 16px 0; padding: 12px 18px; background: #f0efe9; border-radius: 10px; color: var(--muted); font-size: 15px; }
+  blockquote p { margin: 4px 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
+  code { background: #f3f1ea; padding: 1px 6px; border-radius: 5px; font-size: 13.5px; color: #4a3f30; }
+  pre { background: #1f1a14; color: #f0e9d8; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--accent); }
+  strong { color: #1f1a14; }
+  em { color: var(--muted); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<h1 id="-1-self-model">ТЗ-1 · Ядро данных Self Model + проводник пишет в него</h1>
+<p><strong>Это первая инженерная задача «движка».</strong> Закрывает пункты 1+2 из среза архитектуры (<code>architecture-self-model</code>). Сверено с живым кодом стенда (<code>bin/yadro-bot/api/main.py</code>) и <code>elyne.db</code> на 01.07.2026.</p>
+<p>Цель: свести разрозненную «модель личности» (сейчас размазана по <code>insight</code>/<code>vector</code>/<code>sphere_profiles</code>) в <strong>единое ядро наблюдений</strong> с уверенностью, статусом и дисциплиной обновления — и подключить к нему запись проводника. Без экрана (это ТЗ-2) и без ночного консолидатора (ТЗ-3).</p>
+<hr>
+<h2 id="0">0. Что уже есть в коде (чтобы не изобретать заново)</h2>
+<ul>
+<li><strong>Маркеры парсятся</strong> в функции разбора ответа LLM, <code>main.py:1497–1538</code>: <code>[INSIGHT: текст; мотив; опоры]</code>, <code>[VECTOR: направление; сфера]</code>, <code>[ACTION: …]</code> → в <code>parsed["insight"]</code>, <code>parsed["vector"]</code>, <code>parsed["action"]</code>.</li>
+<li><strong>Запись в БД</strong> — в обработчике <code>/api/chat</code>, <code>main.py:2522–2570</code>:</li>
+<li>insight → <code>INSERT INTO insight(... status, quality ...)</code> (2537). <code>status</code> = <code>provisional</code> (прошёл гейт Валидатора: 4 фильтра + ≥2 опоры) либо <code>confirmed</code> (прямой маркер модели после подтверждения человеком, логика на 2515/2526).</li>
+<li>vector → <code>INSERT INTO vector(... insight_id ...)</code> (2564), привязан к insight.</li>
+<li>action → <code>agent_job</code> (status <code>предложена</code>).</li>
+<li><strong>Уверенности как числа сейчас НЕТ.</strong> Есть только <code>insight.status</code> (provisional/confirmed) + <code>insight.quality</code> (JSON-вердикт Валидатора). Нет единого объекта, нет <code>supersedes</code>/<code>locked</code>, нет проекции «модель».</li>
+</ul>
+<p>Ключевое правило (из архитектуры, соблюсти): <strong>проводник НИКОГДА не пишет факт — только <code>proposed</code>.</strong> Повышение — через юзера или консолидатор.</p>
+<hr>
+<h2 id="1-self_model">Задача 1 · Таблица <code>self_model</code></h2>
+<p>Новая таблица — <strong>единый слой наблюдений поверх существующих</strong> (не ломаем <code>insight</code>/<code>vector</code>; они остаются, приложение на них завязано). <code>self_model</code> = источник правды для будущего экрана «Моя модель».</p>
+<pre><code class="language-sql">CREATE TABLE self_model (
+  id            INTEGER PRIMARY KEY AUTOINCREMENT,
+  tg_user_id    INTEGER NOT NULL,
+  run_id        INTEGER NOT NULL DEFAULT 1,
+  kind          TEXT NOT NULL,                       -- identity|insight|vector|sphere|motif|taste|value|preference
+  key           TEXT,                                -- краткий ярлык наблюдения (для дедупа/группировки)
+  value         TEXT NOT NULL,                       -- формулировка «как я его понял»
+  confidence    REAL NOT NULL DEFAULT 0.3,           -- 0.0–1.0
+  status        TEXT NOT NULL DEFAULT 'proposed',    -- proposed|confirmed|integrated|superseded
+  source        TEXT NOT NULL DEFAULT 'provodnik',   -- provodnik|validator|user|consolidator
+  anchors       TEXT,                                -- JSON-массив цитат-доказательств из реплик
+  motive        TEXT,                                -- для kind=insight/vector
+  sphere        TEXT,                                -- для kind=vector/sphere
+  origin_insight_id INTEGER,                         -- мост со старой таблицей insight.id
+  origin_vector_id  INTEGER,                         -- мост со старой vector.id
+  supersedes    INTEGER,                             -- id наблюдения, которое это уточняет/заменяет
+  locked        INTEGER NOT NULL DEFAULT 0,          -- 1 = ядро, что юзер закрепил (не менять авто)
+  created_at    TEXT NOT NULL,
+  updated_at    TEXT NOT NULL
+);
+CREATE INDEX idx_self_model_user ON self_model(tg_user_id, run_id, status);
+CREATE INDEX idx_self_model_kind ON self_model(tg_user_id, kind);
+</code></pre>
+<p>Создавать идемпотентно при старте (рядом с прочими <code>_add_col</code>/<code>CREATE TABLE IF NOT EXISTS</code> в инициализации схемы).</p>
+<hr>
+<h2 id="2-proposed-">Задача 2 · Проводник пишет <code>proposed</code>-наблюдения</h2>
+<p><strong>Точка встройки:</strong> тот же блок <code>/api/chat</code>, <code>main.py:2522–2570</code>, СРАЗУ после существующих INSERT в <code>insight</code>/<code>vector</code> (оставляем их — двойная запись на переходный период).</p>
+<p>Добавить хелпер и вызвать его:</p>
+<pre><code class="language-python">def _sm_observe(db, uid, run, kind, value, *, key=None, anchors=None,
+                motive=None, sphere=None, source=&quot;provodnik&quot;,
+                seed_conf=0.30, origin_insight_id=None, origin_vector_id=None, now=None):
+    &quot;&quot;&quot;Кладёт наблюдение в self_model. Если такое уже есть (тот же kind + похожий key/value
+    в этом прогоне) — не плодит дубль, а ПОВЫШАЕТ уверенность (независимый сигнал) и
+    доклеивает опоры. Проводник пишет только proposed.&quot;&quot;&quot;
+    dedup_key = (key or value).strip().lower()[:120]
+    row = &lt;SELECT id, confidence, anchors, status FROM self_model
+           WHERE tg_user_id=uid AND run_id=run AND kind=kind
+             AND lower(coalesce(key,value)) = dedup_key LIMIT 1&gt;
+    if row:
+        new_conf = min(0.95, row.confidence + 0.15)          # корроборация
+        merged_anchors = _merge_anchors(row.anchors, anchors)
+        &lt;UPDATE self_model SET confidence=new_conf, anchors=merged_anchors,
+                updated_at=now WHERE id=row.id&gt;              # status/locked не трогаем
+        return row.id
+    &lt;INSERT INTO self_model(tg_user_id, run_id, kind, key, value, confidence, status,
+        source, anchors, motive, sphere, origin_insight_id, origin_vector_id,
+        created_at, updated_at)
+     VALUES (uid, run, kind, key, value, seed_conf, 'proposed', source,
+        json(anchors), motive, sphere, origin_insight_id, origin_vector_id, now, now)&gt;
+</code></pre>
+<p>Вызовы (в существующем блоке записи):</p>
+<ul>
+<li>после сохранения insight (после 2544):
+  <code>_sm_observe(db, uid, run, "insight", itext, key=itext[:80], anchors=[parsed insight anchors], motive=..., source=("validator" if istatus=="provisional" else "provodnik"), seed_conf=(0.45 if istatus=="provisional" else 0.70 if istatus=="confirmed" else 0.30), origin_insight_id=insight_id, now=now)</code></li>
+<li>после сохранения vector (после 2569):
+  <code>_sm_observe(db, uid, run, "vector", vname, key=vname[:80], sphere=..., source="provodnik", seed_conf=0.40, origin_vector_id=&lt;lastrowid&gt;, now=now)</code></li>
+</ul>
+<p>Проводник <strong>только создаёт proposed и повышает при повторе.</strong> Подтверждение юзером (<code>confirmed</code>/<code>locked</code>) и <code>integrated</code> — в ТЗ-2/ТЗ-3.</p>
+<hr>
+<h2 id="confidence">Расчёт <code>confidence</code> (точные правила)</h2>
+<p><strong>Посев (seed) при первом наблюдении — по источнику/качеству:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Ситуация</th>
+<th>seed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Проводник, обычное наблюдение</td>
+<td><strong>0.30</strong></td>
+</tr>
+<tr>
+<td>Прошло гейт Валидатора (insight <code>provisional</code>: 4 фильтра + ≥2 опоры)</td>
+<td><strong>0.45</strong></td>
+</tr>
+<tr>
+<td>Прямой маркер модели <code>confirmed</code> (после подтверждения в диалоге, логика 2526)</td>
+<td><strong>0.70</strong></td>
+</tr>
+<tr>
+<td>Явное подтверждение юзером (ТЗ-2)</td>
+<td><strong>0.90</strong> + <code>locked=1</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Корроборация:</strong> повторное независимое наблюдение того же (kind+key) → <code>confidence += 0.15</code>, потолок <strong>0.95</strong>, опоры сливаются. Дубли не плодим.</p>
+<p><strong>Переходы статуса (машина состояний):</strong>
+- <code>proposed</code> — <code>confidence &lt; 0.7</code> и не подтверждён юзером.
+- <code>confirmed</code> — <code>confidence ≥ 0.7</code> <strong>и</strong> юзер не возразил, <strong>или</strong> явное подтверждение юзером.
+- <code>integrated</code> — выставляет ночной консолидатор (ТЗ-3), колонка уже есть.
+- <code>superseded</code> — при уточнении: у нового <code>supersedes=&lt;old_id&gt;</code>, у старого <code>status='superseded'</code>.</p>
+<p>В этом ТЗ проводник доводит только до <code>proposed</code>→(рост conf). Автоперевод в <code>confirmed</code> по порогу — оставить хук, но включить в ТЗ-2 вместе с экраном (иначе подтверждать нечем).</p>
+<hr>
+<h2 id="_1">Миграция / бэкфилл существующего</h2>
+<p>Разовый скрипт (или блок при старте): перелить в <code>self_model</code> то, что уже накоплено, чтобы модель не была пустой у текущих 19 юзеров:
+- <code>insight</code> → kind=<code>insight</code>, seed: <code>confirmed→0.70</code>, <code>provisional→0.45</code>; <code>origin_insight_id</code>, anchors из <code>insight.anchors</code>.
+- <code>vector</code> → kind=<code>vector</code>, 0.50; <code>origin_vector_id</code>, sphere.
+- <code>sphere_profiles.summary</code> → kind=<code>sphere</code> (по одной на сферу), 0.50.
+- <code>users</code> (имя/пол/как звать) → kind=<code>identity</code>, 0.90, <code>locked=1</code>.
+- <code>taste_calibration</code> → kind=<code>taste</code>, 0.60.</p>
+<p>Идемпотентно (не дублировать при повторном прогоне — проверять по origin-id).</p>
+<hr>
+<h2 id="_2">Что НЕ входит (явно, чтобы не расползлось)</h2>
+<ul>
+<li>Экран «Моя модель» (показ + подтверждение/правка) — <strong>ТЗ-2</strong>.</li>
+<li>Ночной консолидатор (повышение/понижение, diff, <code>integrated</code>) — <strong>ТЗ-3</strong>.</li>
+<li>Оркестратор/навыки/отбор ролей — позже.</li>
+</ul>
+<hr>
+<h2 id="_3">Критерии приёмки</h2>
+<ol>
+<li>После хода диалога с <code>[INSIGHT]</code>/<code>[VECTOR]</code> в <code>self_model</code> появляется строка: <code>source=provodnik|validator</code>, <code>status=proposed</code>, <code>confidence</code> 0.30–0.70, <code>anchors</code> заполнены, <code>origin_insight_id</code>/<code>origin_vector_id</code> проставлены.</li>
+<li>Повтор того же инсайта следующим ходом <strong>не создаёт дубль</strong> — повышает <code>confidence</code> существующей строки и доклеивает опоры (проверяется в логе/БД).</li>
+<li>Бэкфилл дал число строк, соответствующее текущим <code>insight</code>+<code>vector</code>+<code>sphere</code>+<code>identity</code>+<code>taste</code>.</li>
+<li>Регрессии нет: <code>insight</code>/<code>vector</code> пишутся как раньше; Путь/сцены/дашборд не сломаны.</li>
+</ol>
+<h2 id="_4">Объём</h2>
+<p>~1 день миддла: таблица + хелпер <code>_sm_observe</code> + двойная запись в 2 точках + миграция-бэкфилл + проверки по 4 критериям.</p>
+<div class="footer">Elyne · документ опубликован для команды. Канон лежит в приватном репо Monada — здесь срез на момент публикации.</div>
+</body>
+</html>
