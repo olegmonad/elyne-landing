@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PROVODNIK 10.6 — сборка (сверка до деплоя)</title>
+<style>
+  :root{
+    --bg:#0c0e11; --card:#14171c; --card2:#1a1e24; --line:#252a32;
+    --tx:#e9ebee; --mut:#98a0ab; --acc:#8fb4e0; --gold:#e8a23d; --grn:#5ec27a; --red:#e5715f;
+    --ff:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--tx);font-family:var(--ff);line-height:1.55;font-size:16px;-webkit-text-size-adjust:100%;padding:0 0 46px}
+  .wrap{max-width:740px;margin:0 auto;padding:24px 16px}
+  h1{font-size:21px;margin:2px 0 2px;letter-spacing:-.02em}
+  .sub{color:var(--mut);font-size:13.5px;margin-bottom:8px}
+  .badge{display:inline-block;background:rgba(232,162,61,.14);color:var(--gold);border:1px solid rgba(232,162,61,.35);
+    border-radius:99px;padding:4px 12px;font-size:12px;font-weight:700;letter-spacing:.03em;margin-bottom:16px}
+  h2{font-size:15px;margin:24px 0 8px;color:var(--gold);text-transform:uppercase;letter-spacing:.04em}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px;margin:10px 0}
+  p{margin:8px 0}.mut{color:var(--mut)}
+  .have{background:rgba(94,194,122,.07);border:1px solid rgba(94,194,122,.22);border-radius:12px;padding:13px 15px;margin:10px 0;font-size:14px}
+  .have b{color:var(--grn)}
+  .have ul{margin:6px 0;padding-left:18px}.have li{margin:3px 0}
+  .add{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:0 12px 12px 0;padding:14px 16px;margin:12px 0}
+  .add .n{color:var(--gold);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+  .add .ti{font-weight:700;font-size:16px;margin-bottom:6px}
+  .add .why{color:var(--mut);font-size:13px;margin-bottom:8px}
+  .block{background:#0a0c0f;border:1px solid #232833;border-radius:10px;padding:12px 13px;font-size:14px;line-height:1.5}
+  .block .lbl{color:var(--acc);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+  .finding{background:linear-gradient(160deg,#231a12,#14171c);border:1px solid #4a3320;border-radius:14px;padding:16px;margin:14px 0}
+  .finding .t{color:var(--gold);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+  .finding b{color:#f0d6a8}
+  .foot{color:var(--mut);font-size:12.5px;margin-top:26px;border-top:1px solid var(--line);padding-top:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>PROVODNIK 10.6 — сборка</h1>
+  <div class="sub">Сверка до деплоя · для Олега и Сергея · 04.07.2026</div>
+  <div class="badge">⏸ НЕ задеплоено — сначала сверка методологии</div>
+
+  <div class="finding">
+    <div class="t">Главное, что я обнаружил, когда прочитал весь промт (555 строк)</div>
+    <p><b>Промт уже почти на 10.6.</b> Почти всё, что нашёл сегодняшний аудит живых диалогов, — <b>уже вшито</b>. Значит провалы в диалогах (переход в действие срабатывал 1 из 8, метафоры вместо слов юзера, вязкость) — это <b>не нехватка правил, а их неисполнение</b>: правила есть, но промт очень плотный, и модель не держит всё сразу.</p>
+    <p>Поэтому 10.6 — <b>не «влить ещё правил»</b> (это была бы груда заплаток на и без того перегруженный промт), а <b>ровно 2 честных добавления</b>, которых реально не было. И отдельный вывод про главный следующий рычаг — ниже.</p>
+  </div>
+
+  <div class="have">
+    <b>Уже в промте</b> (аудит это подтвердил как «правила есть»):
+    <ul>
+      <li>Правило Б «ставка ≠ шаг» — вилка «к делу / уточнить» перед действием</li>
+      <li>Провенанс 6a (гипотеза его словами) + плавающий порог тёплый/холодный</li>
+      <li>Депт-гейт 6b «лучше опоздать, чем взломать»</li>
+      <li>Транскрипт = гипотеза, сверка при явной аномалии (узел 8)</li>
+      <li>Чек хвоста + «одно когнитивное действие за ход»</li>
+      <li>Анти-застревание проводника (много отразил, ставки нет → рискни назвать)</li>
+      <li>Время суток активно (3 ночи → бережность; «завтра в 2 ночи» двусмысленно) — 7a/7b закрыты</li>
+      <li>Его язык/метафоры; конкретный шаг → [ACTION] в Реализатор; позиционирование (3 слоя); роли (реально+подобрано)</li>
+    </ul>
+  </div>
+
+  <h2>Что реально добавляю в 10.6</h2>
+
+  <div class="add">
+    <div class="n">Добавление 1 · узел 5 (ответ Сергея msg 1136) + главный рычаг аудита</div>
+    <div class="ti">Присвоение как точка ветвления — отдать руль</div>
+    <div class="why">Чего нет: после «да, это про меня» проводник сам решает, куда дальше, и уводит в углубление. Аудит: диалоги вязли именно здесь (холодный человек хочет движения, а не вечного «а что за этим?»). Ровно то, что Сергей закрыл узлом 5.</div>
+    <div class="block">
+      <div class="lbl">блок в промт (после «Присвоение» / контактной паузы)</div>
+      После того как человек присвоил («да, это про меня») и контактная пауза прожита — не решай за него, куда дальше. Дай развилку и <b>отдай руль</b>. Три направления (назови 2-3 живыми словами из его темы, не терминами):<br>
+      — в <b>действие</b>: развернуть это в конкретный шаг/дело (→ Путь / Реализатор);<br>
+      — в <b>глубину</b>: докрутить само это узнавание;<br>
+      — в <b>связи</b>: как это соединяется с другими его темами.<br>
+      Спроси коротко, куда потянуть внимание — и иди за его выбором. Это антидот бесконечному углублению: диалог — ветвистое дерево, где рулит он, а не труба, куда ведёшь ты. (Одно действие за ход: развилка = один ход, не инсайт + меню сразу.)
+    </div>
+  </div>
+
+  <div class="add">
+    <div class="n">Добавление 2 · из аудита (случай с острой болью)</div>
+    <div class="ti">Когда человек застрял в «не знаю» — смена ракурса</div>
+    <div class="why">Чего нет: есть анти-застревание для ПРОВОДНИКА (не висни в зеркале), но нет тактики, когда застрял ЮЗЕР. В аудите тяжёлый диалог: человек 15 ходов «не знаю / легче не становится», а проводник по кругу спрашивал про состояние — углубляя тупик.</div>
+    <div class="block">
+      <div class="lbl">блок в промт (рядом с анти-застреванием)</div>
+      Если человек раз за разом отвечает «не знаю», «не вижу», «легче не становится» — <b>не повторяй вопросы к состоянию</b> («что чувствуешь?», «что было бы облегчением?»). Это углубляет застревание. Смени ракурс:<br>
+      — назови само застревание как факт, без нажима: «похоже, сейчас никакой ответ не находится — и это тоже честно»;<br>
+      — или переведи с абстрактного на предельно малое и конкретное: не «что тебе нужно», а «что было последним, что дало хоть каплю тепла за сегодня»;<br>
+      — или сними требование решать: «не обязательно сейчас понимать — иногда достаточно, что это названо».<br>
+      Застревание в «не знаю» — не запрос на новый вопрос, а сигнал, что вопросов к состоянию уже было слишком много. Меньше спрашивай, больше будь рядом словом.
+    </div>
+  </div>
+
+  <div class="finding">
+    <div class="t">Вывод про главный следующий рычаг</div>
+    <p>Раз правила уже есть, а в живых диалогах не срабатывают — <b>дальше не текст правил, а одно из двух:</b></p>
+    <p>1. <b>Консолидация промта.</b> 555 строк — модель не удерживает всё. Свести плотное в изящное ядро (не терять смысл, убрать дубли-соседей). Это работа в духе «не груда заплаток».</p>
+    <p>2. <b>Прогон на реальных диалогах (eval).</b> Взять 5-6 диалогов из аудита, прогнать через 10.6, посмотреть глазами — где всё ещё ломается. Правила чинить точечно по факту, а не на глаз.</p>
+    <p class="mut">Это уже к обсуждению — методология (Сергей) + реализация (я). Не делаю в одиночку.</p>
+  </div>
+
+  <div class="foot">
+    Статус: 2 добавления готовы к вливанию, НЕ задеплоено. Жду сверки Сергея по формулировкам (его территория) → затем интегрирую в provodnik_prompt.md и деплою с канарейкой. Промт-файл — 555 строк, ветка feature/taste-board-stend.
+  </div>
+
+</div>
+</body>
+</html>
