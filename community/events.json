@@ -12,7 +12,8 @@
       "description": "Митап для исследователей безопасности и багхантеров. Реальные истории найденных уязвимостей, программы bug bounty из первых рук и живое общение с этичными хакерами.",
       "price": "",
       "is_free": false,
-      "url": "https://ict2go.ru/events/70666/"
+      "url": "https://ict2go.ru/events/70666/",
+      "tg_msg_id": 925
     },
     {
       "id": "bely-bim-film-fest-2026-07-17",
@@ -81,7 +82,8 @@
       "description": "Ежегодная ML/AI-конференция Т-Банка: 700+ инженеров и исследователей. Три трека — фундаментальные исследования, прикладной ML в проде и ML-инфраструктура. Темы: NLP, AI for SDLC, мультимодальные модели.",
       "price": "",
       "is_free": false,
-      "url": "https://meetup.tbank.ru/event/turbo-ml-conf26/"
+      "url": "https://meetup.tbank.ru/event/turbo-ml-conf26/",
+      "tg_msg_id": 926
     },
     {
       "id": "vk-fest-vdnh-2026-07-18",
@@ -163,7 +165,8 @@
       "description": "Практический интенсив про сборку ИИ-агентов под задачи бизнеса и деловых сообществ. Прикладной подход — от идеи до работающего помощника без лишней теории.",
       "price": "",
       "is_free": false,
-      "url": "https://ict2go.ru/events/70445/"
+      "url": "https://ict2go.ru/events/70445/",
+      "tg_msg_id": 927
     },
     {
       "id": "it-market-portrait-2026-07-21",
@@ -176,7 +179,8 @@
       "description": "Аналитическая сессия про то, как устроен российский IT-рынок сегодня: тренды, аудитория, инструменты. Полезно тем, кто строит или продаёт технологический продукт в России.",
       "price": "",
       "is_free": true,
-      "url": "https://ict2go.ru/events/70525/"
+      "url": "https://ict2go.ru/events/70525/",
+      "tg_msg_id": 928
     },
     {
       "id": "ai-search-sales-2026-07-22",
@@ -189,7 +193,8 @@
       "description": "Разбор про умный AI-поиск и его влияние на выручку. Как вырастает конверсия, почему без него бизнес теряет деньги — кейсы и цифры из первых рук.",
       "price": "",
       "is_free": false,
-      "url": "https://ict2go.ru/events/70590/"
+      "url": "https://ict2go.ru/events/70590/",
+      "tg_msg_id": 929
     },
     {
       "id": "personal-data-neft-2026-07-22",
@@ -202,7 +207,8 @@
       "description": "Бизнес-завтрак про угрозы кибербезопасности, утечки данных и новые штрафы 2026 года. Как бизнесу не влететь на многомиллионные санкции — разбор реальных кейсов.",
       "price": "2 500 ₽",
       "is_free": false,
-      "url": "https://all-events.ru/events/personalnye_dannye_novaya_neft/"
+      "url": "https://all-events.ru/events/personalnye_dannye_novaya_neft/",
+      "tg_msg_id": 930
     },
     {
       "id": "invest-zavtrak-pitcha-2026-07-22",
@@ -215,7 +221,8 @@
       "description": "Закрытая встреча предпринимателей, инвесторов и экспертов за завтраком. Разбирают весь путь — от питча проекта до реальных денег. Камерный формат, нужные контакты.",
       "price": "2 700 ₽",
       "is_free": false,
-      "url": "https://all-events.ru/events/invest_zavtrak_ot_pitcha_do_investitsiy/"
+      "url": "https://all-events.ru/events/invest_zavtrak_ot_pitcha_do_investitsiy/",
+      "tg_msg_id": 931
     },
     {
       "id": "kino-park-gorkogo-2026-07-22",
@@ -242,7 +249,8 @@
       "description": "Встреча про BI-аналитику на Yandex DataLens: как строить дашборды и работать с данными без боли. Для аналитиков и всех, кто живёт в цифрах. Бесплатно.",
       "price": "",
       "is_free": true,
-      "url": "https://ict2go.ru/events/70581/"
+      "url": "https://ict2go.ru/events/70581/",
+      "tg_msg_id": 932
     },
     {
       "id": "marketing-ai-workshop-2026-07-23",
@@ -255,7 +263,8 @@
       "description": "Воркшоп для маркетологов про то, как собрать собственный набор ИИ-инструментов вместо коробочных решений. Практика вместо хайпа — берёшь и внедряешь.",
       "price": "",
       "is_free": false,
-      "url": "https://ict2go.ru/events/70444/"
+      "url": "https://ict2go.ru/events/70444/",
+      "tg_msg_id": 933
     },
     {
       "id": "insurtechday-2026-07-23",
@@ -268,7 +277,8 @@
       "description": "Второй ежегодный форум: 200+ топ-менеджеров по цифровизации, лидеры цифровых продаж и специалисты по ИИ в страховании. Про то, как технологии перестраивают страховой рынок.",
       "price": "",
       "is_free": false,
-      "url": "https://all-events.ru/events/insurtechday-2026/"
+      "url": "https://all-events.ru/events/insurtechday-2026/",
+      "tg_msg_id": 934
     },
     {
       "id": "vdohnovenie-vdnh-2026-07-23",
@@ -295,7 +305,8 @@
       "description": "Митап Go-разработчиков от YADRO, VK и Postgres Professional. Доклады про переезд с Python на Go, проектирование высоконагруженных сервисов и очереди задач на Postgres. Бесплатно.",
       "price": "",
       "is_free": true,
-      "url": "https://ict2go.ru/events/70613/"
+      "url": "https://ict2go.ru/events/70613/",
+      "tg_msg_id": 935
     },
     {
       "id": "gorizont-media-ai-2026-07-24",
@@ -308,7 +319,8 @@
       "description": "Событие про то, как ИИ перекраивает медиа и производство контента. Куда движется индустрия, что делает AI с дистрибуцией — взгляд практиков изнутри.",
       "price": "",
       "is_free": false,
-      "url": "https://ict2go.ru/events/70612/"
+      "url": "https://ict2go.ru/events/70612/",
+      "tg_msg_id": 936
     },
     {
       "id": "pycon-russia-2026-07-24",
@@ -335,7 +347,8 @@
       "description": "Закрытый вечер деловых знакомств для предпринимателей и топ-менеджеров — заявки проверяют вручную. 40 мест, знакомства по раундам, контакты сохраняются в личной CRM.",
       "price": "3 000 ₽",
       "is_free": false,
-      "url": "https://all-events.ru/events/connectday_vecher_delovykh_znakomstv/"
+      "url": "https://all-events.ru/events/connectday_vecher_delovykh_znakomstv/",
+      "tg_msg_id": 937
     },
     {
       "id": "letnee-kino-muzeon-2026-07-24",
@@ -376,7 +389,8 @@
       "description": "Фестиваль для продактов и продуктовых команд: доклады, воркшопы и нетворкинг про то, как строить продукты, которые растут. Хорошая точка сборки продуктового комьюнити.",
       "price": "",
       "is_free": false,
-      "url": "https://ict2go.ru/events/70338/"
+      "url": "https://ict2go.ru/events/70338/",
+      "tg_msg_id": 938
     },
     {
       "id": "vkus-leta-depo-2026-07-25",
@@ -431,7 +445,8 @@
       "description": "Встреча сообщества аналитиков — системных, продуктовых и бизнес. Обмен опытом, разбор задач и знакомства для тех, кто переводит хаос требований в ясные решения.",
       "price": "",
       "is_free": false,
-      "url": "https://ict2go.ru/events/70617/"
+      "url": "https://ict2go.ru/events/70617/",
+      "tg_msg_id": 939
     },
     {
       "id": "mediabiz-interactive-2026-07-29",
@@ -458,7 +473,8 @@
       "description": "Закрытая инвестиционная площадка: тренды 2026, презентации отобранных проектов, практические кейсы и нетворкинг. Участников отбирают заранее.",
       "price": "от 4 390 ₽",
       "is_free": false,
-      "url": "https://all-events.ru/events/pride_invest_forum_11/"
+      "url": "https://all-events.ru/events/pride_invest_forum_11/",
+      "tg_msg_id": 940
     },
     {
       "id": "k8s-conf-moscow-2026-07-30",
@@ -499,7 +515,8 @@
       "description": "Разговор про то, как крупные компании ведут UX-ресёрч и R&D в эпоху ИИ. Куда идёт корпоративный research и как встроить его в продукт.",
       "price": "",
       "is_free": false,
-      "url": "https://ict2go.ru/events/70644/"
+      "url": "https://ict2go.ru/events/70644/",
+      "tg_msg_id": 941
     },
     {
       "id": "organ-duel-svechi-sobor-2026-07-31",
@@ -526,7 +543,8 @@
       "description": "Еженедельный бесплатный офлайн-нетворкинг для собственников, инвесторов и экспертов. Гостевой билет бесплатный по регистрации — приходишь, знакомишься, решаешь. Проходит каждый вторник августа.",
       "price": "",
       "is_free": true,
-      "url": "http://networkingmoscow.ru/"
+      "url": "http://networkingmoscow.ru/",
+      "tg_msg_id": 942
     },
     {
       "id": "b2b-growth-opportunities-2026-08-04",
@@ -553,7 +571,8 @@
       "description": "Профессиональный нетворкинг-салон для обмена опытом в качественной деловой среде. Живые контакты без презентаций и сцены — для тех, кто ценит атмосферу.",
       "price": "5 000 ₽",
       "is_free": false,
-      "url": "https://all-events.ru/events/salon_estetika_v_detalyakh_sezon_zhelaniy_i_vremya_nadezhd_/"
+      "url": "https://all-events.ru/events/salon_estetika_v_detalyakh_sezon_zhelaniy_i_vremya_nadezhd_/",
+      "tg_msg_id": 943
     },
     {
       "id": "it-picnic-kolom-2026-08-08",
@@ -566,7 +585,8 @@
       "description": "Главный летний IT-фестиваль от Т-Банка под открытым небом: до 30 тысяч человек. Лекции про данные, кибербез и генеративный ИИ вперемешку с музыкой и воркшопами для всей семьи. Хедлайнер — LAB Антона Беляева. Часть от билетов идёт в фонд «Галчонок».",
       "price": "3 000 ₽ (физлицо)",
       "is_free": false,
-      "url": "https://it-picnic.ru/"
+      "url": "https://it-picnic.ru/",
+      "tg_msg_id": 944
     },
     {
       "id": "ostankino-letniy-vhod-2026-08-09",
@@ -592,7 +612,8 @@
       "description": "Ежегодная бизнес-регата для CIO и топ-менеджеров IT-компаний от DCLogic. Панель про AI и эффективность бизнеса, потом командная гонка на яхтах и ужин с награждением. Деловые связи завязываются между галсами, не в переговорках.",
       "price": "",
       "is_free": true,
-      "url": "https://invite.dclogic.ru/itsailingday2026"
+      "url": "https://invite.dclogic.ru/itsailingday2026",
+      "tg_msg_id": 945
     },
     {
       "id": "tretyakov-veera-2026-08-15",
@@ -618,7 +639,8 @@
       "description": "Форум для инвесторов и предпринимателей: перспективные проекты, стратегии инвестирования в российские и международные активы. Среди спикеров — президент Евразийской ассоциации бизнеса. Вход бесплатный.",
       "price": "",
       "is_free": true,
-      "url": "https://all-events.ru/events/vremya_vozmozhnostey_/"
+      "url": "https://all-events.ru/events/vremya_vozmozhnostey_/",
+      "tg_msg_id": 946
     },
     {
       "id": "tretyakov-night-art-2026-08-15",
@@ -644,7 +666,8 @@
       "description": "Трёхдневная конференция про то, что сейчас реально работает в соцсетях. Форматы контента, вовлечение, продвижение — без теории, практикующие эксперты разбирают живые кейсы кампаний.",
       "price": "",
       "is_free": false,
-      "url": "https://eventimage.ru/konferentsii-i-treningi/smm-proryv/"
+      "url": "https://eventimage.ru/konferentsii-i-treningi/smm-proryv/",
+      "tg_msg_id": 947
     },
     {
       "id": "kommersant-invest-branch-2026-08-19",
@@ -657,7 +680,8 @@
       "description": "Ежегодная встреча инвесторов и игроков рынка недвижимости от «Коммерсанта». Макроэкономика, влияние ставки ЦБ, коллективные инвестиции и прогнозы. Отдельно — про то, как AI заходит в управление недвижимостью.",
       "price": "21 600 ₽",
       "is_free": false,
-      "url": "https://events.kommersant.ru/nedvizhimost/avgustovskij-branch_26/"
+      "url": "https://events.kommersant.ru/nedvizhimost/avgustovskij-branch_26/",
+      "tg_msg_id": 948
     },
     {
       "id": "spasskaya-bashnya-2026-08-21",
@@ -723,7 +747,8 @@
       "description": "Конференция Т-Банка для JVM/Java-разработчиков: устройство JVM изнутри, асинхронные фреймворки, Kafka, конкурентность и сборка высоконагруженных систем. Регистрация открыта, вход бесплатный.",
       "price": "",
       "is_free": true,
-      "url": "https://meetup.tbank.ru/conference/jvm-day/"
+      "url": "https://meetup.tbank.ru/conference/jvm-day/",
+      "tg_msg_id": 949
     },
     {
       "id": "megacampus-summit-dubai-2026-09-18",
