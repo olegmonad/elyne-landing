@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-22",
+  "updated": "2026-07-23",
   "events": [
     {
       "id": "zamuzhnyaya-nevesta-mossoveta-2026-07-28",
@@ -112,20 +112,6 @@
       "is_free": false,
       "url": "https://ddx-fest.ru/",
       "tg_msg_id": 964
-    },
-    {
-      "id": "it-market-portrait-2026-07-21",
-      "title": "Портрет российского IT-рынка: тренды и аудитория",
-      "date": "2026-07-21",
-      "time": "",
-      "place": "Москва",
-      "category": "it",
-      "emoji": "📈",
-      "description": "Аналитическая сессия про то, как устроен российский IT-рынок сегодня: тренды, аудитория, инструменты. Полезно тем, кто строит или продаёт технологический продукт в России.",
-      "price": "",
-      "is_free": true,
-      "url": "https://ict2go.ru/events/70525/",
-      "tg_msg_id": 928
     },
     {
       "id": "ai-search-sales-2026-07-22",
@@ -708,20 +694,6 @@
       "is_free": false,
       "url": "https://summit.megacampus.ru/dubai26/",
       "tg_msg_id": 495
-    },
-    {
-      "id": "iisus-hristos-superzvezda-mossoveta-2026-07-21",
-      "title": "Рок-опера «Иисус Христос — суперзвезда»",
-      "date": "2026-07-21",
-      "time": "19:00",
-      "place": "Театр им. Моссовета, Большая Садовая, 16",
-      "category": "театр",
-      "emoji": "🎭",
-      "description": "Русскоязычная версия культовой рок-оперы идёт на сцене Театра имени Моссовета уже больше двадцати лет — режиссёр Павел Хомский первым в России поставил настоящий бродвейский мюзикл.",
-      "price": "500–5000 ₽",
-      "is_free": false,
-      "url": "https://kudago.com/msk/event/iisus-hristos-superzvezda/",
-      "tg_msg_id": 979
     },
     {
       "id": "standup-5-hedlainerov-still-2026-07-25",
