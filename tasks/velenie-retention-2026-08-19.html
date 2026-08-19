@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VELENIE · задачи по контуру удержания</title>
+<style>
+  :root{--bg:#f7f7fb;--card:#fff;--ink:#1c1a24;--muted:#6a6678;--line:#e6e4ee;--ind:#4f46e5;--ind-soft:#eef0ff;--red:#c0392b;--amber:#b7791f;--green:#2f855a;--grey:#8b8798}
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,"Inter",system-ui,sans-serif;max-width:840px;margin:0 auto;padding:28px 16px 80px;color:var(--ink);line-height:1.6;background:var(--bg);-webkit-text-size-adjust:100%}
+  h1{font-size:26px;font-weight:650;margin:0 0 6px;letter-spacing:-.02em}
+  .sub{color:var(--muted);font-size:14px;margin:0 0 22px}
+  .lead{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:0 0 26px;font-size:15px}
+  .lead p{margin:6px 0}
+  h2{font-size:18px;font-weight:650;margin:34px 0 12px;display:flex;align-items:center;gap:9px}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:0 0 auto}
+  .p0 .dot{background:var(--red)} .p1 .dot{background:var(--amber)} .p2 .dot{background:var(--ind)} .p3 .dot{background:var(--grey)}
+  .lvl{font-size:13px;color:var(--muted);font-weight:400;margin-left:2px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:0 0 14px}
+  .card h3{font-size:16.5px;font-weight:650;margin:0 0 4px;line-height:1.35}
+  .num{color:var(--ind);font-weight:700;margin-right:6px}
+  .meta{font-size:12.5px;color:var(--muted);margin:0 0 12px}
+  .row{margin:9px 0;font-size:14.5px}
+  .row b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.055em;color:var(--muted);font-weight:600;margin-bottom:2px}
+  .fact{background:var(--ind-soft);border-radius:9px;padding:9px 12px;font-size:14px;margin:9px 0}
+  code{background:#f0eff6;padding:1px 5px;border-radius:4px;font-size:13px}
+  .cmtbox{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line)}
+  .cmtlabel{font-size:12px;color:var(--muted);margin-bottom:5px}
+  textarea{width:100%;min-height:60px;border:1px solid var(--line);border-radius:10px;padding:9px 11px;font:inherit;font-size:14.5px;resize:vertical;background:#fcfcff;color:var(--ink)}
+  textarea:focus{outline:none;border-color:var(--ind)}
+  .mic{margin-top:6px;border:1px solid var(--line);background:#fff;border-radius:9px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer;color:var(--muted)}
+  .mic.on{background:var(--ind);color:#fff;border-color:var(--ind)}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+  th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+  th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600}
+  .final{position:sticky;bottom:0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-top:30px;box-shadow:0 -6px 24px rgba(28,26,36,.07)}
+  .btn{border:0;background:var(--ind);color:#fff;border-radius:10px;padding:11px 18px;font:inherit;font-size:15px;font-weight:600;cursor:pointer;width:100%}
+  .foot{margin-top:26px;font-size:12.5px;color:var(--muted)}
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#141320;--card:#1c1b2a;--ink:#eceaf5;--muted:#a29fb4;--line:#2c2a3d;--ind:#8b85f5;--ind-soft:#242238}
+    textarea{background:#181726} .mic{background:#1c1b2a} code{background:#242238}
+  }
+</style>
+</head>
+<body>
+
+<h1>VELENIE · задачи по контуру удержания</h1>
+<p class="sub">Собрано из двухдневного разбора с Сергеем · снимок базы 19.08.2026, 19:30 МСК · внешние пользователи (без наших аккаунтов и симуляций)</p>
+
+<div class="lead">
+<p><b>Откуда это.</b> 18–19 августа разбирали вопрос «нужна ли анкета в онбординге». Ответ — не нужна, и это защищается данными, а не вкусом. По ходу разбора выяснилось, что настоящая дыра не на входе, а дальше: система хорошо узнаёт человека и плохо превращает узнавание в движение.</p>
+<p><b>Что в документе.</b> 13 задач, отсортированы по тому, что чинить первым. Под каждой — окно для комментария и кнопка голоса. Внизу — сбор всех комментариев одной кнопкой.</p>
+<p><b>Каждая цифра проверена запросом к живой базе</b>, не взята из презентации. Где цифры нет — так и написано.</p>
+</div>
+
+<h2 class="p0"><span class="dot"></span>Красный · чинить первым <span class="lvl">теряем данные каждый день, либо блокирует остальное</span></h2>
+
+<div class="card">
+<h3><span class="num">1</span>Начать записывать историю изменения модели человека</h3>
+<p class="meta">Код · день работы · без интерфейса</p>
+<div class="fact">Поле <code>self_model.supersedes</code> объявлено в схеме и не записано <b>ни разу</b>: 0 из 1508 строк за всё время. В коде оно встречается только в объявлении таблицы.</div>
+<div class="row"><b>Что это значит</b>Система про каждого человека накопила понимание (480 строк на внешних), но не хранит, <i>как это понимание менялось</i>. Вчера думала о нём одно, сегодня другое — вчерашнее просто затёрто.</div>
+<div class="row"><b>Почему первым</b>Это единственная задача в списке, где промедление необратимо. Всё остальное можно сделать через месяц с тем же результатом. Историю за август, если не начать писать сейчас, восстановить нельзя никогда.</div>
+<div class="row"><b>Что делать</b>Только запись, молча, без показа пользователю. Интерфейс «я изменила мнение о тебе» — потом, когда накопится материал.</div>
+<div class="row"><b>Чем проверим</b>Через неделю в базе есть строки с заполненным <code>supersedes</code>, и по одному человеку видна цепочка «было → стало».</div>
+<div class="cmtbox"><div class="cmtlabel">Комментарий</div><textarea class="cmt" data-t="1. История изменения модели"></textarea><button class="mic">🎤 голосом</button></div>
+</div>
+
+<div class="card">
+<h3><span class="num">2</span>Различать, кто подтвердил инсайт — человек или система</h3>
+<p class="meta">Код · один столбец в базе · полдня</p>
+<div class="fact">272 из 340 инсайтов помечены «подтверждён» — 80%. В это невозможно верить.</div>
+<div class="row"><b>Что это значит</b>В статус «подтверждён» ведут три разные дороги: человек нажал «Отозвалось»; система сама вывела согласие из диалога; модель поставила маркер сразу при создании — вообще без участия человека. Какой дорогой пришла конкретная запись — нигде не записано.</div>
+<div class="row"><b>Почему это больно дважды</b>Первое: ни одну метрику узнавания нельзя защитить — мы не знаем, что именно меряем. Второе: в инвесторской деке «23 подтверждённых инсайта» — та же самая колонка. На вопрос «а как считали?» ответить сейчас нечем.</div>
+<div class="row"><b>Что делать</b>Добавить <code>insight.confirmed_by</code> со значениями «человек / диалог / модель». Старые записи не пересчитывать — честно оставить неизвестными.</div>
+<div class="row"><b>Чем проверим</b>Через неделю доля «подтверждено человеком» отдельной цифрой. Ставлю на то, что она сильно меньше 80%.</div>
+<div class="cmtbox"><div class="cmtlabel">Комментарий</div><textarea class="cmt" data-t="2. Кто подтвердил инсайт"></textarea><button class="mic">🎤 голосом</button></div>
+</div>
+
+<div class="card">
+<h3><span class="num">3</span>Починить работы, которые истекают вместо того, чтобы быть сделанными</h3>
+<p class="meta">Код · неизвестно, сначала разобраться в причине</p>
+<div class="fact">16 работ из 49 в статусе «истекла». Это задело 15 человек из 21, кто вообще доходил до задачи — то есть почти каждого.</div>
+<div class="row"><b>Что это значит</b>Человек попросил сделать — и не получил ничего. Не отказ, не ошибка, просто тишина.</div>
+<div class="row"><b>Почему до механик удержания</b>Следующая по списку идея — спросить назавтра «ну как, получилось?». Если спросить это у человека, чья работа истекла, мы напомним ему ровно о том, что подвели. Порядок здесь принципиален: сначала перестать ронять, потом спрашивать про результат.</div>
+<div class="row"><b>Чем проверим</b>Доля истёкших за следующие две недели около нуля.</div>
+<div class="cmtbox"><div class="cmtlabel">Комментарий</div><textarea class="cmt" data-t="3. Истекающие работы"></textarea><button class="mic">🎤 голосом</button></div>
+</div>
+
+<h2 class="p1"><span class="dot"></span>Оранжевый · главные дыры воронки <span class="lvl">здесь теряется ценность, которая уже создана</span></h2>
+
+<div class="card">
+<h3><span class="num">4</span>Инсайт → направление: четыре из пяти инсайтов никуда не ведут</h3>
+<p class="meta">Методология + промт · главная содержательная задача списка</p>
+<div class="fact">340 инсайтов → направлением стали 75. Двадцать два процента. Медиана инсайтов на человека — 9, медиана направлений — 2.</div>
+<div class="row"><b>Отдельно резко</b>Четыре человека с двузначным числом инсайтов и нулём направлений:</div>
+<table><tr><th>человек</th><th>инсайтов</th><th>подтверждённых</th><th>направлений</th></tr>
+<tr><td>…1126</td><td>22</td><td>9</td><td>0</td></tr>
+<tr><td>…6886</td><td>19</td><td>0</td><td>0</td></tr>
+<tr><td>…1885</td><td>14</td><td>13</td><td>0</td></tr>
+<tr><td>…7653</td><td>10</td><td>9</td><td>0</td></tr></table>
+<div class="row"><b>Случай …1885</b>Тринадцать раз система попала в человека и ни разу не превратила это в «куда идти». Шестьдесят пять инсайтов на четверых — ноль движения.</div>
+<div class="row"><b>Поправка к моей вчерашней цифре</b>Я говорил «73% доходят до направления, это не узкое место». Считал по людям — человеку хватало одного направления из двадцати двух инсайтов, чтобы попасть в числитель. По сущностям картина обратная. Сергей поймал, цифра снята.</div>
+<div class="row"><b>Что делать</b>Это твоя зона, не моя. Вопрос не инженерный: при каких условиях названный инсайт обязан становиться направлением, а при каких — честно не должен. Возможно, для части людей «insight → vector → action» действительно навязанная логика, как ты писал.</div>
+<div class="cmtbox"><div class="cmtlabel">Комментарий</div><textarea class="cmt" data-t="4. Инсайт не становится направлением"></textarea><button class="mic">🎤 голосом</button></div>
+</div>
+
+<div class="card">
+<h3><span class="num">5</span>Предлагать маленькое дело тем, у кого первый день лёгкий</h3>
+<p class="meta">Продукт + промт · средне</p>
+<div class="fact">60 человек написали → 22 получили подтверждённый инсайт. До задачи дошёл 21 человек, и все они — уже вовлечённые. Ни один человек с коротким первым днём никогда не получал предложения что-то сделать.</div>
+<div class="row"><b>Почему это важнее, чем кажется</b>Отсюда же берётся ответ на твой главный вопрос — возвращается ли человек, когда VELENIE становится участником незавершённого дела. Сырые числа говорят «да» очень громко: 34% возврата у тех, кто только разговаривал, против 90% у тех, кто дошёл до дела. Но я проверил на отбор — эффект исчезает. Задачу получали только те, кто и так был вовлечён. Гипотеза не подтверждена, она <b>не проверена</b>.</div>
+<div class="row"><b>Что делать</b>Единственный способ её проверить — предложить маленькое дело тем 39 людям (60 минус 21), кому мы сейчас не предлагаем ничего.</div>
+<div class="row"><b>Предупреждение</b>Разрыв 34% / 90% на слайд инвестору не ставить. Первый же въедливый вопрос его разберёт.</div>
+<div class="cmtbox"><div class="cmtlabel">Комментарий</div><textarea class="cmt" data-t="5. Дело для лёгкого первого дня"></textarea><button class="mic">🎤 голосом</button></div>
+</div>
+
+<div class="card">
+<h3><span class="num">6</span>Спросить, что произошло с тем, что мы сделали</h3>
+<p class="meta">Код · дёшево · поле уже существует</p>
+<div class="fact">Поле <code>agent_job.feedback</code> есть, ручка записи есть, в нём лежат живые ответы «да» / «нет» / «частично». Заполнено 4 раза из 49. Восемь процентов.</div>
+<div class="row"><b>Что это значит</b>Твой пункт «фиксация применения» технически уже построен. Не хватает ровно одного — вопроса. Никто не спрашивает.</div>
+<div class="row"><b>Что делать</b>Через сутки после выдачи результата — один вопрос, привязанный к тому, что делали, а не к теме разговора. «Вчера мы придумали, как начать этот разговор. Ты в итоге сказал это?»</div>
+<div class="row"><b>Зависит от</b>Задача 3. Пока работы истекают, этот вопрос попадёт не туда.</div>
+<div class="row"><b>Чем проверим</b>Доля работ с зафиксированным исходом: сейчас 8%, цель — за половину.</div>
+<div class="cmtbox"><div class="cmtlabel">Комментарий</div><textarea class="cmt" data-t="6. Спросить про применение"></textarea><button class="mic">🎤 голосом</button></div>
+</div>
+
+<h2 class="p2"><span class="dot"></span>Синий · механики удержания <span class="lvl">после того, как красное и оранжевое закрыты</span></h2>
+
+<div class="card">
+<h3><span class="num">7</span>Незавершённая гипотеза — и конфликт с существующим правилом</h3>
+<p class="meta">Промт · нужно твоё решение до кода</p>
+<div class="row"><b>Твоя идея</b>В конце разговора оставить открытый контур: «кое-что про тебя поняла, но не уверена — завтра хочу проверить».</div>
+<div class="fact">Прямо противоречит Правилу Б «Латентность прежде смысла» (<code>guide_prompt.md:235</code>): сильную гипотезу нужно выдерживать 2–3 хода и называть только после трёх независимых сигналов.</div>
+<div class="row"><b>Моё предложение</b>Разделить: раскрывать <i>неуверенность и процесс</i> («выбираю между двумя объяснениями») можно сразу, вердикт — по-прежнему выдерживать. Тогда открытый контур появляется, а преждевременного ярлыка нет.</div>
+<div class="row"><b>Попутно</b>Твоё «гипотеза, а не истина» в промте уже есть — <code>base_prompt.md:157</code>, <code>birth_prompt.md:60</code> и ещё три места. Это не строить, это уже работает.</div>
+<div class="cmtbox"><div class="cmtlabel">Комментарий · здесь нужен твой ответ по существу</div><textarea class="cmt" data-t="7. Незавершённая гипотеза vs Правило Б"></textarea><button class="mic">🎤 голосом</button></div>
+</div>
+
+<div class="card">
+<h3><span class="num">8</span>Весточка — от состояния дела, а не от вчерашней темы</h3>
+<p class="meta">Код · средне · механизм уже живой</p>
+<div class="fact">Проактивные сообщения уже существуют в коде и уходят. До внешних людей дошли впервые 17.08 — четыре человека, четыре сообщения. Истории по ним ещё нет.</div>
+<div class="row"><b>Снимаю своё вчерашнее</b>Я написал «поводом вернуться не является ничего». Неверно. Механизм есть, я его не увидел в цифрах, потому что он заработал на внешних два дня назад.</div>
+<div class="row"><b>Что менять</b>Сейчас весточка отталкивается от вчерашней темы. Нужно — от состояния дела. Разница ровно та, что ты описал: не «ты вчера говорил о работе, как дела», а «ты собирался поговорить с клиентом, как прошло».</div>
+<div class="row"><b>Зависит от</b>Задачи 3 и 6.</div>
+<div class="cmtbox"><div class="cmtlabel">Комментарий</div><textarea class="cmt" data-t="8. Весточка от состояния дела"></textarea><button class="mic">🎤 голосом</button></div>
+</div>
+
+<div class="card">
+<h3><span class="num">9</span>Поставить приборы — семь метрик</h3>
+<p class="meta">Код · дёшево · нужно независимо от всего остального</p>
+<div class="row"><b>Что мерить</b>Ответ на follow-up · доля результатов с зафиксированным исходом · исход → следующее действие · возврат на второй день · возврат на седьмой · повторный содержательный разговор · частота обновления модели.</div>
+<div class="fact">Твой вертикальный срез «контроль против эксперимента» как контролируемый опыт не запустится. При базе возврата 55% на прирост в 15 пунктов нужно 163 человека <b>на ветку</b>; под условие входа подходит 21 человек всего. Делить их надвое — потерять обе половины.</div>
+<div class="row"><b>Что вместо</b>Приборы построить сейчас — они дёшевы и нужны в любом случае. Механику катить на всех, без контрольной группы. Результат читать как направление. Слова «статистически значимо» не произносить до полутора сотен на ветку.</div>
+<div class="cmtbox"><div class="cmtlabel">Комментарий</div><textarea class="cmt" data-t="9. Семь метрик"></textarea><button class="mic">🎤 голосом</button></div>
+</div>
+
+<div class="card">
+<h3><span class="num">10</span>Следующий шаг в конце разговора</h3>
+<p class="meta">Промт · дёшево</p>
+<div class="row"><b>Суть</b>«Мы нашли вот это. Завтра можно сделать один маленький шаг». Частично уже существует как развилка после присвоения.</div>
+<div class="row"><b>Ограничение из твоего же текста</b>Не создавать шаг ради возврата. Только когда продолжение действительно есть.</div>
+<div class="cmtbox"><div class="cmtlabel">Комментарий</div><textarea class="cmt" data-t="10. Следующий шаг"></textarea><button class="mic">🎤 голосом</button></div>
+</div>
+
+<h2 class="p3"><span class="dot"></span>Серый · не сейчас, с обоснованием</h2>
+
+<div class="card">
+<h3><span class="num">11</span>Личная нить истории — подложки нет</h3>
+<div class="fact">Ты писал, что обновление <code>vector.journey_json</code> уже предусмотрено. Проверил: заполнено 5 строк из 103, и внутри не путь, а один классификационный тег вида <code>{"human_dimension":"patterns"}</code>.</div>
+<div class="row"><b>Вывод</b>Строить не на чем. Материал для нити начнёт появляться после задач 1 и 6 — тогда и возвращаться. Стратегически согласен, по готовности нет.</div>
+<div class="cmtbox"><div class="cmtlabel">Комментарий</div><textarea class="cmt" data-t="11. Личная нить"></textarea><button class="mic">🎤 голосом</button></div>
+</div>
+
+<div class="card">
+<h3><span class="num">12</span>Созерцательный контур — у внешних не запускался ни разу</h3>
+<div class="fact">У внешних людей: сообщений с образом — 0, задач на образ — 0. По всей базе, включая наши аккаунты, задач на образ две.</div>
+<div class="row"><b>Вывод</b>Контур живёт как замысел и как опыт одного тестировщика. Само разделение на режимы верное, спорю только с тем, чтобы прямо сейчас ставить его четвёртым равноправным.</div>
+<div class="cmtbox"><div class="cmtlabel">Комментарий</div><textarea class="cmt" data-t="12. Созерцательный контур"></textarea><button class="mic">🎤 голосом</button></div>
+</div>
+
+<div class="card">
+<h3><span class="num">13</span>Игровые механики — не делать</h3>
+<div class="row">Полосы, очки, значки, серии дней. Согласен с тобой полностью: продукту противопоказано. Пункт здесь только чтобы вопрос не всплывал заново.</div>
+<div class="cmtbox"><div class="cmtlabel">Комментарий</div><textarea class="cmt" data-t="13. Игровые механики"></textarea><button class="mic">🎤 голосом</button></div>
+</div>
+
+<h2 class="p1"><span class="dot"></span>Решённое и открытое</h2>
+
+<div class="card">
+<h3>Что мы за два дня решили</h3>
+<div class="row"><b>Анкету не делать</b>Защищается данными: диалог сам работает механизмом сбора модели, и на входе почти никто не отваливается.</div>
+<div class="row"><b>«За четыре минуты» — не обещание</b>Медиана от первого сообщения до подтверждённого инсайта — семь часов. В четыре минуты укладываются 4 человека (замер утром 19.08 по 61 внешнему). Распределение двугорбое: люди уходят и возвращаются. Мерить в сообщениях, а не в минутах — медиана 6 сообщений, и это правда.</div>
+<div class="row"><b>Отстройка</b>«Они спрашивают, кто ты. Мы помогаем тебе это обнаружить» + «Они сначала собирают данные о тебе. Мы собираем тебя из разговора».</div>
+<div class="cmtbox"><div class="cmtlabel">Комментарий</div><textarea class="cmt" data-t="Решённое за два дня"></textarea><button class="mic">🎤 голосом</button></div>
+</div>
+
+<div class="card">
+<h3>Что ждёт твоего голоса</h3>
+<div class="row">· Правило Б против раскрытия процесса — задача 7.<br>· Условие «когда инсайт обязан стать направлением» — задача 4.<br>· Какой вариант первого экрана берём в работу.<br>· Твоё ТЗ на деку от 14.08 — я его не отдал, это мой висяк. Нужно ещё или дека ушла дальше?</div>
+<div class="cmtbox"><div class="cmtlabel">Комментарий</div><textarea class="cmt" data-t="Открытые решения"></textarea><button class="mic">🎤 голосом</button></div>
+</div>
+
+<div class="final">
+<button class="btn" id="collect">Собрать все комментарии</button>
+<textarea id="out" style="margin-top:10px;display:none;min-height:130px"></textarea>
+</div>
+
+<p class="foot">Полный разбор с методом подсчёта — <code>vault/elyne/state/onboarding-research-2026-08-19.md</code>, 15 разделов. Здесь выжимка в задачи.</p>
+
+<script>
+document.querySelectorAll('.mic').forEach(function(btn){
+  var ta = btn.parentNode.querySelector('textarea');
+  var rec = null, on = false, base = '';
+  btn.addEventListener('click', function(){
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if(!SR){ alert('Голосовой ввод работает в Chrome. Здесь — печатай.'); return; }
+    if(on){ on = false; btn.classList.remove('on'); btn.textContent = '🎤 голосом'; if(rec) rec.stop(); rec = null; return; }
+    base = ta.value ? ta.value + ' ' : '';
+    rec = new SR(); rec.lang = 'ru-RU'; rec.continuous = true; rec.interimResults = true;
+    rec.onresult = function(e){
+      var interim = '';
+      for(var i = e.resultIndex; i < e.results.length; i++){
+        var tr = e.results[i][0].transcript;
+        if(e.results[i].isFinal){ base += tr; } else { interim += tr; }
+      }
+      ta.value = base + interim;
+    };
+    rec.onend = function(){ if(on && rec){ try{ rec.start(); }catch(err){} } };
+    on = true; btn.classList.add('on'); btn.textContent = '⏹ стоп';
+    rec.start();
+  });
+});
+document.getElementById('collect').addEventListener('click', function(){
+  var parts = [];
+  document.querySelectorAll('textarea.cmt').forEach(function(t){
+    if(t.value.trim()) parts.push('▸ ' + t.dataset.t + '\n' + t.value.trim());
+  });
+  var out = document.getElementById('out');
+  out.style.display = 'block';
+  out.value = parts.length ? 'Комментарии Сергея · 19.08\n\n' + parts.join('\n\n') : 'Пока пусто — заполни хотя бы одно поле.';
+  out.select();
+  try{ document.execCommand('copy'); }catch(e){}
+});
+</script>
+</body>
+</html>
