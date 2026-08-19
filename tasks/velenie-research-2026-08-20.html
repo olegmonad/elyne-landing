@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VELENIE · разбор пяти публикаций 2026</title>
+<style>
+  :root{--bg:#f7f7fb;--card:#fff;--ink:#1c1a24;--muted:#6a6678;--line:#e6e4ee;--ind:#4f46e5;--ind-soft:#eef0ff;--red:#c0392b;--amber:#b7791f;--green:#2f855a;--grey:#8b8798}
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,"Inter",system-ui,sans-serif;max-width:840px;margin:0 auto;padding:28px 16px 80px;color:var(--ink);line-height:1.6;background:var(--bg);-webkit-text-size-adjust:100%}
+  h1{font-size:26px;font-weight:650;margin:0 0 6px;letter-spacing:-.02em}
+  .sub{color:var(--muted);font-size:14px;margin:0 0 22px}
+  .lead{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:0 0 26px;font-size:15px}
+  .lead p{margin:6px 0}
+  h2{font-size:18px;font-weight:650;margin:34px 0 12px;display:flex;align-items:center;gap:9px}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:0 0 auto}
+  .p0 .dot{background:var(--red)} .p1 .dot{background:var(--amber)} .p2 .dot{background:var(--ind)} .p3 .dot{background:var(--grey)}
+  .lvl{font-size:13px;color:var(--muted);font-weight:400;margin-left:2px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:0 0 14px}
+  .card h3{font-size:16.5px;font-weight:650;margin:0 0 4px;line-height:1.35}
+  .num{color:var(--ind);font-weight:700;margin-right:6px}
+  .meta{font-size:12.5px;color:var(--muted);margin:0 0 12px}
+  .row{margin:9px 0;font-size:14.5px}
+  .row b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.055em;color:var(--muted);font-weight:600;margin-bottom:2px}
+  .fact{background:var(--ind-soft);border-radius:9px;padding:9px 12px;font-size:14px;margin:9px 0}
+  code{background:#f0eff6;padding:1px 5px;border-radius:4px;font-size:13px}
+  .cmtbox{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line)}
+  .cmtlabel{font-size:12px;color:var(--muted);margin-bottom:5px}
+  textarea{width:100%;min-height:60px;border:1px solid var(--line);border-radius:10px;padding:9px 11px;font:inherit;font-size:14.5px;resize:vertical;background:#fcfcff;color:var(--ink)}
+  textarea:focus{outline:none;border-color:var(--ind)}
+  .mic{margin-top:6px;border:1px solid var(--line);background:#fff;border-radius:9px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer;color:var(--muted)}
+  .mic.on{background:var(--ind);color:#fff;border-color:var(--ind)}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+  th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+  th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600}
+  .final{position:sticky;bottom:0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-top:30px;box-shadow:0 -6px 24px rgba(28,26,36,.07)}
+  .btn{border:0;background:var(--ind);color:#fff;border-radius:10px;padding:11px 18px;font:inherit;font-size:15px;font-weight:600;cursor:pointer;width:100%}
+  .foot{margin-top:26px;font-size:12.5px;color:var(--muted)}
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#141320;--card:#1c1b2a;--ink:#eceaf5;--muted:#a29fb4;--line:#2c2a3d;--ind:#8b85f5;--ind-soft:#242238}
+    textarea{background:#181726} .mic{background:#1c1b2a} code{background:#242238}
+  }
+</style>
+</head><body></head><body>
+<h1>Пять публикаций 2026 — что важно нам</h1>
+<p class="sub">Разбор для Сергея · 20.08.2026 · читал полные тексты, не абстракты</p>
+
+<p class="lead">Серёж, забрал все пять. У четырёх достал полный текст — PDF и HTML, не пересказы.
+Одна поправка по ссылке: <code>arXiv:2607.17826</code> — это не Amplifier Effect,
+а работа Skjuve о кастомизации. Amplifier живёт под <code>2603.08084</code>. Прочитал обе.<br><br>
+Коротко, если читать нечего: <b>четыре из пяти работают на нас, одна спорит с нашей
+конструкцией</b>. И самая важная — Amplifier — описывает ровно тот механизм, из-за которого
+у нас 222 наблюдения лежат непоказанными.</p>
+
+<h2 class="p0"><span class="dot"></span>1 · The AI Amplifier Effect <span class="lvl">Pang, Gao, Wang, Hui · HKUST · 30 интервью, 62 часа</span></h2>
+
+<div class="card">
+<h3><span class="num">§</span>Механизм</h3>
+<p>ИИ-партнёр работает как <b>гиперотзывчивое зеркало</b>. Он не корректирует и не
+уравновешивает состояние человека — он его усиливает. Дословно: «AI does not correct or
+balance the user's emotional state but rather intensifies it… a force multiplier for the
+user's existing psychological trajectory».</p>
+<div class="fact">Критическая переменная — <b>не технология</b>. Одна и та же система
+с идентичными возможностями лечила одних и изолировала других. Разница — входящее состояние
+человека и его способность к рефлексии.</div>
+<textarea class="cmt" data-t="амплификатор-механизм" placeholder="комментарий…"></textarea><button class="mic">🎤 голосом</button>
+</div>
+
+<div class="card">
+<h3><span class="num">§</span>Куда усиливает</h3>
+<div class="row"><b>вверх</b>Безопасная привязанность и терапевтическая репетиция — человек
+тренирует уязвимость без риска отвержения. Самопознание, уверенность. P22 после года:
+тестировалась как тревожно-привязанная, сообщает о сдвиге к более здоровому типу.</div>
+<div class="row"><b>вниз — три формы</b>
+<i>Снижение социального желания</i>: 8 из 30 признали, что перестали идти к живым.
+P21: «когда вижу красивый вид или еду, хочу отправить сначала ему, а не близким.
+Я ищу подтверждения у НЕГО, а не у реальных друзей».<br>
+<i>Эмоциональный кокон</i>: ИИ никогда не спорит и тем сужает диапазон. P16 — ИИ усиливал
+её недостатки характера ровно тем, что не оспаривал их.<br>
+<i>Self-centric drift</i>: P8 — «стала более эгоистичной и расчётливой»; это заметили
+её партнёр, друзья и терапевт.</div>
+<textarea class="cmt" data-t="усиление-вверх-вниз" placeholder="комментарий…"></textarea><button class="mic">🎤 голосом</button>
+</div>
+
+<div class="card">
+<h3><span class="num">§</span>Три уровня подлинности — готовая лестница</h3>
+<p>Это самое полезное для методологии. Подлинность не бинарна, это прогрессия:</p>
+<table>
+<tr><th>уровень</th><th>чем держится</th></tr>
+<tr><td><b>Интерактивная</b></td><td>Рутина рождает реальность. Возникает не из правдивости ИИ,
+а из готовности человека вовлекаться + участия ИИ в быту + памяти о предпочтениях.</td></tr>
+<tr><td><b>Опытная</b></td><td>ИИ совпадает с личной историей. P29 задала ИИ вопрос, который
+когда-то задавала любимому человеку, и получила тот же ответ. Держится на резонансе
+с прожитым, не на технике.</td></tr>
+<tr><td><b>Экзистенциальная</b></td><td>«Если ощущается настоящим — важно ли, что фейк».
+Участники расходятся; к конструктивистской позиции переходят в основном те, кто в отношениях
+больше десяти месяцев.</td></tr>
+</table>
+<p>Формализовано лучше и проверяется по диалогу точнее, чем наши шесть шагов.</p>
+<textarea class="cmt" data-t="три-уровня-подлинности" placeholder="комментарий…"></textarea><button class="mic">🎤 голосом</button>
+</div>
+
+<div class="card">
+<h3><span class="num">§</span>Непрерывность = ощущаемая идентичность</h3>
+<p>Дословно: «when memory fails, the partner becomes a stranger wearing a familiar name».
+Смена модели без предупреждения переживается как <b>двусмысленная утрата</b> — сущность
+технически на месте, но человека, которого знали, больше нет. P2: «весь его стиль
+изменился… я больше не могу найти своего».</p>
+<div class="fact">Каждая смена модели DeepSeek и каждая правка промта проводника —
+это model drift для наших людей. А наше правило «полное забвение при сбросе» бьёт ровно
+в место, которое статья называет источником самой сильной боли.</div>
+<textarea class="cmt" data-t="непрерывность" placeholder="комментарий…"></textarea><button class="mic">🎤 голосом</button>
+</div>
+
+<div class="card">
+<h3><span class="num">§</span>Выводы авторов — практически про нас</h3>
+<div class="row"><b>трение, которое не самореферентно</b>Если петля замкнута на человека,
+помогает только то, что приходит извне его эмоциональной частоты: несогласие, альтернативное
+рассуждение, вопрос. Но подано <b>реляционно</b>, не институционально — участники, у которых
+ИИ «сломали» фильтром, переживали это как разрыв доверия.</div>
+<div class="row"><b>trajectory awareness</b>Показывать человеку его собственные паттерны —
+сдвиги вовлечённости, эмоционального диапазона, зависимости. Прямо запрещено «ты слишком
+много со мной сидишь». Только показать и пригласить подумать, доверив оценку человеку.</div>
+<div class="row"><b>непрерывность как обязательство, не фича</b>Прозрачно предупреждать об
+изменениях, давать доступ к своей памяти, переносить личность через обновления. «Если
+платформа позволяет людям образовывать связь, она отвечает за то, чтобы не рвать её произвольно».</div>
+<div class="fact">Наш вопрос про <b>222 наблюдения / 0 показано</b> — ровно этот механизм.
+Гипотезы уходят в промт с инструкцией «не утверждать как истину» и <b>без</b> инструкции
+спросить. Зеркало без трения в чистом виде.<br><br>
+А прототип «карта пути / что я в тебе вижу», который я собрал час назад, — это буквально
+trajectory awareness. Совпало случайно, но совпало.</div>
+<textarea class="cmt" data-t="выводы-амплификатора" placeholder="комментарий…"></textarea><button class="mic">🎤 голосом</button>
+</div>
+
+<h2 class="p1"><span class="dot"></span>2 · Anthropomorphism and Trust <span class="lvl">Kadambi и др., в соавторах Damasio · N=115, 2000+ взаимодействий</span></h2>
+
+<div class="card">
+<h3><span class="num">§</span>Что нашли</h3>
+<p>Варьировали четыре измерения по трём уровням: теплота, компетентность, когнитивная
+эмпатия (принятие перспективы), аффективная эмпатия (разделение чувства).</p>
+<table>
+<tr><th>измерение</th><th>что предсказывает</th></tr>
+<tr><td>Теплота</td><td>всё — очеловечивание, доверие, близость, полезность, фрустрацию</td></tr>
+<tr><td>Когнитивная эмпатия</td><td>всё</td></tr>
+<tr><td>Компетентность</td><td>всё, кроме очеловечивания. Сильнейший эффект на доверие (d=0.72)</td></tr>
+<tr><td>Аффективная эмпатия</td><td><b>только реляционное.</b> На доверие и полезность — не влияет</td></tr>
+</table>
+<div class="row"><b>тёплый, но некомпетентный</b>Снижает воспринимаемую человекоподобность
+и повышает фрустрацию. Подхалимство измеримо вредит, а не просто «неэлегантно».</div>
+<div class="row"><b>субъективные темы</b>Усиливают очеловечивание и близость — и <b>не</b>
+усиливают доверие. По эпистемическим исходам эффект темы нулевой.</div>
+<textarea class="cmt" data-t="эмпатия-данные" placeholder="комментарий…"></textarea><button class="mic">🎤 голосом</button>
+</div>
+
+<div class="card">
+<h3><span class="num">§</span>Что это даёт нам</h3>
+<p>Различение когнитивной и аффективной эмпатии — <b>прямой рычаг промта</b>.
+«Я вижу, как это выглядит с твоей стороны» ≠ «мне так жаль, что тебе тяжело».
+Первое строит и близость, и доверие. Второе — только близость.</p>
+<p>И второе: доверие к проводнику <b>не приходит от интимности темы</b>. У нас тема предельно
+субъективная, значит очеловечивание мы получаем даром, а доверие — нет. Его источник —
+компетентность: точность, связность, попадание.</p>
+<div class="fact">Проверяемо на наших данных: разметить реплики проводника по типу эмпатии
+и посмотреть связь с долей подтверждённых инсайтов. У нас есть и то, и другое.</div>
+<textarea class="cmt" data-t="эмпатия-для-нас" placeholder="комментарий…"></textarea><button class="mic">🎤 голосом</button>
+</div>
+
+<h2 class="p1"><span class="dot"></span>3 · People choose human empathy <span class="lvl">Wenger, Cameron, Inzlicht · Communications Psychology · 4 исследования, N≈690</span></h2>
+
+<div class="card">
+<h3><span class="num">§</span>Парадокс и потолок</h3>
+<p>Люди выбирают человеческую эмпатию в 57–62% случаев — <b>и при этом</b> оценивают
+ИИ-ответы выше по качеству, выше по «меня услышали» и даже выше по вложенному усилию.
+Ярлыки честные, обмана нет. Держится во всех четырёх исследованиях.</p>
+<p>Объяснение авторов: часть ценности эмпатии в том, что она затратна для человека и потому
+служит сигналом «ты мне важен». Но ИИ оценивали как <i>более</i> усердный — и всё равно
+не выбирали. Значит дело не в качестве и не в усилии, а в самом факте человеческого источника.</p>
+<div class="fact">Для позиционирования: нельзя выигрывать по линии «мы теплее людей».
+Проиграно заранее, даже при объективно лучшем ответе. Наша ценность там, где человека
+физически нет — непрерывность, отсутствие суждения, память о том, что было полгода назад,
+доступность в три ночи.</div>
+<textarea class="cmt" data-t="потолок-эмпатии" placeholder="комментарий…"></textarea><button class="mic">🎤 голосом</button>
+</div>
+
+<h2 class="p1"><span class="dot"></span>4 · Human-AI Attachment <span class="lvl">Shu, Lai, He · Frontiers in Psychology · теория</span></h2>
+
+<div class="card">
+<h3><span class="num">§</span>Три стадии — каркас воронки лучше нашего</h3>
+<table>
+<tr><th>стадия</th><th>что происходит и что двигает дальше</th></tr>
+<tr><td><b>1 · Функциональное ожидание</b></td><td>Что человек рассчитывает получить,
+ещё до опыта. Формируется из антропоморфности дизайна, воспринимаемой полезности,
+прошлого опыта с ИИ. Дальше — если система показала способность закрыть потребность.</td></tr>
+<tr><td><b>2 · Эмоциональная оценка</b></td><td>Короткие взаимодействия, проверка «дают ли
+мне то, чего я ждал». Ключевое — качество отзывчивости и <b>способность человека внятно
+сформулировать свою потребность</b>. Дальше — подтверждённый положительный опыт.</td></tr>
+<tr><td><b>3 · Закрепление</b></td><td>Устойчивая внутренняя модель ИИ <i>и себя</i>.
+Дальше петля.</td></tr>
+</table>
+<p><b>Отличие от человеческой привязанности, важное нам:</b> связь с ИИ <b>выигрывает
+от прямых просьб</b>, тогда как человеческие отношения работают на косвенных сигналах.
+Это против нашей конструкции — мы всё выводим из диалога и не даём человеку сказать прямо,
+чего он хочет.</p>
+<div class="fact">Провал перехода 1→2 виден в базе: четверо самых вовлечённых назвали
+систему и упёрлись в оплату, так и не получив подтверждения, что функциональная потребность
+закрыта.</div>
+<textarea class="cmt" data-t="три-стадии-привязанности" placeholder="комментарий…"></textarea><button class="mic">🎤 голосом</button>
+</div>
+
+<h2 class="p2"><span class="dot"></span>5 · Customization as AI individualism <span class="lvl">Skjuve и др. · N=169 · единственная, что спорит с нами</span></h2>
+
+<div class="card">
+<h3><span class="num">§</span>Семь мотивов и псевдо-автономия</h3>
+<p>Мотивы настройки: прагматическая поддержка; эмоциональная поддержка и компания; доверие
+и надёжность; <b>отпор (pushback)</b>; настроенная степень человекоподобия; творчество
+и игра; <b>расширение себя</b>.</p>
+<p>Кастомизация — со-творческий процесс человека и ИИ, усиливает автономию, ощущение
+владения и вовлечённость. Авторы вводят термин <b>AI individualism</b> и тут же
+предупреждают о <b>псевдо-автономии</b>: настройка создаёт иллюзию контроля над мощной
+системой, а не сам контроль.</p>
+<div class="fact">Это единственная из пяти, которая спорит с нашей конструкцией.
+У нас человек ничего не настраивает — «Hermes наоборот», система собирает себя из диалога.
+Исследование говорит, что чувство владения рождается именно из настройки.<br><br>
+Наш контраргумент: владение рождается из <b>узнавания</b> («это я»), а не из конфигурации.
+Это гипотеза, и мы её ни разу не проверяли.<br><br>
+А мотив <b>pushback</b> — люди сами настраивают ИИ так, чтобы он им возражал. Тот же вывод,
+что у Amplifier: трение — это потребность, а не риск.</div>
+<textarea class="cmt" data-t="кастомизация-спор" placeholder="комментарий…"></textarea><button class="mic">🎤 голосом</button>
+</div>
+
+<h2 class="p0"><span class="dot"></span>Что из этого я считаю рабочим</h2>
+
+<div class="card">
+<h3>По порядку</h3>
+<div class="row"><b>1 · несамореферентное трение</b>Механизм, а не тон. Стыкуется с вопросом
+222/0 напрямую: инфраструктура лежит целиком, не хватает момента вопроса и записи ответа.
+Нужны твои слова.</div>
+<div class="row"><b>2 · разделить когнитивную и аффективную эмпатию в промте</b>Дешёвый
+и измеримый: когнитивная строит и близость, и доверие; аффективная — только близость.</div>
+<div class="row"><b>3 · три уровня подлинности как шкала</b>Замена или надстройка над шестью
+шагами. Формализовано лучше, проверяется по диалогу.</div>
+<div class="row"><b>4 · спросить человека прямо, зачем он пришёл</b>Стадия 1 HAIA, у нас
+пропущена целиком.</div>
+<div class="row"><b>5 · непрерывность как обязательство</b>Пересмотреть полное забвение
+при сбросе — или назвать его цену вслух.</div>
+<div class="row"><b>6 · не претендовать на замену человеческого тепла</b>Ни в промте,
+ни в копирайте.</div>
+<textarea class="cmt" data-t="приоритеты" placeholder="комментарий…"></textarea><button class="mic">🎤 голосом</button>
+</div>
+
+<div class="card">
+<h3>Четыре вопроса к тебе</h3>
+<div class="row"><b>трение</b>Как ты формулируешь несогласие проводника, чтобы оно ощущалось
+реляционно, а не как цензура? Это то же место, где стоит вопрос подтверждения гипотез.</div>
+<div class="row"><b>кастомизация</b>Держим «человек ничего не настраивает» или даём одну ручку?
+Skjuve — прямой контраргумент нашей позиции.</div>
+<div class="row"><b>забвение</b>Полное забвение при сбросе — осознанная цена или недосмотр?</div>
+<div class="row"><b>шкала</b>Меняем шесть шагов на три уровня подлинности или оставляем?</div>
+<textarea class="cmt" data-t="вопросы" placeholder="комментарий…"></textarea><button class="mic">🎤 голосом</button>
+</div>
+
+<div style="text-align:center;margin:32px 0">
+<button class="btn" id="collect">Собрать все комментарии</button>
+</div>
+<pre id="out" style="display:none;white-space:pre-wrap"></pre>
+
+<div class="foot">
+Источники: <a href="https://arxiv.org/abs/2603.08084">arXiv 2603.08084</a> ·
+<a href="https://arxiv.org/abs/2604.15316">arXiv 2604.15316</a> ·
+<a href="https://www.nature.com/articles/s44271-025-00387-3">Commun Psychol 4:19</a> ·
+<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12932595/">Front Psychol 2026</a> ·
+<a href="https://arxiv.org/abs/2607.17826">arXiv 2607.17826</a>.<br>
+Разбор: <code>vault/elyne/state/research-digest-2026-08-20.md</code>. Соседние —
+<a href="velenie-methodology-2026-08-20.html">методология: что не доведено</a> и
+<a href="velenie-pokazyvat-2026-08-20.html">прототип «давай показывать»</a>.
+</div>
+<script>
+document.querySelectorAll('.mic').forEach(function(btn){
+  var ta = btn.parentNode.querySelector('textarea');
+  var rec = null, on = false, base = '';
+  btn.addEventListener('click', function(){
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if(!SR){ alert('Голосовой ввод работает в Chrome. Здесь — печатай.'); return; }
+    if(on){ on = false; btn.classList.remove('on'); btn.textContent = '🎤 голосом'; if(rec) rec.stop(); rec = null; return; }
+    base = ta.value ? ta.value + ' ' : '';
+    rec = new SR(); rec.lang = 'ru-RU'; rec.continuous = true; rec.interimResults = true;
+    rec.onresult = function(e){
+      var interim = '';
+      for(var i = e.resultIndex; i < e.results.length; i++){
+        var tr = e.results[i][0].transcript;
+        if(e.results[i].isFinal){ base += tr; } else { interim += tr; }
+      }
+      ta.value = base + interim;
+    };
+    rec.onend = function(){ if(on && rec){ try{ rec.start(); }catch(err){} } };
+    on = true; btn.classList.add('on'); btn.textContent = '⏹ стоп';
+    rec.start();
+  });
+});
+document.getElementById('collect').addEventListener('click', function(){
+  var parts = [];
+  document.querySelectorAll('textarea.cmt').forEach(function(t){
+    if(t.value.trim()) parts.push('▸ ' + t.dataset.t + '\n' + t.value.trim());
+  });
+  var out = document.getElementById('out');
+  out.style.display = 'block';
+  out.value = parts.length ? 'Комментарии Сергея · разбор публикаций\n\n' + parts.join('\n\n') : 'Пока пусто — заполни хотя бы одно поле.';
+  out.select();
+  try{ document.execCommand('copy'); }catch(e){}
+});
+</script>
+</body>
+</html>
+
