@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VELENIE · брошенные задачи за месяц</title>
+<style>
+  :root{--bg:#f7f7fb;--card:#fff;--ink:#1c1a24;--muted:#6a6678;--line:#e6e4ee;--ind:#4f46e5;--ind-soft:#eef0ff;--red:#c0392b;--amber:#b7791f;--green:#2f855a;--grey:#8b8798}
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,"Inter",system-ui,sans-serif;max-width:840px;margin:0 auto;padding:28px 16px 80px;color:var(--ink);line-height:1.6;background:var(--bg);-webkit-text-size-adjust:100%}
+  h1{font-size:26px;font-weight:650;margin:0 0 6px;letter-spacing:-.02em}
+  .sub{color:var(--muted);font-size:14px;margin:0 0 22px}
+  .lead{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:0 0 26px;font-size:15px}
+  .lead p{margin:6px 0}
+  h2{font-size:18px;font-weight:650;margin:34px 0 12px;display:flex;align-items:center;gap:9px}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:0 0 auto}
+  .p0 .dot{background:var(--red)} .p1 .dot{background:var(--amber)} .p2 .dot{background:var(--ind)} .p3 .dot{background:var(--grey)}
+  .lvl{font-size:13px;color:var(--muted);font-weight:400;margin-left:2px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:0 0 14px}
+  .card h3{font-size:16.5px;font-weight:650;margin:0 0 4px;line-height:1.35}
+  .num{color:var(--ind);font-weight:700;margin-right:6px}
+  .meta{font-size:12.5px;color:var(--muted);margin:0 0 12px}
+  .row{margin:9px 0;font-size:14.5px}
+  .row b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.055em;color:var(--muted);font-weight:600;margin-bottom:2px}
+  .fact{background:var(--ind-soft);border-radius:9px;padding:9px 12px;font-size:14px;margin:9px 0}
+  code{background:#f0eff6;padding:1px 5px;border-radius:4px;font-size:13px}
+  .cmtbox{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line)}
+  .cmtlabel{font-size:12px;color:var(--muted);margin-bottom:5px}
+  textarea{width:100%;min-height:60px;border:1px solid var(--line);border-radius:10px;padding:9px 11px;font:inherit;font-size:14.5px;resize:vertical;background:#fcfcff;color:var(--ink)}
+  textarea:focus{outline:none;border-color:var(--ind)}
+  .mic{margin-top:6px;border:1px solid var(--line);background:#fff;border-radius:9px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer;color:var(--muted)}
+  .mic.on{background:var(--ind);color:#fff;border-color:var(--ind)}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+  th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+  th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600}
+  .final{position:sticky;bottom:0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-top:30px;box-shadow:0 -6px 24px rgba(28,26,36,.07)}
+  .btn{border:0;background:var(--ind);color:#fff;border-radius:10px;padding:11px 18px;font:inherit;font-size:15px;font-weight:600;cursor:pointer;width:100%}
+  .foot{margin-top:26px;font-size:12.5px;color:var(--muted)}
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#141320;--card:#1c1b2a;--ink:#eceaf5;--muted:#a29fb4;--line:#2c2a3d;--ind:#8b85f5;--ind-soft:#242238}
+    textarea{background:#181726} .mic{background:#1c1b2a} code{background:#242238}
+  }
+</style>
+</head>
+<body>
+
+<h1>VELENIE · брошенные задачи</h1>
+<p class="sub">20 июля — 19 августа 2026 · снимок базы 20.08, 01:00 МСК · только живые пользователи (<code>account_kind=real</code>, 50 человек)</p>
+
+<div class="lead">
+<p><b>Что спросил Сергей.</b> «Подготовь к утру анализ заброшенных задач за последний месяц».</p>
+<p><b>Что оказалось.</b> Брошенных задач в буквальном смысле почти нет — потому что в реестре работ лежат в основном не задачи. Настоящая брошенность в другом месте и крупнее: 92% названных направлений не превратились ни в одно дело, а 472 наблюдения о человеке не показаны ему ни разу.</p>
+<p><b>Поправка к прошлым цифрам.</b> Раньше я отсекал служебные счета фильтром «не тест и не sim» — туда просачивались наши мини-апп-сессии и один служебный счёт. Из-за него «10 доведённых работ за месяц» превращаются в 4: шесть принадлежали ему. Здесь везде считаю по полю <code>account_kind=real</code>. Оно же даёт ровно 50 человек — цифра из твоей карточки роли подтвердилась.</p>
+</div>
+
+<h2 class="p2"><span class="dot"></span>Что вообще происходило за месяц</h2>
+<div class="card">
+<table>
+<tr><th>За 20.07–19.08</th><th></th></tr>
+<tr><td>писало людей</td><td><b>14</b></td></tr>
+<tr><td>их сообщений</td><td>204</td></tr>
+<tr><td>инсайтов собрано</td><td>56</td></tr>
+<tr><td>направлений названо</td><td>24</td></tr>
+<tr><td>работ заведено</td><td>13</td></tr>
+<tr><td>из них доведено</td><td><b>4</b></td></tr>
+<tr><td>истекло по таймеру</td><td>7</td></tr>
+<tr><td>висит до сих пор</td><td>2</td></tr>
+<tr><td>наблюдений о человеке записано</td><td>222</td></tr>
+<tr><td>из них показано человеку</td><td><b>0</b></td></tr>
+</table>
+<div class="cmtbox"><div class="cmtlabel">Комментарий</div><textarea class="cmt" data-t="Цифры за месяц"></textarea><button class="mic">🎤 голосом</button></div>
+</div>
+
+<h2 class="p0"><span class="dot"></span>Красный · то, что нельзя оставлять как есть</h2>
+
+<div class="card">
+<h3><span class="num">1</span>В реестре работ лежат не задачи, а реплики людей</h3>
+<p class="meta">Код · <code>main.py:15941–15982</code> · причина найдена, чинится за день</p>
+<div class="fact">Все 15 истёкших работ умерли по таймеру. <b>Ни одна</b> — потому что человек отказался. И у большинства в поле «что делаем» лежит не задача, а последняя фраза человека.</div>
+<div class="row"><b>Вот что там лежит дословно</b>«Привет» · «Путь историй» · «Нет, давай как-нибудь по-другому» · «Ты же запросила доступы в кабинеты, это и есть пароли» · «Есть мысли освоить новый навык» · «Мне гораздо лучше. Обследование пока отложу. Просто перестану пить и курить))» · «Никак, ничего не изменилось и легче не стало»</div>
+<div class="row"><b>Почему так вышло</b>Если система родилась, но не активирована, <b>любое</b> сообщение человека записывается как «намерение до активации». Проверки, просил ли он вообще что-нибудь сделать, в этой ветке нет: распознавание намерения живёт внутри исследования, а ветка стоит <i>перед</i> ним и до него не доходит. На каждое следующее сообщение строка перезаписывается свежей репликой. То есть это не журнал задач, а скользящий слепок «последнее, что сказал неоплативший человек», который через 7 дней помечается «устарело».</div>
+<div class="row"><b>Худший случай</b>Надежда, 15 августа, 02:37. Разговор про то, что не хочется продолжать, что денег на психолога нет, что психологи говорили «соберись». Её фраза «Никак, ничего не изменилось и легче не стало» записана в реестр работ как поручение и позже помечена «намерение устарело».<br><br>Ответила ей система по-человечески — тут повезло: навигатор в этой ветке подкладывает инструкцию «скажи, что сохранила намерение, и предложи назвать систему», и модель её проигнорировала. Но инструкция уходит в промт на каждом таком ходе.</div>
+<div class="row"><b>Что делать</b>Два раздельных шага. Первый: спросить распознаватель намерения, прежде чем заводить строку. Второй: не подкладывать инструкцию про наречение в разговор, где человеку плохо.</div>
+<div class="row"><b>Чем проверим</b>В реестре за неделю нет ни одной строки, где «что делаем» — это реплика без просьбы.</div>
+<div class="cmtbox"><div class="cmtlabel">Комментарий</div><textarea class="cmt" data-t="1. Реплики записываются как задачи"></textarea><button class="mic">🎤 голосом</button></div>
+</div>
+
+<div class="card">
+<h3><span class="num">2</span>472 наблюдения о человеке — показано ноль</h3>
+<p class="meta">Код · инфраструктура уже есть · это твой комментарий к задаче 2 от вчера</p>
+<div class="fact">182 «кандидата в черту личности» висят в статусе «предположение». Колонка <code>presented_at</code> есть в схеме и <b>не пишется в коде ни разу</b>. Перехода «предположение → подтверждено» не существует.</div>
+<div class="row"><b>Что это значит</b>Система замечает про человека вещи вроде «склонен к чувству вины, когда не соответствует ролям» или «ценит свободу от обязательств» — и кладёт их в ящик, из которого нет выхода. Четыре верхних подмешиваются в промт с пометкой «гипотезы — не утверждать как истину о человеке». Догадка о человеке навсегда остаётся догадкой, которую запрещено произносить.</div>
+<div class="row"><b>Почему это ровно твой вчерашний комментарий</b>Ты написал: «сделать так, чтобы задавался уточняющий вопрос — кажется, мы нащупали вот это, ты тоже это чувствуешь?». Механизм под это уже собран в базе целиком: есть поле «когда показали», есть поле «каким сообщением подтвердил», есть статусы. Не хватает двух вещей — момента, когда спросить, и записи ответа.</div>
+<div class="row"><b>Побочная выгода</b>Это же закрывает вчерашнюю задачу 2 про «кто подтвердил инсайт»: подтверждение, полученное таким вопросом, — единственное, которое можно честно назвать человеческим.</div>
+<div class="cmtbox"><div class="cmtlabel">Комментарий</div><textarea class="cmt" data-t="2. Наблюдения не показываются"></textarea><button class="mic">🎤 голосом</button></div>
+</div>
+
+<h2 class="p1"><span class="dot"></span>Оранжевый · настоящая брошенность</h2>
+
+<div class="card">
+<h3><span class="num">3</span>92% направлений не превратились ни в одно дело</h3>
+<p class="meta">Продукт · это продолжение вчерашнего пересчёта</p>
+<div class="fact">103 направления названо. <b>95 не имеют ни одной связанной работы.</b> Четыре доведены до результата.</div>
+<div class="row"><b>Что это значит</b>Вчера мы нашли, что инсайт плохо становится направлением — 22% по строкам. Теперь видно продолжение: направление почти никогда не становится делом — 8%. Две воронки подряд, обе текут, и вторая хуже первой.</div>
+<div class="row"><b>Открытый вопрос к тебе</b>Считаем ли направление без единого дела браком воронки? Или бывают направления, которым дело не нужно и не должно быть нужно?</div>
+<div class="cmtbox"><div class="cmtlabel">Комментарий</div><textarea class="cmt" data-t="3. Направления без дел"></textarea><button class="mic">🎤 голосом</button></div>
+</div>
+
+<div class="card">
+<h3><span class="num">4</span>Одиннадцать человек застряли перед активацией. Четверо — уже назвав систему</h3>
+<p class="meta">Продукт · развилка, а не баг</p>
+<div class="fact">16 рождений → 8 назвали систему → 5 активировано.</div>
+<div class="row"><b>Что это значит</b>Активация технически = оплата. Фурия, Путь историй, Искра, ЭйЯ — четыре человека дали системе имя, то есть сделали ровно то, о чём их попросили. Дальше не произошло ничего. И это самые вовлечённые из всех: 108, 103, 96 и 62 сообщения.</div>
+<div class="row"><b>Почему это связано с задачей 1</b>Именно они и генерируют фантомные «работы»: система рождена, не активирована — значит каждое их сообщение падает в реестр как отложенное намерение.</div>
+<div class="row"><b>Открытый вопрос к тебе</b>Что должно происходить после наречения, пока оплаты нет? Сейчас — ничего, и это самый дорогой ноль в продукте.</div>
+<div class="cmtbox"><div class="cmtlabel">Комментарий</div><textarea class="cmt" data-t="4. Застрявшие после наречения"></textarea><button class="mic">🎤 голосом</button></div>
+</div>
+
+<h2 class="p2"><span class="dot"></span>Синий · то, что искажает наши же измерения</h2>
+
+<div class="card">
+<h3><span class="num">5</span>«Готово» тоже завышено</h3>
+<p class="meta">Код · полдня</p>
+<div class="fact">Часть доведённых работ — исследование, запущенное на разговорную реплику, вернувшее пустоту и помеченное «готово».</div>
+<div class="row"><b>Три примера из базы</b>Работа 396: что делаем — «Ну да, в целом я с тобой согласен, так это вижу», результат — «предоставленные источники не содержат информации по вашему запросу». Статус: готово.<br>Работа 215: «Это бизнес, который почти не имеет аналогов в мире» → «на основе источников невозможно однозначно определить». Готово.<br>Работа 379 — то же самое.</div>
+<div class="row"><b>Что делать</b>Результат вида «источники не содержат информации» не может закрываться статусом «готово». Это либо «не нашлось», либо вообще не должно было запускаться.</div>
+<div class="cmtbox"><div class="cmtlabel">Комментарий</div><textarea class="cmt" data-t="5. Ложное готово"></textarea><button class="mic">🎤 голосом</button></div>
+</div>
+
+<div class="card">
+<h3><span class="num">6</span>Мы не знаем, пригодилось ли хоть что-то</h3>
+<p class="meta">Продукт · связано с вчерашней задачей 6</p>
+<div class="fact">Поле «что произошло с результатом» заполнено у 4 работ из 49.</div>
+<div class="row"><b>Что это значит</b>Восемнадцать работ доведено за всё время. Про четырнадцать из них мы не знаем ничего — открыл ли человек, пригодилось ли, сделал ли он что-то. Твой вчерашний комментарий — «через сутки один вопрос, привязанный к тому, что делали» — закрывает ровно это.</div>
+<div class="cmtbox"><div class="cmtlabel">Комментарий</div><textarea class="cmt" data-t="6. Нет обратной связи"></textarea><button class="mic">🎤 голосом</button></div>
+</div>
+
+<div class="card">
+<h3><span class="num">7</span>Люди уходят молча, и ни у одного нет доведённой работы</h3>
+<p class="meta">Наблюдение · без задачи, но важно для порядка починки</p>
+<div class="fact">Из 14 писавших за месяц половина молчит три недели и больше.</div>
+<div class="row"><b>Кто именно</b>Дмитрий Богомолов — 33 сообщения, замолчал 20 июля. sl — 28 сообщений, 21 июля. Eugenia — 25 сообщений, 28 июля. DAYRON — 20 сообщений, 21 июля. Ни у одного из них нет ни одной доведённой работы.</div>
+<div class="row"><b>Осторожно с выводом</b>Это корреляция, не причина: с тем же успехом верно, что работа не доводилась потому, что человек уже уходил. Но порядок починки это подсказывает — сначала перестать ронять, потом звать обратно.</div>
+<div class="cmtbox"><div class="cmtlabel">Комментарий</div><textarea class="cmt" data-t="7. Люди уходят молча"></textarea><button class="mic">🎤 голосом</button></div>
+</div>
+
+<h2 class="p1"><span class="dot"></span>Что я предлагаю делать по порядку</h2>
+<div class="card">
+<div class="row"><b>1</b>Перестать записывать реплики как задачи и убрать инструкцию про наречение из тяжёлых разговоров. Пока это не сделано, любая метрика по работам ничего не измеряет.</div>
+<div class="row"><b>2</b>Подключить вопрос-подтверждение наблюдения — твоё «ты тоже это чувствуешь?». Механизм почти собран, это доделка, не фича.</div>
+<div class="row"><b>3</b>Решить, что происходит после наречения без оплаты. Одиннадцать человек ждут в этой точке.</div>
+<div class="row"><b>4</b>Закрыть ложное «готово».</div>
+<div class="row"><b>5</b>И только потом — вопрос через сутки про применение, иначе спросим у тех, кого подвели.</div>
+<div class="cmtbox"><div class="cmtlabel">Комментарий · согласен с порядком?</div><textarea class="cmt" data-t="Порядок работ"></textarea><button class="mic">🎤 голосом</button></div>
+</div>
+
+<div class="final">
+<button class="btn" id="collect">Собрать все комментарии</button>
+<textarea id="out" style="margin-top:10px;display:none;min-height:130px"></textarea>
+</div>
+
+<p class="foot">Полный разбор с запросами — <code>vault/elyne/state/abandoned-tasks-2026-08-20.md</code>. Вчерашний список из 13 задач — <a href="velenie-retention-2026-08-19.html">здесь</a>.</p>
+
+<script>
+document.querySelectorAll('.mic').forEach(function(btn){
+  var ta = btn.parentNode.querySelector('textarea');
+  var rec = null, on = false, base = '';
+  btn.addEventListener('click', function(){
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if(!SR){ alert('Голосовой ввод работает в Chrome. Здесь — печатай.'); return; }
+    if(on){ on = false; btn.classList.remove('on'); btn.textContent = '🎤 голосом'; if(rec) rec.stop(); rec = null; return; }
+    base = ta.value ? ta.value + ' ' : '';
+    rec = new SR(); rec.lang = 'ru-RU'; rec.continuous = true; rec.interimResults = true;
+    rec.onresult = function(e){
+      var interim = '';
+      for(var i = e.resultIndex; i < e.results.length; i++){
+        var tr = e.results[i][0].transcript;
+        if(e.results[i].isFinal){ base += tr; } else { interim += tr; }
+      }
+      ta.value = base + interim;
+    };
+    rec.onend = function(){ if(on && rec){ try{ rec.start(); }catch(err){} } };
+    on = true; btn.classList.add('on'); btn.textContent = '⏹ стоп';
+    rec.start();
+  });
+});
+document.getElementById('collect').addEventListener('click', function(){
+  var parts = [];
+  document.querySelectorAll('textarea.cmt').forEach(function(t){
+    if(t.value.trim()) parts.push('▸ ' + t.dataset.t + '\n' + t.value.trim());
+  });
+  var out = document.getElementById('out');
+  out.style.display = 'block';
+  out.value = parts.length ? 'Комментарии Сергея · брошенные задачи\n\n' + parts.join('\n\n') : 'Пока пусто — заполни хотя бы одно поле.';
+  out.select();
+  try{ document.execCommand('copy'); }catch(e){}
+});
+</script>
+</body>
+</html>
