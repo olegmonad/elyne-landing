@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VELENIE · методология: что не доведено</title>
+<style>
+  :root{--bg:#f7f7fb;--card:#fff;--ink:#1c1a24;--muted:#6a6678;--line:#e6e4ee;--ind:#4f46e5;--ind-soft:#eef0ff;--red:#c0392b;--amber:#b7791f;--green:#2f855a;--grey:#8b8798}
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,"Inter",system-ui,sans-serif;max-width:840px;margin:0 auto;padding:28px 16px 80px;color:var(--ink);line-height:1.6;background:var(--bg);-webkit-text-size-adjust:100%}
+  h1{font-size:26px;font-weight:650;margin:0 0 6px;letter-spacing:-.02em}
+  .sub{color:var(--muted);font-size:14px;margin:0 0 22px}
+  .lead{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:0 0 26px;font-size:15px}
+  .lead p{margin:6px 0}
+  h2{font-size:18px;font-weight:650;margin:34px 0 12px;display:flex;align-items:center;gap:9px}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:0 0 auto}
+  .p0 .dot{background:var(--red)} .p1 .dot{background:var(--amber)} .p2 .dot{background:var(--ind)} .p3 .dot{background:var(--grey)}
+  .lvl{font-size:13px;color:var(--muted);font-weight:400;margin-left:2px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:0 0 14px}
+  .card h3{font-size:16.5px;font-weight:650;margin:0 0 4px;line-height:1.35}
+  .num{color:var(--ind);font-weight:700;margin-right:6px}
+  .meta{font-size:12.5px;color:var(--muted);margin:0 0 12px}
+  .row{margin:9px 0;font-size:14.5px}
+  .row b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.055em;color:var(--muted);font-weight:600;margin-bottom:2px}
+  .fact{background:var(--ind-soft);border-radius:9px;padding:9px 12px;font-size:14px;margin:9px 0}
+  code{background:#f0eff6;padding:1px 5px;border-radius:4px;font-size:13px}
+  .cmtbox{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line)}
+  .cmtlabel{font-size:12px;color:var(--muted);margin-bottom:5px}
+  textarea{width:100%;min-height:60px;border:1px solid var(--line);border-radius:10px;padding:9px 11px;font:inherit;font-size:14.5px;resize:vertical;background:#fcfcff;color:var(--ink)}
+  textarea:focus{outline:none;border-color:var(--ind)}
+  .mic{margin-top:6px;border:1px solid var(--line);background:#fff;border-radius:9px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer;color:var(--muted)}
+  .mic.on{background:var(--ind);color:#fff;border-color:var(--ind)}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+  th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+  th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600}
+  .final{position:sticky;bottom:0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-top:30px;box-shadow:0 -6px 24px rgba(28,26,36,.07)}
+  .btn{border:0;background:var(--ind);color:#fff;border-radius:10px;padding:11px 18px;font:inherit;font-size:15px;font-weight:600;cursor:pointer;width:100%}
+  .foot{margin-top:26px;font-size:12.5px;color:var(--muted)}
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#141320;--card:#1c1b2a;--ink:#eceaf5;--muted:#a29fb4;--line:#2c2a3d;--ind:#8b85f5;--ind-soft:#242238}
+    textarea{background:#181726} .mic{background:#1c1b2a} code{background:#242238}
+  }
+</style>
+</head><body>
+<h1>VELENIE · методология: что обсуждали и не довели</h1>
+<p class="lead">Серёж, я сначала понял тебя неверно и разобрал реестр работ. Ты имел в виду
+другое — наши методологические задачи и идеи, которые обсуждались, но не дошли до внедрения
+или проверки гипотезы. Вот они.</p>
+
+<div class="card">
+<h3>Как считал</h3>
+<p>Разобрал подряд 433 твоих сообщения с 17.07 по 20.08 и вытащил каждую идею, у которой
+был статус «давай сделаем» или «давай проверим». Дальше — главное: я не верил документам
+со статусом «сделано», а смотрел код <code>main.py</code> и живую базу. Три позиции из-за
+этого поменяли статус, причём в обе стороны.</p>
+<textarea class="cmt" data-t="метод" placeholder="комментарий…"></textarea><button class="mic">🎤 голосом</button>
+</div>
+
+<h2 class="sec red">Готово, но лежит — код написан и не применён</h2>
+
+<div class="card">
+<h3><span class="dot red"></span>1 · Нарративная схема v2 — миграция под твою таксономию</h3>
+<p>Ветка <code>velenie-narrative-schema-v2</code>. Не слита, не задеплоена. Ждёт решения
+Олега с 11.08 — девять дней. Документ <code>narrative-migration-proposal-oleg-2026-08-11.md</code>,
+статус в нём прямым текстом: «ЖДЁТ РЕШЕНИЯ ОЛЕГА».</p>
+<textarea class="cmt" data-t="схема-v2" placeholder="комментарий…"></textarea><button class="mic">🎤 голосом</button>
+</div>
+
+<div class="card">
+<h3><span class="dot red"></span>2 · Процесс обучения, слой 1</h3>
+<p>Твой запрос 11.08: «мы уже неоднократно сталкиваемся что процесс обучения не налажен,
+предложи стратегию реализации». Стратегия написана, слой 1 (фиксация срабатываний
+контрактов) закодирован. Ветка <code>velenie-learning-loop-step1</code>, статус в документе:
+«КОД НАПИСАН, ПРОВЕРЯЕТСЯ, НЕ ЗАДЕПЛОЕН». Тоже с 11.08.</p>
+<textarea class="cmt" data-t="обучение" placeholder="комментарий…"></textarea><button class="mic">🎤 голосом</button>
+</div>
+
+<div class="card">
+<h3><span class="dot red"></span>3 · Эталонная разметка — единственное, что зависит от тебя</h3>
+<p><code>narrative-etalon-sheet-sergei-2026-08-11.md</code>, статус «ждёт разметки Сергея».
+Олег поставил условие: до выхода на весь корпус нужен человеческий эталон, потому что два
+прохода модели меряют её согласие с самой собой, а не с правдой. Без твоей разметки разбор
+инсайтов по матрице стоит.</p>
+<textarea class="cmt" data-t="эталон" placeholder="комментарий…"></textarea><button class="mic">🎤 голосом</button>
+</div>
+
+<h2 class="sec orange">Внедрено формально — не работает</h2>
+
+<div class="card">
+<h3><span class="dot orange"></span>4 · Нарративный слой, шаг 1 — ноль строк за девять дней</h3>
+<p>Таблица <code>narrative_state</code> в проде, маркер <code>[NARRATIVE:]</code> в промте,
+парсер написан. Флаг <code>narrative_marker_v1</code> включён 11.08 ровно для одного
+аккаунта — тестового. <b>В таблице ноль строк.</b> Механизм не отработал ни разу.
+Шаг 3, где Decision Engine читает это состояние, не начат — в коде так и написано.</p>
+<textarea class="cmt" data-t="нарратив-шаг1" placeholder="комментарий…"></textarea><button class="mic">🎤 голосом</button>
+</div>
+
+<div class="card">
+<h3><span class="dot orange"></span>5 · B4 — словарь human_dimension оказался тоньше, чем отчёт</h3>
+<p>09.08 тебе отчитались «сделано, задеплоено, работает прямо сейчас». Проверил: тег правда
+пишется новым записям — 38 инсайтов и 38 векторов с 09.08. Но <code>self_model.kind</code>
+остался старым плоским словарём: insight 851, vector 418, register 174, response_params 54,
+sphere 7, identity 6. Три уровня — экзистенциальное ядро, динамика, движение — в модель
+человека не пришли. «Язык организма», ради которого B4 ставился первым, не появился.
+Появился тег на новых инсайтах.</p>
+<textarea class="cmt" data-t="b4" placeholder="комментарий…"></textarea><button class="mic">🎤 голосом</button>
+</div>
+
+<div class="card">
+<h3><span class="dot orange"></span>6 · DIM_STATE так и лежит мёртвым грузом</h3>
+<p>Ты ставил «из аналитики в движок» шагом 3 ещё 01.08. Метка считается каждый ход,
+67 записей, на пульте есть срез «все 4 измерения ≥ намётки». Но темпом разговора она не
+управляет: чтения <code>dimension_state</code> в маршрутизации нет ни одного. Ровно то,
+что ты описал 01.08, — без изменений.</p>
+<textarea class="cmt" data-t="dim" placeholder="комментарий…"></textarea><button class="mic">🎤 голосом</button>
+</div>
+
+<h2 class="sec blue">Решено и не начато</h2>
+
+<div class="card">
+<h3><span class="dot blue"></span>7 · Порядок от 06.08, по которому мы сказали «поехали»</h3>
+<p><b>B5 — жизненный цикл вектора</b> (candidate → recognized → confirmed → committed →
+active → completed → archived): у таблицы <code>vector</code> нет даже колонки status.<br>
+<b>C3 — видимая карта пути</b>: ты дважды ставил её в Tier 1 со словами «дёшево, не ждёт
+остального». Ни в боте, ни в мини-аппе ничего.<br>
+<b>B3 — self_model как синтез и версионирование</b>: колонка <code>supersedes</code> есть,
+записей ноль.<br>
+<b>B1/B2 — слой связей и эпизоды понимания</b>: таблиц нет. Это та самая нервная система,
+без которой модули не видят друг друга.<br>
+<b>B6 — BIRTH_HANDOFF как проекция self_model</b>: по-прежнему свободный JSON, JOIN
+с vector/insight нет.</p>
+<textarea class="cmt" data-t="b-порядок" placeholder="комментарий…"></textarea><button class="mic">🎤 голосом</button>
+</div>
+
+<div class="card">
+<h3><span class="dot blue"></span>8 · Раннее появление спутника</h3>
+<p>«Два рождения», потом «три рождения» (05–06.08) — принято как продуктовая ставка,
+обсуждено подробно. В коде порядок прежний: гейт «инсайт + вектор» стоит перед всей
+церемонией. То есть самое фундаментальное решение месяца не тронуло ни строки.</p>
+<textarea class="cmt" data-t="спутник" placeholder="комментарий…"></textarea><button class="mic">🎤 голосом</button>
+</div>
+
+<div class="card">
+<h3><span class="dot blue"></span>9 · Чек-поинт на 5–7 ходу — три недели на одной развилке</h3>
+<p>Поднято Евгенией 28.07, тобой 31.07 и 01.08. Развилка «это укороченное рождение или
+отдельный лёгкий артефакт» не выбрана. Формулировка «решение зависло» стоит в моём же
+ответе тебе от 01.08 — за три недели не сдвинулась ни на шаг.</p>
+<textarea class="cmt" data-t="чекпоинт" placeholder="комментарий…"></textarea><button class="mic">🎤 голосом</button>
+</div>
+
+<div class="card">
+<h3><span class="dot blue"></span>10 · Персонаж, тамагочи, индикатор профиля, два мозга</h3>
+<p><b>Персонаж и нарративная геймификация</b>: две спецификации есть (27.07 и 09.08, с
+матрицей архетипов), реализации нет — ни визуализации, ни этапов эволюции, ни артефактов
+за интеграции.<br>
+<b>Индикатор заполненности профиля и баллы</b> (22.07): ты просил вариант реализации,
+я тогда оценил это как самое дешёвое из всего разговора. Не начато.<br>
+<b>Два мозга</b> (твоя гипотеза 11.08): замер сделан, гипотеза подтверждена по журналу
+вызовов модели. Форма разделения — предложение, решения нет, кода нет.<br>
+<b>Trust Ladder</b> и <b>Transformation Signals вместо engagement</b> (06.08): не начато.<br>
+<b>Life/Chapter</b> и <b>Experience Layer</b>: осознанно отложены как FUTURE, держу в списке
+чтобы не потерялись.</p>
+<textarea class="cmt" data-t="прочее" placeholder="комментарий…"></textarea><button class="mic">🎤 голосом</button>
+</div>
+
+<h2 class="sec">Открытые вопросы, на которые никто не ответил</h2>
+
+<div class="card">
+<h3>11 · Четыре вопроса без ответа</h3>
+<p><b>«После рождения по какому принципу идёт узнавание?»</b> — ты спросил дважды 25.07.
+Ответа нет ни в одном документе. Смежный вопрос, оставлять ли DIM_STATE после наречения,
+завис там же.<br><br>
+<b>Что такое «система» на языке пользователя.</b> 28.07 дали три формулировки, выбор не
+зафиксирован. В приветствие ушла «карта направлений» — но как артефакт она человеку не
+показывается. Обещание в первой реплике ничем не подкреплено, а это был приоритет 1 по
+фидбеку Евгении.<br><br>
+<b>Психотипология под капот</b> (Майерс-Бриггс или аналог, твой вопрос 20.07) — обсуждения
+не было.<br><br>
+<b>PLOT / Пропп</b> и <b>муравейник с когнитивными феромонами</b> — ты сам отложил оба,
+это не потеря, держу для полноты.</p>
+<textarea class="cmt" data-t="вопросы" placeholder="комментарий…"></textarea><button class="mic">🎤 голосом</button>
+</div>
+
+<h2 class="sec">Что за месяц реально доведено</h2>
+
+<div class="card">
+<h3>12 · Чтобы не искать заново</h3>
+<p><b>Регистр и параметры ответа</b> (28.07) — все три твоих решения: один вызов вместо трёх,
+параметрический контракт вместо жёстких меток, явная просьба человека побеждает автоматику,
+односложность падает в universal (твой сценарий 7). Целиком.<br>
+<b>Метрики 7–10</b> (20.07) — все четыре на пульте: ложное согласие, глубина через topic_id,
+эмоциональная дельта, surprise rate. Я сам держал их в незакрытых, пока не открыл код. Снимаю.<br>
+<b>Метрика «все 4 измерения ≥ намётки»</b> (22.07) — на пульте, с медианой хода.<br>
+<b>Самопрезентация и приветствие</b> — финал 28.07 в проде.<br>
+<b>Принудительная кристаллизация после 15/25 ходов</b> (20.07) — задеплоена; калибровка
+не финал, упорное сопротивление называнию не пробивает.<br>
+<b>Пакет методправок 22.07</b> — вопрос не обязателен, birth-flow как признаки, гравитация
+без механического возврата. Применено.<br>
+<b>Полное забвение при сбросе</b> (29.07) — в коде.</p>
+<textarea class="cmt" data-t="сделано" placeholder="комментарий…"></textarea><button class="mic">🎤 голосом</button>
+</div>
+
+<div class="card">
+<h3>Что я считаю первым</h3>
+<p>Не по красоте, а по тому, что уже оплачено работой и не даёт эффекта.</p>
+<p><b>Раз.</b> Достать из веток то, что написано — нарративную схему и слой обучения.
+Либо применить, либо честно закрыть. Девять дней написанный код не приносит ничего.<br>
+<b>Два.</b> Включить нарративный маркер шире тестового аккаунта — иначе мы продолжаем
+собирать ноль данных о механизме, который сами построили.<br>
+<b>Три.</b> Закрыть развилку чек-поинта 5–7 хода. Она блокирует сразу три вещи: короткий
+путь, ответ Евгении и твою же идею раннего спутника.</p>
+<p>Из всего списка от тебя зависит одно — эталонная разметка. Остальное на нашей стороне.</p>
+<textarea class="cmt" data-t="приоритет" placeholder="комментарий…"></textarea><button class="mic">🎤 голосом</button>
+</div>
+
+<div style="text-align:center;margin:32px 0">
+<button id="collect">Собрать все комментарии</button>
+</div>
+<pre id="out" style="display:none;white-space:pre-wrap"></pre>
+
+<div class="foot">
+Источник: <code>vault/elyne/state/methodology-not-implemented-2026-08-20.md</code>.
+Проверено по коду и живой базе 20.08.2026. Соседний разбор —
+<a href="velenie-abandoned-2026-08-20.html">брошенные работы</a> и
+<a href="velenie-retention-2026-08-19.html">контур удержания</a>.
+</div>
+<script>
+document.querySelectorAll('.mic').forEach(function(btn){
+  var ta = btn.parentNode.querySelector('textarea');
+  var rec = null, on = false, base = '';
+  btn.addEventListener('click', function(){
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if(!SR){ alert('Голосовой ввод работает в Chrome. Здесь — печатай.'); return; }
+    if(on){ on = false; btn.classList.remove('on'); btn.textContent = '🎤 голосом'; if(rec) rec.stop(); rec = null; return; }
+    base = ta.value ? ta.value + ' ' : '';
+    rec = new SR(); rec.lang = 'ru-RU'; rec.continuous = true; rec.interimResults = true;
+    rec.onresult = function(e){
+      var interim = '';
+      for(var i = e.resultIndex; i < e.results.length; i++){
+        var tr = e.results[i][0].transcript;
+        if(e.results[i].isFinal){ base += tr; } else { interim += tr; }
+      }
+      ta.value = base + interim;
+    };
+    rec.onend = function(){ if(on && rec){ try{ rec.start(); }catch(err){} } };
+    on = true; btn.classList.add('on'); btn.textContent = '⏹ стоп';
+    rec.start();
+  });
+});
+document.getElementById('collect').addEventListener('click', function(){
+  var parts = [];
+  document.querySelectorAll('textarea.cmt').forEach(function(t){
+    if(t.value.trim()) parts.push('▸ ' + t.dataset.t + '\n' + t.value.trim());
+  });
+  var out = document.getElementById('out');
+  out.style.display = 'block';
+  out.value = parts.length ? 'Комментарии Сергея · брошенные задачи\n\n' + parts.join('\n\n') : 'Пока пусто — заполни хотя бы одно поле.';
+  out.select();
+  try{ document.execCommand('copy'); }catch(e){}
+});
+</script>
+</body>
+</html>
+
