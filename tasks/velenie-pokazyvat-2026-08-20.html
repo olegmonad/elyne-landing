@@ -1,0 +1,173 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VELENIE · прототип: что человек видит</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300&family=Geist:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#F2EDE4;--graphite:#2A241D;--muted:#6B6356}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--graphite);font-family:Geist,system-ui,sans-serif;font-weight:300;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding:40px 20px 80px}
+h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:38px;line-height:1.1;margin:0 0 8px}
+h2.sec{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:26px;margin:52px 0 16px;padding-bottom:10px;border-bottom:1px solid rgba(42,36,29,.12)}
+.lead{color:var(--muted);font-size:15px;max-width:660px}
+.note{background:rgba(42,36,29,.04);border:1px solid rgba(42,36,29,.12);border-radius:14px;padding:18px 20px;margin:20px 0;font-size:14px}
+.note b{font-weight:500}
+.row{display:flex;gap:28px;flex-wrap:wrap;margin:24px 0}
+.col{flex:1 1 340px;min-width:320px}
+.who{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.phone{width:100%;max-width:375px;border:1px solid rgba(42,36,29,.18);border-radius:28px;padding:26px 22px 30px;background:var(--cream)}
+.ptitle{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:500;margin:0 0 4px}
+.psub{font-size:13px;color:var(--muted);margin:0 0 22px}
+.step{display:flex;gap:12px;align-items:flex-start;padding:11px 0}
+.mark{flex:0 0 16px;height:16px;margin-top:3px;border-radius:50%;border:1.5px solid rgba(42,36,29,.28)}
+.mark.done{background:var(--graphite);border-color:var(--graphite)}
+.mark.now{border-color:var(--graphite);border-width:4px}
+.st{font-size:14px}
+.st.future{color:var(--muted)}
+.st small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.dir{border:1px solid rgba(42,36,29,.12);border-radius:14px;padding:14px 16px;margin:10px 0}
+.dir .d1{font-size:14px}
+.dir .d2{font-size:12px;color:var(--muted);margin-top:5px}
+.cta{margin-top:22px;height:52px;border-radius:26px;background:var(--graphite);color:var(--cream);display:flex;align-items:center;justify-content:center;font-size:14px;letter-spacing:.08em;text-transform:uppercase}
+.empty{border:1px dashed rgba(42,36,29,.25);border-radius:14px;padding:18px 16px;font-size:13.5px;color:var(--muted);margin:10px 0}
+textarea.cmt{width:100%;min-height:78px;margin-top:14px;padding:12px 14px;border:1px solid rgba(42,36,29,.18);border-radius:12px;background:transparent;font-family:inherit;font-size:14px;color:var(--graphite);resize:vertical}
+textarea.cmt::placeholder{color:var(--muted)}
+button{font-family:inherit;font-size:13px;padding:9px 16px;border-radius:20px;border:1px solid rgba(42,36,29,.25);background:transparent;color:var(--graphite);cursor:pointer;margin-top:8px}
+#collect{background:var(--graphite);color:var(--cream);border:none;padding:14px 28px;font-size:14px;letter-spacing:.06em;text-transform:uppercase}
+pre#out{background:rgba(42,36,29,.05);padding:18px;border-radius:12px;font-size:13px}
+.foot{margin-top:56px;padding-top:20px;border-top:1px solid rgba(42,36,29,.12);font-size:13px;color:var(--muted)}
+code{font-size:12.5px;background:rgba(42,36,29,.06);padding:1px 5px;border-radius:4px}
+</style></head><body><div class="wrap">
+
+<h1>Что человек видит</h1>
+<p class="lead">Серёж, «давай показывать» — вот два экрана на живых данных, ещё не код.
+Слева и справа реальные люди из базы, реальные их записи, ничего не придумано.
+Скажи, что здесь неправильно по смыслу, и я иду делать.</p>
+
+<div class="note">
+<b>Почему это вообще нужно.</b> Первая реплика обещает человеку «карту направлений — ты увидишь
+свой путь целиком». Карты нет ни одной. Это твой Tier 1 от 06.08 — «устраняет дезориентацию
+без изменения модели данных». Данные для обоих экранов уже лежат в базе, новых таблиц не нужно.
+</div>
+
+<h2 class="sec">Экран 1 · Где мы сейчас</h2>
+<p class="lead">Шесть шагов, твоя формулировка от 06.08 — ни один не выглядит как экзамен.
+Положение считается по грубым сигналам, которые уже есть: диалог, наблюдения, подтверждённый
+инсайт, вектор, рождение, работы.</p>
+
+<div class="row">
+<div class="col">
+<div class="who">Максим · 96 сообщений · 19 инсайтов · 10 направлений</div>
+<div class="phone">
+<p class="ptitle">Где мы сейчас</p>
+<p class="psub">Пятая неделя вместе</p>
+<div class="step"><div class="mark done"></div><div class="st">Мы познакомились</div></div>
+<div class="step"><div class="mark done"></div><div class="st">Я собираю наблюдения<small>34 заметки о тебе</small></div></div>
+<div class="step"><div class="mark done"></div><div class="st">Складывается портрет<small>19 узнаваний, ты подтвердил</small></div></div>
+<div class="step"><div class="mark now"></div><div class="st">Появились направления<small>сейчас здесь — 4 линии, ниже</small></div></div>
+<div class="step"><div class="mark"></div><div class="st future">Собирается твоя система</div></div>
+<div class="step"><div class="mark"></div><div class="st future">Строим вместе</div></div>
+<div class="cta">Посмотреть направления</div>
+</div>
+</div>
+
+<div class="col">
+<div class="who">Анна · 186 сообщений · 22 инсайта · 0 направлений</div>
+<div class="phone">
+<p class="ptitle">Где мы сейчас</p>
+<p class="psub">Шестая неделя вместе</p>
+<div class="step"><div class="mark done"></div><div class="st">Мы познакомились</div></div>
+<div class="step"><div class="mark done"></div><div class="st">Я собираю наблюдения<small>19 заметок о тебе</small></div></div>
+<div class="step"><div class="mark now"></div><div class="st">Складывается портрет<small>22 узнавания — самое частое про то, как ум цепляется за концепции</small></div></div>
+<div class="step"><div class="mark"></div><div class="st future">Появятся направления</div></div>
+<div class="step"><div class="mark"></div><div class="st future">Соберётся твоя система</div></div>
+<div class="step"><div class="mark"></div><div class="st future">Строим вместе</div></div>
+<div class="cta">Посмотреть, что я вижу</div>
+</div>
+</div>
+</div>
+
+<div class="note">
+<b>Что этот экран сразу вскрывает.</b> Максим стоит на «появились направления» с десятью
+векторами — и при этом его система до сих пор не родилась, стадия <code>initial</code>. Человек
+шесть недель не знает, что он уже прошёл дальше, чем система ему показывает. Анна — обратный
+случай: 186 сообщений, 22 узнавания, ноль направлений, тот самый твой пример …1126.
+Карта делает это видимым и ей, и нам, без единого запроса в аналитику.
+<textarea class="cmt" data-t="экран-1" placeholder="комментарий…"></textarea>
+</div>
+
+<h2 class="sec">Экран 2 · Что я в тебе вижу</h2>
+<p class="lead">То самое обещание из первой реплики. Здесь настоящие записи Максима, слово в слово
+из базы — я только сгруппировал и убрал служебный язык.</p>
+
+<div class="row">
+<div class="col">
+<div class="who">Максим · направления</div>
+<div class="phone">
+<p class="ptitle">Что я в тебе вижу</p>
+<p class="psub">Четыре линии. Ты можешь поправить любую</p>
+<div class="dir"><div class="d1">Уйти из ресторана в свою практику личного повара</div>
+<div class="d2">Июль · держится месяц · ещё 3–4 клиента как Григорий</div></div>
+<div class="dir"><div class="d1">Расширяться через сарафанное радио и помощников</div>
+<div class="d2">Июль · как именно — пока не решили</div></div>
+<div class="dir"><div class="d1">Очиститься от алкоголя и сигарет, чтобы прояснить цель</div>
+<div class="d2">Август · ты уже начал</div></div>
+<div class="dir"><div class="d1">Научиться внутренней паузе — не реагировать на провокации</div>
+<div class="d2">Август · перенеслось с голодания на разговоры с людьми</div></div>
+<div class="cta">Это про меня</div>
+</div>
+</div>
+
+<div class="col">
+<div class="who">Анна · направлений нет — что показывать</div>
+<div class="phone">
+<p class="ptitle">Что я в тебе вижу</p>
+<p class="psub">Направление ещё не назвали. Вот что я замечаю</p>
+<div class="empty">Здесь пока пусто — но я не молчу, а показываю то, что уже вижу, и предлагаю
+назвать это вместе.</div>
+<div class="dir"><div class="d1">Ты видишь, как ум цепляется даже за тонкие опоры — «наблюдатель», «пространство»</div>
+<div class="d2">Возвращается с 5 июля, шесть раз</div></div>
+<div class="dir"><div class="d1">В стрессе внутреннее пространство мгновенно расщепляется на множество «я»</div>
+<div class="d2">12 июля, дважды за один разговор</div></div>
+<div class="cta">Похоже на моё направление?</div>
+</div>
+</div>
+</div>
+
+<div class="note">
+<b>Честно, что здесь плохо.</b> У Максима в базе не четыре записи, а десять — «масштабировать
+работу личного повара» лежит четырьмя почти одинаковыми строками. Если показать как есть,
+человек увидит мусор и перестанет верить экрану. То есть показывать нельзя без склейки
+дублей — это маленькая работа, но обязательная, и она же половина твоего B5.
+<textarea class="cmt" data-t="экран-2" placeholder="комментарий…"></textarea>
+</div>
+
+<h2 class="sec">Что решить тебе</h2>
+<div class="note">
+<b>Раз.</b> Правильные ли шесть шагов и их формулировки — это твой текст от 06.08, я его не трогал.<br>
+<b>Два.</b> Экран Анны: показывать ли наблюдения, когда направления нет. Мой довод за — иначе
+человек шесть недель видит пустоту там, где ему обещали карту. Твой довод против может быть
+сильнее: это предъявление неподтверждённой гипотезы, а мы договаривались гипотезы не выдавать
+за правду о человеке.<br>
+<b>Три.</b> Где это живёт — отдельный экран мини-аппа или система сама показывает это в разговоре
+в нужный момент.
+<textarea class="cmt" data-t="решения" placeholder="комментарий…"></textarea>
+</div>
+
+<div style="text-align:center;margin:36px 0"><button id="collect">Собрать все комментарии</button></div>
+<pre id="out" style="display:none;white-space:pre-wrap"></pre>
+
+<div class="foot">Прототип, не код. Данные — живая база на 20.08.2026, реальные записи двух пользователей.
+Соседние разборы: <a href="velenie-methodology-2026-08-20.html">методология</a> ·
+<a href="velenie-abandoned-2026-08-20.html">брошенные работы</a>.</div>
+
+<script>
+document.getElementById('collect').onclick=function(){
+ var o=[];document.querySelectorAll('textarea.cmt').forEach(function(t){
+  if(t.value.trim())o.push('▸ '+t.dataset.t+'\n'+t.value.trim())});
+ var out=document.getElementById('out');
+ out.style.display='block';
+ out.textContent=o.length?('Комментарии Сергея · прототип 20.08\n\n'+o.join('\n\n')):'Пока пусто.';
+ out.scrollIntoView({behavior:'smooth'});};
+</script>
+</div></body></html>
