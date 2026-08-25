@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-24",
+  "updated": "2026-08-25",
   "events": [
     {
       "id": "leto-v-moskve-sokolniki-2026-08-27",
@@ -84,34 +84,6 @@
       "is_free": false,
       "url": "https://www.tretyakovgallery.ru/exhibitions/o/epokha-neizvestnogo-k-100-letiyu-khudozhnika/",
       "tg_msg_id": 1367
-    },
-    {
-      "id": "big-run-fest-2026-08-23",
-      "title": "Большой фестиваль бега (Big Run Fest) 2026",
-      "date": "2026-08-23",
-      "time": "09:00",
-      "place": "Садовое кольцо, финиш — Крымский Вал / парк «Музеон»",
-      "category": "спорт",
-      "emoji": "🏃",
-      "description": "Ежегодный забег по Садовому кольцу — можно бежать соревновательно или в темпе фестиваля, есть отдельная дистанция северной ходьбы. На финише в «Музеоне» весь день музыкальная программа для участников.",
-      "price": "от 1000 ₽ до 2000 ₽ (бесплатно для льготных категорий)",
-      "is_free": false,
-      "url": "https://runfest.runc.run/",
-      "tg_msg_id": 1324
-    },
-    {
-      "id": "vystavka-cherny-chelovek-esenin-2026-08-23",
-      "title": "Выставка «Чёрный человек. Исповедь поэта» — последние дни",
-      "date": "2026-08-23",
-      "time": "",
-      "place": "Есенин-центр, пер. Чернышевского, д. 4, стр. 2",
-      "category": "выставки",
-      "emoji": "🖼",
-      "description": "Выставка вокруг есенинской поэмы о разговоре с внутренним двойником — история текста, реакция современников, тема тьмы и творчества. Закрывается в конце этой недели.",
-      "price": "от 0 до 350 ₽",
-      "is_free": false,
-      "url": "https://kudago.com/msk/event/vyistavka-chyornyij-chelovek-ispoved-poeta-s4yhhu/",
-      "tg_msg_id": 1323
     },
     {
       "id": "spasskaya-bashnya-detyam-2026-08-24",
@@ -377,6 +349,48 @@
       "is_free": false,
       "url": "https://ict2go.ru/events/70253/",
       "tg_msg_id": 1409
+    },
+    {
+      "id": "cloud-sessions-vktech-2026-08-27",
+      "title": "Cloud Sessions от VK Tech",
+      "date": "2026-08-27",
+      "time": "18:00",
+      "place": "Москва, офис VK Tech",
+      "category": "it",
+      "emoji": "💻",
+      "description": "Технический митап про облака, платформы и инфраструктуру: реальные инженерные кейсы. Один из докладов — как команда VK Cloud написала собственный kernel scheduler на eBPF и решила проблему steal time в облаке.",
+      "price": "Вход свободный, по регистрации",
+      "is_free": true,
+      "url": "https://ict2go.ru/events/71467/",
+      "tg_msg_id": 1442
+    },
+    {
+      "id": "festival-istoricheskih-sadov-tsaritsyno-2026-08-30",
+      "title": "Фестиваль исторических садов",
+      "date": "2026-08-30",
+      "time": "",
+      "place": "Музей-заповедник «Царицыно»",
+      "category": "культура",
+      "emoji": "🌳",
+      "description": "IX фестиваль показывает 17 ландшафтных композиций от разных эпох и стилей — в этом году в том числе «Вертикальные сады Ле Корбюзье». 27 августа пройдёт круглый стол «Наука в исторических парках». Идёт с 21 по 30 августа.",
+      "price": "Вход свободный",
+      "is_free": true,
+      "url": "https://kudago.com/msk/event/festival-festival-istoricheskih-sadov-v-tsaritsyine/",
+      "tg_msg_id": 1443
+    },
+    {
+      "id": "otkrytaya-voda-krylatskoe-2026-08-28",
+      "title": "Фестиваль «Открытая вода»",
+      "date": "2026-08-28",
+      "time": "",
+      "place": "Гребной канал, Крылатское",
+      "category": "спорт",
+      "emoji": "🌊",
+      "description": "Чемпионат и первенство России по водно-моторному спорту — флайборд, гидроцикл, аквабайк-фристайл. 30 августа — семейная развлекательная программа: настольный теннис, детская зона, мастер-классы, водно-экстремальное шоу.",
+      "price": "Вход свободный",
+      "is_free": true,
+      "url": "https://water.sport.moscow/",
+      "tg_msg_id": 1444
     }
   ]
 }
