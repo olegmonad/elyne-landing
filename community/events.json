@@ -1,20 +1,6 @@
 {
-  "updated": "2026-08-31",
+  "updated": "2026-09-01",
   "events": [
-    {
-      "id": "sluzhanki-teatrium-serpuhovka-2026-08-31",
-      "title": "«Служанки» Романа Виктюка",
-      "date": "2026-08-31",
-      "time": "19:00",
-      "place": "Театриум на Серпуховке, ул. Павловская, 6",
-      "category": "театр",
-      "emoji": "🎭",
-      "description": "Постановка по пьесе Жана Жене больше 30 лет держится в репертуаре — история двух служанок, Соланж и Клер, благоговеющих перед своей Мадам и одновременно безудержно ей завидующих. Один из самых узнаваемых спектаклей русского театра.",
-      "price": "от 1500 ₽",
-      "is_free": false,
-      "url": "https://afisha.yandex.ru/moscow/theatre_show/sluzhanki-sovremennyi-teatr-miuzikla",
-      "tg_msg_id": 1432
-    },
     {
       "id": "megacampus-summit-dubai-2026-09-18",
       "title": "МегаКампус Саммит 2026 — Дубай",
@@ -72,20 +58,6 @@
       "tg_msg_id": 1489
     },
     {
-      "id": "kubok-mera-hokkey-megasport-2026-08-31",
-      "title": "Кубок Мэра Москвы по хоккею",
-      "date": "2026-08-31",
-      "time": "",
-      "place": "Дворец спорта «Мегаспорт», Ходынский б-р, 3",
-      "category": "спорт",
-      "emoji": "🏒",
-      "description": "«Мегаспорт» перед стартом сезона принимает единственный в столице турнир КХЛ — впервые за победу поборются сразу восемь команд. Идёт до 31 августа.",
-      "price": "От 190 ₽",
-      "is_free": false,
-      "url": "https://kudago.com/msk/event/entertainment-kubok-mera-moskvyi-po-hokkeyu/",
-      "tg_msg_id": 1490
-    },
-    {
       "id": "moscow-forensics-day-2026-09-03",
       "title": "Moscow Forensics Day 2026",
       "date": "2026-09-03",
@@ -112,20 +84,6 @@
       "is_free": true,
       "url": "https://www.kp.ru/afisha/msk/prazdniki/1-sentyabrya-v-moskve/",
       "tg_msg_id": 1503
-    },
-    {
-      "id": "yoga-v-parke-finale-2026-08-31",
-      "title": "Йога в парке — финал сезона",
-      "date": "2026-08-31",
-      "time": "19:00",
-      "place": "Парк Дружбы / Екатерининский парк",
-      "category": "wellbeing",
-      "emoji": "🧘",
-      "description": "Последний день бесплатного проекта «Йога в парке»: кундалини-йога в парке Дружбы и хатха-йога для всех уровней в Екатерининском парке. Без предварительной записи — приходите и присоединяйтесь.",
-      "price": "Вход свободный",
-      "is_free": true,
-      "url": "https://kudago.com/msk/list/besplatnye-zanyatiya-jogoj-v-parkah/",
-      "tg_msg_id": 1504
     },
     {
       "id": "den-hodby-2026-09-05",
@@ -182,6 +140,20 @@
       "is_free": true,
       "url": "https://ict2go.ru/events/71581/",
       "tg_msg_id": 1518
+    },
+    {
+      "id": "kiberzarnitsa-vdnh-2026-09-05",
+      "title": "Фестиваль «Киберзарница»",
+      "date": "2026-09-05",
+      "time": "10:00–21:00",
+      "place": "ВДНХ, площадь Промышленности",
+      "category": "it",
+      "emoji": "🎮",
+      "description": "Городской фестиваль объединит киберспорт, технологии и физическую активность: финалы турниров по «Мир танков» и Counter-Strike 2, шоу-матч с медийными киберспортсменами, FPV-зона с дрон-симуляторами и дрон-баскетболом, VR, лазертаг-арена и 70-метровая полоса препятствий.",
+      "price": "Вход свободный, нужна регистрация на сайте",
+      "is_free": true,
+      "url": "https://cyber.sport.mos.ru/",
+      "tg_msg_id": 1528
     }
   ]
 }
