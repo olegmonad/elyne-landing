@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VELENIE — технология с душой</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prata&family=Onest:wght@300;400&display=swap" rel="stylesheet">
+<style>
+/* ===========================================
+   FIXED 16:9 STAGE: MANDATORY BASE STYLES
+   Include this ENTIRE file in every presentation.
+   Slides are authored at 1920×1080 and scaled as a whole.
+   =========================================== */
+
+/* 1. Lock the browser viewport */
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: var(--stage-bg, #000);
+}
+
+/* 2. Full-window deck viewport */
+.deck-viewport {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    background: var(--stage-bg, #000);
+}
+
+/* 3. Fixed 16:9 design canvas.
+   JavaScript sets transform: translate(...) scale(...). */
+.deck-stage {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    transform-origin: 0 0;
+    background: var(--slide-bg, #fff);
+}
+
+/* 4. Slides stack inside the fixed stage.
+   Content must be laid out at 1920×1080, not reflowed per device. */
+.slide {
+    position: absolute;
+    inset: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    background: var(--slide-bg, #fff);
+}
+
+.slide.active,
+.slide.visible {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 1;
+}
+
+/* 5. Keep media inside authored slide bounds */
+img,
+video,
+canvas,
+svg {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+/* 6. Presentation chrome stays outside the slide design system */
+.deck-controls {
+    position: fixed;
+    left: 50%;
+    bottom: 22px;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+
+/* 7. Print one fixed-size slide per page */
+@media print {
+    html,
+    body {
+        width: 1920px;
+        height: auto;
+        overflow: visible;
+        background: #fff;
+    }
+
+    .deck-viewport {
+        position: static;
+        overflow: visible;
+        background: #fff;
+    }
+
+    .deck-stage {
+        position: static;
+        width: auto;
+        height: auto;
+        transform: none !important;
+        background: none;
+    }
+
+    .slide {
+        position: relative;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        width: 1920px;
+        height: 1080px;
+        break-after: page;
+        page-break-after: always;
+    }
+
+    .slide:last-child {
+        break-after: auto;
+        page-break-after: auto;
+    }
+
+    .deck-controls {
+        display: none !important;
+    }
+}
+
+/* 8. Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+    }
+}
+
+
+/* === ТОКЕНЫ: «Огонь в темноте» — тёплая темнота, свет даёт только огонь === */
+:root{--stage-bg:#0b0907;--slide-bg:transparent;--fg:#EFE6D8;--dim:rgba(239,230,216,.55);--ember:#FF9F4A;--ember-2:#E2572B}
+.deck-stage{background:radial-gradient(1400px 900px at 70% 80%, #2a1a10 0%, #140f0b 55%, #0b0907 100%)}
+.slide{color:var(--fg);font-family:'Onest',sans-serif;font-weight:300;background:transparent}
+#fire{position:absolute;left:0;top:0;width:1920px;height:1080px;z-index:0;max-width:none;max-height:none}
+.slide>*{position:relative;z-index:2}
+
+.mark{position:absolute;left:120px;top:72px;font:400 20px 'Onest',sans-serif;letter-spacing:.42em;color:var(--dim)}
+.pg{position:absolute;right:120px;top:72px;font:300 20px 'Onest',sans-serif;color:var(--dim)}
+.pr{font-family:'Prata',serif;font-weight:400}
+.st{font-family:'Prata',serif;font-size:80px;line-height:1.12;letter-spacing:-.01em}
+.body{font-size:30px;line-height:1.5;max-width:32ch}
+.chap{font:300 24px 'Onest',sans-serif;color:var(--ember);letter-spacing:.06em}
+/* слово, которое горит */
+.hot{background:linear-gradient(90deg,#FFD9A0,#FF9F4A 45%,#E2572B);-webkit-background-clip:text;background-clip:text;color:transparent;
+  text-shadow:0 0 38px rgba(255,140,60,.35)}
+
+/* строки проявляются из дыма: размытие → резкость */
+.r{opacity:0;filter:blur(14px);transform:translateY(18px);transition:opacity 1.2s ease,filter 1.4s ease,transform 1.4s cubic-bezier(.23,1,.32,1)}
+.active .r{opacity:1;filter:blur(0);transform:none;transition-delay:calc(var(--d,0) * 1ms)}
+.cool .r{color:var(--dim)}
+
+#deckCounter{position:fixed;right:22px;bottom:16px;font:12px Onest,sans-serif;color:#7a6c5c;z-index:5}
+</style>
+</head>
+<body>
+<div class="deck-viewport"><div class="deck-stage" id="deckStage">
+<canvas id="fire" width="1920" height="1080"></canvas>
+
+<!-- === 1. ОБЛОЖКА: очаг, из которого поднимаются искры === -->
+<section class="slide" data-fire="hearth">
+  <div class="mark">VELENIE</div>
+  <div style="position:absolute;left:120px;top:330px;width:1100px">
+    <div class="pr r" style="font-size:210px;line-height:1;--d:300">VELENIE</div>
+    <div class="pr r" style="font-size:84px;margin-top:30px;--d:700">технология <span class="hot">с душой</span></div>
+    <div class="r" style="font-size:28px;color:var(--dim);margin-top:64px;--d:1100">Олег и Сергей</div>
+  </div>
+</section>
+
+<!-- === 2. ВСТУПЛЕНИЕ: искры выстраиваются в светящийся путь вперёд и вверх === -->
+<section class="slide" data-fire="path">
+  <div class="mark">VELENIE</div><div class="pg">02</div>
+  <div style="position:absolute;left:120px;top:250px;width:900px">
+    <div class="chap r" style="--d:100">Вступление</div>
+    <div class="st r" style="margin-top:40px;--d:300">Помнишь ли ты, когда внутри что-то по-настоящему <span class="hot">зажигалось</span>?</div>
+    <div class="body r" style="margin-top:40px;--d:800">Когда перед тобой не было преград, путь просматривался далеко вперёд, ты чувствовал себя наполненным — и <span class="hot">сиял</span></div>
+  </div>
+</section>
+
+<!-- === 3. ПОЧЕМУ ОГОНЬ ГАСНЕТ: огонь садится, вместо искр — пепел === -->
+<section class="slide cool" data-fire="ash">
+  <div class="mark">VELENIE</div><div class="pg">05</div>
+  <div style="position:absolute;left:120px;top:220px;width:980px">
+    <div class="chap r" style="--d:100;color:#9c7a5c">Почему огонь гаснет</div>
+    <div class="st r" style="margin-top:40px;--d:300">Огонь гаснет не потому, что идея была не твоя.</div>
+    <div class="body r" style="margin-top:36px;font-size:27px;max-width:44ch;--d:800">И не потому, что тебе чего-то не хватает. Просто после яркого замысла наступает время действий. Замысел — это вспышка, а реализация требует усилий, конкретных шагов, концентрации внимания и воли, преодоления сомнений.</div>
+    <div class="st r" style="margin-top:40px;font-size:54px;--d:1300">Именно здесь всё и затухает</div>
+  </div>
+</section>
+
+</div></div>
+<div id="deckCounter"></div>
+<script>
+/* === ОГОНЬ: одно поле частиц на всю колоду; каждый слайд задаёт ему режим === */
+const cv = document.getElementById('fire'), cx = cv.getContext('2d');
+const P = [];
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let mode = 'hearth', heat = 1, heatT = 1, t = 0;
+// кривая пути для слайда «Вступление»: из нижнего левого края сцены вправо-вверх к горизонту
+const bez = u => { const x0=980,y0=1060,x1=1250,y1=760,x2=1500,y2=560,x3=1860,y3=300, v=1-u;
+  return {x: v*v*v*x0+3*v*v*u*x1+3*v*u*u*x2+u*u*u*x3, y: v*v*v*y0+3*v*v*u*y1+3*v*u*u*y2+u*u*u*y3}; };
+const src = {
+  hearth: () => ({x: 1450 + (Math.random() - .5) * 180 * Math.random(), y: 1075, vx: (Math.random() - .5) * .5, vy: -(.7 + Math.random() * 1.6), hot: .6 + Math.random() * .4}),
+  path: () => { const u = Math.random(); const q = bez(u);
+    return {x: q.x + (Math.random() - .5) * 40 * (1 - u), y: q.y + (Math.random() - .5) * 40 * (1 - u), vx: (Math.random() - .5) * .25, vy: -(.1 + Math.random() * .35), hot: 1 - u * .45, size: 1.2 - u * .7, still: 1}; },
+  ash: () => Math.random() < .25
+      ? {x: 1450 + (Math.random() - .5) * 140, y: 1075, vx: (Math.random() - .5) * .3, vy: -(.3 + Math.random() * .5), hot: .45}
+      : {x: 900 + Math.random() * 1000, y: -10, vx: (Math.random() - .5) * .3, vy: .35 + Math.random() * .5, hot: 0},
+};
+const rate = {hearth: 1.4, path: 2.2, ash: .6};
+let acc = 0;
+function spawn() {
+  const p = src[mode]();
+  p.life = 0; p.max = (p.still ? 220 : 380) + Math.random() * 380; p.s = (p.size || 1) * (.7 + Math.random() * 1.6); p.ph = Math.random() * 6.28;
+  P.push(p);
+}
+function frame() {
+  t++;
+  heat += (heatT - heat) * .02;
+  cx.globalCompositeOperation = 'source-over';
+  cx.clearRect(0, 0, 1920, 1080);
+  // очаг: мягкое свечение снизу — сам огонь угадывается, а не рисуется
+  const flick = .9 + Math.sin(t * .09) * .05 + Math.sin(t * .23) * .04;
+  if (mode !== 'path') {
+    const gl = cx.createRadialGradient(1450, 1100, 0, 1450, 1100, 620);
+    gl.addColorStop(0, `rgba(255,150,60,${.55 * heat * flick})`); gl.addColorStop(.25, `rgba(230,90,30,${.22 * heat * flick})`); gl.addColorStop(1, 'rgba(120,40,10,0)');
+    cx.fillStyle = gl; cx.fillRect(0, 0, 1920, 1080);
+  } else {
+    // тропа: тонкая светящаяся линия под искрами
+    cx.globalCompositeOperation = 'lighter';
+    for (const [w, a] of [[14, .05], [5, .12], [1.6, .5]]) {
+      cx.strokeStyle = `rgba(255,160,80,${a * heat})`; cx.lineWidth = w; cx.beginPath();
+      for (let u = 0; u <= 1.001; u += .02) { const q = bez(u); u ? cx.lineTo(q.x, q.y) : cx.moveTo(q.x, q.y); }
+      cx.stroke();
+    }
+    const gl = cx.createRadialGradient(1860, 300, 0, 1860, 300, 520);
+    gl.addColorStop(0, `rgba(255,200,120,${.28 * heat})`); gl.addColorStop(1, 'rgba(255,120,40,0)');
+    cx.fillStyle = gl; cx.fillRect(0, 0, 1920, 1080);
+  }
+  cx.globalCompositeOperation = 'lighter';
+  acc += rate[mode]; while (acc >= 1) { acc--; if (P.length < 520) spawn(); }
+  for (let i = P.length - 1; i >= 0; i--) {
+    const p = P[i]; p.life++;
+    const up = Math.max(0, 1080 - p.y) / 1080;
+    p.x += p.vx + Math.sin(p.ph + p.life * .03) * (.2 + up * .9); p.y += p.vy;
+    if (p.life > p.max) { P.splice(i, 1); continue; }
+    const a = Math.sin(Math.PI * p.life / p.max) * (p.still ? (.6 + .4 * Math.sin(p.ph + t * .08)) : 1);
+    if (p.hot) {
+      const h = p.hot * heat, r = p.s * (1.2 + h);
+      const g = cx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r * 5);
+      g.addColorStop(0, `rgba(255,${200 + 40 * h | 0},${140 + 60 * h | 0},${a * .9 * h})`);
+      g.addColorStop(.2, `rgba(255,140,60,${a * .35 * h})`);
+      g.addColorStop(1, 'rgba(255,90,30,0)');
+      cx.fillStyle = g; cx.beginPath(); cx.arc(p.x, p.y, r * 5, 0, 6.29); cx.fill();
+    } else {
+      cx.globalCompositeOperation = 'source-over';
+      cx.fillStyle = `rgba(170,160,150,${a * .3})`; cx.beginPath(); cx.arc(p.x, p.y, p.s, 0, 6.29); cx.fill();
+      cx.globalCompositeOperation = 'lighter';
+    }
+  }
+  if (!reduced) requestAnimationFrame(frame);
+}
+addEventListener('slide', e => {
+  mode = e.detail.slide.dataset.fire || 'hearth';
+  heatT = mode === 'ash' ? .35 : 1;
+  P.forEach(p => { p.max = Math.min(p.max, p.life + 70); });
+  for (let k = 0; k < (mode === 'path' ? 260 : 140); k++) { spawn(); const q = P[P.length - 1]; q.life = Math.random() * q.max * .8; if (!q.still) q.y += q.vy * q.life; }
+});
+/* === SLIDE PRESENTATION CONTROLLER (frontend-slides) ===
+   Сцена 1920×1080 масштабируется целиком; листание: стрелки, пробел, колесо, свайп, тап.
+   На каждый показ слайда шлёт событие 'slide' {index, slide} — по нему оживают визуалы. */
+class SlidePresentation {
+  constructor() {
+    // точная длина каждого рисуемого штриха
+    document.querySelectorAll('.draw').forEach(el => { try { el.style.setProperty('--len', Math.ceil(el.getTotalLength()) + 2); } catch (e) {} });
+    this.slides = [...document.querySelectorAll('.slide')];
+    this.stage = document.getElementById('deckStage');
+    this.counter = document.getElementById('deckCounter');
+    this.i = -1; this.lock = 0;
+    const fit = () => {
+      const f = Math.min(innerWidth / 1920, innerHeight / 1080);
+      this.stage.style.transform = `translate(${(innerWidth - 1920 * f) / 2}px, ${(innerHeight - 1080 * f) / 2}px) scale(${f})`;
+    };
+    fit(); addEventListener('resize', fit);
+    addEventListener('keydown', e => {
+      if (['ArrowRight', 'ArrowDown', ' ', 'PageDown', 'Enter'].includes(e.key)) { e.preventDefault(); this.go(this.i + 1); }
+      if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); this.go(this.i - 1); }
+    });
+    addEventListener('wheel', e => { const t = Date.now(); if (t - this.lock < 900 || Math.abs(e.deltaY) < 20) return; this.lock = t; this.go(this.i + (e.deltaY > 0 ? 1 : -1)); }, {passive: true});
+    let sx = 0, sy = 0;
+    addEventListener('touchstart', e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, {passive: true});
+    addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) this.go(this.i + (dx < 0 ? 1 : -1));
+      else if (Math.abs(dx) < 10 && Math.abs(dy) < 10) this.go(this.i + (sx > innerWidth * .33 ? 1 : -1));
+    }, {passive: true});
+    addEventListener('click', e => { if (e.pointerType === 'mouse' || e.detail) { if (!('ontouchstart' in window)) this.go(this.i + (e.clientX > innerWidth * .33 ? 1 : -1)); } });
+    const start = +(location.hash.slice(1) || 1) - 1;
+    this.go(Math.max(0, Math.min(start, this.slides.length - 1)));
+  }
+  go(n) {
+    if (n < 0 || n >= this.slides.length || n === this.i) return;
+    const prev = this.slides[this.i];
+    if (prev) { prev.classList.remove('active', 'visible'); prev.classList.add('left'); setTimeout(() => prev.classList.remove('left'), 900); }
+    this.i = n;
+    const s = this.slides[n];
+    s.classList.add('active', 'visible');
+    if (this.counter) this.counter.textContent = `${n + 1} / ${this.slides.length}`;
+    history.replaceState(null, '', '#' + (n + 1));
+    dispatchEvent(new CustomEvent('slide', {detail: {index: n, slide: s}}));
+  }
+}
+
+new SlidePresentation();
+frame();
+</script>
+</body>
+</html>
