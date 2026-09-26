@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VELENIE — технология с душой</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Jost:wght@300;400&family=JetBrains+Mono:wght@300&display=swap" rel="stylesheet">
+<style>
+/* ===========================================
+   FIXED 16:9 STAGE: MANDATORY BASE STYLES
+   Include this ENTIRE file in every presentation.
+   Slides are authored at 1920×1080 and scaled as a whole.
+   =========================================== */
+
+/* 1. Lock the browser viewport */
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: var(--stage-bg, #000);
+}
+
+/* 2. Full-window deck viewport */
+.deck-viewport {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    background: var(--stage-bg, #000);
+}
+
+/* 3. Fixed 16:9 design canvas.
+   JavaScript sets transform: translate(...) scale(...). */
+.deck-stage {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    transform-origin: 0 0;
+    background: var(--slide-bg, #fff);
+}
+
+/* 4. Slides stack inside the fixed stage.
+   Content must be laid out at 1920×1080, not reflowed per device. */
+.slide {
+    position: absolute;
+    inset: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    background: var(--slide-bg, #fff);
+}
+
+.slide.active,
+.slide.visible {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 1;
+}
+
+/* 5. Keep media inside authored slide bounds */
+img,
+video,
+canvas,
+svg {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+/* 6. Presentation chrome stays outside the slide design system */
+.deck-controls {
+    position: fixed;
+    left: 50%;
+    bottom: 22px;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+
+/* 7. Print one fixed-size slide per page */
+@media print {
+    html,
+    body {
+        width: 1920px;
+        height: auto;
+        overflow: visible;
+        background: #fff;
+    }
+
+    .deck-viewport {
+        position: static;
+        overflow: visible;
+        background: #fff;
+    }
+
+    .deck-stage {
+        position: static;
+        width: auto;
+        height: auto;
+        transform: none !important;
+        background: none;
+    }
+
+    .slide {
+        position: relative;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        width: 1920px;
+        height: 1080px;
+        break-after: page;
+        page-break-after: always;
+    }
+
+    .slide:last-child {
+        break-after: auto;
+        page-break-after: auto;
+    }
+
+    .deck-controls {
+        display: none !important;
+    }
+}
+
+/* 8. Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+    }
+}
+
+
+/* === ТОКЕНЫ: «Роща» (grove) — лесной зелёный, антиква без жирного, коралл как акцент === */
+:root{--stage-bg:#101c11;--slide-bg:#192B1B;--bg-alt:#1E3221;--fg:#D4CFBF;--dim:rgba(212,207,191,.55);--hair:rgba(212,207,191,.18);--coral:#C8524A;--coral-2:#E3897E}
+
+.slide{color:var(--fg);font-family:'Jost',sans-serif;font-weight:300;
+  background:radial-gradient(1200px 900px at 78% 70%, #22392500, #0f1a10aa), var(--slide-bg)}
+/* === ХРОМ: тонкие линии сверху и снизу, моно-подписи === */
+.bar{position:absolute;left:110px;right:110px;display:flex;justify-content:space-between;font:300 17px 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.bar.t{top:58px;padding-bottom:18px;border-bottom:1px solid var(--hair)}
+.bar.b{bottom:52px;padding-top:18px;border-top:1px solid var(--hair)}
+
+.pf{font-family:'Playfair Display',serif;font-weight:400}
+.st{font-family:'Playfair Display',serif;font-weight:400;font-size:76px;line-height:1.1}
+.st em,.acc{font-style:italic;color:var(--coral-2)}
+.kick{font:300 18px 'JetBrains Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--coral-2);display:flex;align-items:center;gap:18px}
+.kick::after{content:"";width:36px;height:1px;background:var(--coral)}
+.body{font-size:29px;line-height:1.5;max-width:31ch;color:var(--fg)}
+.wm{position:absolute;font-family:'Playfair Display',serif;font-size:520px;line-height:1;color:rgba(212,207,191,.045);pointer-events:none}
+
+.r{opacity:0;transform:translateY(22px);transition:opacity 1s cubic-bezier(.23,1,.32,1),transform 1.2s cubic-bezier(.23,1,.32,1)}
+.active .r{opacity:1;transform:none;transition-delay:calc(var(--d,0) * 1ms)}
+
+/* === ДЕРЕВО: ветви прорастают по ярусам, цветы раскрываются на концах === */
+.tree{position:absolute;overflow:visible}
+.tree .br{fill:none;stroke:var(--fg);stroke-linecap:round;stroke-dasharray:var(--len);stroke-dashoffset:var(--len)}
+.active .tree .br{animation:grow var(--t) cubic-bezier(.33,0,.2,1) forwards;animation-delay:calc(var(--d) * 1ms)}
+@keyframes grow{to{stroke-dashoffset:0}}
+.tree .bl{transform-box:fill-box;transform-origin:center;transform:scale(0)}
+.active .tree .bl{animation:bloom .9s cubic-bezier(.34,1.56,.64,1) forwards;animation-delay:calc(var(--d) * 1ms)}
+@keyframes bloom{to{transform:scale(1)}}
+/* увядание: ветви гаснут, цветы опадают на землю */
+.wither .br{stroke:var(--fg)}
+.active .wither .brs{animation:fade 3s ease forwards 1800ms}
+@keyframes fade{to{opacity:.32}}
+.active .wither .bl{animation:bloom .7s ease forwards, drop 2.8s cubic-bezier(.45,0,.55,1) forwards;animation-delay:calc(var(--d) * 1ms), calc(1800ms + var(--f) * 1ms)}
+@keyframes drop{0%{transform:scale(1)}100%{transform:translate(var(--fx),var(--fy)) rotate(var(--fr)) scale(.7);opacity:.3;fill:#7d5a48}}
+.ground{stroke:var(--hair);stroke-width:1}
+
+#deckCounter{position:fixed;right:22px;bottom:16px;font:12px 'JetBrains Mono',monospace;color:#8d8a7e;z-index:5}
+</style>
+</head>
+<body>
+<div class="deck-viewport"><div class="deck-stage" id="deckStage">
+
+<!-- === 1. ОБЛОЖКА: росток уже тянется вверх === -->
+<section class="slide">
+  <div class="bar t"><span>VELENIE</span><span>Олег и Сергей</span></div>
+  <div style="position:absolute;left:110px;top:290px;width:980px">
+    <div class="kick r" style="--d:100">Презентация</div>
+    <div class="pf r" style="font-size:200px;line-height:1;margin-top:40px;--d:250">VELENIE</div>
+    <div class="pf acc r" style="font-size:92px;margin-top:22px;--d:500">технология с душой</div>
+  </div>
+  <svg class="tree" data-tree="7,8,bud" viewBox="0 0 900 900" style="left:1000px;top:120px;width:860px;height:860px"></svg>
+  <div class="bar b"><span>Олег и Сергей</span><span>01 / 15</span></div>
+</section>
+
+<!-- === 2. ВСТУПЛЕНИЕ: дерево в полном цвету === -->
+<section class="slide">
+  <div class="bar t"><span>VELENIE</span><span>Внутренний огонь</span></div>
+  <div class="wm" style="left:60px;top:170px">01</div>
+  <div style="position:absolute;left:110px;top:230px;width:860px">
+    <div class="kick r" style="--d:100">Вступление</div>
+    <div class="st r" style="margin-top:44px;--d:300">Помнишь ли ты, когда внутри что-то по-настоящему <em>зажигалось</em>?</div>
+    <div class="body r" style="margin-top:40px;--d:700">Когда перед тобой не было преград, путь просматривался далеко вперёд, ты чувствовал себя наполненным — и сиял</div>
+  </div>
+  <svg class="tree" data-tree="7,9,full" viewBox="0 0 900 900" style="left:960px;top:110px;width:880px;height:880px"></svg>
+  <div class="bar b"><span>Олег и Сергей</span><span>02 / 15</span></div>
+</section>
+
+<!-- === 3. ПОЧЕМУ ОГОНЬ ГАСНЕТ: то же дерево — цвет опадает === -->
+<section class="slide" style="--slide-bg:#172418">
+  <div class="bar t"><span>VELENIE</span><span>Рутина</span></div>
+  <div class="wm" style="left:60px;top:170px">05</div>
+  <div style="position:absolute;left:110px;top:220px;width:900px">
+    <div class="kick r" style="--d:100">Почему огонь гаснет</div>
+    <div class="st r" style="margin-top:44px;--d:300">Огонь гаснет не потому, что идея была не твоя.</div>
+    <div class="body r" style="margin-top:36px;font-size:26px;max-width:42ch;color:var(--dim);--d:700">И не потому, что тебе чего-то не хватает. Просто после яркого замысла наступает время действий. Замысел — это вспышка, а реализация требует усилий, конкретных шагов, концентрации внимания и воли, преодоления сомнений.</div>
+    <div class="st r" style="margin-top:36px;font-size:52px;font-style:italic;color:var(--dim);--d:1100">Именно здесь всё и затухает</div>
+  </div>
+  <svg class="tree wither" data-tree="7,9,wither" viewBox="0 0 900 900" style="left:960px;top:110px;width:880px;height:880px"></svg>
+  <div class="bar b"><span>Олег и Сергей</span><span>05 / 15</span></div>
+</section>
+
+</div></div>
+<div id="deckCounter"></div>
+<script>
+/* === ГЕНЕРАТИВНОЕ ДЕРЕВО: одно зерно — одно и то же дерево на всех слайдах === */
+const NS = 'http://www.w3.org/2000/svg';
+document.querySelectorAll('[data-tree]').forEach(svg => {
+  const [seed0, depthMax, mode] = svg.dataset.tree.split(',');
+  let seed = +seed0 * 9973;
+  const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const brs = document.createElementNS(NS, 'g'); brs.setAttribute('class', 'brs'); svg.appendChild(brs);
+  const fl = document.createElementNS(NS, 'g'); svg.appendChild(fl);
+  const g = document.createElementNS(NS, 'line');
+  Object.entries({x1: 80, y1: 860, x2: 860, y2: 860, class: 'ground'}).forEach(([k, v]) => g.setAttribute(k, v)); svg.insertBefore(g, brs);
+  const D = +depthMax, STEP = 230;
+  let tips = 0;
+  const grow = (x, y, len, ang, d, t0) => {
+    const x2 = x + Math.cos(ang) * len, y2 = y + Math.sin(ang) * len;
+    const mx = (x + x2) / 2 + Math.cos(ang + Math.PI / 2) * len * (rnd() - .5) * .35;
+    const my = (y + y2) / 2 + Math.sin(ang + Math.PI / 2) * len * (rnd() - .5) * .35;
+    const p = document.createElementNS(NS, 'path');
+    p.setAttribute('d', `M${x.toFixed(1)} ${y.toFixed(1)} Q${mx.toFixed(1)} ${my.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}`);
+    p.setAttribute('class', 'br');
+    p.setAttribute('stroke-width', Math.max(1, 13 * Math.pow(.66, d)).toFixed(2));
+    const dur = 520 + len * 2.2;
+    p.style.setProperty('--d', t0); p.style.setProperty('--t', dur + 'ms');
+    brs.appendChild(p);
+    p.style.setProperty('--len', Math.ceil(p.getTotalLength()) + 2);
+    const tEnd = t0 + dur * .85;
+    if (d >= D || len < 9) {
+      const bloomAt = mode === 'bud' ? d >= D - 1 : true;
+      if (!bloomAt) return;
+      const n = mode === 'bud' ? (rnd() < .3 ? 1 : 0) : (rnd() < .55 ? 1 : 2);
+      for (let k = 0; k < n; k++) {
+        const c = document.createElementNS(NS, 'circle');
+        const r = mode === 'bud' ? 3 + rnd() * 3 : 3.5 + rnd() * 6;
+        c.setAttribute('cx', (x2 + (rnd() - .5) * 26).toFixed(1)); c.setAttribute('cy', (y2 + (rnd() - .5) * 26).toFixed(1));
+        c.setAttribute('r', r.toFixed(1)); c.setAttribute('class', 'bl');
+        c.setAttribute('fill', rnd() < .6 ? '#C8524A' : '#E3897E'); c.setAttribute('fill-opacity', (.65 + rnd() * .35).toFixed(2));
+        c.style.setProperty('--d', Math.round(tEnd + rnd() * 400));
+        if (mode === 'wither' && rnd() < .3) { c.setAttribute('fill', '#8a6a55'); c.setAttribute('fill-opacity', '.5'); }
+        else if (mode === 'wither') {
+          c.style.setProperty('--f', Math.round(rnd() * 2600));
+          c.style.setProperty('--fx', ((rnd() - .5) * 420).toFixed(0) + 'px');
+          c.style.setProperty('--fy', (848 - y2 - r - rnd() * 22).toFixed(0) + 'px');
+          c.style.setProperty('--fr', ((rnd() - .5) * 180).toFixed(0) + 'deg');
+        }
+        fl.appendChild(c); tips++;
+      }
+      return;
+    }
+    const kids = d < 2 ? 2 : (rnd() < .35 ? 3 : 2);
+    for (let k = 0; k < kids; k++) {
+      const spread = (.32 + rnd() * .38) * (k === 0 ? -1 : k === 1 ? 1 : (rnd() - .5));
+      grow(x2, y2, len * (.68 + rnd() * .14), ang + spread, d + 1, tEnd);
+    }
+  };
+  grow(450, 860, 190, -Math.PI / 2 + (rnd() - .5) * .1, 0, 200);
+});
+/* === SLIDE PRESENTATION CONTROLLER (frontend-slides) ===
+   Сцена 1920×1080 масштабируется целиком; листание: стрелки, пробел, колесо, свайп, тап.
+   На каждый показ слайда шлёт событие 'slide' {index, slide} — по нему оживают визуалы. */
+class SlidePresentation {
+  constructor() {
+    // точная длина каждого рисуемого штриха
+    document.querySelectorAll('.draw').forEach(el => { try { el.style.setProperty('--len', Math.ceil(el.getTotalLength()) + 2); } catch (e) {} });
+    this.slides = [...document.querySelectorAll('.slide')];
+    this.stage = document.getElementById('deckStage');
+    this.counter = document.getElementById('deckCounter');
+    this.i = -1; this.lock = 0;
+    const fit = () => {
+      const f = Math.min(innerWidth / 1920, innerHeight / 1080);
+      this.stage.style.transform = `translate(${(innerWidth - 1920 * f) / 2}px, ${(innerHeight - 1080 * f) / 2}px) scale(${f})`;
+    };
+    fit(); addEventListener('resize', fit);
+    addEventListener('keydown', e => {
+      if (['ArrowRight', 'ArrowDown', ' ', 'PageDown', 'Enter'].includes(e.key)) { e.preventDefault(); this.go(this.i + 1); }
+      if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); this.go(this.i - 1); }
+    });
+    addEventListener('wheel', e => { const t = Date.now(); if (t - this.lock < 900 || Math.abs(e.deltaY) < 20) return; this.lock = t; this.go(this.i + (e.deltaY > 0 ? 1 : -1)); }, {passive: true});
+    let sx = 0, sy = 0;
+    addEventListener('touchstart', e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, {passive: true});
+    addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) this.go(this.i + (dx < 0 ? 1 : -1));
+      else if (Math.abs(dx) < 10 && Math.abs(dy) < 10) this.go(this.i + (sx > innerWidth * .33 ? 1 : -1));
+    }, {passive: true});
+    addEventListener('click', e => { if (e.pointerType === 'mouse' || e.detail) { if (!('ontouchstart' in window)) this.go(this.i + (e.clientX > innerWidth * .33 ? 1 : -1)); } });
+    const start = +(location.hash.slice(1) || 1) - 1;
+    this.go(Math.max(0, Math.min(start, this.slides.length - 1)));
+  }
+  go(n) {
+    if (n < 0 || n >= this.slides.length || n === this.i) return;
+    const prev = this.slides[this.i];
+    if (prev) { prev.classList.remove('active', 'visible'); prev.classList.add('left'); setTimeout(() => prev.classList.remove('left'), 900); }
+    this.i = n;
+    const s = this.slides[n];
+    s.classList.add('active', 'visible');
+    if (this.counter) this.counter.textContent = `${n + 1} / ${this.slides.length}`;
+    history.replaceState(null, '', '#' + (n + 1));
+    dispatchEvent(new CustomEvent('slide', {detail: {index: n, slide: s}}));
+  }
+}
+
+new SlidePresentation();
+</script>
+</body>
+</html>
