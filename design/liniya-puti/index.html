@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VELENIE — технология с душой</title>
+<!--
+  Линия пути. Прототип 26.09.2026.
+  Один смелый элемент — нить пути, прорисовывается прокруткой, на кончике огонёк.
+  Её поведение повторяет сюжет: рутина — истончается и сереет; не с той стороны — петля;
+  разворот — выпрямляется; «ничто не теряется» — потускневший путь восстанавливается;
+  «не один» — вливается вторая нить; финал — нить замыкается в кольцо.
+  Палитра и шрифты — BRAND.md (cream/графит/muted, Cormorant Garamond + Geist).
+  Огонёк — единственный тёплый цвет, как индикатор пути (исключение, согласовать).
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Geist:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F2EDE4; --graphite:#2A241D; --muted:#6B6356; --faint:#B9B0A2;
+    --ember:#D08A3E;
+    --line-x-a:.30; --line-x-b:.70;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{background:var(--cream);color-scheme:light}
+  body{background:var(--cream);color:var(--graphite);font-family:'Geist',system-ui,sans-serif;font-weight:300;
+       -webkit-font-smoothing:antialiased;overflow-x:hidden}
+  #track{position:relative}
+  svg#path{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
+  #path path{fill:none;stroke-linecap:round;stroke-linejoin:round;transition:stroke .9s ease, opacity .9s ease}
+  .seg-bright{stroke:var(--graphite);stroke-width:2.2}
+  .seg-fray{stroke:var(--muted);stroke-width:1.3}
+  .seg-faint{stroke:var(--faint);stroke-width:1;opacity:.75}
+  .seg-knot{stroke:var(--muted);stroke-width:1.2}
+  .restored .seg-fray,.restored .seg-faint,.restored .seg-knot{stroke:var(--graphite);opacity:1;stroke-width:1.8}
+  .seg-second{stroke:var(--graphite);stroke-width:1.2;opacity:.55}
+  .dot{fill:var(--cream);stroke:var(--graphite);stroke-width:1.4;transition:fill .5s ease}
+  .dot.on{fill:var(--graphite)}
+  .num{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;fill:var(--muted)}
+
+  #ember{position:absolute;left:0;top:0;width:0;height:0;pointer-events:none;z-index:3}
+  #ember i{position:absolute;left:-7px;top:-7px;width:14px;height:14px;border-radius:50%;
+           background:radial-gradient(circle, #FFE3B8 0 22%, var(--ember) 45%, rgba(208,138,62,0) 72%);}
+  #ember b{position:absolute;left:-40px;top:-40px;width:80px;height:80px;border-radius:50%;
+           background:radial-gradient(circle, rgba(208,138,62,.38), rgba(208,138,62,0) 68%);}
+
+  .ch{position:relative;min-height:92vh;padding:0 6vw}
+  .ch .txt{position:absolute;width:min(40vw,560px)}
+  .ch.l .txt{left:8vw}
+  .ch.r .txt{right:8vw}
+  .name{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;font-size:22px;color:var(--muted);margin-bottom:18px}
+  .st{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(34px,3.6vw,54px);line-height:1.08;letter-spacing:-.005em;margin-bottom:22px}
+  .st em{font-style:italic}
+  .body{font-size:clamp(17px,1.25vw,20px);line-height:1.55;color:var(--graphite);max-width:34em}
+  .body p+p{margin-top:.8em}
+  .quiet .st,.quiet .body{color:var(--muted)}
+
+  .w{display:inline-block;white-space:nowrap}
+  .c{display:inline-block;opacity:0;filter:blur(6px);transform:translateY(.18em)}
+  .reduced .c{opacity:1;filter:none;transform:none}
+
+  header{height:100vh;height:100svh;position:relative;display:flex;flex-direction:column;justify-content:center;padding:0 8vw}
+  .mark{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(56px,9vw,128px);line-height:.95;letter-spacing:.01em}
+  .sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:clamp(28px,3.4vw,46px);margin-top:10px}
+  .by{margin-top:36px;font-size:16px;color:var(--muted)}
+  .hint{position:absolute;bottom:34px;left:8vw;font-size:14px;color:var(--muted);transition:opacity .6s}
+
+  #final{height:120vh;position:relative}
+  #final .in{position:absolute;left:50%;transform:translate(-50%,-50%);text-align:center;width:min(80vw,520px)}
+  #final .mark{font-size:clamp(48px,6vw,84px)}
+  #final .sub{font-size:clamp(24px,2.6vw,36px)}
+
+  @media (max-width:760px){
+    .ch{padding:0;min-height:84vh}
+    .ch .txt,.ch.l .txt,.ch.r .txt{left:64px;right:22px;width:auto}
+    .name{font-size:19px;margin-bottom:12px}
+    .st{font-size:31px;margin-bottom:16px}
+    .body{font-size:16.5px}
+    header{padding:0 22px 0 64px}
+    .hint{left:64px}
+  }
+</style>
+</head>
+<body>
+<div id="track">
+  <svg id="path"></svg>
+  <div id="ember"><b></b><i></i></div>
+
+  <header>
+    <div class="mark">VELENIE</div>
+    <div class="sub">технология с душой</div>
+    <div class="by">Олег и Сергей</div>
+    <div class="hint" id="hint">Листай вниз — путь начинается здесь</div>
+  </header>
+
+  <section class="ch r" data-seg="bright" data-name="Вступление">
+    <div class="txt">
+      <div class="st">Помнишь ли ты, когда внутри что-то по-настоящему <em>зажигалось</em>?</div>
+      <div class="body"><p>Когда перед тобой не было преград, путь просматривался далеко вперёд, ты чувствовал себя наполненным — и сиял</p></div>
+    </div>
+  </section>
+
+  <section class="ch l" data-seg="bright" data-name="Что было дальше">
+    <div class="txt">
+      <div class="st">Легко ли было сохранить этот внутренний запал?</div>
+      <div class="body"><p>Получалось ли идти по этому пути — или что-то сбивало и не давало сделать следующий шаг?</p></div>
+    </div>
+  </section>
+
+  <section class="ch r quiet" data-seg="fray" data-ember=".55" data-name="Рутина">
+    <div class="txt">
+      <div class="st">Часто изначальный огонёк теряется в рутине дня</div>
+      <div class="body"><p>и не даёт видимых плодов</p></div>
+    </div>
+  </section>
+
+  <section class="ch l quiet" data-seg="faint" data-ember=".18" data-name="Почему огонь гаснет">
+    <div class="txt">
+      <div class="st">Огонь гаснет не потому, что идея была не твоя.</div>
+      <div class="body"><p>И не потому, что тебе чего-то не хватает. Просто после яркого замысла наступает время действий. Замысел — это вспышка, а реализация требует усилий, конкретных шагов, концентрации внимания и воли, преодоления сомнений.</p><p>Именно здесь всё и затухает</p></div>
+    </div>
+  </section>
+
+  <section class="ch r quiet" data-seg="faint" data-ember=".12" data-name="Вопрос">
+    <div class="txt">
+      <div class="st">Могут ли в этом быть полезны технологии?</div>
+    </div>
+  </section>
+
+  <section class="ch l" data-seg="faint" data-ember=".25" data-name="Технологии и человек">
+    <div class="txt">
+      <div class="st">Технологии сегодня часто отвлекают, рассеивают, уводят. Но это не приговор.</div>
+      <div class="body"><p>Технология может быть осознанной. В правильном использовании она не уводит от развития, а наоборот — способствует ему</p></div>
+    </div>
+  </section>
+
+  <section class="ch r" data-seg="faint" data-ember=".3" data-name="Не с той стороны">
+    <div class="txt">
+      <div class="st">Часто человек заходит в технологии не с той стороны</div>
+      <div class="body"><p>— не следуя своему истинному запросу. И тогда технология начинает вести его за собой</p></div>
+    </div>
+  </section>
+
+  <section class="ch l" data-seg="knot" data-ember="1" data-burst="1" data-name="Разворот">
+    <div class="txt">
+      <div class="st">Не человек подстраивается под логику системы, а система выстраивается <em>от истинного запроса</em></div>
+      <div class="body"><p>— от того, что живо в самом человеке</p></div>
+    </div>
+  </section>
+
+  <section class="ch r" data-seg="bright" data-name="Что такое VELENIE">
+    <div class="txt">
+      <div class="st">VELENIE — среда осознанного взаимодействия, которая развивается вместе с человеком.</div>
+      <div class="body"><p>Её задача — помочь человеку выстроить вектор и пройти по нему.</p><p>Это инструмент перехода в новое время — когда по-старому уже не получается, а по-новому ещё не знаешь как.</p><p>Здесь человек учится жить не из «надо», а из своего внутреннего огня</p></div>
+    </div>
+  </section>
+
+  <section class="ch l" data-seg="bright" data-restore="1" data-name="Помнит путь">
+    <div class="txt">
+      <div class="st">VELENIE помнит путь человека и держит его целиком, в одном месте. <em>Ничто не теряется.</em></div>
+      <div class="body"><p>Система подбирает то, что сейчас поддерживает твой шаг, и передаёт твой контекст дальше — тебе не нужно объяснять всё заново</p></div>
+    </div>
+  </section>
+
+  <section class="ch r" data-seg="bright" data-second="1" data-name="Что получает человек">
+    <div class="txt">
+      <div class="st">Ясность и инструмент, который остаётся с ним надолго.</div>
+      <div class="body"><p>VELENIE сопровождает человека на его пути реализации.</p><p>А чтобы он шёл не один — помогает находить близких по духу или целям и создавать совместные проекты</p></div>
+    </div>
+  </section>
+
+  <section class="ch l" data-seg="bright" data-name="Мероприятия">
+    <div class="txt">
+      <div class="st">Среда продолжает работать и за пределами приложения.</div>
+      <div class="body"><p>Помимо цифровой среды, человек получает доступ к офлайн-мероприятиям. Система подбирает их под его запросы</p></div>
+    </div>
+  </section>
+
+  <section class="ch r" data-seg="bright" data-name="Мы">
+    <div class="txt">
+      <div class="st">Мы — Олег и Сергей.</div>
+      <div class="body"><p>Мы создаём пространство, где внутренний огонь соединяется с реальными шагами. Где осознанные технологии не отбирают внимание, а возвращают человеку его самого</p></div>
+    </div>
+  </section>
+
+  <section id="final">
+    <div class="in" id="finalIn">
+      <div class="mark">VELENIE</div>
+      <div class="sub">технология с душой</div>
+    </div>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script>
+(() => {
+  const NS = 'http://www.w3.org/2000/svg';
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const svg = document.getElementById('path');
+  const track = document.getElementById('track');
+  const ember = document.getElementById('ember');
+  const emberI = ember.querySelector('i'), emberB = ember.querySelector('b');
+  const chapters = [...document.querySelectorAll('.ch')];
+  const finalIn = document.getElementById('finalIn');
+  const hint = document.getElementById('hint');
+  if (reduced) document.documentElement.classList.add('reduced');
+
+  // ---------- разбивка текста на буквы (пишется по буквам) ----------
+  const splitEls = el => {
+    const walk = node => {
+      [...node.childNodes].forEach(n => {
+        if (n.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach(part => {
+            if (!part) return;
+            if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(' ')); return; }
+            const w = document.createElement('span'); w.className = 'w';
+            [...part].forEach(ch => { const c = document.createElement('span'); c.className = 'c'; c.textContent = ch; w.appendChild(c); });
+            frag.appendChild(w);
+          });
+          n.replaceWith(frag);
+        } else if (n.nodeType === 1) walk(n);
+      });
+    };
+    walk(el);
+  };
+  chapters.forEach(ch => ch.querySelectorAll('.st,.body').forEach(splitEls));
+  splitEls(finalIn);
+
+  const write = (root, on) => {
+    const cs = root.querySelectorAll('.c');
+    if (reduced) return;
+    gsap.killTweensOf(cs);
+    if (on) gsap.to(cs, {opacity:1, filter:'blur(0px)', y:0, duration:.7, ease:'power3.out', stagger:{each:.012}});
+    else gsap.to(cs, {opacity:0, filter:'blur(6px)', y:'.18em', duration:.25, ease:'power1.in', stagger:{each:.002, from:'end'}});
+  };
+
+  // ---------- геометрия ----------
+  let W, H, mobile, segs = [], lut = [], total = 0, milestones = [], second = null, ring = null, dots = [];
+  const el = (tag, attrs, parent = svg) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
+  const top = e => e.getBoundingClientRect().top + scrollY;
+
+  // кубическая «S» между двумя точками с вертикальными касательными
+  const cubic = (a, b) => t => {
+    const k = (b.y - a.y) * .5;
+    const p1 = {x:a.x, y:a.y + k}, p2 = {x:b.x, y:b.y - k};
+    const u = 1 - t;
+    return {x: u*u*u*a.x + 3*u*u*t*p1.x + 3*u*t*t*p2.x + t*t*t*b.x,
+            y: u*u*u*a.y + 3*u*u*t*p1.y + 3*u*t*t*p2.y + t*t*t*b.y};
+  };
+  const pts2d = pts => 'M' + pts.map(p => p.x.toFixed(1) + ' ' + p.y.toFixed(1)).join(' L');
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+
+  function build() {
+    svg.innerHTML = ''; segs = []; lut = []; total = 0; milestones = []; dots = []; seed = 7;
+    W = document.documentElement.clientWidth; H = track.scrollHeight; mobile = W <= 760;
+    svg.setAttribute('width', W); svg.setAttribute('height', H); svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+    const lineX = side => mobile ? (side === 'r' ? 34 : 26) : W * (side === 'r' ? .30 : .70);
+    // стартовая точка — под подзаголовком шапки
+    const head = document.querySelector('header .by');
+    let prev = {x: mobile ? 30 : W*.08 + 6, y: top(head) + 60};
+    const start = prev;
+
+    chapters.forEach((ch, i) => {
+      const side = ch.classList.contains('r') ? 'r' : 'l';
+      const txt = ch.querySelector('.txt');
+      // текст главы ставим по центру секции по вертикали
+      const secTop = top(ch);
+      txt.style.top = (ch.offsetHeight * .5 - txt.offsetHeight * .5) + 'px';
+      const ty = secTop + ch.offsetHeight * .5 - txt.offsetHeight * .5;
+      const p = {x: lineX(side), y: ty + (mobile ? 14 : 30)};
+      const kind = ch.dataset.seg;
+      const f = cubic(prev, p);
+      let pts = [];
+      const N = Math.max(40, Math.round((p.y - prev.y) / 6));
+      for (let j = 0; j <= N; j++) {
+        const t = j / N; let q = f(t);
+        if (kind === 'fray') {
+          // дрожь: чем дальше, тем сильнее
+          const amp = (mobile ? 3 : 6) * t;
+          q = {x: q.x + (rnd() - .5) * amp + Math.sin(t * 40) * amp * .5, y: q.y};
+        }
+        if (kind === 'knot') {
+          // утягивает вбок и закручивает в петлю
+          const pull = (mobile ? W * .5 : W * .16) * Math.sin(Math.PI * t) * (side === 'r' ? -1 : 1);
+          let dx = pull, dy = 0;
+          if (t > .38 && t < .62) {
+            const th = (t - .38) / .24 * Math.PI * 2, R = mobile ? 30 : 54;
+            dx += R * Math.sin(th) * (side === 'r' ? -1 : 1); dy += R * (Math.cos(th) - 1) * 1.1;
+          }
+          q = {x: q.x + dx, y: q.y + dy};
+        }
+        pts.push(q);
+      }
+      milestones.push({ch, p, idx: segs.length, i, name: ch.dataset.name, side});
+      addSeg(pts, 'seg-' + kind);
+      prev = p;
+    });
+
+    // финал: к верху кольца, потом круг
+    const fin = document.getElementById('final');
+    const cy = top(fin) + fin.offsetHeight * .5;
+    finalIn.style.top = (fin.offsetHeight * .5) + 'px';
+    const R = mobile ? Math.min(W * .42, 170) : Math.min(W * .22, 300);
+    const cx = W / 2;
+    const ringTop = {x: cx, y: cy - R};
+    const f = cubic(prev, ringTop), toRing = [];
+    for (let j = 0; j <= 60; j++) toRing.push(f(j / 60));
+    addSeg(toRing, 'seg-bright');
+    const circ = [];
+    for (let j = 0; j <= 160; j++) { const a = -Math.PI/2 + j/160 * Math.PI*2; circ.push({x: cx + R*Math.cos(a), y: cy + R*Math.sin(a)}); }
+    ring = {idx: segs.length, cy, cx, R};
+    addSeg(circ, 'seg-bright', true);
+
+    // вторая нить: входит справа и ложится рядом до кольца
+    const sm = milestones.find(m => m.ch.dataset.second);
+    if (sm) {
+      const from = {x: mobile ? W - 8 : W * .96, y: sm.p.y - (mobile ? 260 : 420)};
+      const pts = [];
+      const g = cubic(from, {x: sm.p.x + 7, y: sm.p.y + 40});
+      for (let j = 0; j <= 50; j++) pts.push(g(j / 50));
+      // рядом с основной до кольца
+      for (let s = sm.idx + 1; s < ring.idx; s++) segs[s].pts.forEach((q, n) => { if (n % 3 === 0) pts.push({x: q.x + 7, y: q.y + 4}); });
+      const path = el('path', {d: pts2d(pts), class: 'seg-second'});
+      const len = path.getTotalLength();
+      path.style.strokeDasharray = len; path.style.strokeDashoffset = len;
+      second = {path, len, y0: from.y, y1: pts[pts.length - 1].y};
+    }
+
+    // вехи: точки и номера
+    milestones.forEach((m, n) => {
+      const d = el('circle', {cx: m.p.x, cy: m.p.y, r: mobile ? 4 : 5, class: 'dot'});
+      const numX = mobile ? m.p.x - 2 : (m.side === 'r' ? m.p.x - 30 : m.p.x + 14);
+      const t = el('text', {x: numX, y: m.p.y - 12, class: 'num', 'text-anchor': mobile ? 'middle' : (m.side === 'r' ? 'end' : 'start')});
+      t.textContent = m.name;
+      if (mobile) t.setAttribute('display', 'none');
+      dots.push(d);
+    });
+
+    // поиск по длине: для каждой точки пути — накопленный максимум y
+    let acc = 0, maxY = -1e9;
+    segs.forEach(s => {
+      s.start = acc;
+      for (let n = 0; n < s.pts.length; n++) {
+        if (n) acc += Math.hypot(s.pts[n].x - s.pts[n-1].x, s.pts[n].y - s.pts[n-1].y);
+        maxY = Math.max(maxY, s.pts[n].y);
+        lut.push({L: acc, y: maxY, x: s.pts[n].x, py: s.pts[n].y, s});
+      }
+      s.len = acc - s.start;
+      s.path.style.strokeDasharray = s.len + ' ' + (s.len + 10);
+    });
+    total = acc;
+    // ring — рисуется временем, не прокруткой
+    ring.seg = segs[ring.idx];
+    update(true);
+  }
+
+  function addSeg(pts, cls, isRing) {
+    const path = el('path', {d: pts2d(pts), class: cls});
+    segs.push({pts, path, cls, isRing});
+  }
+
+  // ---------- прокрутка ----------
+  let emberLevel = 1, restored = false, ringDone = false, lastL = 0;
+  const shown = new Set();
+  function update(force) {
+    if (!lut.length) return;
+    const vh = innerHeight;
+    const target = scrollY + vh * (mobile ? .62 : .58);
+    hint.style.opacity = scrollY > 40 ? 0 : 1;
+
+    // длина пути до цели (без кольца)
+    const ringStart = ring.seg.start;
+    let L = 0, pos = lut[0];
+    if (reduced) { L = ringStart; pos = lut.filter(q => q.s !== ring.seg).pop(); }
+    else {
+      let lo = 0, hi = lut.length - 1;
+      while (lo < hi) { const mid = (lo + hi) >> 1; if (lut[mid].y < target) lo = mid + 1; else hi = mid; }
+      pos = lut[lo]; L = Math.min(pos.L, ringStart);
+      if (pos.s === ring.seg) pos = lut.filter(q => q.s !== ring.seg).pop();
+    }
+    lastL = L;
+    segs.forEach(s => {
+      if (s.isRing) return;
+      const d = Math.max(0, Math.min(s.len, L - s.start));
+      s.path.style.strokeDashoffset = s.len - d;
+    });
+    if (second) {
+      const t = Math.max(0, Math.min(1, (target - second.y0) / (second.y1 - second.y0)));
+      second.path.style.strokeDashoffset = second.len * (1 - (reduced ? 1 : t));
+    }
+
+    // вехи
+    milestones.forEach((m, n) => {
+      const on = reduced || L >= segs[m.idx].start + segs[m.idx].len - 2;
+      dots[n].classList.toggle('on', on);
+      if (on !== shown.has(m.ch)) {
+        on ? shown.add(m.ch) : shown.delete(m.ch);
+        write(m.ch, on);
+        if (on && m.ch.dataset.burst && !reduced) burst();
+      }
+      if (m.ch.dataset.restore) {
+        if (on !== restored) { restored = on; svg.classList.toggle('restored', on); }
+      }
+    });
+    // уровень огонька — от последней пройденной главы с пометкой
+    let lv = 1;
+    for (const m of milestones) { const on = L >= segs[m.idx].start + segs[m.idx].len - 2; if (!on) break; if (m.ch.dataset.ember) lv = +m.ch.dataset.ember; }
+    if (lv !== emberLevel) { emberLevel = lv; gsap.to([emberI, emberB], {opacity: .25 + lv * .75, scale: .6 + lv * .4, duration: 1.1, ease: 'power2.out'}); }
+
+    // огонёк на кончике
+    if (!ringDone) gsap.set(ember, {x: pos.x, y: pos.py});
+
+    // кольцо — когда нить дошла до его верха
+    const atRing = reduced || (target >= ring.cy - ring.R && L >= ringStart - 2);
+    if (atRing && !ringDone) closeRing();
+    if (!atRing && ringDone && !reduced) openRing();
+  }
+
+  let ringTween = null;
+  function closeRing() {
+    ringDone = true;
+    const s = ring.seg, o = {d: 0};
+    ringTween && ringTween.kill();
+    if (reduced) { s.path.style.strokeDashoffset = 0; finalIn.querySelectorAll('.c').forEach(c => c.style.opacity = 1); return; }
+    ringTween = gsap.to(o, {d: 1, duration: 2.2, ease: 'power2.inOut', onUpdate: () => {
+      s.path.style.strokeDashoffset = s.len * (1 - o.d);
+      const a = -Math.PI/2 + o.d * Math.PI * 2;
+      gsap.set(ember, {x: ring.cx + ring.R * Math.cos(a), y: ring.cy + ring.R * Math.sin(a)});
+    }, onComplete: heartbeat});
+    write(finalIn, true);
+  }
+  function openRing() {
+    ringDone = false; ringTween && ringTween.kill(); beat && beat.kill();
+    ring.seg.path.style.strokeDashoffset = ring.seg.len;
+    write(finalIn, false);
+    gsap.to([emberI, emberB], {scale: .6 + emberLevel * .4, duration: .3});
+  }
+  let beat = null;
+  function heartbeat() {
+    beat = gsap.timeline({repeat: -1, repeatDelay: .9})
+      .to([emberI, emberB], {scale: 1.35, duration: .14, ease: 'power2.out'})
+      .to([emberI, emberB], {scale: 1, duration: .22, ease: 'power2.in'})
+      .to([emberI, emberB], {scale: 1.22, duration: .12, ease: 'power2.out'})
+      .to([emberI, emberB], {scale: 1, duration: .5, ease: 'power3.out'});
+  }
+  function burst() {
+    gsap.fromTo(emberB, {scale: 1}, {scale: 3.2, duration: .5, ease: 'power2.out', yoyo: true, repeat: 1});
+  }
+
+  let raf = 0;
+  addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; update(); }); }, {passive: true});
+  let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(build, 150); });
+  document.fonts.ready.then(build);
+})();
+</script>
+</body>
+</html>
